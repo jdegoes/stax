@@ -57,4 +57,4 @@ You can import this representation and helper functions with the following two l
 </pre>
 
 The first line imports all the external declarations that inform HaXe how every element in the DOM is typed. The second line imports various helper 
-classes, including a <pre>Lib</pre> class that provides access to top-level JavaScript objects and functions.
+classes, including a <code>Lib</code> class that provides access to top-level JavaScript objects and functions.
