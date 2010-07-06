@@ -2116,15 +2116,61 @@ haxe.Log.clear = function() {
 }
 haxe.Log.prototype.__class__ = haxe.Log;
 if(!haxe["abstract"]) haxe["abstract"] = {}
-haxe.abstract.PartialFunction1 = function(def) { if( def === $_ ) return; {
+haxe.abstract.PartialFunction1 = function() { }
+haxe.abstract.PartialFunction1.__name__ = ["haxe","abstract","PartialFunction1"];
+haxe.abstract.PartialFunction1.prototype.call = null;
+haxe.abstract.PartialFunction1.prototype.isDefinedAt = null;
+haxe.abstract.PartialFunction1.prototype.orAlways = null;
+haxe.abstract.PartialFunction1.prototype.orAlwaysC = null;
+haxe.abstract.PartialFunction1.prototype.orElse = null;
+haxe.abstract.PartialFunction1.prototype.toFunction = null;
+haxe.abstract.PartialFunction1.prototype.__class__ = haxe.abstract.PartialFunction1;
+haxe.abstract.PartialFunction2 = function() { }
+haxe.abstract.PartialFunction2.__name__ = ["haxe","abstract","PartialFunction2"];
+haxe.abstract.PartialFunction2.prototype.call = null;
+haxe.abstract.PartialFunction2.prototype.isDefinedAt = null;
+haxe.abstract.PartialFunction2.prototype.orAlways = null;
+haxe.abstract.PartialFunction2.prototype.orAlwaysC = null;
+haxe.abstract.PartialFunction2.prototype.orElse = null;
+haxe.abstract.PartialFunction2.prototype.toFunction = null;
+haxe.abstract.PartialFunction2.prototype.__class__ = haxe.abstract.PartialFunction2;
+haxe.abstract.PartialFunction3 = function() { }
+haxe.abstract.PartialFunction3.__name__ = ["haxe","abstract","PartialFunction3"];
+haxe.abstract.PartialFunction3.prototype.call = null;
+haxe.abstract.PartialFunction3.prototype.isDefinedAt = null;
+haxe.abstract.PartialFunction3.prototype.orAlways = null;
+haxe.abstract.PartialFunction3.prototype.orAlwaysC = null;
+haxe.abstract.PartialFunction3.prototype.orElse = null;
+haxe.abstract.PartialFunction3.prototype.toFunction = null;
+haxe.abstract.PartialFunction3.prototype.__class__ = haxe.abstract.PartialFunction3;
+haxe.abstract.PartialFunction4 = function() { }
+haxe.abstract.PartialFunction4.__name__ = ["haxe","abstract","PartialFunction4"];
+haxe.abstract.PartialFunction4.prototype.call = null;
+haxe.abstract.PartialFunction4.prototype.isDefinedAt = null;
+haxe.abstract.PartialFunction4.prototype.orAlways = null;
+haxe.abstract.PartialFunction4.prototype.orAlwaysC = null;
+haxe.abstract.PartialFunction4.prototype.orElse = null;
+haxe.abstract.PartialFunction4.prototype.toFunction = null;
+haxe.abstract.PartialFunction4.prototype.__class__ = haxe.abstract.PartialFunction4;
+haxe.abstract.PartialFunction5 = function() { }
+haxe.abstract.PartialFunction5.__name__ = ["haxe","abstract","PartialFunction5"];
+haxe.abstract.PartialFunction5.prototype.call = null;
+haxe.abstract.PartialFunction5.prototype.isDefinedAt = null;
+haxe.abstract.PartialFunction5.prototype.orAlways = null;
+haxe.abstract.PartialFunction5.prototype.orAlwaysC = null;
+haxe.abstract.PartialFunction5.prototype.orElse = null;
+haxe.abstract.PartialFunction5.prototype.toFunction = null;
+haxe.abstract.PartialFunction5.prototype.__class__ = haxe.abstract.PartialFunction5;
+if(!haxe.abstract._PartialFunction) haxe.abstract._PartialFunction = {}
+haxe.abstract._PartialFunction.PartialFunction1Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract.PartialFunction1.__name__ = ["haxe","abstract","PartialFunction1"];
-haxe.abstract.PartialFunction1.create = function(def) {
-	return new haxe.abstract.PartialFunction1(def);
+haxe.abstract._PartialFunction.PartialFunction1Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction1Impl"];
+haxe.abstract._PartialFunction.PartialFunction1Impl.create = function(def) {
+	return new haxe.abstract._PartialFunction.PartialFunction1Impl(def);
 }
-haxe.abstract.PartialFunction1.prototype._def = null;
-haxe.abstract.PartialFunction1.prototype.call = function(a) {
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype._def = null;
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.call = function(a) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2135,7 +2181,7 @@ haxe.abstract.PartialFunction1.prototype.call = function(a) {
 	}
 	return Stax.error("Function undefined at " + a);
 }
-haxe.abstract.PartialFunction1.prototype.isDefinedAt = function(a) {
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.isDefinedAt = function(a) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2146,43 +2192,44 @@ haxe.abstract.PartialFunction1.prototype.isDefinedAt = function(a) {
 	}
 	return false;
 }
-haxe.abstract.PartialFunction1.prototype.orAlways = function(f) {
-	return haxe.abstract.PartialFunction1.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orAlways = function(f) {
+	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
 		return true;
 	}),f)]));
 }
-haxe.abstract.PartialFunction1.prototype.orAlwaysC = function(z) {
-	return haxe.abstract.PartialFunction1.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orAlwaysC = function(z) {
+	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
 		return true;
 	}),function(a) {
 		return z();
 	})]));
 }
-haxe.abstract.PartialFunction1.prototype.orElse = function(that) {
-	return haxe.abstract.PartialFunction1.create(this._def.concat(that._def));
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orElse = function(that) {
+	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract.PartialFunction1.prototype.toFunction = function() {
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a) {
 		return (self.isDefinedAt(a)?Option.Some(self.call(a)):Option.None);
 	}
 }
-haxe.abstract.PartialFunction1.prototype.__class__ = haxe.abstract.PartialFunction1;
-haxe.abstract.PartialFunction1Extensions = function() { }
-haxe.abstract.PartialFunction1Extensions.__name__ = ["haxe","abstract","PartialFunction1Extensions"];
-haxe.abstract.PartialFunction1Extensions.toPartialFunction = function(def) {
-	return haxe.abstract.PartialFunction1.create(def);
+haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction1Impl;
+haxe.abstract._PartialFunction.PartialFunction1Impl.__interfaces__ = [haxe.abstract.PartialFunction1];
+haxe.abstract.PartialFunction1ImplExtensions = function() { }
+haxe.abstract.PartialFunction1ImplExtensions.__name__ = ["haxe","abstract","PartialFunction1ImplExtensions"];
+haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
+	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(def);
 }
-haxe.abstract.PartialFunction1Extensions.prototype.__class__ = haxe.abstract.PartialFunction1Extensions;
-haxe.abstract.PartialFunction2 = function(def) { if( def === $_ ) return; {
+haxe.abstract.PartialFunction1ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction1ImplExtensions;
+haxe.abstract._PartialFunction.PartialFunction2Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract.PartialFunction2.__name__ = ["haxe","abstract","PartialFunction2"];
-haxe.abstract.PartialFunction2.create = function(def) {
-	return new haxe.abstract.PartialFunction2(def);
+haxe.abstract._PartialFunction.PartialFunction2Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction2Impl"];
+haxe.abstract._PartialFunction.PartialFunction2Impl.create = function(def) {
+	return new haxe.abstract._PartialFunction.PartialFunction2Impl(def);
 }
-haxe.abstract.PartialFunction2.prototype._def = null;
-haxe.abstract.PartialFunction2.prototype.call = function(a,b) {
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype._def = null;
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.call = function(a,b) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2193,7 +2240,7 @@ haxe.abstract.PartialFunction2.prototype.call = function(a,b) {
 	}
 	return Stax.error(((("Function undefined at (" + a) + ", ") + b) + ")");
 }
-haxe.abstract.PartialFunction2.prototype.isDefinedAt = function(a,b) {
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.isDefinedAt = function(a,b) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2204,43 +2251,44 @@ haxe.abstract.PartialFunction2.prototype.isDefinedAt = function(a,b) {
 	}
 	return false;
 }
-haxe.abstract.PartialFunction2.prototype.orAlways = function(f) {
-	return haxe.abstract.PartialFunction2.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orAlways = function(f) {
+	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
 		return true;
 	}),f)]));
 }
-haxe.abstract.PartialFunction2.prototype.orAlwaysC = function(z) {
-	return haxe.abstract.PartialFunction2.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orAlwaysC = function(z) {
+	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
 		return true;
 	}),function(a,b) {
 		return z();
 	})]));
 }
-haxe.abstract.PartialFunction2.prototype.orElse = function(that) {
-	return haxe.abstract.PartialFunction2.create(this._def.concat(that._def));
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orElse = function(that) {
+	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract.PartialFunction2.prototype.toFunction = function() {
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b) {
 		return (self.isDefinedAt(a,b)?Option.Some(self.call(a,b)):Option.None);
 	}
 }
-haxe.abstract.PartialFunction2.prototype.__class__ = haxe.abstract.PartialFunction2;
-haxe.abstract.PartialFunction2Extensions = function() { }
-haxe.abstract.PartialFunction2Extensions.__name__ = ["haxe","abstract","PartialFunction2Extensions"];
-haxe.abstract.PartialFunction2Extensions.toPartialFunction = function(def) {
-	return haxe.abstract.PartialFunction2.create(def);
+haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction2Impl;
+haxe.abstract._PartialFunction.PartialFunction2Impl.__interfaces__ = [haxe.abstract.PartialFunction2];
+haxe.abstract.PartialFunction2ImplExtensions = function() { }
+haxe.abstract.PartialFunction2ImplExtensions.__name__ = ["haxe","abstract","PartialFunction2ImplExtensions"];
+haxe.abstract.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
+	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(def);
 }
-haxe.abstract.PartialFunction2Extensions.prototype.__class__ = haxe.abstract.PartialFunction2Extensions;
-haxe.abstract.PartialFunction3 = function(def) { if( def === $_ ) return; {
+haxe.abstract.PartialFunction2ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction2ImplExtensions;
+haxe.abstract._PartialFunction.PartialFunction3Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract.PartialFunction3.__name__ = ["haxe","abstract","PartialFunction3"];
-haxe.abstract.PartialFunction3.create = function(def) {
-	return new haxe.abstract.PartialFunction3(def);
+haxe.abstract._PartialFunction.PartialFunction3Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction3Impl"];
+haxe.abstract._PartialFunction.PartialFunction3Impl.create = function(def) {
+	return new haxe.abstract._PartialFunction.PartialFunction3Impl(def);
 }
-haxe.abstract.PartialFunction3.prototype._def = null;
-haxe.abstract.PartialFunction3.prototype.call = function(a,b,c) {
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype._def = null;
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.call = function(a,b,c) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2251,7 +2299,7 @@ haxe.abstract.PartialFunction3.prototype.call = function(a,b,c) {
 	}
 	return Stax.error(((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ")");
 }
-haxe.abstract.PartialFunction3.prototype.isDefinedAt = function(a,b,c) {
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.isDefinedAt = function(a,b,c) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2262,43 +2310,44 @@ haxe.abstract.PartialFunction3.prototype.isDefinedAt = function(a,b,c) {
 	}
 	return false;
 }
-haxe.abstract.PartialFunction3.prototype.orAlways = function(f) {
-	return haxe.abstract.PartialFunction3.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orAlways = function(f) {
+	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
 		return true;
 	}),f)]));
 }
-haxe.abstract.PartialFunction3.prototype.orAlwaysC = function(z) {
-	return haxe.abstract.PartialFunction3.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orAlwaysC = function(z) {
+	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
 		return true;
 	}),function(a,b,c) {
 		return z();
 	})]));
 }
-haxe.abstract.PartialFunction3.prototype.orElse = function(that) {
-	return haxe.abstract.PartialFunction3.create(this._def.concat(that._def));
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orElse = function(that) {
+	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract.PartialFunction3.prototype.toFunction = function() {
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c) {
 		return (self.isDefinedAt(a,b,c)?Option.Some(self.call(a,b,c)):Option.None);
 	}
 }
-haxe.abstract.PartialFunction3.prototype.__class__ = haxe.abstract.PartialFunction3;
-haxe.abstract.PartialFunction3Extensions = function() { }
-haxe.abstract.PartialFunction3Extensions.__name__ = ["haxe","abstract","PartialFunction3Extensions"];
-haxe.abstract.PartialFunction3Extensions.toPartialFunction = function(def) {
-	return haxe.abstract.PartialFunction3.create(def);
+haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction3Impl;
+haxe.abstract._PartialFunction.PartialFunction3Impl.__interfaces__ = [haxe.abstract.PartialFunction3];
+haxe.abstract.PartialFunction3ImplExtensions = function() { }
+haxe.abstract.PartialFunction3ImplExtensions.__name__ = ["haxe","abstract","PartialFunction3ImplExtensions"];
+haxe.abstract.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
+	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(def);
 }
-haxe.abstract.PartialFunction3Extensions.prototype.__class__ = haxe.abstract.PartialFunction3Extensions;
-haxe.abstract.PartialFunction4 = function(def) { if( def === $_ ) return; {
+haxe.abstract.PartialFunction3ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction3ImplExtensions;
+haxe.abstract._PartialFunction.PartialFunction4Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract.PartialFunction4.__name__ = ["haxe","abstract","PartialFunction4"];
-haxe.abstract.PartialFunction4.create = function(def) {
-	return new haxe.abstract.PartialFunction4(def);
+haxe.abstract._PartialFunction.PartialFunction4Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction4Impl"];
+haxe.abstract._PartialFunction.PartialFunction4Impl.create = function(def) {
+	return new haxe.abstract._PartialFunction.PartialFunction4Impl(def);
 }
-haxe.abstract.PartialFunction4.prototype._def = null;
-haxe.abstract.PartialFunction4.prototype.call = function(a,b,c,d) {
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype._def = null;
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.call = function(a,b,c,d) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2309,7 +2358,7 @@ haxe.abstract.PartialFunction4.prototype.call = function(a,b,c,d) {
 	}
 	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
 }
-haxe.abstract.PartialFunction4.prototype.isDefinedAt = function(a,b,c,d) {
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.isDefinedAt = function(a,b,c,d) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2320,43 +2369,44 @@ haxe.abstract.PartialFunction4.prototype.isDefinedAt = function(a,b,c,d) {
 	}
 	return false;
 }
-haxe.abstract.PartialFunction4.prototype.orAlways = function(f) {
-	return haxe.abstract.PartialFunction4.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orAlways = function(f) {
+	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
 		return true;
 	}),f)]));
 }
-haxe.abstract.PartialFunction4.prototype.orAlwaysC = function(z) {
-	return haxe.abstract.PartialFunction4.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orAlwaysC = function(z) {
+	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
 		return true;
 	}),function(a,b,c,d) {
 		return z();
 	})]));
 }
-haxe.abstract.PartialFunction4.prototype.orElse = function(that) {
-	return haxe.abstract.PartialFunction4.create(this._def.concat(that._def));
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orElse = function(that) {
+	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract.PartialFunction4.prototype.toFunction = function() {
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c,d) {
 		return (self.isDefinedAt(a,b,c,d)?Option.Some(self.call(a,b,c,d)):Option.None);
 	}
 }
-haxe.abstract.PartialFunction4.prototype.__class__ = haxe.abstract.PartialFunction4;
-haxe.abstract.PartialFunction4Extensions = function() { }
-haxe.abstract.PartialFunction4Extensions.__name__ = ["haxe","abstract","PartialFunction4Extensions"];
-haxe.abstract.PartialFunction4Extensions.toPartialFunction = function(def) {
-	return haxe.abstract.PartialFunction4.create(def);
+haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction4Impl;
+haxe.abstract._PartialFunction.PartialFunction4Impl.__interfaces__ = [haxe.abstract.PartialFunction4];
+haxe.abstract.PartialFunction4ImplExtensions = function() { }
+haxe.abstract.PartialFunction4ImplExtensions.__name__ = ["haxe","abstract","PartialFunction4ImplExtensions"];
+haxe.abstract.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
+	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(def);
 }
-haxe.abstract.PartialFunction4Extensions.prototype.__class__ = haxe.abstract.PartialFunction4Extensions;
-haxe.abstract.PartialFunction5 = function(def) { if( def === $_ ) return; {
+haxe.abstract.PartialFunction4ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction4ImplExtensions;
+haxe.abstract._PartialFunction.PartialFunction5Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract.PartialFunction5.__name__ = ["haxe","abstract","PartialFunction5"];
-haxe.abstract.PartialFunction5.create = function(def) {
-	return new haxe.abstract.PartialFunction5(def);
+haxe.abstract._PartialFunction.PartialFunction5Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction5Impl"];
+haxe.abstract._PartialFunction.PartialFunction5Impl.create = function(def) {
+	return new haxe.abstract._PartialFunction.PartialFunction5Impl(def);
 }
-haxe.abstract.PartialFunction5.prototype._def = null;
-haxe.abstract.PartialFunction5.prototype.call = function(a,b,c,d,e) {
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype._def = null;
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.call = function(a,b,c,d,e) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2367,7 +2417,7 @@ haxe.abstract.PartialFunction5.prototype.call = function(a,b,c,d,e) {
 	}
 	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
 }
-haxe.abstract.PartialFunction5.prototype.isDefinedAt = function(a,b,c,d,e) {
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.isDefinedAt = function(a,b,c,d,e) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2378,34 +2428,35 @@ haxe.abstract.PartialFunction5.prototype.isDefinedAt = function(a,b,c,d,e) {
 	}
 	return false;
 }
-haxe.abstract.PartialFunction5.prototype.orAlways = function(f) {
-	return haxe.abstract.PartialFunction5.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orAlways = function(f) {
+	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
 		return true;
 	}),f)]));
 }
-haxe.abstract.PartialFunction5.prototype.orAlwaysC = function(z) {
-	return haxe.abstract.PartialFunction5.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orAlwaysC = function(z) {
+	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
 		return true;
 	}),function(a,b,c,d,e) {
 		return z();
 	})]));
 }
-haxe.abstract.PartialFunction5.prototype.orElse = function(that) {
-	return haxe.abstract.PartialFunction5.create(this._def.concat(that._def));
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orElse = function(that) {
+	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract.PartialFunction5.prototype.toFunction = function() {
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c,d,e) {
 		return (self.isDefinedAt(a,b,c,d,e)?Option.Some(self.call(a,b,c,d,e)):Option.None);
 	}
 }
-haxe.abstract.PartialFunction5.prototype.__class__ = haxe.abstract.PartialFunction5;
-haxe.abstract.PartialFunction5Extensions = function() { }
-haxe.abstract.PartialFunction5Extensions.__name__ = ["haxe","abstract","PartialFunction5Extensions"];
-haxe.abstract.PartialFunction5Extensions.toPartialFunction = function(def) {
-	return haxe.abstract.PartialFunction5.create(def);
+haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction5Impl;
+haxe.abstract._PartialFunction.PartialFunction5Impl.__interfaces__ = [haxe.abstract.PartialFunction5];
+haxe.abstract.PartialFunction5ImplExtensions = function() { }
+haxe.abstract.PartialFunction5ImplExtensions.__name__ = ["haxe","abstract","PartialFunction5ImplExtensions"];
+haxe.abstract.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
+	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(def);
 }
-haxe.abstract.PartialFunction5Extensions.prototype.__class__ = haxe.abstract.PartialFunction5Extensions;
+haxe.abstract.PartialFunction5ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction5ImplExtensions;
 haxe.data.collections.SetTestCase = function(p) { if( p === $_ ) return; {
 	haxe.unit.TestCase.apply(this,[]);
 }}
@@ -4177,7 +4228,7 @@ haxe.abstract.PartialFunctionTestCase.__name__ = ["haxe","abstract","PartialFunc
 haxe.abstract.PartialFunctionTestCase.__super__ = haxe.unit.TestCase;
 for(var k in haxe.unit.TestCase.prototype ) haxe.abstract.PartialFunctionTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
 haxe.abstract.PartialFunctionTestCase.prototype.testCallForPartialFunction1 = function() {
-	var f = haxe.abstract.PartialFunction1Extensions.toPartialFunction([Tuple2.create(function(i) {
+	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i > 0;
 	},function(i) {
 		return i * i;
@@ -4185,7 +4236,7 @@ haxe.abstract.PartialFunctionTestCase.prototype.testCallForPartialFunction1 = fu
 	this.assertEquals(4,f.call(2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 37, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testCallForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testIsDefinedAtForPartialFunction1 = function() {
-	var f = haxe.abstract.PartialFunction1Extensions.toPartialFunction([Tuple2.create(function(i) {
+	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i > 0;
 	},function(i) {
 		return i * i;
@@ -4194,7 +4245,7 @@ haxe.abstract.PartialFunctionTestCase.prototype.testIsDefinedAtForPartialFunctio
 	this.assertFalse(f.isDefinedAt(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 31, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testIsDefinedAtForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testOrAlwaysCForPartialFunction1 = function() {
-	var f = haxe.abstract.PartialFunction1Extensions.toPartialFunction([Tuple2.create(function(i) {
+	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i > 0;
 	},function(i) {
 		return i * i;
@@ -4202,12 +4253,12 @@ haxe.abstract.PartialFunctionTestCase.prototype.testOrAlwaysCForPartialFunction1
 	this.assertTrue(f.orAlwaysC(FunctionExtensions.toThunk(9)).isDefinedAt(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 55, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrAlwaysCForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testOrElseForPartialFunction1 = function() {
-	var f1 = haxe.abstract.PartialFunction1Extensions.toPartialFunction([Tuple2.create(function(i) {
+	var f1 = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i > 0;
 	},function(i) {
 		return i * i;
 	})]);
-	var f2 = haxe.abstract.PartialFunction1Extensions.toPartialFunction([Tuple2.create(function(i) {
+	var f2 = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i < 0;
 	},function(i) {
 		return i * i;

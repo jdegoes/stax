@@ -43,6 +43,14 @@ h2. Using Prelude Abstractions
 
 h2. Stax Collections Library
 
+The Stax collections library includes three types of collections:
+
+ * Lists, which represent ordered sequences of elements;
+ * Sets, which represent unordered collections of unique elements;
+ * Maps, which represent partial functions from one type (the key) to another (the value).
+ 
+
+
 h2. Stax JavaScript
 
 Stax has a fully-typed representation of the vast majority of the DOM, including the latest W3C standards and widely supported non-standards.

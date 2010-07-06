@@ -22,11 +22,81 @@ using Prelude;
 
 typedef PartialFunction<A, Z> = PartialFunction1<A, Z>
 
-class PartialFunction1<A, Z> {
+interface PartialFunction1<A, Z> {
+  public function isDefinedAt(a: A): Bool;
+  
+  public function orElse(that: PartialFunction1<A, Z>): PartialFunction1<A, Z>;
+  
+  public function orAlways(f: A ->  Z): PartialFunction1<A, Z>;
+  
+  public function orAlwaysC(z: Thunk<Z>): PartialFunction1<A, Z>;
+  
+	public function call(a: A): Z;
+	
+	public function toFunction(): A -> Option<Z>;
+}
+
+interface PartialFunction2<A, B, Z> {
+  public function isDefinedAt(a: A, b: B): Bool;
+  
+  public function orElse(that: PartialFunction2<A, B, Z>): PartialFunction2<A, B, Z>;
+  
+  public function orAlways(f: A -> B ->  Z): PartialFunction2<A, B, Z>;
+  
+  public function orAlwaysC(z: Thunk<Z>): PartialFunction2<A, B, Z>;
+  
+	public function call(a: A, b: B): Z;
+	
+	public function toFunction(): A -> B -> Option<Z>;
+}
+
+interface PartialFunction3<A, B, C, Z> {
+  public function isDefinedAt(a: A, b: B, c: C): Bool;
+  
+  public function orElse(that: PartialFunction3<A, B, C, Z>): PartialFunction3<A, B, C, Z>;
+  
+  public function orAlways(f: A -> B -> C ->  Z): PartialFunction3<A, B, C, Z>;
+  
+  public function orAlwaysC(z: Thunk<Z>): PartialFunction3<A, B, C, Z>;
+  
+	public function call(a: A, b: B, c: C): Z;
+	
+	public function toFunction(): A -> B -> C -> Option<Z>;
+}
+
+interface PartialFunction4<A, B, C, D, Z> {
+  public function isDefinedAt(a: A, b: B, c: C, d: D): Bool;
+  
+  public function orElse(that: PartialFunction4<A, B, C, D, Z>): PartialFunction4<A, B, C, D, Z>;
+  
+  public function orAlways(f: A -> B -> C -> D -> Z): PartialFunction4<A, B, C, D, Z>;
+  
+  public function orAlwaysC(z: Thunk<Z>): PartialFunction4<A, B, C, D, Z>;
+  
+	public function call(a: A, b: B, c: C, d: D): Z;
+	
+	public function toFunction(): A -> B -> C -> D -> Option<Z>;
+}
+
+interface PartialFunction5<A, B, C, D, E, Z> {
+  public function isDefinedAt(a: A, b: B, c: C, d: D, e: E): Bool;
+  
+  public function orElse(that: PartialFunction5<A, B, C, D, E, Z>): PartialFunction5<A, B, C, D, E, Z>;
+  
+  public function orAlways(f: A -> B -> C -> D -> E -> Z): PartialFunction5<A, B, C, D, E, Z>;
+  
+  public function orAlwaysC(z: Thunk<Z>): PartialFunction5<A, B, C, D, E, Z>;
+  
+	public function call(a: A, b: B, c: C, d: D, e: E): Z;
+	
+	public function toFunction(): A -> B -> C -> D -> E -> Option<Z>;
+}
+
+private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
   var _def: Array<Tuple2<A -> Bool, A -> Z>>;
   
   public static function create<A, Z>(def: Array<Tuple2<A -> Bool, A -> Z>>) {
-    return new PartialFunction1<A, Z>(def);
+    return new PartialFunction1Impl<A, Z>(def);
   }
   
   private function new(def: Array<Tuple2<A -> Bool, A -> Z>>) {
@@ -42,17 +112,19 @@ class PartialFunction1<A, Z> {
   }
   
   public function orElse(that: PartialFunction1<A, Z>): PartialFunction1<A, Z> {
-    return PartialFunction1.create(this._def.concat(that._def));
+    return PartialFunction1Impl.create(this._def.concat(
+      [Tuple2.create(that.isDefinedAt, that.call)]
+    ));
   }
   
   public function orAlways(f: A ->  Z): PartialFunction1<A, Z> {
-    return PartialFunction1.create(this._def.concat([
+    return PartialFunction1Impl.create(this._def.concat([
       (function(a) { return true; }).entuple(f)
     ]));
   }
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction1<A, Z> {
-    return PartialFunction1.create(this._def.concat([
+    return PartialFunction1Impl.create(this._def.concat([
       (function(a) { return true; }).entuple(function(a) { return z(); })
     ]));
   }
@@ -75,17 +147,17 @@ class PartialFunction1<A, Z> {
   }
 }
 
-class PartialFunction1Extensions {
+class PartialFunction1ImplExtensions {
 	public static function toPartialFunction<A, Z>(def: Array<Tuple2<A -> Bool, A -> Z>>) {
-	  return PartialFunction1.create(def);
+	  return PartialFunction1Impl.create(def);
 	}
 }
 
-class PartialFunction2<A, B, Z> {
+private class PartialFunction2Impl<A, B, Z> implements PartialFunction2<A, B, Z> {
   var _def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>;
   
   public static function create<A, B, Z>(def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>) {
-    return new PartialFunction2<A, B, Z>(def);
+    return new PartialFunction2Impl<A, B, Z>(def);
   }
   
   private function new(def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>) {
@@ -101,17 +173,19 @@ class PartialFunction2<A, B, Z> {
   }
   
   public function orElse(that: PartialFunction2<A, B, Z>): PartialFunction2<A, B, Z> {
-    return PartialFunction2.create(this._def.concat(that._def));
+    return PartialFunction2Impl.create(this._def.concat(
+      [Tuple2.create(that.isDefinedAt, that.call)]
+    ));
   }
   
   public function orAlways(f: A -> B ->  Z): PartialFunction2<A, B, Z> {
-    return PartialFunction2.create(this._def.concat([
+    return PartialFunction2Impl.create(this._def.concat([
       (function(a, b) { return true; }).entuple(f)
     ]));
   }
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction2<A, B, Z> {
-    return PartialFunction2.create(this._def.concat([
+    return PartialFunction2Impl.create(this._def.concat([
       (function(a, b) { return true; }).entuple(function(a, b) { return z(); })
     ]));
   }
@@ -134,17 +208,17 @@ class PartialFunction2<A, B, Z> {
   }
 }
 
-class PartialFunction2Extensions {
+class PartialFunction2ImplExtensions {
 	public static function toPartialFunction<A, B, Z>(def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>) {
-	  return PartialFunction2.create(def);
+	  return PartialFunction2Impl.create(def);
 	}
 }
 
-class PartialFunction3<A, B, C, Z> {
+private class PartialFunction3Impl<A, B, C, Z> implements PartialFunction3<A, B, C, Z> {
   var _def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>;
   
   public static function create<A, B, C, Z>(def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>) {
-    return new PartialFunction3<A, B, C, Z>(def);
+    return new PartialFunction3Impl<A, B, C, Z>(def);
   }
   
   private function new(def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>) {
@@ -160,17 +234,19 @@ class PartialFunction3<A, B, C, Z> {
   }
   
   public function orElse(that: PartialFunction3<A, B, C, Z>): PartialFunction3<A, B, C, Z> {
-    return PartialFunction3.create(this._def.concat(that._def));
+    return PartialFunction3Impl.create(this._def.concat(
+      [Tuple2.create(that.isDefinedAt, that.call)]
+    ));
   }
   
   public function orAlways(f: A -> B -> C ->  Z): PartialFunction3<A, B, C, Z> {
-    return PartialFunction3.create(this._def.concat([
+    return PartialFunction3Impl.create(this._def.concat([
       (function(a, b, c) { return true; }).entuple(f)
     ]));
   }
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction3<A, B, C, Z> {
-    return PartialFunction3.create(this._def.concat([
+    return PartialFunction3Impl.create(this._def.concat([
       (function(a, b, c) { return true; }).entuple(function(a, b, c) { return z(); })
     ]));
   }
@@ -193,18 +269,17 @@ class PartialFunction3<A, B, C, Z> {
   }
 }
 
-class PartialFunction3Extensions {
+class PartialFunction3ImplExtensions {
 	public static function toPartialFunction<A, B, C, Z>(def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>) {
-	  return PartialFunction3.create(def);
+	  return PartialFunction3Impl.create(def);
 	}
 }
 
-
-class PartialFunction4<A, B, C, D, Z> {
+private class PartialFunction4Impl<A, B, C, D, Z> implements PartialFunction4<A, B, C, D, Z> {
   var _def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>;
   
   public static function create<A, B, C, D, Z>(def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>) {
-    return new PartialFunction4<A, B, C, D, Z>(def);
+    return new PartialFunction4Impl<A, B, C, D, Z>(def);
   }
   
   private function new(def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>) {
@@ -220,17 +295,19 @@ class PartialFunction4<A, B, C, D, Z> {
   }
   
   public function orElse(that: PartialFunction4<A, B, C, D, Z>): PartialFunction4<A, B, C, D, Z> {
-    return PartialFunction4.create(this._def.concat(that._def));
+    return PartialFunction4Impl.create(this._def.concat(
+      [Tuple2.create(that.isDefinedAt, that.call)]
+    ));
   }
   
   public function orAlways(f: A -> B -> C -> D -> Z): PartialFunction4<A, B, C, D, Z> {
-    return PartialFunction4.create(this._def.concat([
+    return PartialFunction4Impl.create(this._def.concat([
       (function(a, b, c, d) { return true; }).entuple(f)
     ]));
   }
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction4<A, B, C, D, Z> {
-    return PartialFunction4.create(this._def.concat([
+    return PartialFunction4Impl.create(this._def.concat([
       (function(a, b, c, d) { return true; }).entuple(function(a, b, c, d) { return z(); })
     ]));
   }
@@ -253,17 +330,17 @@ class PartialFunction4<A, B, C, D, Z> {
   }
 }
 
-class PartialFunction4Extensions {
+class PartialFunction4ImplExtensions {
 	public static function toPartialFunction<A, B, C, D, Z>(def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>) {
-	  return PartialFunction4.create(def);
+	  return PartialFunction4Impl.create(def);
 	}
 }
 
-class PartialFunction5<A, B, C, D, E, Z> {
+private class PartialFunction5Impl<A, B, C, D, E, Z> implements PartialFunction5<A, B, C, D, E, Z> {
   var _def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>;
   
   public static function create<A, B, C, D, E, Z>(def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>) {
-    return new PartialFunction5<A, B, C, D, E, Z>(def);
+    return new PartialFunction5Impl<A, B, C, D, E, Z>(def);
   }
   
   private function new(def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>) {
@@ -279,17 +356,19 @@ class PartialFunction5<A, B, C, D, E, Z> {
   }
   
   public function orElse(that: PartialFunction5<A, B, C, D, E, Z>): PartialFunction5<A, B, C, D, E, Z> {
-    return PartialFunction5.create(this._def.concat(that._def));
+    return PartialFunction5Impl.create(this._def.concat(
+      [Tuple2.create(that.isDefinedAt, that.call)]
+    ));
   }
   
   public function orAlways(f: A -> B -> C -> D -> E -> Z): PartialFunction5<A, B, C, D, E, Z> {
-    return PartialFunction5.create(this._def.concat([
+    return PartialFunction5Impl.create(this._def.concat([
       (function(a, b, c, d, e) { return true; }).entuple(f)
     ]));
   }
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction5<A, B, C, D, E, Z> {
-    return PartialFunction5.create(this._def.concat([
+    return PartialFunction5Impl.create(this._def.concat([
       (function(a, b, c, d, e) { return true; }).entuple(function(a, b, c, d, e) { return z(); })
     ]));
   }
@@ -312,8 +391,8 @@ class PartialFunction5<A, B, C, D, E, Z> {
   }
 }
 
-class PartialFunction5Extensions {
+class PartialFunction5ImplExtensions {
 	public static function toPartialFunction<A, B, C, D, E, Z>(def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>) {
-	  return PartialFunction5.create(def);
+	  return PartialFunction5Impl.create(def);
 	}
 }

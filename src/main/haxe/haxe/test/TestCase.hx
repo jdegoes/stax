@@ -30,11 +30,17 @@ class TestCase {
 
 	public function new() {
 	}
-
-	public function setup(): Void {
+	
+	public function beforeAll(): Void {
 	}
 
-	public function tearDown(): Void {
+	public function before(): Void {
+	}
+
+	public function after(): Void {
+	}
+	
+	public function afterAll(): Void {
 	}
 
 	public function print(v: Dynamic) {

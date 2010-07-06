@@ -14,15 +14,14 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 package haxe.test.mock;
 
 import haxe.test.TestCase;
 
-class Mock extends Dynamic {
-  private var _expects: Hash<String, Array<Dynamic>>;
+class Mock<T> extends Dynamic {
+  var _expects: Hash<String, Array<Dynamic>>;
   
-	public function new() {
+	private function new() {
 	  _expects = new Hash<String, Array<Dynamic>>();
 	}
 	
@@ -30,8 +29,8 @@ class Mock extends Dynamic {
 	  var self = this;
 	  
 	  for (i in 0...times) {
-	    add(name, function(p: P1): R {
-  	    self.remove(name);
+	    internal_add(name, function(p: P1): R {
+  	    self.internal_remove(name);
 	    
   	    return f(p);
   	  });
@@ -42,8 +41,8 @@ class Mock extends Dynamic {
     var self = this;
     
     for (i in 0...times) {
-  	  add(name, function(p1: P1, p2: P2): R {
-  	    self.remove(name);
+  	  internal_add(name, function(p1: P1, p2: P2): R {
+  	    self.internal_remove(name);
 	    
   	    return f(p1, p2);
   	  });
@@ -54,8 +53,8 @@ class Mock extends Dynamic {
     var self = this;
     
     for (i in 0...times) {
-	    add(name, function(p1: P1, p2: P2, p3: P3): R {
-  	    self.remove(name);
+	    internal_add(name, function(p1: P1, p2: P2, p3: P3): R {
+  	    self.internal_remove(name);
 	    
   	    return f(p1, p2, p3);
   	  });
@@ -66,20 +65,20 @@ class Mock extends Dynamic {
     var self = this;
     
     for (i in 0...times) {
-  	  add(name, function(p1: P1, p2: P2, p3: P3, p4: P4): R {
-  	    self.remove(name);
+  	  internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4): R {
+  	    self.internal_remove(name);
 	    
   	    return f(p1, p2, p3, p4);
   	  });
   	}
   }
   
-  public function expect5<P1, P2, P3, P4, P5, R>(name: String, f: Function4<P1, P2, P3, P4, P5, R>, times: Int = 1): Void {
+  public function expect5<P1, P2, P3, P4, P5, R>(name: String, f: Function5<P1, P2, P3, P4, P5, R>, times: Int = 1): Void {
     var self = this;
     
     for (i in 0...times) {
-  	  add(name, function(p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): R {
-  	    self.remove(name);
+  	  internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): R {
+  	    self.internal_remove(name);
 	    
   	    return f(p1, p2, p3, p4, p5);
   	  });
@@ -102,11 +101,11 @@ class Mock extends Dynamic {
     Reflect.setField(this, name, f);
   }
   
-  public function allow5<P1, P2, P3, P4, P5, R>(name: String, f: Function4<P1, P2, P3, P4, P5, R>): Void {
+  public function allow5<P1, P2, P3, P4, P5, R>(name: String, f: Function5<P1, P2, P3, P4, P5, R>): Void {
     Reflect.setField(this, name, f);
   }
     
-  public function verifyAll(): Void {
+  public function verifyAllExpectations(): Void {
     for (key in _expects.keys()) {
       var array = _expects.get(key);
       
@@ -116,11 +115,11 @@ class Mock extends Dynamic {
     }
   }
   
-  public function asTarget<T>(): T {
+  public function asTarget(): T {
     return cast this;
   }
   
-  private function add(name: String, f: Dynamic): Void {
+  private function internal_add(name: String, f: Dynamic): Void {
     var a = _expects.get(name);
     
     if (a == null) { a = []; _expects.set(name, a); }
@@ -130,7 +129,7 @@ class Mock extends Dynamic {
     Reflect.setField(this, name, f);
   }
   
-  private function remove(name: String): Void {
+  private function internal_remove(name: String): Void {
     var array = _expects.get(name);
     
     array.shift();
@@ -140,31 +139,60 @@ class Mock extends Dynamic {
     }
   }
   
-  public static function create(): Mock {
+  private static function internal_create(): Mock {
     return new Mock();
   }
 }
 
 class MockTestCase extends TestCase {
-  private var _mocks: Array<Mock>;
+  var _localMocks: Array<Mock<Dynamic>>;
+  var _globalMocks: Array<Mock<Dynamic>>;
+  var _runningTest: Bool;
   
-  override public function setup(): Void {
-    _mocks = [];
+  public function new() {
+    _runningTest = false;
   }
   
-  public function newMock(): Mock {
-    var mock = Mock.create();
+  override public function before(): Void {
+    _localMocks = [];
+    _runningTest = true;
+  }
+  
+  public function newMock<T>(): Mock<T> {
+    var mock = Mock.internal_create();
     
-    _mocks.push(mock);
+    if (_runningTest) {
+      _localMocks.push(mock);
+    }
+    else {
+      _globalMocks.push(mock);
+    }
     
     return mock;
   }
   
-  override public function tearDown(): Void {
-    for (mock in _mocks) {
-      mock.verifyAll();
-    }
+  override public function after(): Void {
+    try {
+      for (mock in _localMocks) {
+        mock.verifyAllExpectations();
+      }
     
-    _mocks = [];
+      _localMocks = [];
+      
+      _runningTest = false;
+    }
+    catch (e: Dynamic) {
+      _runningTest = false;
+      
+      throw e;
+    }
+  }
+  
+  override public function afterAll(): Void {
+    for (mock in _globalMocks) {
+      mock.verifyAllExpectations();
+    }
+  
+    _globalMocks = [];
   }
 }
