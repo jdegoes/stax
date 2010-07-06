@@ -988,6 +988,109 @@ extern interface HTMLSelectElement implements HTMLElement {
 
     public function focus(): Void;
 }
+//Tested
+extern interface HTMLCanvasElement implements HTMLElement {
+    public var width:                      Int;
+    public var height:                     Int;
+    
+    public function toDataURL(type:DOMString, args: Dynamic): DOMString;
+    
+    public function getContext(contextId: DOMString): Dynamic;
+}
+//Tested
+extern interface CanvasRenderingContext2D {
+
+    public var canvas: HTMLCanvasElement;
+
+    public function save():Void; // push state on state stack
+    public function restore():Void; // pop state stack and restore state
+    public function scale(x: Float, y: Float):Void;
+    public function rotate(angle: Float):Void;
+    public function translate(x: Float, y: Float):Void;
+    public function transform(m11: Float, m12: Float, m21: Float, m22: Float, dx: Float, dy: Float):Void;
+    public function setTransform(m11: Float, m12: Float, m21: Float, m22: Float, dx: Float, dy: Float):Void;
+    public var globalAlpha:                 Float; // (default 1.0)
+    public var globalCompositeOperation:    DOMString; // (default source-over)
+
+    public var strokeStyle:                 Dynamic; // (default black)
+    public var fillStyle:                   Dynamic; // (default black)
+    public function createLinearGradient(x0: Float, y0: Float, x1: Float, y1: Float):CanvasGradient;
+    public function createRadialGradient(x0: Float, y0: Float, r0: Float, x1: Float, y1: Float, r1: Float):CanvasGradient;
+    public function createPattern(image: HTMLImageElement, repetition: DOMString):CanvasPattern;
+
+    public var lineWidth:                   Float; // (default 1)
+    public var lineCap:                     DOMString; // "butt", "round", "square" (default "butt")
+    public var lineJoin:                    DOMString; // "round", "bevel", "miter" (default "miter")
+    public var miterLimit:                  Float; // (default 10)
+
+
+    public var shadowOffsetX:               Float; // (default 0)
+    public var shadowOffsetY:               Float; // (default 0)
+    public var shadowBlur:                  Float; // (default 0)
+    public var shadowColor:                 DOMString; // (default transparent black)
+
+
+    public function clearRect(x: Float, y: Float, w: Float, h: Float):Void;
+    public function fillRect(x: Float, y: Float, w: Float, h: Float):Void;
+    public function strokeRect(x: Float, y: Float, w: Float, h: Float):Void;
+
+
+    public function beginPath():Void;
+    public function closePath():Void;
+    public function moveTo(x: Float, y: Float):Void;
+    public function lineTo(x: Float, y: Float):Void;
+    public function quadraticCurveTo(cpx: Float, cpy: Float, x: Float, y: Float):Void;
+    public function bezierCurveTo(cp1x: Float, cp1y: Float, cp2x: Float, cp2y: Float, x: Float, y: Float):Void;
+    public function arcTo(x1: Float, y1: Float, x2: Float, y2: Float, radius: Float):Void;
+    public function rect(x: Float, y: Float, w: Float, h: Float):Void;
+    public function arc(x: Float, y: Float, radius: Float, startAngle: Float, endAngle: Float, anticlockwise: Bool):Void;
+    public function fill():Void;
+    public function stroke():Void;
+    public function clip():Void;
+    public function isPointInPath(x: Float, y: Float):Bool;
+
+
+    public function drawFocusRing(element: Element, xCaret: Float, yCaret: Float, canDrawCustom: Bool):Bool;
+
+
+    public var font:                    DOMString; // (default 10px sans-serif)
+    public var textAlign:               DOMString; // "start", "end", "left", "right", "center" (default: "start")
+    public var textBaseline:            DOMString; // "top", "hanging", "middle", "alphabetic", "ideographic", "bottom" (default: "alphabetic")
+    public function fillText(text: DOMString, x: Float, y: Float, maxWidth: Float):Void;
+    public function strokeText(text: DOMString, x: Float, y: Float, maxWidth: Float):Void;
+    public function measureText(text: DOMString):TextMetrics;
+
+    public function drawImage(image: Dynamic, sx: Float, sy: Float, sw: Float, sh: Float, dx: Float, dy: Float, dw: Float, dh: Float):Void;
+
+    public function createImageData(imagedata: Dynamic):ImageData;
+    public function getImageData(sx: Float, sy: Float, sw: Float, sh: Float):ImageData;
+    public function putImageData(imagedata: ImageData, dx: Float, dy: Float, dirtyX: Float, dirtyY: Float, dirtyWidth: Float, dirtyHeight: Float):Void;
+}
+//Tested
+extern interface CanvasGradient {
+    public function addColorStop(offset: Float, color: DOMString): Void;
+}
+
+extern interface CanvasPattern {
+
+}
+//Tested
+extern interface TextMetrics {
+    public var width            (default, null): Int;
+}
+//Tested
+extern interface ImageData {
+    public var width              (default, null): Int;
+    public var height             (default, null): Int;
+    public var data               (default, null): CanvasPixelArray;
+}
+
+extern interface CanvasPixelArray {
+  public var length(default, null): Int;
+}
+
+extern interface Octet {}
+
 //Unable to Test
 extern interface HTMLOptGroupElement implements HTMLElement {
     public var disabled (default, null):        Bool;
@@ -2003,7 +2106,7 @@ extern interface DocumentTraversal {
 extern interface TimeRanges {
   public var length         (default, null): Int;
   
-  public function float(index: Int): Float;
+  public function Float(index: Int): Float;
   
   public function end(index: Int): Float;
 }
@@ -2375,7 +2478,7 @@ class PrimitiveType {
 extern interface CSSPrimitiveValue implements CSSValue {
     public var primitiveType    (default, null): Int;
     
-    public function setFloatValue(unitType: Int, floatValue: Float): Void;
+    public function setFloatValue(unitType: Int, FloatValue: Float): Void;
     
     public function getFloatValue(unitType: Int): Float;
     
@@ -2794,6 +2897,7 @@ extern interface XMLHttpRequest implements XMLHttpRequestEventTarget {
 
 class EnvLib {
     /** Top level objects */
+    public static var canvas:    HTMLCanvasElement   = untyped __js__('document.getElementById("canvas")'); 
     public static var document:  Document = untyped __js__('document');
     public static var screen:    Screen   = untyped __js__('screen');
     public static var window:    Window   = untyped __js__('window');
@@ -2810,7 +2914,7 @@ class EnvLib {
     public static function alert(a: Dynamic): Void {
         untyped __js__('alert')(Std.string(a));
     }
-    
+        
     public static function decodeURI(uri: DOMString): DOMString {
         return untyped __js__('decodeURI(uri)');
     }

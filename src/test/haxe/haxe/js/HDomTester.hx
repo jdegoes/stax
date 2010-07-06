@@ -1920,6 +1920,108 @@ class DomTester extends TestCase {
         
         assertTrue(Type.typeof(req) != null);
     }
+    
+    public function testThatCanvasElementContainsMethodsAndProperties(): Void {
+        var canvas: HTMLCanvasElement = cast _doc.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var radGrad = ctx.createRadialGradient(10, 10, 1000, 10, 10, 10);
+        var mesText = ctx.measureText('yippee calle');
+        var imgData = ctx.getImageData(20,20,20,20);
+        var pixArray = imgData.data;
+        
+        ctx.fillStyle = "rgb(200, 0, 0)";
+        ctx.fillRect(10, 10, 55, 50);
+        
+        ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+        ctx.fillRect(30, 30, 55, 50);
+        
+
+        
+        var pixArrayProperties = [
+            "length"
+        ];
+        
+        var imgDataProperties = [
+            "width",
+            "height",
+            "data"
+        ];
+        
+        var mesTextProperties = [
+            "width"
+        ];
+        
+        var radGradMethods = [
+            "addColorStop"
+        ];
+        
+        var canvasProperties = [
+            "height",
+            "width"
+        ];
+        
+        var ctxProperties = [
+            "canvas",
+            "globalAlpha",
+            "strokeStyle",
+            "fillStyle",
+            "lineWidth",
+            "lineCap",
+            "lineJoin",
+            "miterLimit",
+            "shadowOffsetX",
+            "shadowOffsetY",
+            "shadowBlur",
+            "shadowColor",
+            "font",
+            "textAlign",
+            "textBaseline"
+        ];
+        
+        var ctxMethods = [
+            "save", 
+            "restore", 
+            "scale",
+            "rotate",
+            "translate",
+            "transform",
+            "setTransform",
+            "createLinearGradient",
+            "createRadialGradient",
+            "createPattern",
+            "clearRect",
+            "fillRect",
+            "strokeRect",
+            "beginPath",
+            "closePath",
+            "moveTo",
+            "lineTo",
+            "quadraticCurveTo",
+            "bezierCurveTo",
+            "arcTo",
+            "rect",
+            "arc",
+            "fill",
+            "stroke",
+            "clip",
+            "isPointInPath",
+            //"drawFocusRing",
+            "fillText",
+            "strokeText",
+            "measureText",
+            "drawImage",
+            "createImageData",
+            "getImageData",
+            "putImageData"
+        ];
+        verifyThatPropertiesExist(canvas, canvasProperties);
+        verifyThatPropertiesExist(ctx, ctxProperties);
+        verifyThatMethodsExist(ctx, ctxMethods);
+        verifyThatMethodsExist(radGrad, radGradMethods);
+        verifyThatPropertiesExist(mesText, mesTextProperties);
+        verifyThatPropertiesExist(imgData, imgDataProperties);
+        verifyThatPropertiesExist(pixArray, pixArrayProperties);
+    }
 
     private function alertObject(obj) {
         untyped __js__('

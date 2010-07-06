@@ -594,6 +594,32 @@ js.DomTester.prototype.testThatCSSStyleSheetHasMethodsAndProperties = function()
 	var methods = ["insertRule","deleteRule"];
 	this.verifyThatMethodsExist(styleSheet,methods,{ fileName : "HDomTester.hx", lineNumber : 1566, className : "js.DomTester", methodName : "testThatCSSStyleSheetHasMethodsAndProperties"});
 }
+js.DomTester.prototype.testThatCanvasElementContainsMethodsAndProperties = function() {
+	var canvas = this._doc.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var radGrad = ctx.createRadialGradient(10,10,1000,10,10,10);
+	var mesText = ctx.measureText("yippee calle");
+	var imgData = ctx.getImageData(20,20,20,20);
+	var pixArray = imgData.data;
+	ctx.fillStyle = "rgb(200, 0, 0)";
+	ctx.fillRect(10,10,55,50);
+	ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+	ctx.fillRect(30,30,55,50);
+	var pixArrayProperties = ["length"];
+	var imgDataProperties = ["width","height","data"];
+	var mesTextProperties = ["width"];
+	var radGradMethods = ["addColorStop"];
+	var canvasProperties = ["height","width"];
+	var ctxProperties = ["canvas","globalAlpha","strokeStyle","fillStyle","lineWidth","lineCap","lineJoin","miterLimit","shadowOffsetX","shadowOffsetY","shadowBlur","shadowColor","font","textAlign","textBaseline"];
+	var ctxMethods = ["save","restore","scale","rotate","translate","transform","setTransform","createLinearGradient","createRadialGradient","createPattern","clearRect","fillRect","strokeRect","beginPath","closePath","moveTo","lineTo","quadraticCurveTo","bezierCurveTo","arcTo","rect","arc","fill","stroke","clip","isPointInPath","fillText","strokeText","measureText","drawImage","createImageData","getImageData","putImageData"];
+	this.verifyThatPropertiesExist(canvas,canvasProperties,{ fileName : "HDomTester.hx", lineNumber : 2017, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(ctx,ctxProperties,{ fileName : "HDomTester.hx", lineNumber : 2018, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatMethodsExist(ctx,ctxMethods,{ fileName : "HDomTester.hx", lineNumber : 2019, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatMethodsExist(radGrad,radGradMethods,{ fileName : "HDomTester.hx", lineNumber : 2020, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(mesText,mesTextProperties,{ fileName : "HDomTester.hx", lineNumber : 2021, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(imgData,imgDataProperties,{ fileName : "HDomTester.hx", lineNumber : 2022, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(pixArray,pixArrayProperties,{ fileName : "HDomTester.hx", lineNumber : 2023, className : "js.DomTester", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+}
 js.DomTester.prototype.testThatCreateXMLHttpRequestWorks = function() {
 	var req = js.EnvLib.createXMLHttpRequest();
 	this.assertTrue(Type["typeof"](req) != null,{ fileName : "HDomTester.hx", lineNumber : 1921, className : "js.DomTester", methodName : "testThatCreateXMLHttpRequestWorks"});
@@ -1065,10 +1091,10 @@ js.DomTester.prototype.verifyThatMethodsExist = function(o,methods,pos) {
 			return $r;
 		}(this));
 		if(!isMethod) {
-			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1942, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
-			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1942, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 2044, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 2044, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
 		}
-		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1943, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 2045, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
 	}
 }
 js.DomTester.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
@@ -1078,10 +1104,10 @@ js.DomTester.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
 		++_g;
 		var f = Reflect.field(o,field);
 		if(f == null) {
-			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1950, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
-			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1950, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 2052, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 2052, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
 		}
-		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1951, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 2053, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
 	}
 }
 js.DomTester.prototype.xtestThatHTMLLinkElementHasProperties = function() {
@@ -2076,6 +2102,7 @@ js.States.OPENED = 1;
 js.States.HEADERS_RECEIVED = 2;
 js.States.LOADING = 3;
 js.States.DONE = 4;
+js.EnvLib.canvas = document.getElementById("canvas");
 js.EnvLib.document = document;
 js.EnvLib.screen = screen;
 js.EnvLib.window = window;
