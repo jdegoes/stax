@@ -554,6 +554,13 @@ js.DomTester.prototype.testTextNodeHasMethods = function() {
 	var methods = ["splitText","replaceWholeText","substringData","appendData","insertData","deleteData","replaceData","hasChildNodes","replaceChild","removeChild","appendChild","cloneNode","normalize","isSupported","hasAttributes","addEventListener","removeEventListener","dispatchEvent","compareDocumentPosition","isSameNode","lookupPrefix","isDefaultNamespace","lookupNamespaceURI","isEqualNode"];
 	this.verifyThatMethodsExist(textNode,methods,{ fileName : "HDomTester.hx", lineNumber : 195, className : "js.DomTester", methodName : "testTextNodeHasMethods"});
 }
+js.DomTester.prototype.testThatApplicationCacheHasPropertiesAndMethods = function() {
+	var appCache = js.EnvLib.window.applicationCache;
+	var properties = ["status"];
+	this.verifyThatPropertiesExist(appCache,properties,{ fileName : "HDomTester.hx", lineNumber : 1783, className : "js.DomTester", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
+	var methods = ["swapCache","update","dispatchEvent","addEventListener","removeEventListener"];
+	this.verifyThatMethodsExist(appCache,methods,{ fileName : "HDomTester.hx", lineNumber : 1804, className : "js.DomTester", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
+}
 js.DomTester.prototype.testThatAttrHasProperties = function() {
 	var main = this._doc.getElementById("main");
 	var attr = this._doc.createAttribute("main");
@@ -561,26 +568,39 @@ js.DomTester.prototype.testThatAttrHasProperties = function() {
 	var properties = ["name","specified","value","ownerElement"];
 	this.verifyThatPropertiesExist(attr,properties,{ fileName : "HDomTester.hx", lineNumber : 57, className : "js.DomTester", methodName : "testThatAttrHasProperties"});
 }
+js.DomTester.prototype.testThatBarPropHasProperties = function() {
+	var barProp = js.EnvLib.window.locationbar;
+	var properties = ["visible"];
+	this.verifyThatPropertiesExist(barProp,properties,{ fileName : "HDomTester.hx", lineNumber : 1770, className : "js.DomTester", methodName : "testThatBarPropHasProperties"});
+}
 js.DomTester.prototype.testThatCSSRuleHasProperties = function() {
 	var stylesheet = this._doc.styleSheets[0];
 	var rule = stylesheet.cssRules[0];
 	var properties = ["type","cssText","parentStyleSheet"];
-	this.verifyThatPropertiesExist(rule,properties,{ fileName : "HDomTester.hx", lineNumber : 1566, className : "js.DomTester", methodName : "testThatCSSRuleHasProperties"});
+	this.verifyThatPropertiesExist(rule,properties,{ fileName : "HDomTester.hx", lineNumber : 1568, className : "js.DomTester", methodName : "testThatCSSRuleHasProperties"});
 }
 js.DomTester.prototype.testThatCSSStyleDeclarationHasPropertiesAndMethods = function() {
 	var div = this._doc.getElementsByTagName("DIV")[0];
 	var cssStyleDeclaration = div.style;
 	var properties = ["length","cssText"];
-	this.verifyThatPropertiesExist(cssStyleDeclaration,properties,{ fileName : "HDomTester.hx", lineNumber : 1581, className : "js.DomTester", methodName : "testThatCSSStyleDeclarationHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(cssStyleDeclaration,properties,{ fileName : "HDomTester.hx", lineNumber : 1583, className : "js.DomTester", methodName : "testThatCSSStyleDeclarationHasPropertiesAndMethods"});
 	var methods = ["removeProperty","getPropertyPriority","getPropertyValue","getPropertyCSSValue","item","setProperty"];
-	this.verifyThatMethodsExist(cssStyleDeclaration,methods,{ fileName : "HDomTester.hx", lineNumber : 1594, className : "js.DomTester", methodName : "testThatCSSStyleDeclarationHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(cssStyleDeclaration,methods,{ fileName : "HDomTester.hx", lineNumber : 1596, className : "js.DomTester", methodName : "testThatCSSStyleDeclarationHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testThatCSSStyleSheetHasMethodsAndProperties = function() {
 	var styleSheet = this._doc.styleSheets[0];
 	var properties = ["ownerNode","cssRules","type","disabled","media"];
-	this.verifyThatPropertiesExist(styleSheet,properties,{ fileName : "HDomTester.hx", lineNumber : 1545, className : "js.DomTester", methodName : "testThatCSSStyleSheetHasMethodsAndProperties"});
+	this.verifyThatPropertiesExist(styleSheet,properties,{ fileName : "HDomTester.hx", lineNumber : 1547, className : "js.DomTester", methodName : "testThatCSSStyleSheetHasMethodsAndProperties"});
 	var methods = ["insertRule","deleteRule"];
-	this.verifyThatMethodsExist(styleSheet,methods,{ fileName : "HDomTester.hx", lineNumber : 1552, className : "js.DomTester", methodName : "testThatCSSStyleSheetHasMethodsAndProperties"});
+	this.verifyThatMethodsExist(styleSheet,methods,{ fileName : "HDomTester.hx", lineNumber : 1554, className : "js.DomTester", methodName : "testThatCSSStyleSheetHasMethodsAndProperties"});
+}
+js.DomTester.prototype.testThatDecodeURIComponentWorks = function() {
+	var encodedURI = js.EnvLib.decodeURIComponent("Thyme%20%26time%3Dagain");
+	this.assertEquals("Thyme &time=again",encodedURI,{ fileName : "HDomTester.hx", lineNumber : 1888, className : "js.DomTester", methodName : "testThatDecodeURIComponentWorks"});
+}
+js.DomTester.prototype.testThatDecodeURIWorks = function() {
+	var decodedURI = js.EnvLib.decodeURI("~!@#$%25%5E&*()%7B%7D%5B%5D=:/,;?+'%22%5C");
+	this.assertEquals("~!@#$%^&*(){}[]=:/,;?+'\"\\",decodedURI,{ fileName : "HDomTester.hx", lineNumber : 1876, className : "js.DomTester", methodName : "testThatDecodeURIWorks"});
 }
 js.DomTester.prototype.testThatDocumentHasMethods = function() {
 	var doc = this._doc;
@@ -630,12 +650,20 @@ js.DomTester.prototype.testThatElementHasProperties = function() {
 	var properties = ["tagName","scrollTop","scrollLeft","scrollWidth","scrollHeight","clientHeight","clientWidth","attributes","childElementCount","childNodes","className","dir","firstChild","firstElementChild","id","innerHTML","lang","lastChild","lastElementChild","localName","namespaceURI","nextSibling","nextElementSibling","nodeName","nodeType","offsetHeight","offsetLeft","offsetTop","offsetWidth","ownerDocument","parentNode","previousSibling","previousElementSibling","style","tabIndex","textContent","title"];
 	this.verifyThatPropertiesExist(element,properties,{ fileName : "HDomTester.hx", lineNumber : 294, className : "js.DomTester", methodName : "testThatElementHasProperties"});
 }
+js.DomTester.prototype.testThatEncodeURIComponentWorks = function() {
+	var encodedURI = js.EnvLib.encodeURIComponent("Thyme &time=again");
+	this.assertEquals("Thyme%20%26time%3Dagain",encodedURI,{ fileName : "HDomTester.hx", lineNumber : 1882, className : "js.DomTester", methodName : "testThatEncodeURIComponentWorks"});
+}
+js.DomTester.prototype.testThatEncodeURIWorks = function() {
+	var encodedURI = js.EnvLib.encodeURI("~!@#$%^&*(){}[]=:/,;?+'\"\\");
+	this.assertEquals("~!@#$%25%5E&*()%7B%7D%5B%5D=:/,;?+'%22%5C",encodedURI,{ fileName : "HDomTester.hx", lineNumber : 1870, className : "js.DomTester", methodName : "testThatEncodeURIWorks"});
+}
 js.DomTester.prototype.testThatHTMLAnchorElementHasPropertiesAndMethods = function() {
 	var anchor = this._doc.getElementsByTagName("a")[0];
 	var properties = ["accessKey","charset","coords","href","hreflang","name","rel","rev","shape","tabIndex","target","type"];
 	this.verifyThatPropertiesExist(anchor,properties,{ fileName : "HDomTester.hx", lineNumber : 1111, className : "js.DomTester", methodName : "testThatHTMLAnchorElementHasPropertiesAndMethods"});
 	var methods = ["blur","focus"];
-	this.verifyThatPropertiesExist(anchor,methods,{ fileName : "HDomTester.hx", lineNumber : 1118, className : "js.DomTester", methodName : "testThatHTMLAnchorElementHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(anchor,methods,{ fileName : "HDomTester.hx", lineNumber : 1118, className : "js.DomTester", methodName : "testThatHTMLAnchorElementHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testThatHTMLAppletElementHasProperties = function() {
 	var applet = this._doc.getElementsByTagName("applet")[0];
@@ -883,21 +911,21 @@ js.DomTester.prototype.testThatHTMLTableElementHasPropertiesAndMethods = functio
 	var properties = ["caption","tHead","tFoot","rows","tBodies","align","bgColor","border","cellPadding","cellSpacing","frame","rules","summary","width"];
 	this.verifyThatPropertiesExist(table,properties,{ fileName : "HDomTester.hx", lineNumber : 1284, className : "js.DomTester", methodName : "testThatHTMLTableElementHasPropertiesAndMethods"});
 	var methods = ["createTHead","deleteTHead","createTFoot","deleteTFoot","createCaption","deleteCaption","insertRow","deleteRow"];
-	this.verifyThatPropertiesExist(table,methods,{ fileName : "HDomTester.hx", lineNumber : 1297, className : "js.DomTester", methodName : "testThatHTMLTableElementHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(table,methods,{ fileName : "HDomTester.hx", lineNumber : 1297, className : "js.DomTester", methodName : "testThatHTMLTableElementHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testThatHTMLTableRowElementHasProperties = function() {
 	var tableRow = this._doc.getElementsByTagName("tr")[0];
 	var properties = ["rowIndex","sectionRowIndex","cells","align","bgColor","ch","chOff","vAlign"];
 	var methods = ["insertCell","deleteCell"];
-	this.verifyThatPropertiesExist(tableRow,methods,{ fileName : "HDomTester.hx", lineNumber : 1365, className : "js.DomTester", methodName : "testThatHTMLTableRowElementHasProperties"});
+	this.verifyThatMethodsExist(tableRow,methods,{ fileName : "HDomTester.hx", lineNumber : 1365, className : "js.DomTester", methodName : "testThatHTMLTableRowElementHasProperties"});
 	this.verifyThatPropertiesExist(tableRow,properties,{ fileName : "HDomTester.hx", lineNumber : 1367, className : "js.DomTester", methodName : "testThatHTMLTableRowElementHasProperties"});
 }
-js.DomTester.prototype.testThatHTMLTableSectionElementHasProperties = function() {
+js.DomTester.prototype.testThatHTMLTableSectionElementHasPropertiesAndMethods = function() {
 	var section = this._doc.getElementsByTagName("thead")[0];
 	var properties = ["align","ch","chOff","vAlign","rows"];
 	var methods = ["insertRow","deleteRow"];
-	this.verifyThatPropertiesExist(section,methods,{ fileName : "HDomTester.hx", lineNumber : 1341, className : "js.DomTester", methodName : "testThatHTMLTableSectionElementHasProperties"});
-	this.verifyThatPropertiesExist(section,properties,{ fileName : "HDomTester.hx", lineNumber : 1343, className : "js.DomTester", methodName : "testThatHTMLTableSectionElementHasProperties"});
+	this.verifyThatMethodsExist(section,methods,{ fileName : "HDomTester.hx", lineNumber : 1341, className : "js.DomTester", methodName : "testThatHTMLTableSectionElementHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(section,properties,{ fileName : "HDomTester.hx", lineNumber : 1343, className : "js.DomTester", methodName : "testThatHTMLTableSectionElementHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testThatHTMLTextAreaElementHasPropertiesAndMethods = function() {
 	var element = this._doc.getElementsByTagName("textarea")[0];
@@ -918,23 +946,49 @@ js.DomTester.prototype.testThatHTMLUListElementHasProperties = function() {
 	var properties = ["compact","type"];
 	this.verifyThatPropertiesExist(uList,properties,{ fileName : "HDomTester.hx", lineNumber : 927, className : "js.DomTester", methodName : "testThatHTMLUListElementHasProperties"});
 }
+js.DomTester.prototype.testThatHistoryHasPropertiesAndMethods = function() {
+	var history = js.EnvLib.history;
+	var properties = ["length"];
+	this.verifyThatPropertiesExist(history,properties,{ fileName : "HDomTester.hx", lineNumber : 1689, className : "js.DomTester", methodName : "testThatHistoryHasPropertiesAndMethods"});
+	var methods = ["back","forward","go"];
+	this.verifyThatMethodsExist(history,methods,{ fileName : "HDomTester.hx", lineNumber : 1699, className : "js.DomTester", methodName : "testThatHistoryHasPropertiesAndMethods"});
+}
+js.DomTester.prototype.testThatLocationHasPropertiesAndMethods = function() {
+	var location = js.EnvLib.location;
+	var properties = ["hash","host","hostname","href","pathname","port","protocol","search"];
+	this.verifyThatPropertiesExist(location,properties,{ fileName : "HDomTester.hx", lineNumber : 1719, className : "js.DomTester", methodName : "testThatLocationHasPropertiesAndMethods"});
+	var methods = ["assign","replace","reload"];
+	this.verifyThatMethodsExist(location,methods,{ fileName : "HDomTester.hx", lineNumber : 1728, className : "js.DomTester", methodName : "testThatLocationHasPropertiesAndMethods"});
+}
 js.DomTester.prototype.testThatMouseEventWorks = function() {
 	var main = this._doc.getElementById("main");
 	var win = this._doc.defaultView;
 	main.addEventListener("mousedown",function(e) {
-		haxe.Log.trace(e.screenX,{ fileName : "HDomTester.hx", lineNumber : 1515, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
+		haxe.Log.trace(e.screenX,{ fileName : "HDomTester.hx", lineNumber : 1517, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
 	},false);
 	win.addEventListener("mousedown",function(e) {
-		haxe.Log.trace(e.screenX,{ fileName : "HDomTester.hx", lineNumber : 1523, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
+		haxe.Log.trace(e.screenX,{ fileName : "HDomTester.hx", lineNumber : 1525, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
 	},false);
-	this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1528, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
+	this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1530, className : "js.DomTester", methodName : "testThatMouseEventWorks"});
 }
 js.DomTester.prototype.testThatNavigatorHasPropertiesAndMethods = function() {
 	var navigator = js.EnvLib.navigator;
-	var properties = ["appCodeName","cookieEnabled","geolocation","language","appName","appVersion","platform","userAgent","appName","appVersion","platform","plugins","onLine","productSub","product","mimeTypes","vendorSub","vendor"];
-	this.verifyThatPropertiesExist(navigator,properties,{ fileName : "HDomTester.hx", lineNumber : 1653, className : "js.DomTester", methodName : "testThatNavigatorHasPropertiesAndMethods"});
-	var methods = ["cookieEnabled"];
-	this.verifyThatPropertiesExist(navigator,methods,{ fileName : "HDomTester.hx", lineNumber : 1659, className : "js.DomTester", methodName : "testThatNavigatorHasPropertiesAndMethods"});
+	var properties = ["appCodeName","cookieEnabled","geolocation","language","appName","appVersion","platform","userAgent","appName","appVersion","platform","plugins","onLine","productSub","product","mimeTypes","vendorSub","vendor","cookieEnabled"];
+	this.verifyThatPropertiesExist(navigator,properties,{ fileName : "HDomTester.hx", lineNumber : 1654, className : "js.DomTester", methodName : "testThatNavigatorHasPropertiesAndMethods"});
+}
+js.DomTester.prototype.testThatPluginHasPropertiesAndMethods = function() {
+	var plugins = js.EnvLib.navigator.plugins[0];
+	var properties = ["length","name","filename","description"];
+	this.verifyThatPropertiesExist(plugins,properties,{ fileName : "HDomTester.hx", lineNumber : 1669, className : "js.DomTester", methodName : "testThatPluginHasPropertiesAndMethods"});
+	var methods = ["item","namedItem"];
+	this.verifyThatMethodsExist(plugins,methods,{ fileName : "HDomTester.hx", lineNumber : 1676, className : "js.DomTester", methodName : "testThatPluginHasPropertiesAndMethods"});
+}
+js.DomTester.prototype.testThatScreenHasPropertiesAndMethods = function() {
+	var screen = js.EnvLib.screen;
+	var properties = ["availHeight","availWidth","colorDepth","height","pixelDepth","width","availTop","availLeft"];
+	this.verifyThatPropertiesExist(screen,properties,{ fileName : "HDomTester.hx", lineNumber : 1749, className : "js.DomTester", methodName : "testThatScreenHasPropertiesAndMethods"});
+	var methods = [];
+	this.verifyThatMethodsExist(screen,methods,{ fileName : "HDomTester.hx", lineNumber : 1758, className : "js.DomTester", methodName : "testThatScreenHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testThatTextNodeHasProperties = function() {
 	var textNode = this._doc.createTextNode("new");
@@ -944,14 +998,21 @@ js.DomTester.prototype.testThatTextNodeHasProperties = function() {
 js.DomTester.prototype.testThatWindowBarPropContainsProperties = function() {
 	var bar = this._doc.defaultView.locationbar;
 	var properties = ["visible"];
-	this.verifyThatPropertiesExist(bar,properties,{ fileName : "HDomTester.hx", lineNumber : 1504, className : "js.DomTester", methodName : "testThatWindowBarPropContainsProperties"});
+	this.verifyThatPropertiesExist(bar,properties,{ fileName : "HDomTester.hx", lineNumber : 1506, className : "js.DomTester", methodName : "testThatWindowBarPropContainsProperties"});
 }
 js.DomTester.prototype.testThatWindowHasPropertiesAndMethods = function() {
 	var view = this._doc.defaultView;
 	var properties = ["closed","defaultStatus","frames","innerHeight","innerWidth","length","navigator","outerHeight","outerWidth","pageXOffset","pageYOffset","parent","screen","screenX","screenY","status","scrollY","top","window","self","document","name","location","history","locationbar","menubar","personalbar","scrollbars","statusbar","toolbar","applicationCache","localStorage"];
-	this.verifyThatPropertiesExist(view,properties,{ fileName : "HDomTester.hx", lineNumber : 1463, className : "js.DomTester", methodName : "testThatWindowHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(view,properties,{ fileName : "HDomTester.hx", lineNumber : 1465, className : "js.DomTester", methodName : "testThatWindowHasPropertiesAndMethods"});
 	var methods = ["moveBy","moveTo","find","resizeTo","resizeBy","atob","btoa","getComputedStyle","postMessage","getSelection","stop","close","focus","blur","open","alert","confirm","prompt","print","showModalDialog","scroll","scrollTo","scrollBy","setTimeout","clearTimeout","setInterval","clearInterval"];
-	this.verifyThatMethodsExist(view,methods,{ fileName : "HDomTester.hx", lineNumber : 1495, className : "js.DomTester", methodName : "testThatWindowHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(view,methods,{ fileName : "HDomTester.hx", lineNumber : 1497, className : "js.DomTester", methodName : "testThatWindowHasPropertiesAndMethods"});
+}
+js.DomTester.prototype.testThatXMLHTTPRequestHasPropertiesAndMethods = function() {
+	var xhr = js.EnvLib.createXMLHttpRequest();
+	var properties = ["readyState","status","statusText","responseText"];
+	this.verifyThatPropertiesExist(xhr,properties,{ fileName : "HDomTester.hx", lineNumber : 1844, className : "js.DomTester", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
+	var methods = ["open","setRequestHeader","send","abort","getResponseHeader","getAllResponseHeaders"];
+	this.verifyThatMethodsExist(xhr,methods,{ fileName : "HDomTester.hx", lineNumber : 1864, className : "js.DomTester", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
 }
 js.DomTester.prototype.testgetElementsByTagName = function() {
 	var divElements = this._doc.getElementsByTagName("DIV");
@@ -979,10 +1040,10 @@ js.DomTester.prototype.verifyThatMethodsExist = function(o,methods,pos) {
 			return $r;
 		}(this));
 		if(!isMethod) {
-			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1688, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
-			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1688, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1915, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1915, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
 		}
-		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1689, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
+		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1916, className : "js.DomTester", methodName : "verifyThatMethodsExist"});
 	}
 }
 js.DomTester.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
@@ -992,10 +1053,10 @@ js.DomTester.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
 		++_g;
 		var f = Reflect.field(o,field);
 		if(f == null) {
-			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1696, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
-			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1696, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "HDomTester.hx", lineNumber : 1923, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+			this.assertTrue(false,{ fileName : "HDomTester.hx", lineNumber : 1923, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
 		}
-		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1697, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
+		else this.assertTrue(true,{ fileName : "HDomTester.hx", lineNumber : 1924, className : "js.DomTester", methodName : "verifyThatPropertiesExist"});
 	}
 }
 js.DomTester.prototype.xtestThatHTMLLinkElementHasProperties = function() {
@@ -1224,31 +1285,31 @@ js.EnvLib.alert = function(a) {
 	alert(Std.string(a));
 }
 js.EnvLib.decodeURI = function(uri) {
-	return decodeURI(uri)();
+	return decodeURI(uri);
 }
 js.EnvLib.decodeURIComponent = function(uriComponent) {
-	return decodeURIComponent(uriComponent)();
+	return decodeURIComponent(uriComponent);
 }
 js.EnvLib.encodeURI = function(uri) {
-	return encodeURI(uri)();
+	return encodeURI(uri);
 }
 js.EnvLib.encodeURIComponent = function(uriComponent) {
-	return encodeURIComponent(uriComponent)();
+	return encodeURIComponent(uriComponent);
 }
 js.EnvLib.escape = function(string) {
-	return escape(string)();
+	return escape(string);
 }
 js.EnvLib.unescape = function(string) {
-	return unescape(string)();
+	return unescape(string);
 }
 js.EnvLib.eval = function(string) {
-	return eval(string)();
+	return eval(string);
 }
 js.EnvLib.isFinite = function(number) {
-	return isFinite(number)();
+	return isFinite(number);
 }
 js.EnvLib.isNaN = function(number) {
-	return isNaN(number)();
+	return isNaN(number);
 }
 js.EnvLib.createXMLHttpRequest = function() {
 	return (js.EnvLib.window.XMLHttpRequest?new XMLHttpRequest():(js.EnvLib.window.ActiveXObject?(function($this) {
