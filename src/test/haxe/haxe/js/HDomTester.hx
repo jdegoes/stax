@@ -376,7 +376,6 @@ class DomTester extends TestCase {
     public function testThatDocumentTypeHasProperties(): Void {
         var docType = _doc.doctype;
         
-        
         var properties = [
             "name",
             //"entities", Not fully supported
@@ -391,8 +390,7 @@ class DomTester extends TestCase {
     
     public function testThatDocumentHasProperties(): Void {
         var doc = _doc;
-        
-        
+                
         var properties = [
         "activeElement",
         "anchors",
@@ -1430,8 +1428,6 @@ class DomTester extends TestCase {
     
     public function testThatWindowHasPropertiesAndMethods(): Void {
         var view = _doc.defaultView;
-        
-        //alertObject(view);
 
         var properties = [
             "closed",
@@ -1476,8 +1472,7 @@ class DomTester extends TestCase {
             //"sessionStorage",
             //"crypto", Mozilla Specific
             //"media",
-        ];
-        
+        ];        
         
         verifyThatPropertiesExist(view, properties);
         
@@ -1583,7 +1578,6 @@ class DomTester extends TestCase {
         ];
         
         verifyThatPropertiesExist(rule, properties);
-
     }
     
     public function testThatCSSStyleDeclarationHasPropertiesAndMethods(): Void {
@@ -1611,8 +1605,8 @@ class DomTester extends TestCase {
         ];
         
         verifyThatMethodsExist(cssStyleDeclaration, methods);
-
     }
+
 /*  Firefox Returns Null when trying to retrieve this object -- Safari tested
     public function testThatCSSPrimitiveValueHasPropertiesAndMethods(): Void {
         var div: HTMLElement = cast _doc.getElementById('inlineStyleElement');
@@ -1669,8 +1663,6 @@ class DomTester extends TestCase {
         ];
         
         verifyThatPropertiesExist(navigator, properties);
-        
-        
     }
     
     public function testThatPluginHasPropertiesAndMethods(): Void {
@@ -1691,13 +1683,10 @@ class DomTester extends TestCase {
         ];
         
         verifyThatMethodsExist(plugins, methods);
-
     }
     
     public function testThatHistoryHasPropertiesAndMethods(): Void {
         var history = EnvLib.history;
-
-        //alertObject(history);
         
         var properties = [
             "length"
@@ -1714,14 +1703,11 @@ class DomTester extends TestCase {
         ];
         
         verifyThatMethodsExist(history, methods);
-
     }
     
     public function testThatLocationHasPropertiesAndMethods(): Void {
         var location = EnvLib.location;
 
-        //alertObject(location);
-        
         var properties = [
             "hash",
             "host",
@@ -1743,13 +1729,11 @@ class DomTester extends TestCase {
         ];
         
         verifyThatMethodsExist(location, methods);
-
     }
     
     public function testThatScreenHasPropertiesAndMethods(): Void {
         var screen = EnvLib.screen;
 
-        //alertObject(screen);
         var properties = [
             "availHeight",	
             "availWidth",	
@@ -1777,8 +1761,6 @@ class DomTester extends TestCase {
     
     public function testThatBarPropHasProperties(): Void {
         var barProp = EnvLib.window.locationbar;
-
-        //alertObject(barProp);
         
         var properties = [
             "visible"
@@ -1789,8 +1771,6 @@ class DomTester extends TestCase {
     
     public function testThatApplicationCacheHasPropertiesAndMethods(): Void {
         var appCache = EnvLib.window.applicationCache;
-
-        //alertObject(appCache);
         
         var properties = [
             "status",
@@ -1820,6 +1800,7 @@ class DomTester extends TestCase {
         
         verifyThatMethodsExist(appCache, methods);
     }
+
 /*  No major browser supports the UndoManager as of 7/1/2010
     public function testThatUndoManagerHasPropertiesAndMethods(): Void {
         var undoManager = EnvLib.window.applicationCache;
@@ -1846,11 +1827,10 @@ class DomTester extends TestCase {
         verifyThatMethodsExist(undoManager, methods);
     }
 */  
+
     public function testThatXMLHTTPRequestHasPropertiesAndMethods(): Void {
         var xhr = EnvLib.createXMLHttpRequest();
 
-        //alertObject(xhr);
-        
         var properties = [
             "readyState",
             "status",
@@ -1940,14 +1920,6 @@ class DomTester extends TestCase {
         
         assertTrue(Type.typeof(req) != null);
     }
-    
-    
-    
-    
-    
-// public var (\w+):\s+\w+;
-// [\t]*(\w+) *(.+|.+\. +)*
-// (\w+)? ?attribute (\w+ )*?\s*(\w+);   -- properties
 
     private function alertObject(obj) {
         untyped __js__('
