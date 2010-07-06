@@ -49,7 +49,17 @@ The Stax collections library includes three types of collections:
  * Sets, which represent unordered collections of unique elements;
  * Maps, which represent partial functions from one type (the key) to another (the value).
  
+All collection are immutable, support arbitrary element types, and are unifed via a <code>Collection</code> interface, which provides access to functionality that is universally available across all kinds of collections (principally, <code>add()</code>, <code>addAll()</code>, <code>remove()</code>, <code>removeAll()</code>, <code>size</code>,  and <code>contains()</code>).
 
+Collections implement the <code>Foldable</code> interface, so it's possible to gain access to much advanced functionality by using the <code>Foldable</code> extensions:
+
+<pre>
+<code>
+  using haxe.abstract.Foldable;
+</code>
+</pre>
+
+Collections can be created through a static factory method on the collection classes named *create*. This function typically requires access to equal, hash, or ordering type classes for the specified element type(s).
 
 h2. Stax JavaScript
 
