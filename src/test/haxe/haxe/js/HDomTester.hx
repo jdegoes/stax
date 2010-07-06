@@ -1,3 +1,20 @@
+/*
+ HaXe library written by John A. De Goes <john@socialmedia.com>
+ Contributed by Social Media Networks
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the
+ distribution.
+
+ THIS SOFTWARE IS PROVIDED BY SOCIAL MEDIA NETWORKS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SOCIAL MEDIA NETWORKS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
 package js;
 
 import js.Dom;
@@ -1887,6 +1904,44 @@ class DomTester extends TestCase {
 
         assertEquals("Thyme &time=again", encodedURI);
     }
+    
+    public function testThatEscapeWorks(): Void {
+        var escapedString = EnvLib.escape('http://www.google.com?q=quadrilateral');
+
+        assertEquals("http%3A//www.google.com%3Fq%3Dquadrilateral", escapedString);
+    }
+    
+    public function testThatUnescapeWorks(): Void {
+        var unescapedString = EnvLib.unescape('http%3A//www.google.com%3Fq%3Dquadrilateral');
+
+        assertEquals("http://www.google.com?q=quadrilateral", unescapedString);
+    }
+    
+    public function testThatIsFiniteWorks(): Void {
+        var n = 22;
+        
+        assertTrue(EnvLib.isFinite(22.2));
+        assertFalse(EnvLib.isFinite(EnvLib.JInfinity));
+    }
+    
+    public function testThatIsNaNWorks(): Void {
+        var n = 22;
+        
+        assertFalse(EnvLib.isNaN(22.2));
+        assertTrue(EnvLib.isNaN(EnvLib.JNaN));
+    }
+    
+    public function testThatJUndefinedWorks(): Void {
+        assertEquals(Std.string(Type.typeof(EnvLib.JUndefined)), 'TNull');
+    }
+    
+    public function testThatCreateXMLHttpRequestWorks(): Void {
+        var req = EnvLib.createXMLHttpRequest();
+        
+        assertTrue(Type.typeof(req) != null);
+    }
+    
+    
     
     
     
