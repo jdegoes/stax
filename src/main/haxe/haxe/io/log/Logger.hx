@@ -17,9 +17,9 @@
 package haxe.io.log;
 
 import Prelude;
-using Prelude;
-
 import haxe.PosInfos;
+
+using Prelude;
 
 typedef LogHandler = LogLevel -> String -> PosInfos -> Void
 
