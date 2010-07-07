@@ -49,9 +49,9 @@ The Stax collections library, contained in the package _haxe.data.collections_, 
  * Sets (_haxe.data.collections.Set_), which represent unordered collections of unique elements;
  * Maps (_haxe.data.collections.Map_), which represent partial functions from one type (the key) to another (the value).
  
-All collection are immutable, support arbitrary element types, and are unifed via a <code>Collection</code> interface, which provides access to functionality that is universally available across all kinds of collections (principally, <code>add()</code>, <code>addAll()</code>, <code>remove()</code>, <code>removeAll()</code>, <code>size</code>,  and <code>contains()</code>).
+All collection are immutable, support arbitrary element types, and are unifed via a <code>Collection</code> interface, which provides access to functionality that is universally available across all kinds of collections (<code>add()</code>, <code>addAll()</code>, <code>remove()</code>, <code>removeAll()</code>, <code>size</code>,  <code>contains()</code>, and <code>iterator()</code>).
 
-Collections implement the <code>Foldable</code> interface, so it's possible to gain access to much advanced functionality by using the <code>Foldable</code> extensions:
+Collections implement the <code>Foldable</code> interface, so it's possible to gain access to more advanced functionality by using the <code>Foldable</code> extensions:
 
 <pre>
 <code>
