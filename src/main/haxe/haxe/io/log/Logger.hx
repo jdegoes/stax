@@ -108,13 +108,13 @@ class LogHandlers {
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
     (function(text, console: Dynamic) {
       switch (level) {
-        case All: if (console.debug) console.debug(text);
-        case Debug: if (console.debug) console.debug(text);
-        case Info: if (console.info) console.info(text);
-        case Warning: if (console.warn) console.warn(text);
-        case Error: if (console.error) console.error(text);
-        case Fatal: if (console.error) console.error(text);
-        case None: if (console.error) console.error(text);
+        case All: if (console.debug != null) console.debug(text);
+        case Debug: if (console.debug != null) console.debug(text);
+        case Info: if (console.info != null) console.info(text);
+        case Warning: if (console.warn != null) console.warn(text);
+        case Error: if (console.error != null) console.error(text);
+        case Fatal: if (console.error != null) console.error(text);
+        case None: if (console.error != null) console.error(text);
       }
     })(format(text, p), untyped __js__('console'));
   }
