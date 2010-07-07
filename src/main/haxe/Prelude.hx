@@ -14,7 +14,6 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 using Lambda;
 
 typedef AnyRef = {}
@@ -95,7 +94,7 @@ class DynamicExtensions {
   public static function into<A, B>(a: A, f: A -> B): B {
     return f(a);
   }
-  public static function isInstanceOf(o: Dynamic, c: Dynamic): Bool {
+  public static inline function isInstanceOf(o: Dynamic, c: Dynamic): Bool {
     return Std.is(o, c);
   }
   public static function entuple<A, B>(a: A, b: B): Tuple2<A, B> {

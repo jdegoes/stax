@@ -62,6 +62,26 @@ class FoldableExtensions {
     });
   }
   
+  public static function partitionWhile<A, B>(foldable: Foldable<A, B>, f: B -> Bool): Tuple2<A, A> {
+    var partitioning = true;
+    
+    return foldable.foldl(Tuple2.create(foldable.empty(), foldable.empty()), function(a, b) {
+      return if (partitioning) {
+        if (f(b)) {
+          Tuple2.create(foldable.append(a._1, b), a._2);
+        }
+        else {
+          partitioning = false;
+          
+          Tuple2.create(a._1, foldable.append(a._2, b));
+        }
+      }
+      else {
+        Tuple2.create(a._1, foldable.append(a._2, b));
+      }
+    });
+  }
+  
   public static function map<A, B>(foldable: Foldable<A, B>, f: B -> B): A {
     return foldable.foldl(foldable.empty(), function(a, b) {
       return foldable.append(a, f(b));
