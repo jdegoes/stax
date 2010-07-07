@@ -26,7 +26,7 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>0</integer>
 				<key>line</key>
 				<integer>59</integer>
 			</dict>
@@ -175,20 +175,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>src/main/haxe/haxe/text/json/JValueBehavior.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>26</integer>
-		</dict>
 		<key>src/main/haxe/haxe/text/json/Json.hx</key>
 		<dict>
 			<key>caret</key>
@@ -261,7 +247,6 @@
 		<string>src/test/haxe/haxe/text/json/JsonTestCase.hx</string>
 		<string>src/main/haxe/haxe/text/json/Json.hx</string>
 		<string>src/main/haxe/haxe/text/json/JValue.hx</string>
-		<string>src/main/haxe/haxe/text/json/JValueBehavior.hx</string>
 		<string>src/test/haxe/PreludeTest.hx</string>
 		<string>src/test/haxe/TestSuite.hx</string>
 	</array>

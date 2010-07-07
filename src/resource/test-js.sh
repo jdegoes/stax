@@ -1,2 +1,2 @@
-haxe -js dom.js -cp ../main/ -cp ../main/haxe/haxe -cp ../test -main haxe.HDomTester
+haxe -js dom.js -cp ../main/ -cp ../main/haxe -cp ../test -main haxe.DomTester
 open index.html
