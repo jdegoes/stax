@@ -1493,20 +1493,22 @@ haxe.test.TestCase.prototype.after = function() {
 haxe.test.TestCase.prototype.afterAll = function() {
 	null;
 }
-haxe.test.TestCase.prototype.assertEquals = function(expected,actual,c) {
+haxe.test.TestCase.prototype.assertEquals = function(expected,actual,equal,c) {
+	equal = ((equal == null?DynamicExtensions.EqualT():equal));
 	this.currentTest.done = true;
-	if(actual != expected) {
+	if(equal.notEqual(actual,expected)) {
 		this.currentTest.success = false;
 		this.currentTest.error = ((("Expected '" + expected) + "' but was '") + actual) + "'";
 		this.currentTest.posInfos = c;
 		throw this.currentTest;
 	}
 }
-haxe.test.TestCase.prototype.assertFalse = function(b,c) {
+haxe.test.TestCase.prototype.assertFalse = function(b,msg,c) {
+	if(msg == null) msg = "Expected false but was true";
 	this.currentTest.done = true;
 	if(b == true) {
 		this.currentTest.success = false;
-		this.currentTest.error = "Expected false but was true";
+		this.currentTest.error = msg;
 		this.currentTest.posInfos = c;
 		throw this.currentTest;
 	}
@@ -1529,11 +1531,12 @@ haxe.test.TestCase.prototype.assertNull = function(a,c) {
 		throw this.currentTest;
 	}
 }
-haxe.test.TestCase.prototype.assertTrue = function(b,c) {
+haxe.test.TestCase.prototype.assertTrue = function(b,msg,c) {
+	if(msg == null) msg = "Expected true but was false";
 	this.currentTest.done = true;
 	if(b == false) {
 		this.currentTest.success = false;
-		this.currentTest.error = "Expected true but was false";
+		this.currentTest.error = msg;
 		this.currentTest.posInfos = c;
 		throw this.currentTest;
 	}
@@ -1545,6 +1548,23 @@ haxe.test.TestCase.prototype.beforeAll = function() {
 	null;
 }
 haxe.test.TestCase.prototype.currentTest = null;
+haxe.test.TestCase.prototype.expectException = function(f,msg,c) {
+	if(msg == null) msg = "Expected an exception, but nothing was thrown";
+	this.currentTest.done = true;
+	try {
+		f();
+		this.currentTest.success = false;
+		this.currentTest.error = msg;
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+	catch( $e4 ) {
+		{
+			var e = $e4;
+			null;
+		}
+	}
+}
 haxe.test.TestCase.prototype.print = function(v) {
 	this.currentTest.output += Std.string(v);
 }
@@ -1676,8 +1696,8 @@ haxe.data.collections.MapTestCase.prototype.testAddingSameKeyButDifferentValueUp
 		while(_g < 100) {
 			var i = _g++;
 			m = m.set(i,"bar");
-			this.assertEquals("bar",OptionExtensions.get(m.get(i)),{ fileName : "MapTestCase.hx", lineNumber : 110, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeyButDifferentValueUpdatesMap"});
-			this.assertEquals(100,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 111, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeyButDifferentValueUpdatesMap"});
+			this.assertEquals("bar",OptionExtensions.get(m.get(i)),null,{ fileName : "MapTestCase.hx", lineNumber : 110, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeyButDifferentValueUpdatesMap"});
+			this.assertEquals(100,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 111, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeyButDifferentValueUpdatesMap"});
 		}
 	}
 }
@@ -1689,8 +1709,8 @@ haxe.data.collections.MapTestCase.prototype.testAddingSameKeysAndSameValueDoesNo
 			var i = _g++;
 			var oldM = m;
 			m = m.set(i,"foo");
-			this.assertEquals(oldM,m,{ fileName : "MapTestCase.hx", lineNumber : 99, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeysAndSameValueDoesNotChangeMap"});
-			this.assertEquals(100,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 100, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeysAndSameValueDoesNotChangeMap"});
+			this.assertEquals(oldM,m,null,{ fileName : "MapTestCase.hx", lineNumber : 99, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeysAndSameValueDoesNotChangeMap"});
+			this.assertEquals(100,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 100, className : "haxe.data.collections.MapTestCase", methodName : "testAddingSameKeysAndSameValueDoesNotChangeMap"});
 		}
 	}
 }
@@ -1698,22 +1718,22 @@ haxe.data.collections.MapTestCase.prototype.testCanIterateThroughKeys = function
 	var m = this.defaultMap();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it4 = m.keys().iterator();
-	while( $it4.hasNext() ) { var k = $it4.next();
+	{ var $it5 = m.keys().iterator();
+	while( $it5.hasNext() ) { var k = $it5.next();
 	{
 		count -= k;
 		++iterated;
 	}
 	}}
-	this.assertEquals(100,iterated,{ fileName : "MapTestCase.hx", lineNumber : 127, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughKeys"});
-	this.assertEquals(0,count,{ fileName : "MapTestCase.hx", lineNumber : 128, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughKeys"});
+	this.assertEquals(100,iterated,null,{ fileName : "MapTestCase.hx", lineNumber : 127, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughKeys"});
+	this.assertEquals(0,count,null,{ fileName : "MapTestCase.hx", lineNumber : 128, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughKeys"});
 }
 haxe.data.collections.MapTestCase.prototype.testCanIterateThroughValues = function() {
 	var m = this.defaultMap();
-	{ var $it5 = m.values().iterator();
-	while( $it5.hasNext() ) { var v = $it5.next();
+	{ var $it6 = m.values().iterator();
+	while( $it6.hasNext() ) { var v = $it6.next();
 	{
-		this.assertEquals("foo",v,{ fileName : "MapTestCase.hx", lineNumber : 135, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughValues"});
+		this.assertEquals("foo",v,null,{ fileName : "MapTestCase.hx", lineNumber : 135, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughValues"});
 	}
 	}}
 }
@@ -1725,7 +1745,7 @@ haxe.data.collections.MapTestCase.prototype.testCanRetrieveValuesForKeys = funct
 			var i = _g++;
 			this.assertEquals("foo",OptionExtensions.getOrElse(m.get(i),function() {
 				return "bar";
-			}),{ fileName : "MapTestCase.hx", lineNumber : 53, className : "haxe.data.collections.MapTestCase", methodName : "testCanRetrieveValuesForKeys"});
+			}),null,{ fileName : "MapTestCase.hx", lineNumber : 53, className : "haxe.data.collections.MapTestCase", methodName : "testCanRetrieveValuesForKeys"});
 		}
 	}
 }
@@ -1735,9 +1755,9 @@ haxe.data.collections.MapTestCase.prototype.testContainsKeys = function() {
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertFalse(m.containsKey(i),{ fileName : "MapTestCase.hx", lineNumber : 83, className : "haxe.data.collections.MapTestCase", methodName : "testContainsKeys"});
+			this.assertFalse(m.containsKey(i),null,{ fileName : "MapTestCase.hx", lineNumber : 83, className : "haxe.data.collections.MapTestCase", methodName : "testContainsKeys"});
 			m = m.set(i,"foo");
-			this.assertTrue(m.containsKey(i),{ fileName : "MapTestCase.hx", lineNumber : 87, className : "haxe.data.collections.MapTestCase", methodName : "testContainsKeys"});
+			this.assertTrue(m.containsKey(i),null,{ fileName : "MapTestCase.hx", lineNumber : 87, className : "haxe.data.collections.MapTestCase", methodName : "testContainsKeys"});
 		}
 	}
 }
@@ -1745,7 +1765,7 @@ haxe.data.collections.MapTestCase.prototype.testFilter = function() {
 	var m = haxe.abstract.FoldableExtensions.filter(this.defaultMap(),function(t) {
 		return t._1 < 50;
 	});
-	this.assertEquals(50,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 142, className : "haxe.data.collections.MapTestCase", methodName : "testFilter"});
+	this.assertEquals(50,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 142, className : "haxe.data.collections.MapTestCase", methodName : "testFilter"});
 }
 haxe.data.collections.MapTestCase.prototype.testLoadNeverExceedsMax = function() {
 	var m = this.map();
@@ -1754,7 +1774,7 @@ haxe.data.collections.MapTestCase.prototype.testLoadNeverExceedsMax = function()
 		while(_g < 100) {
 			var i = _g++;
 			m = m.set(i,"foo");
-			this.assertTrue(m.load() <= haxe.data.collections.Map.MaxLoad,{ fileName : "MapTestCase.hx", lineNumber : 75, className : "haxe.data.collections.MapTestCase", methodName : "testLoadNeverExceedsMax"});
+			this.assertTrue(m.load() <= haxe.data.collections.Map.MaxLoad,null,{ fileName : "MapTestCase.hx", lineNumber : 75, className : "haxe.data.collections.MapTestCase", methodName : "testLoadNeverExceedsMax"});
 		}
 	}
 }
@@ -1767,7 +1787,7 @@ haxe.data.collections.MapTestCase.prototype.testSizeGrowsWhenAddingDuplicateKeys
 			m = m.set(0,"foo");
 		}
 	}
-	this.assertEquals(1,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 46, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingDuplicateKeys"});
+	this.assertEquals(1,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 46, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingDuplicateKeys"});
 }
 haxe.data.collections.MapTestCase.prototype.testSizeGrowsWhenAddingUniqueKeys = function() {
 	var m = this.map();
@@ -1775,11 +1795,11 @@ haxe.data.collections.MapTestCase.prototype.testSizeGrowsWhenAddingUniqueKeys = 
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(i,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 33, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingUniqueKeys"});
+			this.assertEquals(i,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 33, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingUniqueKeys"});
 			m = m.set(i,"foo");
 		}
 	}
-	this.assertEquals(100,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 38, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingUniqueKeys"});
+	this.assertEquals(100,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 38, className : "haxe.data.collections.MapTestCase", methodName : "testSizeGrowsWhenAddingUniqueKeys"});
 }
 haxe.data.collections.MapTestCase.prototype.testSizeShrinksWhenRemovingKeys = function() {
 	var m = this.defaultMap();
@@ -1787,11 +1807,11 @@ haxe.data.collections.MapTestCase.prototype.testSizeShrinksWhenRemovingKeys = fu
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(100 - i,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 61, className : "haxe.data.collections.MapTestCase", methodName : "testSizeShrinksWhenRemovingKeys"});
+			this.assertEquals(100 - i,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 61, className : "haxe.data.collections.MapTestCase", methodName : "testSizeShrinksWhenRemovingKeys"});
 			m = m.removeByKey(i);
 		}
 	}
-	this.assertEquals(0,m.getSize(),{ fileName : "MapTestCase.hx", lineNumber : 66, className : "haxe.data.collections.MapTestCase", methodName : "testSizeShrinksWhenRemovingKeys"});
+	this.assertEquals(0,m.getSize(),null,{ fileName : "MapTestCase.hx", lineNumber : 66, className : "haxe.data.collections.MapTestCase", methodName : "testSizeShrinksWhenRemovingKeys"});
 }
 haxe.data.collections.MapTestCase.prototype.__class__ = haxe.data.collections.MapTestCase;
 haxe.text.json.JsonTestCase = function(p) { if( p === $_ ) return; {
@@ -1804,7 +1824,7 @@ haxe.text.json.JsonTestCase.prototype.assertIdentity = function(x) {
 	this.assertLooksEqual(haxe.text.json.Json.decode(x),haxe.text.json.Json.decode(haxe.text.json.Json.encode(haxe.text.json.Json.decode(x))));
 }
 haxe.text.json.JsonTestCase.prototype.assertLooksEqual = function(x,y) {
-	this.assertEquals(Std.string(x),Std.string(y),{ fileName : "JsonTestCase.hx", lineNumber : 36, className : "haxe.text.json.JsonTestCase", methodName : "assertLooksEqual"});
+	this.assertEquals(Std.string(x),Std.string(y),null,{ fileName : "JsonTestCase.hx", lineNumber : 36, className : "haxe.text.json.JsonTestCase", methodName : "assertLooksEqual"});
 }
 haxe.text.json.JsonTestCase.prototype.testArrayDecodings = function() {
 	this.assertLooksEqual(haxe.text.json.Json.fromObject([]),haxe.text.json.Json.decode("[]"));
@@ -1892,15 +1912,15 @@ haxe.text.json.JsonTestCase.prototype.testLiteralDecodings = function() {
 	this.assertLooksEqual(haxe.text.json.Json.decode("\"\\\"\\\" is equal to \\\"\\\", but isn't equal to \\\"\\n\\\"\""),haxe.text.json.JValue.JString("\"\" is equal to \"\", but isn't equal to \"\n\""));
 }
 haxe.text.json.JsonTestCase.prototype.testLiteralEncodings = function() {
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("foo")),"\"foo\"",{ fileName : "JsonTestCase.hx", lineNumber : 57, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("\"foo\"")),"\"\\\"foo\\\"\"",{ fileName : "JsonTestCase.hx", lineNumber : 58, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("foo\n")),"\"foo\\n\"",{ fileName : "JsonTestCase.hx", lineNumber : 59, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("\\foo\\")),"\"\\\\foo\\\\\"",{ fileName : "JsonTestCase.hx", lineNumber : 60, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNumber(3)),"3",{ fileName : "JsonTestCase.hx", lineNumber : 62, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNumber(1.01)),"1.01",{ fileName : "JsonTestCase.hx", lineNumber : 63, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JBool(true)),"true",{ fileName : "JsonTestCase.hx", lineNumber : 65, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JBool(false)),"false",{ fileName : "JsonTestCase.hx", lineNumber : 66, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
-	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNull),"null",{ fileName : "JsonTestCase.hx", lineNumber : 67, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("foo")),"\"foo\"",null,{ fileName : "JsonTestCase.hx", lineNumber : 57, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("\"foo\"")),"\"\\\"foo\\\"\"",null,{ fileName : "JsonTestCase.hx", lineNumber : 58, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("foo\n")),"\"foo\\n\"",null,{ fileName : "JsonTestCase.hx", lineNumber : 59, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JString("\\foo\\")),"\"\\\\foo\\\\\"",null,{ fileName : "JsonTestCase.hx", lineNumber : 60, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNumber(3)),"3",null,{ fileName : "JsonTestCase.hx", lineNumber : 62, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNumber(1.01)),"1.01",null,{ fileName : "JsonTestCase.hx", lineNumber : 63, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JBool(true)),"true",null,{ fileName : "JsonTestCase.hx", lineNumber : 65, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JBool(false)),"false",null,{ fileName : "JsonTestCase.hx", lineNumber : 66, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
+	this.assertEquals(haxe.text.json.Json.encode(haxe.text.json.JValue.JNull),"null",null,{ fileName : "JsonTestCase.hx", lineNumber : 67, className : "haxe.text.json.JsonTestCase", methodName : "testLiteralEncodings"});
 }
 haxe.text.json.JsonTestCase.prototype.testLiteralIdentities = function() {
 	this.assertIdentity("\"\"");
@@ -1949,9 +1969,9 @@ haxe.text.json.JsonTestCase.prototype.testObjectFold = function() {
 			try {
 				$r = [haxe.text.json.JValueExtensions.extractKey(x)];
 			}
-			catch( $e6 ) {
+			catch( $e7 ) {
 				{
-					var e = $e6;
+					var e = $e7;
 					$r = [];
 				}
 			}
@@ -1964,9 +1984,9 @@ haxe.text.json.JsonTestCase.prototype.testObjectFold = function() {
 			try {
 				$r = [haxe.text.json.JValueExtensions.extractKey(x)];
 			}
-			catch( $e7 ) {
+			catch( $e8 ) {
 				{
-					var e = $e7;
+					var e = $e8;
 					$r = [];
 				}
 			}
@@ -2011,9 +2031,9 @@ haxe.text.json.JsonTestCase.prototype.testRandomValues = function() {
 	}
 }
 haxe.text.json.JsonTestCase.prototype.testSanityOfParseInt = function() {
-	this.assertEquals(Std.parseInt("0x30"),48,{ fileName : "JsonTestCase.hx", lineNumber : 43, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
-	this.assertEquals(Std.parseInt("0xD8A6"),55462,{ fileName : "JsonTestCase.hx", lineNumber : 44, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
-	this.assertEquals(Std.parseInt("55462"),55462,{ fileName : "JsonTestCase.hx", lineNumber : 45, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
+	this.assertEquals(Std.parseInt("0x30"),48,null,{ fileName : "JsonTestCase.hx", lineNumber : 43, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
+	this.assertEquals(Std.parseInt("0xD8A6"),55462,null,{ fileName : "JsonTestCase.hx", lineNumber : 44, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
+	this.assertEquals(Std.parseInt("55462"),55462,null,{ fileName : "JsonTestCase.hx", lineNumber : 45, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
 }
 haxe.text.json.JsonTestCase.prototype.__class__ = haxe.text.json.JsonTestCase;
 Reflect = function() { }
@@ -2021,8 +2041,8 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it8 = arr.iterator();
-	while( $it8.hasNext() ) { var t = $it8.next();
+	{ var $it9 = arr.iterator();
+	while( $it9.hasNext() ) { var t = $it9.next();
 	if(t == field) return true;
 	}}
 	return false;
@@ -2032,9 +2052,9 @@ Reflect.field = function(o,field) {
 	try {
 		v = o[field];
 	}
-	catch( $e9 ) {
+	catch( $e10 ) {
 		{
-			var e = $e9;
+			var e = $e10;
 			null;
 		}
 	}
@@ -2061,9 +2081,9 @@ Reflect.fields = function(o) {
 		try {
 			t = o.__proto__;
 		}
-		catch( $e10 ) {
+		catch( $e11 ) {
 			{
-				var e = $e10;
+				var e = $e11;
 				{
 					t = null;
 				}
@@ -2505,8 +2525,8 @@ haxe.data.collections.SetTestCase.prototype.testAddingSameElementDoesNotChangeSe
 			var i = _g++;
 			var oldM = s;
 			s = s.add(i);
-			this.assertEquals(oldM,s,{ fileName : "SetTestCase.hx", lineNumber : 81, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
-			this.assertEquals(100,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 82, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
+			this.assertEquals(oldM,s,null,{ fileName : "SetTestCase.hx", lineNumber : 81, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
+			this.assertEquals(100,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 82, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
 		}
 	}
 }
@@ -2514,15 +2534,15 @@ haxe.data.collections.SetTestCase.prototype.testCanIterateThroughElements = func
 	var s = this.defaultSet();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it11 = s.iterator();
-	while( $it11.hasNext() ) { var k = $it11.next();
+	{ var $it12 = s.iterator();
+	while( $it12.hasNext() ) { var k = $it12.next();
 	{
 		count -= k;
 		++iterated;
 	}
 	}}
-	this.assertEquals(100,iterated,{ fileName : "SetTestCase.hx", lineNumber : 98, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
-	this.assertEquals(0,count,{ fileName : "SetTestCase.hx", lineNumber : 99, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
+	this.assertEquals(100,iterated,null,{ fileName : "SetTestCase.hx", lineNumber : 98, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
+	this.assertEquals(0,count,null,{ fileName : "SetTestCase.hx", lineNumber : 99, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
 }
 haxe.data.collections.SetTestCase.prototype.testContainsElements = function() {
 	var s = this.set();
@@ -2530,9 +2550,9 @@ haxe.data.collections.SetTestCase.prototype.testContainsElements = function() {
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertFalse(s.contains(i),{ fileName : "SetTestCase.hx", lineNumber : 65, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
+			this.assertFalse(s.contains(i),null,{ fileName : "SetTestCase.hx", lineNumber : 65, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
 			s = s.add(i);
-			this.assertTrue(s.contains(i),{ fileName : "SetTestCase.hx", lineNumber : 69, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
+			this.assertTrue(s.contains(i),null,{ fileName : "SetTestCase.hx", lineNumber : 69, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
 		}
 	}
 }
@@ -2540,7 +2560,7 @@ haxe.data.collections.SetTestCase.prototype.testFilter = function() {
 	var s = haxe.abstract.FoldableExtensions.filter(this.defaultSet(),function(e) {
 		return e < 50;
 	});
-	this.assertEquals(50,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 105, className : "haxe.data.collections.SetTestCase", methodName : "testFilter"});
+	this.assertEquals(50,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 105, className : "haxe.data.collections.SetTestCase", methodName : "testFilter"});
 }
 haxe.data.collections.SetTestCase.prototype.testSizeDoesNotGrowWhenAddingDuplicateElements = function() {
 	var s = this.set().add(0);
@@ -2551,7 +2571,7 @@ haxe.data.collections.SetTestCase.prototype.testSizeDoesNotGrowWhenAddingDuplica
 			s = s.add(0);
 		}
 	}
-	this.assertEquals(1,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 46, className : "haxe.data.collections.SetTestCase", methodName : "testSizeDoesNotGrowWhenAddingDuplicateElements"});
+	this.assertEquals(1,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 46, className : "haxe.data.collections.SetTestCase", methodName : "testSizeDoesNotGrowWhenAddingDuplicateElements"});
 }
 haxe.data.collections.SetTestCase.prototype.testSizeGrowsWhenAddingUniqueElements = function() {
 	var s = this.set();
@@ -2559,11 +2579,11 @@ haxe.data.collections.SetTestCase.prototype.testSizeGrowsWhenAddingUniqueElement
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(i,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 33, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+			this.assertEquals(i,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 33, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
 			s = s.add(i);
 		}
 	}
-	this.assertEquals(100,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 38, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+	this.assertEquals(100,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 38, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
 }
 haxe.data.collections.SetTestCase.prototype.testSizeShrinksWhenRemovingElements = function() {
 	var s = this.defaultSet();
@@ -2571,11 +2591,11 @@ haxe.data.collections.SetTestCase.prototype.testSizeShrinksWhenRemovingElements 
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(100 - i,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 53, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+			this.assertEquals(100 - i,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 53, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
 			s = s.remove(i);
 		}
 	}
-	this.assertEquals(0,s.getSize(),{ fileName : "SetTestCase.hx", lineNumber : 58, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+	this.assertEquals(0,s.getSize(),null,{ fileName : "SetTestCase.hx", lineNumber : 58, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
 }
 haxe.data.collections.SetTestCase.prototype.__class__ = haxe.data.collections.SetTestCase;
 haxe.abstract.Foldable = function() { }
@@ -2642,8 +2662,8 @@ haxe.data.collections.List.prototype.add = function(t) {
 }
 haxe.data.collections.List.prototype.addAll = function(i) {
 	var a = [];
-	{ var $it12 = i.iterator();
-	while( $it12.hasNext() ) { var e = $it12.next();
+	{ var $it13 = i.iterator();
+	while( $it13.hasNext() ) { var e = $it13.next();
 	a.push(e);
 	}}
 	a.reverse();
@@ -2771,8 +2791,8 @@ haxe.data.collections.List.prototype.remove = function(t) {
 }
 haxe.data.collections.List.prototype.removeAll = function(i) {
 	var r = this;
-	{ var $it13 = i.iterator();
-	while( $it13.hasNext() ) { var e = $it13.next();
+	{ var $it14 = i.iterator();
+	while( $it14.hasNext() ) { var e = $it14.next();
 	r = r.remove(e);
 	}}
 	return r;
@@ -2907,7 +2927,7 @@ haxe.io.log.LoggerTestCase.prototype.doTest = function(handler,f) {
 	});
 	f(haxe.io.log.Logger.get());
 	haxe.io.log.Logger.defaultHandlers.pop();
-	this.assertTrue(invoked,{ fileName : "LoggerTestCase.hx", lineNumber : 136, className : "haxe.io.log.LoggerTestCase", methodName : "doTest"});
+	this.assertTrue(invoked,null,{ fileName : "LoggerTestCase.hx", lineNumber : 136, className : "haxe.io.log.LoggerTestCase", methodName : "doTest"});
 }
 haxe.io.log.LoggerTestCase.prototype.testLogDebug = function() {
 	haxe.io.log.Logger.defaultLevel = haxe.io.log.LogLevel.Debug;
@@ -2917,10 +2937,10 @@ haxe.io.log.LoggerTestCase.prototype.testLogDebug = function() {
 		switch( $e[1] ) {
 		case 1:
 		{
-			self.assertEquals("hi",text,{ fileName : "LoggerTestCase.hx", lineNumber : 36, className : "haxe.io.log.LoggerTestCase", methodName : "testLogDebug"});
+			self.assertEquals("hi",text,null,{ fileName : "LoggerTestCase.hx", lineNumber : 36, className : "haxe.io.log.LoggerTestCase", methodName : "testLogDebug"});
 		}break;
 		default:{
-			self.assertTrue(false,{ fileName : "LoggerTestCase.hx", lineNumber : 38, className : "haxe.io.log.LoggerTestCase", methodName : "testLogDebug"});
+			self.assertTrue(false,null,{ fileName : "LoggerTestCase.hx", lineNumber : 38, className : "haxe.io.log.LoggerTestCase", methodName : "testLogDebug"});
 		}break;
 		}
 	},function(logger) {
@@ -2935,10 +2955,10 @@ haxe.io.log.LoggerTestCase.prototype.testLogError = function() {
 		switch( $e[1] ) {
 		case 4:
 		{
-			self.assertEquals("hi",text,{ fileName : "LoggerTestCase.hx", lineNumber : 95, className : "haxe.io.log.LoggerTestCase", methodName : "testLogError"});
+			self.assertEquals("hi",text,null,{ fileName : "LoggerTestCase.hx", lineNumber : 95, className : "haxe.io.log.LoggerTestCase", methodName : "testLogError"});
 		}break;
 		default:{
-			self.assertTrue(false,{ fileName : "LoggerTestCase.hx", lineNumber : 97, className : "haxe.io.log.LoggerTestCase", methodName : "testLogError"});
+			self.assertTrue(false,null,{ fileName : "LoggerTestCase.hx", lineNumber : 97, className : "haxe.io.log.LoggerTestCase", methodName : "testLogError"});
 		}break;
 		}
 	},function(logger) {
@@ -2954,10 +2974,10 @@ haxe.io.log.LoggerTestCase.prototype.testLogFatal = function() {
 		switch( $e[1] ) {
 		case 5:
 		{
-			self.assertEquals("hi",text,{ fileName : "LoggerTestCase.hx", lineNumber : 115, className : "haxe.io.log.LoggerTestCase", methodName : "testLogFatal"});
+			self.assertEquals("hi",text,null,{ fileName : "LoggerTestCase.hx", lineNumber : 115, className : "haxe.io.log.LoggerTestCase", methodName : "testLogFatal"});
 		}break;
 		default:{
-			self.assertTrue(false,{ fileName : "LoggerTestCase.hx", lineNumber : 117, className : "haxe.io.log.LoggerTestCase", methodName : "testLogFatal"});
+			self.assertTrue(false,null,{ fileName : "LoggerTestCase.hx", lineNumber : 117, className : "haxe.io.log.LoggerTestCase", methodName : "testLogFatal"});
 		}break;
 		}
 	},function(logger) {
@@ -2973,10 +2993,10 @@ haxe.io.log.LoggerTestCase.prototype.testLogInfo = function() {
 		switch( $e[1] ) {
 		case 2:
 		{
-			self.assertEquals("hi",text,{ fileName : "LoggerTestCase.hx", lineNumber : 55, className : "haxe.io.log.LoggerTestCase", methodName : "testLogInfo"});
+			self.assertEquals("hi",text,null,{ fileName : "LoggerTestCase.hx", lineNumber : 55, className : "haxe.io.log.LoggerTestCase", methodName : "testLogInfo"});
 		}break;
 		default:{
-			self.assertTrue(false,{ fileName : "LoggerTestCase.hx", lineNumber : 57, className : "haxe.io.log.LoggerTestCase", methodName : "testLogInfo"});
+			self.assertTrue(false,null,{ fileName : "LoggerTestCase.hx", lineNumber : 57, className : "haxe.io.log.LoggerTestCase", methodName : "testLogInfo"});
 		}break;
 		}
 	},function(logger) {
@@ -2992,10 +3012,10 @@ haxe.io.log.LoggerTestCase.prototype.testLogWarning = function() {
 		switch( $e[1] ) {
 		case 3:
 		{
-			self.assertEquals("hi",text,{ fileName : "LoggerTestCase.hx", lineNumber : 75, className : "haxe.io.log.LoggerTestCase", methodName : "testLogWarning"});
+			self.assertEquals("hi",text,null,{ fileName : "LoggerTestCase.hx", lineNumber : 75, className : "haxe.io.log.LoggerTestCase", methodName : "testLogWarning"});
 		}break;
 		default:{
-			self.assertTrue(false,{ fileName : "LoggerTestCase.hx", lineNumber : 77, className : "haxe.io.log.LoggerTestCase", methodName : "testLogWarning"});
+			self.assertTrue(false,null,{ fileName : "LoggerTestCase.hx", lineNumber : 77, className : "haxe.io.log.LoggerTestCase", methodName : "testLogWarning"});
 		}break;
 		}
 	},function(logger) {
@@ -3053,8 +3073,8 @@ haxe.data.collections.Set.prototype.add = function(t) {
 }
 haxe.data.collections.Set.prototype.addAll = function(it) {
 	var set = this;
-	{ var $it14 = it.iterator();
-	while( $it14.hasNext() ) { var e = $it14.next();
+	{ var $it15 = it.iterator();
+	while( $it15.hasNext() ) { var e = $it15.next();
 	set = set.add(e);
 	}}
 	return set;
@@ -3074,8 +3094,8 @@ haxe.data.collections.Set.prototype.empty = function() {
 haxe.data.collections.Set.prototype.equal = null;
 haxe.data.collections.Set.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it15 = this._map.iterator();
-	while( $it15.hasNext() ) { var e = $it15.next();
+	{ var $it16 = this._map.iterator();
+	while( $it16.hasNext() ) { var e = $it16.next();
 	{
 		acc = f(acc,e._1);
 	}
@@ -3094,8 +3114,8 @@ haxe.data.collections.Set.prototype.remove = function(t) {
 }
 haxe.data.collections.Set.prototype.removeAll = function(it) {
 	var set = this;
-	{ var $it16 = it.iterator();
-	while( $it16.hasNext() ) { var e = $it16.next();
+	{ var $it17 = it.iterator();
+	while( $it17.hasNext() ) { var e = $it17.next();
 	set = set.remove(e);
 	}}
 	return set;
@@ -3139,8 +3159,8 @@ haxe.test.TestRunner.prototype.add = function(c) {
 	return this;
 }
 haxe.test.TestRunner.prototype.addAll = function(i) {
-	{ var $it17 = i.iterator();
-	while( $it17.hasNext() ) { var c = $it17.next();
+	{ var $it18 = i.iterator();
+	while( $it18.hasNext() ) { var c = $it18.next();
 	this.cases.add(c);
 	}}
 	return this;
@@ -3149,8 +3169,8 @@ haxe.test.TestRunner.prototype.cases = null;
 haxe.test.TestRunner.prototype.result = null;
 haxe.test.TestRunner.prototype.run = function() {
 	this.result = new haxe.test.TestResult();
-	{ var $it18 = this.cases.iterator();
-	while( $it18.hasNext() ) { var c = $it18.next();
+	{ var $it19 = this.cases.iterator();
+	while( $it19.hasNext() ) { var c = $it19.next();
 	{
 		this.runCase(c);
 	}
@@ -3189,15 +3209,15 @@ haxe.test.TestRunner.prototype.runCase = function(t) {
 						haxe.test.TestRunner.print("W");
 					}
 				}
-				catch( $e19 ) {
-					if( js.Boot.__instanceof($e19,haxe.test.TestStatus) ) {
-						var e = $e19;
+				catch( $e20 ) {
+					if( js.Boot.__instanceof($e20,haxe.test.TestStatus) ) {
+						var e = $e20;
 						{
 							haxe.test.TestRunner.print("F");
 							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
 						}
 					} else {
-						var e = $e19;
+						var e = $e20;
 						{
 							haxe.test.TestRunner.print("E");
 							if(e.message != null) {
@@ -3338,8 +3358,8 @@ haxe.abstract.FoldableExtensions.append = function(foldable,e) {
 }
 haxe.abstract.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
-	{ var $it20 = i.iterator();
-	while( $it20.hasNext() ) { var e = $it20.next();
+	{ var $it21 = i.iterator();
+	while( $it21.hasNext() ) { var e = $it21.next();
 	{
 		acc = acc.append(acc,e);
 	}
@@ -3485,24 +3505,24 @@ Lambda = function() { }
 Lambda.__name__ = ["Lambda"];
 Lambda.array = function(it) {
 	var a = new Array();
-	{ var $it21 = it.iterator();
-	while( $it21.hasNext() ) { var i = $it21.next();
+	{ var $it22 = it.iterator();
+	while( $it22.hasNext() ) { var i = $it22.next();
 	a.push(i);
 	}}
 	return a;
 }
 Lambda.list = function(it) {
 	var l = new List();
-	{ var $it22 = it.iterator();
-	while( $it22.hasNext() ) { var i = $it22.next();
+	{ var $it23 = it.iterator();
+	while( $it23.hasNext() ) { var i = $it23.next();
 	l.add(i);
 	}}
 	return l;
 }
 Lambda.map = function(it,f) {
 	var l = new List();
-	{ var $it23 = it.iterator();
-	while( $it23.hasNext() ) { var x = $it23.next();
+	{ var $it24 = it.iterator();
+	while( $it24.hasNext() ) { var x = $it24.next();
 	l.add(f(x));
 	}}
 	return l;
@@ -3510,66 +3530,66 @@ Lambda.map = function(it,f) {
 Lambda.mapi = function(it,f) {
 	var l = new List();
 	var i = 0;
-	{ var $it24 = it.iterator();
-	while( $it24.hasNext() ) { var x = $it24.next();
+	{ var $it25 = it.iterator();
+	while( $it25.hasNext() ) { var x = $it25.next();
 	l.add(f(i++,x));
 	}}
 	return l;
 }
 Lambda.has = function(it,elt,cmp) {
 	if(cmp == null) {
-		{ var $it25 = it.iterator();
-		while( $it25.hasNext() ) { var x = $it25.next();
+		{ var $it26 = it.iterator();
+		while( $it26.hasNext() ) { var x = $it26.next();
 		if(x == elt) return true;
 		}}
 	}
 	else {
-		{ var $it26 = it.iterator();
-		while( $it26.hasNext() ) { var x = $it26.next();
+		{ var $it27 = it.iterator();
+		while( $it27.hasNext() ) { var x = $it27.next();
 		if(cmp(x,elt)) return true;
 		}}
 	}
 	return false;
 }
 Lambda.exists = function(it,f) {
-	{ var $it27 = it.iterator();
-	while( $it27.hasNext() ) { var x = $it27.next();
+	{ var $it28 = it.iterator();
+	while( $it28.hasNext() ) { var x = $it28.next();
 	if(f(x)) return true;
 	}}
 	return false;
 }
 Lambda.foreach = function(it,f) {
-	{ var $it28 = it.iterator();
-	while( $it28.hasNext() ) { var x = $it28.next();
+	{ var $it29 = it.iterator();
+	while( $it29.hasNext() ) { var x = $it29.next();
 	if(!f(x)) return false;
 	}}
 	return true;
 }
 Lambda.iter = function(it,f) {
-	{ var $it29 = it.iterator();
-	while( $it29.hasNext() ) { var x = $it29.next();
+	{ var $it30 = it.iterator();
+	while( $it30.hasNext() ) { var x = $it30.next();
 	f(x);
 	}}
 }
 Lambda.filter = function(it,f) {
 	var l = new List();
-	{ var $it30 = it.iterator();
-	while( $it30.hasNext() ) { var x = $it30.next();
+	{ var $it31 = it.iterator();
+	while( $it31.hasNext() ) { var x = $it31.next();
 	if(f(x)) l.add(x);
 	}}
 	return l;
 }
 Lambda.fold = function(it,f,first) {
-	{ var $it31 = it.iterator();
-	while( $it31.hasNext() ) { var x = $it31.next();
+	{ var $it32 = it.iterator();
+	while( $it32.hasNext() ) { var x = $it32.next();
 	first = f(x,first);
 	}}
 	return first;
 }
 Lambda.count = function(it) {
 	var n = 0;
-	{ var $it32 = it.iterator();
-	while( $it32.hasNext() ) { var _ = $it32.next();
+	{ var $it33 = it.iterator();
+	while( $it33.hasNext() ) { var _ = $it33.next();
 	++n;
 	}}
 	return n;
@@ -3706,13 +3726,13 @@ PreludeTestCase.prototype.testCompose = function() {
 	var f2 = function(i) {
 		return i - 1;
 	}
-	this.assertEquals(2,(FunctionExtensions.compose(f1,f2))(2),{ fileName : "PreludeTest.hx", lineNumber : 33, className : "PreludeTestCase", methodName : "testCompose"});
+	this.assertEquals(2,(FunctionExtensions.compose(f1,f2))(2),null,{ fileName : "PreludeTest.hx", lineNumber : 33, className : "PreludeTestCase", methodName : "testCompose"});
 }
 PreludeTestCase.prototype.testCurry2 = function() {
 	var f = function(i1,i2,i3) {
 		return (i1 + i2) + i3;
 	}
-	this.assertEquals(3,(((Function3Extensions.curry(f))(2))(-2))(3),{ fileName : "PreludeTest.hx", lineNumber : 39, className : "PreludeTestCase", methodName : "testCurry2"});
+	this.assertEquals(3,(((Function3Extensions.curry(f))(2))(-2))(3),null,{ fileName : "PreludeTest.hx", lineNumber : 39, className : "PreludeTestCase", methodName : "testCurry2"});
 }
 PreludeTestCase.prototype.testFutureChaining = function() {
 	var f1 = Future.create();
@@ -3722,7 +3742,7 @@ PreludeTestCase.prototype.testFutureChaining = function() {
 		return Future.create().deliver(s.length < 2);
 	});
 	f1.deliver(9);
-	this.assertEquals(true,OptionExtensions.get(f2.value()),{ fileName : "PreludeTest.hx", lineNumber : 49, className : "PreludeTestCase", methodName : "testFutureChaining"});
+	this.assertEquals(true,OptionExtensions.get(f2.value()),null,{ fileName : "PreludeTest.hx", lineNumber : 49, className : "PreludeTestCase", methodName : "testFutureChaining"});
 }
 PreludeTestCase.prototype.__class__ = PreludeTestCase;
 if(typeof js=='undefined') js = {}
@@ -3794,9 +3814,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e33 ) {
+	catch( $e34 ) {
 		{
-			var e = $e33;
+			var e = $e34;
 			{
 				cl = null;
 			}
@@ -3810,9 +3830,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e34 ) {
+	catch( $e35 ) {
 		{
-			var err = $e34;
+			var err = $e35;
 			{
 				e = null;
 			}
@@ -3906,9 +3926,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e35 ) {
+	catch( $e36 ) {
 		{
-			var e = $e35;
+			var e = $e36;
 			{
 				return false;
 			}
@@ -3993,9 +4013,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e36 ) {
+		catch( $e37 ) {
 			{
-				var e = $e36;
+				var e = $e37;
 				{
 					return "???";
 				}
@@ -4052,9 +4072,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e37 ) {
+	catch( $e38 ) {
 		{
-			var e = $e37;
+			var e = $e38;
 			{
 				if(cl == null) return false;
 			}
@@ -4152,7 +4172,7 @@ haxe.data.transcode.JValueTestCase.prototype.doTest = function(decomposer,extrac
 		if(!equal) {
 			throw (("Expected " + value) + " but was ") + actual;
 		}
-		this.assertTrue(equal,{ fileName : "JValueTestCase.hx", lineNumber : 141, className : "haxe.data.transcode.JValueTestCase", methodName : "doTest"});
+		this.assertTrue(equal,null,{ fileName : "JValueTestCase.hx", lineNumber : 141, className : "haxe.data.transcode.JValueTestCase", methodName : "doTest"});
 	}
 }
 haxe.data.transcode.JValueTestCase.prototype.testArray = function() {
@@ -4281,7 +4301,7 @@ haxe.abstract.PartialFunctionTestCase.prototype.testCallForPartialFunction1 = fu
 	},function(i) {
 		return i * i;
 	})]);
-	this.assertEquals(4,f.call(2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 37, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testCallForPartialFunction1"});
+	this.assertEquals(4,f.call(2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 37, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testCallForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testIsDefinedAtForPartialFunction1 = function() {
 	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
@@ -4289,8 +4309,8 @@ haxe.abstract.PartialFunctionTestCase.prototype.testIsDefinedAtForPartialFunctio
 	},function(i) {
 		return i * i;
 	})]);
-	this.assertTrue(f.isDefinedAt(2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 30, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testIsDefinedAtForPartialFunction1"});
-	this.assertFalse(f.isDefinedAt(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 31, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testIsDefinedAtForPartialFunction1"});
+	this.assertTrue(f.isDefinedAt(2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 30, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testIsDefinedAtForPartialFunction1"});
+	this.assertFalse(f.isDefinedAt(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 31, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testIsDefinedAtForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testOrAlwaysCForPartialFunction1 = function() {
 	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
@@ -4298,7 +4318,7 @@ haxe.abstract.PartialFunctionTestCase.prototype.testOrAlwaysCForPartialFunction1
 	},function(i) {
 		return i * i;
 	})]);
-	this.assertTrue(f.orAlwaysC(FunctionExtensions.toThunk(9)).isDefinedAt(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 55, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrAlwaysCForPartialFunction1"});
+	this.assertTrue(f.orAlwaysC(FunctionExtensions.toThunk(9)).isDefinedAt(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 55, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrAlwaysCForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testOrElseForPartialFunction1 = function() {
 	var f1 = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
@@ -4312,9 +4332,9 @@ haxe.abstract.PartialFunctionTestCase.prototype.testOrElseForPartialFunction1 = 
 		return i * i;
 	})]);
 	var f = f1.orElse(f2);
-	this.assertTrue(f.isDefinedAt(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 46, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
-	this.assertEquals(4,f.call(-2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 48, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
-	this.assertEquals(4,f.call(2),{ fileName : "PartialFunctionTestCase.hx", lineNumber : 49, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
+	this.assertTrue(f.isDefinedAt(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 46, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
+	this.assertEquals(4,f.call(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 48, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
+	this.assertEquals(4,f.call(2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 49, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrElseForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.__class__ = haxe.abstract.PartialFunctionTestCase;
 haxe.io.log.LoggerFacade = function() { }
@@ -4611,8 +4631,8 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 		var keys1 = v1.keySet();
 		var keys2 = v2.keySet();
 		if(!haxe.data.collections.Set.EqualT(kequal).equal(keys1,keys2)) return false;
-		{ var $it38 = keys1.iterator();
-		while( $it38.hasNext() ) { var key = $it38.next();
+		{ var $it39 = keys1.iterator();
+		while( $it39.hasNext() ) { var key = $it39.next();
 		{
 			var v11 = OptionExtensions.get(v1.get(key));
 			var v21 = OptionExtensions.get(v2.get(key));
@@ -4682,8 +4702,8 @@ haxe.data.collections.Map.prototype.add = function(t) {
 }
 haxe.data.collections.Map.prototype.addAll = function(i) {
 	var map = this;
-	{ var $it39 = i.iterator();
-	while( $it39.hasNext() ) { var t = $it39.next();
+	{ var $it40 = i.iterator();
+	while( $it40.hasNext() ) { var t = $it40.next();
 	map = map.add(t);
 	}}
 	return map;
@@ -4696,8 +4716,8 @@ haxe.data.collections.Map.prototype.bucketFor = function(k) {
 }
 haxe.data.collections.Map.prototype.contains = function(t) {
 	var tupleEqual = Tuple2.EqualT(this.keyEqual,this.valueEqual);
-	{ var $it40 = this.entries().iterator();
-	while( $it40.hasNext() ) { var e = $it40.next();
+	{ var $it41 = this.entries().iterator();
+	while( $it41.hasNext() ) { var e = $it41.next();
 	{
 		if(tupleEqual.equal(e,t)) return true;
 	}
@@ -4776,8 +4796,8 @@ haxe.data.collections.Map.prototype.entries = function() {
 }
 haxe.data.collections.Map.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it41 = this.entries().iterator();
-	while( $it41.hasNext() ) { var e = $it41.next();
+	{ var $it42 = this.entries().iterator();
+	while( $it42.hasNext() ) { var e = $it42.next();
 	{
 		acc = f(acc,e);
 	}
@@ -4856,8 +4876,8 @@ haxe.data.collections.Map.prototype.rebalance = function() {
 				this._buckets.push([]);
 			}
 		}
-		{ var $it42 = all.iterator();
-		while( $it42.hasNext() ) { var e = $it42.next();
+		{ var $it43 = all.iterator();
+		while( $it43.hasNext() ) { var e = $it43.next();
 		{
 			var bucket = this.bucketFor(e._1);
 			this._buckets[bucket].push(e);
@@ -4870,16 +4890,16 @@ haxe.data.collections.Map.prototype.remove = function(t) {
 }
 haxe.data.collections.Map.prototype.removeAll = function(i) {
 	var map = this;
-	{ var $it43 = i.iterator();
-	while( $it43.hasNext() ) { var t = $it43.next();
+	{ var $it44 = i.iterator();
+	while( $it44.hasNext() ) { var t = $it44.next();
 	map = map.remove(t);
 	}}
 	return map;
 }
 haxe.data.collections.Map.prototype.removeAllByKey = function(i) {
 	var map = this;
-	{ var $it44 = i.iterator();
-	while( $it44.hasNext() ) { var k = $it44.next();
+	{ var $it45 = i.iterator();
+	while( $it45.hasNext() ) { var k = $it45.next();
 	map = map.removeByKey(k);
 	}}
 	return map;
@@ -5242,8 +5262,8 @@ ArrayExtensions.flatMap = function(a,f) {
 		while(_g < a.length) {
 			var e1 = a[_g];
 			++_g;
-			{ var $it45 = f(e1).iterator();
-			while( $it45.hasNext() ) { var e2 = $it45.next();
+			{ var $it46 = f(e1).iterator();
+			while( $it46.hasNext() ) { var e2 = $it46.next();
 			n.push(e2);
 			}}
 		}
@@ -6126,8 +6146,8 @@ IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
 	if(show == null) show = $closure(Std,"string");
 	var s = prefix;
 	var isFirst = true;
-	{ var $it46 = i.iterator();
-	while( $it46.hasNext() ) { var t = $it46.next();
+	{ var $it47 = i.iterator();
+	while( $it47.hasNext() ) { var t = $it47.next();
 	{
 		if(isFirst) isFirst = false;
 		else s += sep;
@@ -6147,8 +6167,8 @@ IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
 }
 IterableExtensions.toArray = function(i) {
 	var a = [];
-	{ var $it47 = i.iterator();
-	while( $it47.hasNext() ) { var e = $it47.next();
+	{ var $it48 = i.iterator();
+	while( $it48.hasNext() ) { var e = $it48.next();
 	a.push(e);
 	}}
 	return a;
@@ -6457,7 +6477,7 @@ haxe.data.collections.ListTestCase.__name__ = ["haxe","data","collections","List
 haxe.data.collections.ListTestCase.__super__ = haxe.test.TestCase;
 for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.ListTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.collections.ListTestCase.prototype.assertListEquals = function(l1,l2) {
-	this.assertTrue(haxe.data.collections.List.EqualT(IntExtensions.EqualT(Int)).equal(l1,l2),{ fileName : "ListTestCase.hx", lineNumber : 140, className : "haxe.data.collections.ListTestCase", methodName : "assertListEquals"});
+	this.assertTrue(haxe.data.collections.List.EqualT(IntExtensions.EqualT(Int)).equal(l1,l2),null,{ fileName : "ListTestCase.hx", lineNumber : 140, className : "haxe.data.collections.ListTestCase", methodName : "assertListEquals"});
 }
 haxe.data.collections.ListTestCase.prototype.defaultList = function() {
 	var l = this.newList();
@@ -6477,15 +6497,15 @@ haxe.data.collections.ListTestCase.prototype.testCanIterateThroughElements = fun
 	var l = this.defaultList();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it48 = l.iterator();
-	while( $it48.hasNext() ) { var k = $it48.next();
+	{ var $it49 = l.iterator();
+	while( $it49.hasNext() ) { var k = $it49.next();
 	{
 		count -= k;
 		++iterated;
 	}
 	}}
-	this.assertEquals(100,iterated,{ fileName : "ListTestCase.hx", lineNumber : 85, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
-	this.assertEquals(0,count,{ fileName : "ListTestCase.hx", lineNumber : 86, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
+	this.assertEquals(100,iterated,null,{ fileName : "ListTestCase.hx", lineNumber : 85, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
+	this.assertEquals(0,count,null,{ fileName : "ListTestCase.hx", lineNumber : 86, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
 }
 haxe.data.collections.ListTestCase.prototype.testContainsElements = function() {
 	var l = this.newList();
@@ -6493,9 +6513,9 @@ haxe.data.collections.ListTestCase.prototype.testContainsElements = function() {
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertFalse(l.contains(i),{ fileName : "ListTestCase.hx", lineNumber : 65, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
+			this.assertFalse(l.contains(i),null,{ fileName : "ListTestCase.hx", lineNumber : 65, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
 			l = l.add(i);
-			this.assertTrue(l.contains(i),{ fileName : "ListTestCase.hx", lineNumber : 69, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
+			this.assertTrue(l.contains(i),null,{ fileName : "ListTestCase.hx", lineNumber : 69, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
 		}
 	}
 }
@@ -6503,15 +6523,15 @@ haxe.data.collections.ListTestCase.prototype.testFilter = function() {
 	var l = haxe.abstract.FoldableExtensions.filter(this.defaultList(),function(e) {
 		return e < 50;
 	});
-	this.assertEquals(50,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 92, className : "haxe.data.collections.ListTestCase", methodName : "testFilter"});
+	this.assertEquals(50,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 92, className : "haxe.data.collections.ListTestCase", methodName : "testFilter"});
 }
 haxe.data.collections.ListTestCase.prototype.testFoldr = function() {
 	this.assertEquals(4950,this.defaultList().foldr(0,function(b,a) {
 		return a + b;
-	}),{ fileName : "ListTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ListTestCase", methodName : "testFoldr"});
+	}),null,{ fileName : "ListTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ListTestCase", methodName : "testFoldr"});
 }
 haxe.data.collections.ListTestCase.prototype.testHead = function() {
-	this.assertEquals(0,this.defaultList().getHead(),{ fileName : "ListTestCase.hx", lineNumber : 128, className : "haxe.data.collections.ListTestCase", methodName : "testHead"});
+	this.assertEquals(0,this.defaultList().getHead(),null,{ fileName : "ListTestCase.hx", lineNumber : 128, className : "haxe.data.collections.ListTestCase", methodName : "testHead"});
 }
 haxe.data.collections.ListTestCase.prototype.testHeadOption = function() {
 	var $e = (this.defaultList().getHeadOption());
@@ -6519,15 +6539,15 @@ haxe.data.collections.ListTestCase.prototype.testHeadOption = function() {
 	case 1:
 	var v = $e[2];
 	{
-		this.assertEquals(0,v,{ fileName : "ListTestCase.hx", lineNumber : 133, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
+		this.assertEquals(0,v,null,{ fileName : "ListTestCase.hx", lineNumber : 133, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
 	}break;
 	default:{
-		this.assertTrue(false,{ fileName : "ListTestCase.hx", lineNumber : 135, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
+		this.assertTrue(false,null,{ fileName : "ListTestCase.hx", lineNumber : 135, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
 	}break;
 	}
 }
 haxe.data.collections.ListTestCase.prototype.testLast = function() {
-	this.assertEquals(99,this.defaultList().getLast(),{ fileName : "ListTestCase.hx", lineNumber : 116, className : "haxe.data.collections.ListTestCase", methodName : "testLast"});
+	this.assertEquals(99,this.defaultList().getLast(),null,{ fileName : "ListTestCase.hx", lineNumber : 116, className : "haxe.data.collections.ListTestCase", methodName : "testLast"});
 }
 haxe.data.collections.ListTestCase.prototype.testLastOption = function() {
 	var $e = (this.defaultList().getLastOption());
@@ -6535,10 +6555,10 @@ haxe.data.collections.ListTestCase.prototype.testLastOption = function() {
 	case 1:
 	var v = $e[2];
 	{
-		this.assertEquals(99,v,{ fileName : "ListTestCase.hx", lineNumber : 121, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
+		this.assertEquals(99,v,null,{ fileName : "ListTestCase.hx", lineNumber : 121, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
 	}break;
 	default:{
-		this.assertTrue(false,{ fileName : "ListTestCase.hx", lineNumber : 123, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
+		this.assertTrue(false,null,{ fileName : "ListTestCase.hx", lineNumber : 123, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
 	}break;
 	}
 }
@@ -6556,7 +6576,7 @@ haxe.data.collections.ListTestCase.prototype.testSizeGrowsWhenAddingDuplicateEle
 			l = l.add(0);
 		}
 	}
-	this.assertEquals(101,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 46, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingDuplicateElements"});
+	this.assertEquals(101,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 46, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingDuplicateElements"});
 }
 haxe.data.collections.ListTestCase.prototype.testSizeGrowsWhenAddingUniqueElements = function() {
 	var l = this.newList();
@@ -6564,11 +6584,11 @@ haxe.data.collections.ListTestCase.prototype.testSizeGrowsWhenAddingUniqueElemen
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(i,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 33, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+			this.assertEquals(i,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 33, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
 			l = l.add(i);
 		}
 	}
-	this.assertEquals(100,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 38, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+	this.assertEquals(100,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 38, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
 }
 haxe.data.collections.ListTestCase.prototype.testSizeShrinksWhenRemovingElements = function() {
 	var l = this.defaultList();
@@ -6576,11 +6596,11 @@ haxe.data.collections.ListTestCase.prototype.testSizeShrinksWhenRemovingElements
 		var _g = 0;
 		while(_g < 100) {
 			var i = _g++;
-			this.assertEquals(100 - i,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 53, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+			this.assertEquals(100 - i,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 53, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
 			l = l.remove(i);
 		}
 	}
-	this.assertEquals(0,l.getSize(),{ fileName : "ListTestCase.hx", lineNumber : 58, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+	this.assertEquals(0,l.getSize(),null,{ fileName : "ListTestCase.hx", lineNumber : 58, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
 }
 haxe.data.collections.ListTestCase.prototype.testSort = function() {
 	var ul = this.newList().addAll([9,2,1,100]);
@@ -6602,9 +6622,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e49 ) {
+	catch( $e50 ) {
 		{
-			var e = $e49;
+			var e = $e50;
 			{
 				
 				for(var i in this.h)
@@ -6647,8 +6667,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it50 = it;
-	while( $it50.hasNext() ) { var i = $it50.next();
+	{ var $it51 = it;
+	while( $it51.hasNext() ) { var i = $it51.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
