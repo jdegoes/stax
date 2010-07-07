@@ -25,7 +25,7 @@ using Prelude;
 using haxe.abstract.Foldable;
 
 /** A cross-platform, immutable map with support for arbitrary keys.
- * TODO: Use an array of lists to avoid unnecessary copying when adding new elements to the map.
+ * TODO: Use an array of lists to avoid unnecessary copying when adding/removing elements.
  */
 class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
   public static var MaxLoad = 10;
@@ -86,10 +86,10 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
   
   public var size (getSize, null): Int;
   
-  var _keyHasher:   Hasher<K>;
-  var _keyEqual:    Equal<K>;
-  var _valueHasher: Hasher<V>;
-  var _valueEqual:  Equal<V>;
+  public var keyHasher:   Hasher<K>;
+  public var keyEqual:    Equal<K>;
+  public var valueHasher: Hasher<V>;
+  public var valueEqual:  Equal<V>;
   
   var _buckets: Array<Array<Tuple2<K, V>>>;
   
@@ -97,11 +97,11 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
   
   public static function create<K, V>(?khasher: Hasher<K>, ?kequal: Equal<K>, ?vhasher: Hasher<V>, ?vequal: Equal<V>) {
     var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherT(); else khasher;
-      var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualT();  else kequal;
-      var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherT(); else vhasher;
-      var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualT();  else vequal;
-      
-      return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, [[]], 0);
+    var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualT();  else kequal;
+    var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherT(); else vhasher;
+    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualT();  else vequal;
+    
+    return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, [[]], 0);
   }
   
   /** Creates a factory for maps of the specified types. */
@@ -111,309 +111,309 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
     }
   }
   
-    private function new(khasher: Hasher<K>, kequal: Equal<K>, vhasher: Hasher<V>, vequal: Equal<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
-      _keyHasher = khasher; _keyEqual = kequal; _valueHasher = vhasher; _valueEqual = vequal;
-      
-      this._size    = size;
-      this._buckets = buckets;
+  private function new(khasher: Hasher<K>, kequal: Equal<K>, vhasher: Hasher<V>, vequal: Equal<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
+    this.keyHasher = khasher; this.keyEqual = kequal; this.valueHasher = vhasher; this.valueEqual = vequal;
+    
+    this._size    = size;
+    this._buckets = buckets;
+  }
+  
+  public function empty(): Map<K, V> {
+    return if (size == 0) this; else Map.create(keyHasher, keyEqual, valueHasher, valueEqual);
+  }
+  
+  public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
+    return m.add(t);
+  }
+  
+  public function foldl<Z>(z: Z, f: Z -> Tuple2<K, V> -> Z): Z {
+    var acc = z;
+    
+    for (e in entries()) {
+      acc = f(acc, e);
     }
     
-    public function empty(): Map<K, V> {
-      return if (size == 0) this; else Map.create(_keyHasher, _keyEqual, _valueHasher, _valueEqual);
-    }
+    return acc;
+  }
+  
+  public function set(k: K, v: V): Map<K, V> {
+    return add(Tuple2.create(k, v));
+  }
+  
+  public function add(t: Tuple2<K, V>): Map<K, V> {
+    var k = t._1;
+    var v = t._2;
+    var bucket = bucketFor(k);
     
-    public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
-      return m.add(t);
-    }
+    var list = _buckets[bucket];
     
-    public function foldl<Z>(z: Z, f: Z -> Tuple2<K, V> -> Z): Z {
-      var acc = z;
+    for (i in 0...list.length) {
+      var entry = list[i];
       
-      for (e in entries()) {
-        acc = f(acc, e);
-      }
-      
-      return acc;
-    }
-    
-    public function set(k: K, v: V): Map<K, V> {
-      return add(Tuple2.create(k, v));
-    }
-    
-    public function add(t: Tuple2<K, V>): Map<K, V> {
-      var k = t._1;
-      var v = t._2;
-      var bucket = bucketFor(k);
-      
-      var list = _buckets[bucket];
-      
-      for (i in 0...list.length) {
-        var entry = list[i];
+      if (keyEqual.equal(entry._1, k)) {
+        if (!valueEqual.equal(entry._2, v)) {
+          var newMap = copyWithMod(bucket);
         
-        if (_keyEqual.equal(entry._1, k)) {
-          if (!_valueEqual.equal(entry._2, v)) {
-            var newMap = copyWithMod(bucket);
-          
-            newMap._buckets[bucket][i] = t;
-                    
-            return newMap;
-          }
-          else {
-            return this;
-          }
+          newMap._buckets[bucket][i] = t;
+                  
+          return newMap;
+        }
+        else {
+          return this;
         }
       }
-      
-      var newMap = copyWithMod(bucket);
-      
-      newMap._buckets[bucket].push(t);
-      
-      newMap._size += 1;
-      
-      if (newMap.load() > MaxLoad) {
-        newMap.rebalance();
+    }
+    
+    var newMap = copyWithMod(bucket);
+    
+    newMap._buckets[bucket].push(t);
+    
+    newMap._size += 1;
+    
+    if (newMap.load() > MaxLoad) {
+      newMap.rebalance();
+    }
+    
+    return newMap;
+  }
+  
+  public function addAll(i: Iterable<Tuple2<K, V>>): Map<K, V> {
+    var map = this;
+    
+    for (t in i) map = map.add(t);
+    
+    return map;
+  }
+  
+  public function remove(t: Tuple2<K, V>): Map<K, V> {
+    return removeInternal(t._1, t._2, false);
+  }
+  
+  public function removeAll(i: Iterable<Tuple2<K, V>>): Map<K, V> {
+    var map = this;
+    
+    for (t in i) map = map.remove(t);
+    
+    return map;
+  }
+  
+  public function removeByKey(k: K): Map<K, V> {
+    return removeInternal(k, null, true);
+  }
+  
+  public function removeAllByKey(i: Iterable<K>): Map<K, V> {
+    var map = this;
+    
+    for (k in i) map = map.removeByKey(k);
+    
+    return map;
+  }
+
+  public function get(k: K): Option<V> {
+    for (e in listFor(k)) {
+      if (keyEqual.equal(e._1, k)) {
+        return Some(e._2);
       }
-      
-      return newMap;
-    }
-    
-    public function addAll(i: Iterable<Tuple2<K, V>>): Map<K, V> {
-      var map = this;
-      
-      for (t in i) map = map.add(t);
-      
-      return map;
-    }
-    
-    public function remove(t: Tuple2<K, V>): Map<K, V> {
-      return removeInternal(t._1, t._2, false);
-    }
-    
-    public function removeAll(i: Iterable<Tuple2<K, V>>): Map<K, V> {
-      var map = this;
-      
-      for (t in i) map = map.remove(t);
-      
-      return map;
-    }
-    
-    public function removeByKey(k: K): Map<K, V> {
-      return removeInternal(k, null, true);
-    }
-    
-    public function removeAllByKey(i: Iterable<K>): Map<K, V> {
-      var map = this;
-      
-      for (k in i) map = map.removeByKey(k);
-      
-      return map;
     }
 
-    public function get(k: K): Option<V> {
-      for (e in listFor(k)) {
-        if (_keyEqual.equal(e._1, k)) {
-          return Some(e._2);
-        }
-      }
-
-      return None;
+    return None;
+  }
+  
+  public function getOrElse(k: K, def: V): V {
+    return switch (get(k)) {
+      case Some(v): v;
+      case None: def;
+    }
+  }
+  
+  public function contains(t: Tuple2<K, V>): Bool {
+    var tupleEqual = Tuple2.EqualT(keyEqual, valueEqual);
+    
+    for (e in entries()) {
+      if (tupleEqual.equal(e, t)) return true;
     }
     
-    public function getOrElse(k: K, def: V): V {
-      return switch (get(k)) {
-        case Some(v): v;
-        case None: def;
-      }
+    return false;
+  }
+  
+  public function containsKey(k: K): Bool {
+    return switch(get(k)) {
+      case None:    false;
+      case Some(v): true;
     }
+  }
+  
+  public function keys(): Iterable<K> {
+    var self = this;
     
-    public function contains(t: Tuple2<K, V>): Bool {
-      var tupleEqual = Tuple2.EqualT(_keyEqual, _valueEqual);
-      
-      for (e in entries()) {
-        if (tupleEqual.equal(e, t)) return true;
-      }
-      
-      return false;
-    }
-    
-    public function containsKey(k: K): Bool {
-      return switch(get(k)) {
-        case None:    false;
-        case Some(v): true;
-      }
-    }
-    
-    public function keys(): Iterable<K> {
-      var self = this;
-      
-      return {
-        iterator: function() {
-          var entryIterator = self.entries().iterator();
-          
-          return {
-            hasNext: entryIterator.hasNext,
-            
-            next: function() {
-              return entryIterator.next()._1;
-            }
-          }
-        }
-      }
-    }
-    
-    public function keySet(): Set<K> {
-      return Set.create(_keyHasher, _keyEqual).addAll(keys());
-    }
-    
-    public function values(): Iterable<V> {
-      var self = this;
-      
-      return {
-        iterator: function() {
-          var entryIterator = self.entries().iterator();
-          
-          return {
-            hasNext: entryIterator.hasNext,
-            
-            next: function() {
-              return entryIterator.next()._2;
-            }
-          }
-        }
-      }
-    }
-    
-    public function iterator(): Iterator<Tuple2<K, V>> {
-      return FoldableExtensions.iterator(this);
-    }
-    
-    public function toString(): String {
-      return Map.ShowT(DynamicExtensions.ShowT(), DynamicExtensions.ShowT()).show(this);
-    }
-    
-    public function load(): Int {
-      return if (_buckets.length == 0) MaxLoad;
-             else Math.round(this.size / _buckets.length);
-    }
-    
-    private function entries(): Iterable<Tuple2<K, V>> {
-      var buckets = _buckets;
-      
-      var iterable: Iterable<Tuple2<K, V>> = {
-        iterator: function(): Iterator<Tuple2<K, V>> {
-          var bucket = 0, element = 0;
-          
-          var computeNextValue = function(): Option<Tuple2<K, V>> {
-            while (bucket < buckets.length) {
-              if (element >= buckets[bucket].length) {
-                element = 0;
-                ++bucket;
-              }
-              else {
-                return Some(buckets[bucket][element++]);
-              }
-            }
-            
-            return None;
-          }
-          
-          var nextValue = computeNextValue();
-          
-          return {
-            hasNext: function(): Bool {
-              return !nextValue.isEmpty();
-            },
-            
-            next: function(): Tuple2<K, V> {
-              var value = nextValue;
-              
-              nextValue = computeNextValue();
-              
-              return value.get();
-            }
-          }
-        }
-      }
-      
-      return iterable;
-    }
-    
-    private function removeInternal(k: K, v: V, ignoreValue: Bool): Map<K, V> {
-      var bucket = bucketFor(k);
-      
-      var list = _buckets[bucket];
-      
-      for (i in 0...list.length) {
-        var entry = list[i];
+    return {
+      iterator: function() {
+        var entryIterator = self.entries().iterator();
         
-        if (_keyEqual.equal(entry._1, k)) {
-          if (ignoreValue || _valueEqual.equal(entry._2, v)) {
-            var newMap = copyWithMod(bucket);
+        return {
+          hasNext: entryIterator.hasNext,
           
-            newMap._buckets[bucket] = list.slice(0, i).concat(list.slice(i + 1, list.length));
-            newMap._size -= 1;
-          
-            if (newMap.load() < MinLoad) {
-              newMap.rebalance();
-            }
-          
-            return newMap;
-          }
-          else {
-            return this;
+          next: function() {
+            return entryIterator.next()._1;
           }
         }
       }
-      
-      return this;
     }
+  }
+  
+  public function keySet(): Set<K> {
+    return Set.create(keyHasher, keyEqual).addAll(keys());
+  }
+  
+  public function values(): Iterable<V> {
+    var self = this;
     
-    private function copyWithMod(index: Int): Map<K, V> {
-      var newTable = [];
-      
-      for (i in 0...index) {
-        newTable.push(_buckets[i]);
-      }
-      
-      newTable.push([].concat(_buckets[index]));
-      
-      for (i in (index + 1)..._buckets.length) {
-        newTable.push(_buckets[i]);
-      }
-      
-      return new Map<K, V>(_keyHasher, _keyEqual, _valueHasher, _valueEqual, newTable, size);      
-    }
-    
-    private function rebalance(): Void {
-      var newSize = Math.round(size / ((MaxLoad + MinLoad) / 2));
-      
-      if (newSize > 0) {
-        var all = entries();
-      
-        _buckets = [];
-      
-        for (i in 0...newSize) {
-          _buckets.push([]);
-        }
-      
-        for (e in all) {
-          var bucket = bucketFor(e._1);
+    return {
+      iterator: function() {
+        var entryIterator = self.entries().iterator();
         
-          _buckets[bucket].push(e);
+        return {
+          hasNext: entryIterator.hasNext,
+          
+          next: function() {
+            return entryIterator.next()._2;
+          }
+        }
+      }
+    }
+  }
+  
+  public function iterator(): Iterator<Tuple2<K, V>> {
+    return FoldableExtensions.iterator(this);
+  }
+  
+  public function toString(): String {
+    return Map.ShowT(DynamicExtensions.ShowT(), DynamicExtensions.ShowT()).show(this);
+  }
+  
+  public function load(): Int {
+    return if (_buckets.length == 0) MaxLoad;
+           else Math.round(this.size / _buckets.length);
+  }
+  
+  private function entries(): Iterable<Tuple2<K, V>> {
+    var buckets = _buckets;
+    
+    var iterable: Iterable<Tuple2<K, V>> = {
+      iterator: function(): Iterator<Tuple2<K, V>> {
+        var bucket = 0, element = 0;
+        
+        var computeNextValue = function(): Option<Tuple2<K, V>> {
+          while (bucket < buckets.length) {
+            if (element >= buckets[bucket].length) {
+              element = 0;
+              ++bucket;
+            }
+            else {
+              return Some(buckets[bucket][element++]);
+            }
+          }
+          
+          return None;
+        }
+        
+        var nextValue = computeNextValue();
+        
+        return {
+          hasNext: function(): Bool {
+            return !nextValue.isEmpty();
+          },
+          
+          next: function(): Tuple2<K, V> {
+            var value = nextValue;
+            
+            nextValue = computeNextValue();
+            
+            return value.get();
+          }
         }
       }
     }
     
-    private function bucketFor(k: K): Int {
-    return _keyHasher.hash(k) % _buckets.length;
+    return iterable;
+  }
+  
+  private function removeInternal(k: K, v: V, ignoreValue: Bool): Map<K, V> {
+    var bucket = bucketFor(k);
+    
+    var list = _buckets[bucket];
+    
+    for (i in 0...list.length) {
+      var entry = list[i];
+      
+      if (keyEqual.equal(entry._1, k)) {
+        if (ignoreValue || valueEqual.equal(entry._2, v)) {
+          var newMap = copyWithMod(bucket);
+        
+          newMap._buckets[bucket] = list.slice(0, i).concat(list.slice(i + 1, list.length));
+          newMap._size -= 1;
+        
+          if (newMap.load() < MinLoad) {
+            newMap.rebalance();
+          }
+        
+          return newMap;
+        }
+        else {
+          return this;
+        }
+      }
     }
     
-    private function listFor(k: K): Array<Tuple2<K, V>> {
-      return if (_buckets.length == 0) []
-      else _buckets[bucketFor(k)];
+    return this;
+  }
+  
+  private function copyWithMod(index: Int): Map<K, V> {
+    var newTable = [];
+    
+    for (i in 0...index) {
+      newTable.push(_buckets[i]);
     }
     
-    private function getSize(): Int {
-      return _size;
+    newTable.push([].concat(_buckets[index]));
+    
+    for (i in (index + 1)..._buckets.length) {
+      newTable.push(_buckets[i]);
     }
+    
+    return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, newTable, size);      
+  }
+  
+  private function rebalance(): Void {
+    var newSize = Math.round(size / ((MaxLoad + MinLoad) / 2));
+    
+    if (newSize > 0) {
+      var all = entries();
+    
+      _buckets = [];
+    
+      for (i in 0...newSize) {
+        _buckets.push([]);
+      }
+    
+      for (e in all) {
+        var bucket = bucketFor(e._1);
+      
+        _buckets[bucket].push(e);
+      }
+    }
+  }
+  
+  private function bucketFor(k: K): Int {
+    return keyHasher.hash(k) % _buckets.length;
+  }
+  
+  private function listFor(k: K): Array<Tuple2<K, V>> {
+    return if (_buckets.length == 0) []
+    else _buckets[bucketFor(k)];
+  }
+  
+  private function getSize(): Int {
+    return _size;
+  }
 }

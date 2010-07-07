@@ -66,9 +66,9 @@ class Set<T> implements Collection<Set<T>, T> {
   }
   
   public var size (getSize, null): Int;
+  public var hasher (default, null): Hasher<T>;
+  public var equal (default, null): Equal<T>;
   
-  var _hasher: Hasher<T>;
-  var _equal: Equal<T>;
   var _map: Map<T, T>;
   
   public static function create<T>(?hasher: Hasher<T>, ?equal: Equal<T>): Set<T> {
@@ -86,7 +86,7 @@ class Set<T> implements Collection<Set<T>, T> {
   }
 
     private function new(hasher: Hasher<T>, equal: Equal<T>, map: Map<T, T>) {
-      _hasher = hasher; _equal = equal; _map = map;
+      this.hasher = hasher; this.equal = equal; _map = map;
     }
     
     public function contains(e: T): Bool {
@@ -94,7 +94,7 @@ class Set<T> implements Collection<Set<T>, T> {
     }
     
     public function empty(): Set<T> {
-      return if (size == 0) this; else Set.create(_hasher, _equal);
+      return if (size == 0) this; else Set.create(hasher, equal);
     }
     
     public function append(s: Set<T>, t: T): Set<T> {
@@ -144,7 +144,7 @@ class Set<T> implements Collection<Set<T>, T> {
     }
     
     private function copyWithMod(newMap: Map<T, T>): Set<T> {
-      return new Set<T>(_hasher, _equal, newMap);
+      return new Set<T>(hasher, equal, newMap);
     }
     
     private function getSize(): Int {
