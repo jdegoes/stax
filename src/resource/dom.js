@@ -1342,9 +1342,9 @@ haxe.DomTest.prototype.testTextNodeHasMethods = function() {
 haxe.DomTest.prototype.testThatApplicationCacheHasPropertiesAndMethods = function() {
 	var appCache = js.Env.window.applicationCache;
 	var properties = ["status"];
-	this.verifyThatPropertiesExist(appCache,properties,{ fileName : "DomTester.hx", lineNumber : 1784, className : "haxe.DomTest", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(appCache,properties,{ fileName : "DomTester.hx", lineNumber : 1786, className : "haxe.DomTest", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
 	var methods = ["swapCache","update","dispatchEvent","addEventListener","removeEventListener"];
-	this.verifyThatMethodsExist(appCache,methods,{ fileName : "DomTester.hx", lineNumber : 1805, className : "haxe.DomTest", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(appCache,methods,{ fileName : "DomTester.hx", lineNumber : 1807, className : "haxe.DomTest", methodName : "testThatApplicationCacheHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatAttrHasProperties = function() {
 	var main = this._doc.getElementById("main");
@@ -1356,7 +1356,7 @@ haxe.DomTest.prototype.testThatAttrHasProperties = function() {
 haxe.DomTest.prototype.testThatBarPropHasProperties = function() {
 	var barProp = js.Env.window.locationbar;
 	var properties = ["visible"];
-	this.verifyThatPropertiesExist(barProp,properties,{ fileName : "DomTester.hx", lineNumber : 1773, className : "haxe.DomTest", methodName : "testThatBarPropHasProperties"});
+	this.verifyThatPropertiesExist(barProp,properties,{ fileName : "DomTester.hx", lineNumber : 1775, className : "haxe.DomTest", methodName : "testThatBarPropHasProperties"});
 }
 haxe.DomTest.prototype.testThatCSSRuleHasProperties = function() {
 	var stylesheet = this._doc.styleSheets[0];
@@ -1390,8 +1390,8 @@ haxe.DomTest.prototype.testThatCanvasElementContainsMethodsAndProperties = funct
 	ctx.fillRect(10,10,55,50);
 	ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
 	ctx.fillRect(30,30,55,50);
-	this.assertTrue(mesText instanceof TextMetrics,{ fileName : "DomTester.hx", lineNumber : 1946, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.assertTrue(ctx instanceof CanvasRenderingContext2D,{ fileName : "DomTester.hx", lineNumber : 1947, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.assertTrue(mesText instanceof TextMetrics,{ fileName : "DomTester.hx", lineNumber : 1948, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.assertTrue(ctx instanceof CanvasRenderingContext2D,{ fileName : "DomTester.hx", lineNumber : 1949, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
 	var pixArrayProperties = ["length"];
 	var imgDataProperties = ["width","height","data"];
 	var mesTextProperties = ["width"];
@@ -1399,26 +1399,26 @@ haxe.DomTest.prototype.testThatCanvasElementContainsMethodsAndProperties = funct
 	var canvasProperties = ["height","width"];
 	var ctxProperties = ["canvas","globalAlpha","strokeStyle","fillStyle","lineWidth","lineCap","lineJoin","miterLimit","shadowOffsetX","shadowOffsetY","shadowBlur","shadowColor","font","textAlign","textBaseline"];
 	var ctxMethods = ["save","restore","scale","rotate","translate","transform","setTransform","createLinearGradient","createRadialGradient","createPattern","clearRect","fillRect","strokeRect","beginPath","closePath","moveTo","lineTo","quadraticCurveTo","bezierCurveTo","arcTo","rect","arc","fill","stroke","clip","isPointInPath","fillText","strokeText","measureText","drawImage","createImageData","getImageData","putImageData"];
-	this.verifyThatPropertiesExist(canvas,canvasProperties,{ fileName : "DomTester.hx", lineNumber : 2030, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatPropertiesExist(ctx,ctxProperties,{ fileName : "DomTester.hx", lineNumber : 2031, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatMethodsExist(ctx,ctxMethods,{ fileName : "DomTester.hx", lineNumber : 2032, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatMethodsExist(radGrad,radGradMethods,{ fileName : "DomTester.hx", lineNumber : 2033, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatPropertiesExist(mesText,mesTextProperties,{ fileName : "DomTester.hx", lineNumber : 2034, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatPropertiesExist(imgData,imgDataProperties,{ fileName : "DomTester.hx", lineNumber : 2035, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
-	this.verifyThatPropertiesExist(pixArray,pixArrayProperties,{ fileName : "DomTester.hx", lineNumber : 2036, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(canvas,canvasProperties,{ fileName : "DomTester.hx", lineNumber : 2032, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(ctx,ctxProperties,{ fileName : "DomTester.hx", lineNumber : 2033, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatMethodsExist(ctx,ctxMethods,{ fileName : "DomTester.hx", lineNumber : 2034, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatMethodsExist(radGrad,radGradMethods,{ fileName : "DomTester.hx", lineNumber : 2035, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(mesText,mesTextProperties,{ fileName : "DomTester.hx", lineNumber : 2036, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(imgData,imgDataProperties,{ fileName : "DomTester.hx", lineNumber : 2037, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
+	this.verifyThatPropertiesExist(pixArray,pixArrayProperties,{ fileName : "DomTester.hx", lineNumber : 2038, className : "haxe.DomTest", methodName : "testThatCanvasElementContainsMethodsAndProperties"});
 }
 haxe.DomTest.prototype.testThatCreateXMLHttpRequestWorks = function() {
 	var req = js.Env.createXMLHttpRequest();
-	this.assertTrue(req instanceof XMLHttpRequest,{ fileName : "DomTester.hx", lineNumber : 1927, className : "haxe.DomTest", methodName : "testThatCreateXMLHttpRequestWorks"});
-	this.assertTrue(Type["typeof"](req) != null,{ fileName : "DomTester.hx", lineNumber : 1929, className : "haxe.DomTest", methodName : "testThatCreateXMLHttpRequestWorks"});
+	this.assertTrue(req instanceof XMLHttpRequest,{ fileName : "DomTester.hx", lineNumber : 1929, className : "haxe.DomTest", methodName : "testThatCreateXMLHttpRequestWorks"});
+	this.assertTrue(Type["typeof"](req) != null,{ fileName : "DomTester.hx", lineNumber : 1931, className : "haxe.DomTest", methodName : "testThatCreateXMLHttpRequestWorks"});
 }
 haxe.DomTest.prototype.testThatDecodeURIComponentWorks = function() {
 	var encodedURI = js.Env.decodeURIComponent("Thyme%20%26time%3Dagain");
-	this.assertEquals("Thyme &time=again",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1891, className : "haxe.DomTest", methodName : "testThatDecodeURIComponentWorks"});
+	this.assertEquals("Thyme &time=again",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1893, className : "haxe.DomTest", methodName : "testThatDecodeURIComponentWorks"});
 }
 haxe.DomTest.prototype.testThatDecodeURIWorks = function() {
 	var decodedURI = js.Env.decodeURI("~!@#$%25%5E&*()%7B%7D%5B%5D=:/,;?+'%22%5C");
-	this.assertEquals("~!@#$%^&*(){}[]=:/,;?+'\"\\",decodedURI,{ fileName : "DomTester.hx", lineNumber : 1879, className : "haxe.DomTest", methodName : "testThatDecodeURIWorks"});
+	this.assertEquals("~!@#$%^&*(){}[]=:/,;?+'\"\\",decodedURI,{ fileName : "DomTester.hx", lineNumber : 1881, className : "haxe.DomTest", methodName : "testThatDecodeURIWorks"});
 }
 haxe.DomTest.prototype.testThatDocumentHasMethods = function() {
 	var doc = this._doc;
@@ -1470,15 +1470,15 @@ haxe.DomTest.prototype.testThatElementHasProperties = function() {
 }
 haxe.DomTest.prototype.testThatEncodeURIComponentWorks = function() {
 	var encodedURI = js.Env.encodeURIComponent("Thyme &time=again");
-	this.assertEquals("Thyme%20%26time%3Dagain",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1885, className : "haxe.DomTest", methodName : "testThatEncodeURIComponentWorks"});
+	this.assertEquals("Thyme%20%26time%3Dagain",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1887, className : "haxe.DomTest", methodName : "testThatEncodeURIComponentWorks"});
 }
 haxe.DomTest.prototype.testThatEncodeURIWorks = function() {
 	var encodedURI = js.Env.encodeURI("~!@#$%^&*(){}[]=:/,;?+'\"\\");
-	this.assertEquals("~!@#$%25%5E&*()%7B%7D%5B%5D=:/,;?+'%22%5C",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1873, className : "haxe.DomTest", methodName : "testThatEncodeURIWorks"});
+	this.assertEquals("~!@#$%25%5E&*()%7B%7D%5B%5D=:/,;?+'%22%5C",encodedURI,{ fileName : "DomTester.hx", lineNumber : 1875, className : "haxe.DomTest", methodName : "testThatEncodeURIWorks"});
 }
 haxe.DomTest.prototype.testThatEscapeWorks = function() {
 	var escapedString = js.Env.escape("http://www.google.com?q=quadrilateral");
-	this.assertEquals("http%3A//www.google.com%3Fq%3Dquadrilateral",escapedString,{ fileName : "DomTester.hx", lineNumber : 1897, className : "haxe.DomTest", methodName : "testThatEscapeWorks"});
+	this.assertEquals("http%3A//www.google.com%3Fq%3Dquadrilateral",escapedString,{ fileName : "DomTester.hx", lineNumber : 1899, className : "haxe.DomTest", methodName : "testThatEscapeWorks"});
 }
 haxe.DomTest.prototype.testThatHTMLAnchorElementHasPropertiesAndMethods = function() {
 	var anchor = this._doc.getElementsByTagName("a")[0];
@@ -1771,29 +1771,29 @@ haxe.DomTest.prototype.testThatHTMLUListElementHasProperties = function() {
 haxe.DomTest.prototype.testThatHistoryHasPropertiesAndMethods = function() {
 	var history = js.Env.history;
 	var properties = ["length"];
-	this.verifyThatPropertiesExist(history,properties,{ fileName : "DomTester.hx", lineNumber : 1696, className : "haxe.DomTest", methodName : "testThatHistoryHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(history,properties,{ fileName : "DomTester.hx", lineNumber : 1701, className : "haxe.DomTest", methodName : "testThatHistoryHasPropertiesAndMethods"});
 	var methods = ["back","forward","go"];
-	this.verifyThatMethodsExist(history,methods,{ fileName : "DomTester.hx", lineNumber : 1706, className : "haxe.DomTest", methodName : "testThatHistoryHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(history,methods,{ fileName : "DomTester.hx", lineNumber : 1711, className : "haxe.DomTest", methodName : "testThatHistoryHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatIsFiniteWorks = function() {
 	var n = 22;
-	this.assertTrue(js.Env.isFinite(22.2),{ fileName : "DomTester.hx", lineNumber : 1909, className : "haxe.DomTest", methodName : "testThatIsFiniteWorks"});
-	this.assertFalse(js.Env.isFinite(js.Env.JInfinity),{ fileName : "DomTester.hx", lineNumber : 1910, className : "haxe.DomTest", methodName : "testThatIsFiniteWorks"});
+	this.assertTrue(js.Env.isFinite(22.2),{ fileName : "DomTester.hx", lineNumber : 1911, className : "haxe.DomTest", methodName : "testThatIsFiniteWorks"});
+	this.assertFalse(js.Env.isFinite(js.Env.JInfinity),{ fileName : "DomTester.hx", lineNumber : 1912, className : "haxe.DomTest", methodName : "testThatIsFiniteWorks"});
 }
 haxe.DomTest.prototype.testThatIsNaNWorks = function() {
 	var n = 22;
-	this.assertFalse(js.Env.isNaN(22.2),{ fileName : "DomTester.hx", lineNumber : 1916, className : "haxe.DomTest", methodName : "testThatIsNaNWorks"});
-	this.assertTrue(js.Env.isNaN(js.Env.JNaN),{ fileName : "DomTester.hx", lineNumber : 1917, className : "haxe.DomTest", methodName : "testThatIsNaNWorks"});
+	this.assertFalse(js.Env.isNaN(22.2),{ fileName : "DomTester.hx", lineNumber : 1918, className : "haxe.DomTest", methodName : "testThatIsNaNWorks"});
+	this.assertTrue(js.Env.isNaN(js.Env.JNaN),{ fileName : "DomTester.hx", lineNumber : 1919, className : "haxe.DomTest", methodName : "testThatIsNaNWorks"});
 }
 haxe.DomTest.prototype.testThatJUndefinedWorks = function() {
-	this.assertEquals(Std.string(Type["typeof"](js.Env.JUndefined)),"TNull",{ fileName : "DomTester.hx", lineNumber : 1921, className : "haxe.DomTest", methodName : "testThatJUndefinedWorks"});
+	this.assertEquals(Std.string(Type["typeof"](js.Env.JUndefined)),"TNull",{ fileName : "DomTester.hx", lineNumber : 1923, className : "haxe.DomTest", methodName : "testThatJUndefinedWorks"});
 }
 haxe.DomTest.prototype.testThatLocationHasPropertiesAndMethods = function() {
 	var loc = js.Env.location;
 	var properties = ["hash","host","hostname","href","pathname","port","protocol","search"];
-	this.verifyThatPropertiesExist(loc,properties,{ fileName : "DomTester.hx", lineNumber : 1726, className : "haxe.DomTest", methodName : "testThatLocationHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(loc,properties,{ fileName : "DomTester.hx", lineNumber : 1728, className : "haxe.DomTest", methodName : "testThatLocationHasPropertiesAndMethods"});
 	var methods = ["assign","replace","reload"];
-	this.verifyThatMethodsExist(loc,methods,{ fileName : "DomTester.hx", lineNumber : 1735, className : "haxe.DomTest", methodName : "testThatLocationHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(loc,methods,{ fileName : "DomTester.hx", lineNumber : 1737, className : "haxe.DomTest", methodName : "testThatLocationHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatMouseEventWorks = function() {
 	var main = this._doc.getElementById("main");
@@ -1808,22 +1808,24 @@ haxe.DomTest.prototype.testThatMouseEventWorks = function() {
 }
 haxe.DomTest.prototype.testThatNavigatorHasPropertiesAndMethods = function() {
 	var navigator = js.Env.navigator;
+	haxe.Log.trace(navigator,{ fileName : "DomTester.hx", lineNumber : 1645, className : "haxe.DomTest", methodName : "testThatNavigatorHasPropertiesAndMethods"});
+	this.assertTrue(navigator instanceof Navigator,{ fileName : "DomTester.hx", lineNumber : 1646, className : "haxe.DomTest", methodName : "testThatNavigatorHasPropertiesAndMethods"});
 	var properties = ["appCodeName","cookieEnabled","geolocation","language","appName","appVersion","platform","userAgent","appName","appVersion","platform","plugins","onLine","productSub","product","mimeTypes","vendorSub","vendor","cookieEnabled"];
-	this.verifyThatPropertiesExist(navigator,properties,{ fileName : "DomTester.hx", lineNumber : 1666, className : "haxe.DomTest", methodName : "testThatNavigatorHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(navigator,properties,{ fileName : "DomTester.hx", lineNumber : 1671, className : "haxe.DomTest", methodName : "testThatNavigatorHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatPluginHasPropertiesAndMethods = function() {
 	var plugins = js.Env.navigator.plugins[0];
 	var properties = ["length","name","filename","description"];
-	this.verifyThatPropertiesExist(plugins,properties,{ fileName : "DomTester.hx", lineNumber : 1679, className : "haxe.DomTest", methodName : "testThatPluginHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(plugins,properties,{ fileName : "DomTester.hx", lineNumber : 1684, className : "haxe.DomTest", methodName : "testThatPluginHasPropertiesAndMethods"});
 	var methods = ["item","namedItem"];
-	this.verifyThatMethodsExist(plugins,methods,{ fileName : "DomTester.hx", lineNumber : 1686, className : "haxe.DomTest", methodName : "testThatPluginHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(plugins,methods,{ fileName : "DomTester.hx", lineNumber : 1691, className : "haxe.DomTest", methodName : "testThatPluginHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatScreenHasPropertiesAndMethods = function() {
 	var screen = js.Env.screen;
 	var properties = ["availHeight","availWidth","colorDepth","height","pixelDepth","width","availTop","availLeft"];
-	this.verifyThatPropertiesExist(screen,properties,{ fileName : "DomTester.hx", lineNumber : 1754, className : "haxe.DomTest", methodName : "testThatScreenHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(screen,properties,{ fileName : "DomTester.hx", lineNumber : 1756, className : "haxe.DomTest", methodName : "testThatScreenHasPropertiesAndMethods"});
 	var methods = [];
-	this.verifyThatMethodsExist(screen,methods,{ fileName : "DomTester.hx", lineNumber : 1763, className : "haxe.DomTest", methodName : "testThatScreenHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(screen,methods,{ fileName : "DomTester.hx", lineNumber : 1765, className : "haxe.DomTest", methodName : "testThatScreenHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testThatTextNodeHasProperties = function() {
 	var textNode = this._doc.createTextNode("new");
@@ -1832,7 +1834,7 @@ haxe.DomTest.prototype.testThatTextNodeHasProperties = function() {
 }
 haxe.DomTest.prototype.testThatUnescapeWorks = function() {
 	var unescapedString = js.Env.unescape("http%3A//www.google.com%3Fq%3Dquadrilateral");
-	this.assertEquals("http://www.google.com?q=quadrilateral",unescapedString,{ fileName : "DomTester.hx", lineNumber : 1903, className : "haxe.DomTest", methodName : "testThatUnescapeWorks"});
+	this.assertEquals("http://www.google.com?q=quadrilateral",unescapedString,{ fileName : "DomTester.hx", lineNumber : 1905, className : "haxe.DomTest", methodName : "testThatUnescapeWorks"});
 }
 haxe.DomTest.prototype.testThatWindowBarPropContainsProperties = function() {
 	var bar = this._doc.defaultView.locationbar;
@@ -1848,15 +1850,15 @@ haxe.DomTest.prototype.testThatWindowHasPropertiesAndMethods = function() {
 }
 haxe.DomTest.prototype.testThatXMLHTTPRequestHasPropertiesAndMethods = function() {
 	var xhr = js.Env.createXMLHttpRequest();
-	this.assertTrue(xhr instanceof XMLHttpRequest,{ fileName : "DomTester.hx", lineNumber : 1838, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
+	this.assertTrue(xhr instanceof XMLHttpRequest,{ fileName : "DomTester.hx", lineNumber : 1840, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
 	var properties = ["readyState","status","statusText","responseText"];
-	this.verifyThatPropertiesExist(xhr,properties,{ fileName : "DomTester.hx", lineNumber : 1847, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
+	this.verifyThatPropertiesExist(xhr,properties,{ fileName : "DomTester.hx", lineNumber : 1849, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
 	var methods = ["open","setRequestHeader","send","abort","getResponseHeader","getAllResponseHeaders"];
-	this.verifyThatMethodsExist(xhr,methods,{ fileName : "DomTester.hx", lineNumber : 1867, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
+	this.verifyThatMethodsExist(xhr,methods,{ fileName : "DomTester.hx", lineNumber : 1869, className : "haxe.DomTest", methodName : "testThatXMLHTTPRequestHasPropertiesAndMethods"});
 }
 haxe.DomTest.prototype.testgetElementsByTagName = function() {
 	var divElements = this._doc.getElementsByTagName("DIV");
-	this.assertEquals(14,divElements.length,{ fileName : "DomTester.hx", lineNumber : 104, className : "haxe.DomTest", methodName : "testgetElementsByTagName"});
+	this.assertTrue(divElements.length > 13 && divElements.length < 16,{ fileName : "DomTester.hx", lineNumber : 104, className : "haxe.DomTest", methodName : "testgetElementsByTagName"});
 }
 haxe.DomTest.prototype.verifyThatMethodsExist = function(o,methods,pos) {
 	var _g = 0;
@@ -1880,10 +1882,10 @@ haxe.DomTest.prototype.verifyThatMethodsExist = function(o,methods,pos) {
 			return $r;
 		}(this));
 		if(!isMethod) {
-			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "DomTester.hx", lineNumber : 2057, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
-			this.assertTrue(false,{ fileName : "DomTester.hx", lineNumber : 2057, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
+			haxe.Log.trace((("Object does not contain method : " + method) + ". From line: ") + pos.lineNumber,{ fileName : "DomTester.hx", lineNumber : 2059, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
+			this.assertTrue(false,{ fileName : "DomTester.hx", lineNumber : 2059, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
 		}
-		else this.assertTrue(true,{ fileName : "DomTester.hx", lineNumber : 2058, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
+		else this.assertTrue(true,{ fileName : "DomTester.hx", lineNumber : 2060, className : "haxe.DomTest", methodName : "verifyThatMethodsExist"});
 	}
 }
 haxe.DomTest.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
@@ -1893,10 +1895,10 @@ haxe.DomTest.prototype.verifyThatPropertiesExist = function(o,fields,pos) {
 		++_g;
 		var f = Reflect.field(o,field);
 		if(f == null) {
-			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "DomTester.hx", lineNumber : 2065, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
-			this.assertTrue(false,{ fileName : "DomTester.hx", lineNumber : 2065, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
+			haxe.Log.trace((("Object does not contain property : " + field) + ". From line: ") + pos.lineNumber,{ fileName : "DomTester.hx", lineNumber : 2067, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
+			this.assertTrue(false,{ fileName : "DomTester.hx", lineNumber : 2067, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
 		}
-		else this.assertTrue(true,{ fileName : "DomTester.hx", lineNumber : 2066, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
+		else this.assertTrue(true,{ fileName : "DomTester.hx", lineNumber : 2068, className : "haxe.DomTest", methodName : "verifyThatPropertiesExist"});
 	}
 }
 haxe.DomTest.prototype.xtestThatHTMLLinkElementHasProperties = function() {
