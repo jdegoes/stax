@@ -51,7 +51,7 @@ class TestCase {
     currentTest.output += Std.string(v);
   }
   
-  public function expectException(f: Void -> Void, msg: String = "Expected an exception, but nothing was thrown", ?c: PosInfos): Void {
+  public function assertException(f: Void -> Void, msg: String = "Expected an exception, but nothing was thrown", ?c: PosInfos): Void {
     currentTest.done = true;
     
     try {
