@@ -29,15 +29,15 @@ import haxe.abstract.PartialFunctionTestCase;
 
 class TestSuite {
   public static function main (): Void {
-    var r = new TestRunner();
-    r.add (new PreludeTestCase());
-    r.add (new JValueTestCase());
-    r.add (new MapTestCase());
-    r.add (new SetTestCase());
-    r.add (new ListTestCase());
-    r.add (new LoggerTestCase());
-    r.add (new JsonTestCase());
-    r.add (new PartialFunctionTestCase());
-    r.run ();
+    (new TestRunner()).addAll([
+      new PreludeTestCase(),
+      new JValueTestCase(),
+      new MapTestCase(),
+      new SetTestCase(),
+      new ListTestCase(),
+      new LoggerTestCase(),
+      new JsonTestCase(),
+      new PartialFunctionTestCase()
+    ]).run();
   }
 }

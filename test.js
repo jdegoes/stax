@@ -3478,16 +3478,7 @@ Std.prototype.__class__ = Std;
 TestSuite = function() { }
 TestSuite.__name__ = ["TestSuite"];
 TestSuite.main = function() {
-	var r = new haxe.test.TestRunner();
-	r.add(new PreludeTestCase());
-	r.add(new haxe.data.transcode.JValueTestCase());
-	r.add(new haxe.data.collections.MapTestCase());
-	r.add(new haxe.data.collections.SetTestCase());
-	r.add(new haxe.data.collections.ListTestCase());
-	r.add(new haxe.io.log.LoggerTestCase());
-	r.add(new haxe.text.json.JsonTestCase());
-	r.add(new haxe.abstract.PartialFunctionTestCase());
-	r.run();
+	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase()]).run();
 }
 TestSuite.prototype.__class__ = TestSuite;
 Lambda = function() { }
