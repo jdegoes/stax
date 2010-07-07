@@ -31,9 +31,9 @@ interface PartialFunction1<A, Z> {
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction1<A, Z>;
   
-	public function call(a: A): Z;
-	
-	public function toFunction(): A -> Option<Z>;
+    public function call(a: A): Z;
+    
+    public function toFunction(): A -> Option<Z>;
 }
 
 interface PartialFunction2<A, B, Z> {
@@ -45,9 +45,9 @@ interface PartialFunction2<A, B, Z> {
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction2<A, B, Z>;
   
-	public function call(a: A, b: B): Z;
-	
-	public function toFunction(): A -> B -> Option<Z>;
+    public function call(a: A, b: B): Z;
+    
+    public function toFunction(): A -> B -> Option<Z>;
 }
 
 interface PartialFunction3<A, B, C, Z> {
@@ -59,9 +59,9 @@ interface PartialFunction3<A, B, C, Z> {
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction3<A, B, C, Z>;
   
-	public function call(a: A, b: B, c: C): Z;
-	
-	public function toFunction(): A -> B -> C -> Option<Z>;
+    public function call(a: A, b: B, c: C): Z;
+    
+    public function toFunction(): A -> B -> C -> Option<Z>;
 }
 
 interface PartialFunction4<A, B, C, D, Z> {
@@ -73,9 +73,9 @@ interface PartialFunction4<A, B, C, D, Z> {
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction4<A, B, C, D, Z>;
   
-	public function call(a: A, b: B, c: C, d: D): Z;
-	
-	public function toFunction(): A -> B -> C -> D -> Option<Z>;
+    public function call(a: A, b: B, c: C, d: D): Z;
+    
+    public function toFunction(): A -> B -> C -> D -> Option<Z>;
 }
 
 interface PartialFunction5<A, B, C, D, E, Z> {
@@ -87,9 +87,9 @@ interface PartialFunction5<A, B, C, D, E, Z> {
   
   public function orAlwaysC(z: Thunk<Z>): PartialFunction5<A, B, C, D, E, Z>;
   
-	public function call(a: A, b: B, c: C, d: D, e: E): Z;
-	
-	public function toFunction(): A -> B -> C -> D -> E -> Option<Z>;
+    public function call(a: A, b: B, c: C, d: D, e: E): Z;
+    
+    public function toFunction(): A -> B -> C -> D -> E -> Option<Z>;
 }
 
 private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
@@ -105,10 +105,10 @@ private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
   
   public function isDefinedAt(a: A): Bool {
     for (d in _def) {
-	    if (d._1(a)) return true;
-	  }
-	  
-	  return false;
+        if (d._1(a)) return true;
+      }
+      
+      return false;
   }
   
   public function orElse(that: PartialFunction1<A, Z>): PartialFunction1<A, Z> {
@@ -129,15 +129,15 @@ private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
     ]));
   }
   
-	public function call(a: A): Z {
-	  for (d in _def) {
-	    if (d._1(a)) return d._2(a);
-	  }
-	  
-	  return Stax.error("Function undefined at " + a);
-	}
-	
-	public function toFunction(): A -> Option<Z> {
+    public function call(a: A): Z {
+      for (d in _def) {
+        if (d._1(a)) return d._2(a);
+      }
+      
+      return Stax.error("Function undefined at " + a);
+    }
+    
+    public function toFunction(): A -> Option<Z> {
     var self = this;
     
     return function(a) {
@@ -148,9 +148,9 @@ private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
 }
 
 class PartialFunction1ImplExtensions {
-	public static function toPartialFunction<A, Z>(def: Array<Tuple2<A -> Bool, A -> Z>>) {
-	  return PartialFunction1Impl.create(def);
-	}
+    public static function toPartialFunction<A, Z>(def: Array<Tuple2<A -> Bool, A -> Z>>) {
+      return PartialFunction1Impl.create(def);
+    }
 }
 
 private class PartialFunction2Impl<A, B, Z> implements PartialFunction2<A, B, Z> {
@@ -166,10 +166,10 @@ private class PartialFunction2Impl<A, B, Z> implements PartialFunction2<A, B, Z>
   
   public function isDefinedAt(a: A, b: B): Bool {
     for (d in _def) {
-	    if (d._1(a, b)) return true;
-	  }
-	  
-	  return false;
+        if (d._1(a, b)) return true;
+      }
+      
+      return false;
   }
   
   public function orElse(that: PartialFunction2<A, B, Z>): PartialFunction2<A, B, Z> {
@@ -190,15 +190,15 @@ private class PartialFunction2Impl<A, B, Z> implements PartialFunction2<A, B, Z>
     ]));
   }
   
-	public function call(a: A, b: B): Z {
-	  for (d in _def) {
-	    if (d._1(a, b)) return d._2(a, b);
-	  }
-	  
-	  return Stax.error("Function undefined at (" + a + ", " + b + ")");
-	}
-	
-	public function toFunction(): A -> B -> Option<Z> {
+    public function call(a: A, b: B): Z {
+      for (d in _def) {
+        if (d._1(a, b)) return d._2(a, b);
+      }
+      
+      return Stax.error("Function undefined at (" + a + ", " + b + ")");
+    }
+    
+    public function toFunction(): A -> B -> Option<Z> {
     var self = this;
     
     return function(a, b) {
@@ -209,9 +209,9 @@ private class PartialFunction2Impl<A, B, Z> implements PartialFunction2<A, B, Z>
 }
 
 class PartialFunction2ImplExtensions {
-	public static function toPartialFunction<A, B, Z>(def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>) {
-	  return PartialFunction2Impl.create(def);
-	}
+    public static function toPartialFunction<A, B, Z>(def: Array<Tuple2<A -> B -> Bool, A -> B -> Z>>) {
+      return PartialFunction2Impl.create(def);
+    }
 }
 
 private class PartialFunction3Impl<A, B, C, Z> implements PartialFunction3<A, B, C, Z> {
@@ -227,10 +227,10 @@ private class PartialFunction3Impl<A, B, C, Z> implements PartialFunction3<A, B,
   
   public function isDefinedAt(a: A, b: B, c: C): Bool {
     for (d in _def) {
-	    if (d._1(a, b, c)) return true;
-	  }
-	  
-	  return false;
+        if (d._1(a, b, c)) return true;
+      }
+      
+      return false;
   }
   
   public function orElse(that: PartialFunction3<A, B, C, Z>): PartialFunction3<A, B, C, Z> {
@@ -251,15 +251,15 @@ private class PartialFunction3Impl<A, B, C, Z> implements PartialFunction3<A, B,
     ]));
   }
   
-	public function call(a: A, b: B, c: C): Z {
-	  for (d in _def) {
-	    if (d._1(a, b, c)) return d._2(a, b, c);
-	  }
-	  
-	  return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ")");
-	}
-	
-	public function toFunction(): A -> B -> C -> Option<Z> {
+    public function call(a: A, b: B, c: C): Z {
+      for (d in _def) {
+        if (d._1(a, b, c)) return d._2(a, b, c);
+      }
+      
+      return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ")");
+    }
+    
+    public function toFunction(): A -> B -> C -> Option<Z> {
     var self = this;
     
     return function(a, b, c) {
@@ -270,9 +270,9 @@ private class PartialFunction3Impl<A, B, C, Z> implements PartialFunction3<A, B,
 }
 
 class PartialFunction3ImplExtensions {
-	public static function toPartialFunction<A, B, C, Z>(def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>) {
-	  return PartialFunction3Impl.create(def);
-	}
+    public static function toPartialFunction<A, B, C, Z>(def: Array<Tuple2<A -> B -> C -> Bool, A -> B -> C -> Z>>) {
+      return PartialFunction3Impl.create(def);
+    }
 }
 
 private class PartialFunction4Impl<A, B, C, D, Z> implements PartialFunction4<A, B, C, D, Z> {
@@ -288,10 +288,10 @@ private class PartialFunction4Impl<A, B, C, D, Z> implements PartialFunction4<A,
   
   public function isDefinedAt(a: A, b: B, c: C, d: D): Bool {
     for (def in _def) {
-	    if (def._1(a, b, c, d)) return true;
-	  }
-	  
-	  return false;
+        if (def._1(a, b, c, d)) return true;
+      }
+      
+      return false;
   }
   
   public function orElse(that: PartialFunction4<A, B, C, D, Z>): PartialFunction4<A, B, C, D, Z> {
@@ -312,15 +312,15 @@ private class PartialFunction4Impl<A, B, C, D, Z> implements PartialFunction4<A,
     ]));
   }
   
-	public function call(a: A, b: B, c: C, d: D): Z {
-	  for (def in _def) {
-	    if (def._1(a, b, c, d)) return def._2(a, b, c, d);
-	  }
-	  
-	  return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
-	}
-	
-	public function toFunction(): A -> B -> C -> D -> Option<Z> {
+    public function call(a: A, b: B, c: C, d: D): Z {
+      for (def in _def) {
+        if (def._1(a, b, c, d)) return def._2(a, b, c, d);
+      }
+      
+      return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
+    }
+    
+    public function toFunction(): A -> B -> C -> D -> Option<Z> {
     var self = this;
     
     return function(a, b, c, d) {
@@ -331,9 +331,9 @@ private class PartialFunction4Impl<A, B, C, D, Z> implements PartialFunction4<A,
 }
 
 class PartialFunction4ImplExtensions {
-	public static function toPartialFunction<A, B, C, D, Z>(def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>) {
-	  return PartialFunction4Impl.create(def);
-	}
+    public static function toPartialFunction<A, B, C, D, Z>(def: Array<Tuple2<A -> B -> C -> D -> Bool, A -> B -> C -> D -> Z>>) {
+      return PartialFunction4Impl.create(def);
+    }
 }
 
 private class PartialFunction5Impl<A, B, C, D, E, Z> implements PartialFunction5<A, B, C, D, E, Z> {
@@ -349,10 +349,10 @@ private class PartialFunction5Impl<A, B, C, D, E, Z> implements PartialFunction5
   
   public function isDefinedAt(a: A, b: B, c: C, d: D, e: E): Bool {
     for (def in _def) {
-	    if (def._1(a, b, c, d, e)) return true;
-	  }
-	  
-	  return false;
+        if (def._1(a, b, c, d, e)) return true;
+      }
+      
+      return false;
   }
   
   public function orElse(that: PartialFunction5<A, B, C, D, E, Z>): PartialFunction5<A, B, C, D, E, Z> {
@@ -373,15 +373,15 @@ private class PartialFunction5Impl<A, B, C, D, E, Z> implements PartialFunction5
     ]));
   }
   
-	public function call(a: A, b: B, c: C, d: D, e: E): Z {
-	  for (def in _def) {
-	    if (def._1(a, b, c, d, e)) return def._2(a, b, c, d, e);
-	  }
-	  
-	  return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
-	}
-	
-	public function toFunction(): A -> B -> C -> D -> E -> Option<Z> {
+    public function call(a: A, b: B, c: C, d: D, e: E): Z {
+      for (def in _def) {
+        if (def._1(a, b, c, d, e)) return def._2(a, b, c, d, e);
+      }
+      
+      return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
+    }
+    
+    public function toFunction(): A -> B -> C -> D -> E -> Option<Z> {
     var self = this;
     
     return function(a, b, c, d, e) {
@@ -392,7 +392,7 @@ private class PartialFunction5Impl<A, B, C, D, E, Z> implements PartialFunction5
 }
 
 class PartialFunction5ImplExtensions {
-	public static function toPartialFunction<A, B, C, D, E, Z>(def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>) {
-	  return PartialFunction5Impl.create(def);
-	}
+    public static function toPartialFunction<A, B, C, D, E, Z>(def: Array<Tuple2<A -> B -> C -> D -> E -> Bool, A -> B -> C -> D -> E -> Z>>) {
+      return PartialFunction5Impl.create(def);
+    }
 }

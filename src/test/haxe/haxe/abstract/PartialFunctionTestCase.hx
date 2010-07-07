@@ -24,34 +24,34 @@ using Prelude;
 using haxe.abstract.PartialFunction;
 
 class PartialFunctionTestCase extends TestCase {
-	public function testIsDefinedAtForPartialFunction1() {
-	  var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-	  
-	  assertTrue(f.isDefinedAt(2));
-	  assertFalse(f.isDefinedAt(-2));
-	}
-	
-	public function testCallForPartialFunction1() {
-	  var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-	  
-	  assertEquals(4, f.call(2));
-	}
-	
-	public function testOrElseForPartialFunction1() {
-	  var f1 = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-	  var f2 = [Tuple2.create(function(i: Int) return i < 0, function(i: Int) return i * i)].toPartialFunction();
-	  
-	  var f = f1.orElse(f2);
-	  
-	  assertTrue(f.isDefinedAt(-2));
-	  
-	  assertEquals(4, f.call(-2));
-	  assertEquals(4, f.call(2));
-	}
-	
-	public function testOrAlwaysCForPartialFunction1() {
-	  var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-	  
-	  assertTrue(f.orAlwaysC(9.toThunk()).isDefinedAt(-2));
-	}
+    public function testIsDefinedAtForPartialFunction1() {
+      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
+      
+      assertTrue(f.isDefinedAt(2));
+      assertFalse(f.isDefinedAt(-2));
+    }
+    
+    public function testCallForPartialFunction1() {
+      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
+      
+      assertEquals(4, f.call(2));
+    }
+    
+    public function testOrElseForPartialFunction1() {
+      var f1 = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
+      var f2 = [Tuple2.create(function(i: Int) return i < 0, function(i: Int) return i * i)].toPartialFunction();
+      
+      var f = f1.orElse(f2);
+      
+      assertTrue(f.isDefinedAt(-2));
+      
+      assertEquals(4, f.call(-2));
+      assertEquals(4, f.call(2));
+    }
+    
+    public function testOrAlwaysCForPartialFunction1() {
+      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
+      
+      assertTrue(f.orAlwaysC(9.toThunk()).isDefinedAt(-2));
+    }
 }

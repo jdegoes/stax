@@ -27,11 +27,11 @@ interface Collection<C, T> implements Foldable<C, T> {
   
   public function contains(t: T): Bool;
   
-	public function add(t: T): C;
-	
-	public function addAll(t: Iterable<T>): C;
-	
-	public function remove(t: T): C;
-	
-	public function removeAll(t: Iterable<T>): C;
+    public function add(t: T): C;
+    
+    public function addAll(t: Iterable<T>): C;
+    
+    public function remove(t: T): C;
+    
+    public function removeAll(t: Iterable<T>): C;
 }

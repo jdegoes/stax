@@ -27,141 +27,141 @@ package haxe.test;
 import Reflect;
 
 class TestRunner {
-	var result: TestResult;
-	var cases : List<TestCase>;
+    var result: TestResult;
+    var cases : List<TestCase>;
 
 #if flash9
-	static var tf: flash.text.TextField = null;
+    static var tf: flash.text.TextField = null;
 #elseif flash
-	static var tf: flash.TextField = null;
+    static var tf: flash.TextField = null;
 #end
 
-	private static dynamic function print(v: Dynamic untyped {
-		#if flash9
-			if(tf == null {
-				tf = new flash.text.TextField();
-				tf.selectable = false;
-				tf.width = flash.Lib.current.stage.stageWidth;
-				tf.autoSize = flash.text.TextFieldAutoSize.LEFT;
-				flash.Lib.current.addChild(tf);
-			}
-			tf.appendText(v);
-		#elseif flash
-			var root = flash.Lib.current;
-			if(tf == null {
-				root.createTextField("__tf",1048500,0,0,flash.Stage.width,flash.Stage.height+30);
-				tf = root.__tf;
-				tf.selectable = false;
-				tf.wordWrap = true;
-			}
-			var s = flash.Boot.__string_rec(v,"");
-			tf.text += s;
-			while(tf.textHeight > flash.Stage.height {
-				var lines = tf.text.split("\r");
-				lines.shift();
-				tf.text = lines.join("\n");
-			}
-		#elseif neko
-			__dollar__print(v);
-		#elseif php
-			php.Lib.print(v);
-		#elseif js
-			var msg = StringTools.htmlEscape(js.Boot.__string_rec(v,"")).split("\n").join("<br/>");
-			var d = document.getElementById("haxe:trace");
-			if(d == null
-				alert("haxe:trace element not found")
-			else
-				d.innerHTML += msg;
-		#end
-	}
+    private static dynamic function print(v: Dynamic untyped {
+        #if flash9
+            if(tf == null {
+                tf = new flash.text.TextField();
+                tf.selectable = false;
+                tf.width = flash.Lib.current.stage.stageWidth;
+                tf.autoSize = flash.text.TextFieldAutoSize.LEFT;
+                flash.Lib.current.addChild(tf);
+            }
+            tf.appendText(v);
+        #elseif flash
+            var root = flash.Lib.current;
+            if(tf == null {
+                root.createTextField("__tf",1048500,0,0,flash.Stage.width,flash.Stage.height+30);
+                tf = root.__tf;
+                tf.selectable = false;
+                tf.wordWrap = true;
+            }
+            var s = flash.Boot.__string_rec(v,"");
+            tf.text += s;
+            while(tf.textHeight > flash.Stage.height {
+                var lines = tf.text.split("\r");
+                lines.shift();
+                tf.text = lines.join("\n");
+            }
+        #elseif neko
+            __dollar__print(v);
+        #elseif php
+            php.Lib.print(v);
+        #elseif js
+            var msg = StringTools.htmlEscape(js.Boot.__string_rec(v,"")).split("\n").join("<br/>");
+            var d = document.getElementById("haxe:trace");
+            if(d == null
+                alert("haxe:trace element not found")
+            else
+                d.innerHTML += msg;
+        #end
+    }
 
-	private static function customTrace(v, ?p: haxe.PosInfos {
-		print(p.fileName+":"+p.lineNumber+": "+Std.string(v)+"\n");
-	}
+    private static function customTrace(v, ?p: haxe.PosInfos {
+        print(p.fileName+":"+p.lineNumber+": "+Std.string(v)+"\n");
+    }
 
-	public function new() {
-		result = new TestResult();
-		cases = new List();
-	}
+    public function new() {
+        result = new TestResult();
+        cases = new List();
+    }
 
-	public function add(c:TestCase: TestRunner {
-		cases.add(c);
-		
-		return this;
-	}
-	
-	public function addAll(i: Iterable<TestCase>): TestRunner {
-		for (c in i) cases.add(c);
-		
-		return this;
-	}
+    public function add(c:TestCase: TestRunner {
+        cases.add(c);
+        
+        return this;
+    }
+    
+    public function addAll(i: Iterable<TestCase>): TestRunner {
+        for (c in i) cases.add(c);
+        
+        return this;
+    }
 
-	public function run(): Bool {
-		result = new TestResult();
-		for (c in cases {
-			runCase(c);
-		}
-		print(result.toString());
-		return result.success;
-	}
+    public function run(): Bool {
+        result = new TestResult();
+        for (c in cases {
+            runCase(c);
+        }
+        print(result.toString());
+        return result.success;
+    }
 
-	function runCase(t:TestCase: Void 	{
-		var old = haxe.Log.trace;
-		haxe.Log.trace = customTrace;
+    function runCase(t:TestCase: Void     {
+        var old = haxe.Log.trace;
+        haxe.Log.trace = customTrace;
 
-		var cl = Type.getClass(t);
-		var fields = Type.getInstanceFields(cl);
+        var cl = Type.getClass(t);
+        var fields = Type.getInstanceFields(cl);
 
-		print("Class: "+Type.getClassName(cl)+" ");
-		t.beforeAll();
-		
-		for (f in fields) {
-			var fname = f;
-			var field = Reflect.field(t, f);
-			if (StringTools.startsWith(fname,"test") && Reflect.isFunction(field) {
-				t.currentTest = new TestStatus();
-				t.currentTest.classname = Type.getClassName(cl);
-				t.currentTest.method = fname;
-				t.before();
+        print("Class: "+Type.getClassName(cl)+" ");
+        t.beforeAll();
+        
+        for (f in fields) {
+            var fname = f;
+            var field = Reflect.field(t, f);
+            if (StringTools.startsWith(fname,"test") && Reflect.isFunction(field) {
+                t.currentTest = new TestStatus();
+                t.currentTest.classname = Type.getClassName(cl);
+                t.currentTest.method = fname;
+                t.before();
 
-				try {
-					Reflect.callMethod(t, field, new Array());
+                try {
+                    Reflect.callMethod(t, field, new Array());
 
-					if(t.currentTest.done {
-						t.currentTest.success = true;
-						print(".");
-					}
-					else {
-						t.currentTest.success = false;
-						t.currentTest.error = "(warning) no assert";
-						print("W");
-					}
-				}
-				catch (e: TestStatus) {
-					print("F");
-					t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
-				}
-				catch (e: Dynamic {
-					print("E");
-					#if js
-					if(e.message != null {
-						t.currentTest.error = "exception thrown: "+e+" ["+e.message+"]";
-					}else {
-						t.currentTest.error = "exception thrown: "+e;
-					}
-					#else
-					t.currentTest.error = "exception thrown: "+e;
-					#end
-					t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
-				}
-				print(currentTest.output);
-				result.add(t.currentTest);
-				t.after();
-			}
-		}
-		t.afterAll();
+                    if(t.currentTest.done {
+                        t.currentTest.success = true;
+                        print(".");
+                    }
+                    else {
+                        t.currentTest.success = false;
+                        t.currentTest.error = "(warning) no assert";
+                        print("W");
+                    }
+                }
+                catch (e: TestStatus) {
+                    print("F");
+                    t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+                }
+                catch (e: Dynamic {
+                    print("E");
+                    #if js
+                    if(e.message != null {
+                        t.currentTest.error = "exception thrown: "+e+" ["+e.message+"]";
+                    }else {
+                        t.currentTest.error = "exception thrown: "+e;
+                    }
+                    #else
+                    t.currentTest.error = "exception thrown: "+e;
+                    #end
+                    t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+                }
+                print(currentTest.output);
+                result.add(t.currentTest);
+                t.after();
+            }
+        }
+        t.afterAll();
 
-		print("\n");
-		haxe.Log.trace = old;
-	}
+        print("\n");
+        haxe.Log.trace = old;
+    }
 }

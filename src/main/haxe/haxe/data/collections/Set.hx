@@ -85,69 +85,69 @@ class Set<T> implements Collection<Set<T>, T> {
     }
   }
 
-	private function new(hasher: Hasher<T>, equal: Equal<T>, map: Map<T, T>) {
-	  _hasher = hasher; _equal = equal; _map = map;
-	}
-	
-	public function contains(e: T): Bool {
-	  return _map.containsKey(e);
-	}
-	
-	public function empty(): Set<T> {
-	  return if (size == 0) this; else Set.create(_hasher, _equal);
-	}
-	
-	public function append(s: Set<T>, t: T): Set<T> {
-	  return s.copyWithMod(s._map.set(t, t));
-	}
-	
-	public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
-	  var acc = z;
-	  
-	  for (e in _map) {
-	    acc = f(acc, e._1);
-	  }
-	  
-	  return acc;
-	}
-	
-	public function add(t: T): Set<T> {
-	  return if (contains(t)) this; else copyWithMod(_map.set(t, t));
-	}
-	
-	public function addAll(it: Iterable<T>): Set<T> {
-	  var set = this;
-	  
-	  for (e in it) set = set.add(e);
-	  
-	  return set;
-	}
-	
-	public function remove(t: T): Set<T> {
-	  return copyWithMod(_map.removeByKey(t));
-	}
-	
-	public function removeAll(it: Iterable<T>): Set<T> {
-	  var set = this;
-	  
-	  for (e in it) set = set.remove(e);
-	  
-	  return set;
-	}
-	
-	public function iterator(): Iterator<T> {
-	  return FoldableExtensions.iterator(this);
-	}
-	
-	public function toString(): String {
-	  return Set.ShowT(DynamicExtensions.ShowT()).show(this);
-	}
-	
-	private function copyWithMod(newMap: Map<T, T>): Set<T> {
-	  return new Set<T>(_hasher, _equal, newMap);
-	}
-	
-	private function getSize(): Int {
-	  return _map.size;
-	}
+    private function new(hasher: Hasher<T>, equal: Equal<T>, map: Map<T, T>) {
+      _hasher = hasher; _equal = equal; _map = map;
+    }
+    
+    public function contains(e: T): Bool {
+      return _map.containsKey(e);
+    }
+    
+    public function empty(): Set<T> {
+      return if (size == 0) this; else Set.create(_hasher, _equal);
+    }
+    
+    public function append(s: Set<T>, t: T): Set<T> {
+      return s.copyWithMod(s._map.set(t, t));
+    }
+    
+    public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
+      var acc = z;
+      
+      for (e in _map) {
+        acc = f(acc, e._1);
+      }
+      
+      return acc;
+    }
+    
+    public function add(t: T): Set<T> {
+      return if (contains(t)) this; else copyWithMod(_map.set(t, t));
+    }
+    
+    public function addAll(it: Iterable<T>): Set<T> {
+      var set = this;
+      
+      for (e in it) set = set.add(e);
+      
+      return set;
+    }
+    
+    public function remove(t: T): Set<T> {
+      return copyWithMod(_map.removeByKey(t));
+    }
+    
+    public function removeAll(it: Iterable<T>): Set<T> {
+      var set = this;
+      
+      for (e in it) set = set.remove(e);
+      
+      return set;
+    }
+    
+    public function iterator(): Iterator<T> {
+      return FoldableExtensions.iterator(this);
+    }
+    
+    public function toString(): String {
+      return Set.ShowT(DynamicExtensions.ShowT()).show(this);
+    }
+    
+    private function copyWithMod(newMap: Map<T, T>): Set<T> {
+      return new Set<T>(_hasher, _equal, newMap);
+    }
+    
+    private function getSize(): Int {
+      return _map.size;
+    }
 }

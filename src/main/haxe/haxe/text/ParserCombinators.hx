@@ -18,31 +18,31 @@
 package haxe.text;
 
 class ParserCombinators<T> {
-	public function new() {		
-	}
-	
-	public function literal(s: String): Parser<ParseInput<T>, ParseFailure> {
-	  return function(i: ParseInput<T>) {
-	    return if (i.rest.startsWith(s)) i.consume(s.length);
-	           else i.fail("Expected '" + s + "' but found '" + i.rest.substr(0, Math.min(i.rest.length, s.length)) + "'");
-	  }
-	}
-	
-	public function whitespaceChar(): Parser<ParseInput<T>, ParseFailure> {
-	  return function(i: ParseInput<T>) {
-	    var s = i.rest.substr(0, 1);
-	    
-	    return if (s == " " || s == "\t" || s == "\r" || s == "\n") i.consume(1);
-	           else i.fail("Expected whitespace but found '" + i.rest.substr(0, Math.min(i.rest.length, s.length)) + "'");
-	  };
-	}
-	
-	public function digitChar(): Parser<ParseInput<T>, ParseFailure> {
-	  return function(i: ParseInput<T>) {
-	    var s = i.rest.substr(0, 1);
-	    
-	    return if (~/^[0-9]$/.match(s)) i.consume(1);
-	           else i.fail("Expected digit but found '" + s + "'");
-	  }
-	}
+    public function new() {        
+    }
+    
+    public function literal(s: String): Parser<ParseInput<T>, ParseFailure> {
+      return function(i: ParseInput<T>) {
+        return if (i.rest.startsWith(s)) i.consume(s.length);
+               else i.fail("Expected '" + s + "' but found '" + i.rest.substr(0, Math.min(i.rest.length, s.length)) + "'");
+      }
+    }
+    
+    public function whitespaceChar(): Parser<ParseInput<T>, ParseFailure> {
+      return function(i: ParseInput<T>) {
+        var s = i.rest.substr(0, 1);
+        
+        return if (s == " " || s == "\t" || s == "\r" || s == "\n") i.consume(1);
+               else i.fail("Expected whitespace but found '" + i.rest.substr(0, Math.min(i.rest.length, s.length)) + "'");
+      };
+    }
+    
+    public function digitChar(): Parser<ParseInput<T>, ParseFailure> {
+      return function(i: ParseInput<T>) {
+        var s = i.rest.substr(0, 1);
+        
+        return if (~/^[0-9]$/.match(s)) i.consume(1);
+               else i.fail("Expected digit but found '" + s + "'");
+      }
+    }
 }

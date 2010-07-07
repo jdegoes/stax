@@ -26,75 +26,75 @@ package haxe.test;
 import haxe.PosInfos;
 
 class TestCase {
-	public var currentTest: TestStatus;
+    public var currentTest: TestStatus;
 
-	public function new() {
-	}
-	
-	public function beforeAll(): Void {
-	}
+    public function new() {
+    }
+    
+    public function beforeAll(): Void {
+    }
 
-	public function before(): Void {
-	}
+    public function before(): Void {
+    }
 
-	public function after(): Void {
-	}
-	
-	public function afterAll(): Void {
-	}
+    public function after(): Void {
+    }
+    
+    public function afterAll(): Void {
+    }
 
-	public function print(v: Dynamic) {
-		currentTest.output += Std.string(v);
-	}
+    public function print(v: Dynamic) {
+        currentTest.output += Std.string(v);
+    }
 
-	public function assertTrue(b: Bool, ?c: PosInfos): Void {
-		currentTest.done = true;
-		if (b == false){
-			currentTest.success = false;
-			currentTest.error   = "Expected true but was false";
-			currentTest.posInfos = c;
-			throw currentTest;
-		}
-	}
+    public function assertTrue(b: Bool, ?c: PosInfos): Void {
+        currentTest.done = true;
+        if (b == false){
+            currentTest.success = false;
+            currentTest.error   = "Expected true but was false";
+            currentTest.posInfos = c;
+            throw currentTest;
+        }
+    }
 
-	public function assertFalse(b: Bool, ?c: PosInfos): Void {
-		currentTest.done = true;
-		if (b == true){
-			currentTest.success = false;
-			currentTest.error   = "Expected false but was true";
-			currentTest.posInfos = c;
-			throw currentTest;
-		}
-	}
+    public function assertFalse(b: Bool, ?c: PosInfos): Void {
+        currentTest.done = true;
+        if (b == true){
+            currentTest.success = false;
+            currentTest.error   = "Expected false but was true";
+            currentTest.posInfos = c;
+            throw currentTest;
+        }
+    }
 
-	public function assertEquals<T>(expected: T, actual: T,  ?c: PosInfos): Void 	{
-		currentTest.done = true;
-		if (actual != expected){
-			currentTest.success = false;
-			currentTest.error   = "Expected '" + expected + "' but was '" + actual + "'";
-			currentTest.posInfos = c;
-			throw currentTest;
-		}
-	}
-	
-	public function assertNotNull(a: Dynamic, ?c: PosInfos): Void {
-	  currentTest.done = true;
-	  if (a == null) {
-	    currentTest.success = false;
-	    currentTest.error   = "Expected non-null, but was null";
-	    currentTest.posInfos = c;
-	    throw currentTest;
-	  }
-	}
-	
-	public function assertNull(a: Dynamic, ?c: PosInfos): Void {
-	  currentTest.done = true;
-	  if (a != null) {
-	    currentTest.success = false;
-	    currentTest.error   = "Expected null, but was '" + a + "'";
-	    currentTest.posInfos = c;
-	    throw currentTest;
-	  }
-	}
+    public function assertEquals<T>(expected: T, actual: T,  ?c: PosInfos): Void     {
+        currentTest.done = true;
+        if (actual != expected){
+            currentTest.success = false;
+            currentTest.error   = "Expected '" + expected + "' but was '" + actual + "'";
+            currentTest.posInfos = c;
+            throw currentTest;
+        }
+    }
+    
+    public function assertNotNull(a: Dynamic, ?c: PosInfos): Void {
+      currentTest.done = true;
+      if (a == null) {
+        currentTest.success = false;
+        currentTest.error   = "Expected non-null, but was null";
+        currentTest.posInfos = c;
+        throw currentTest;
+      }
+    }
+    
+    public function assertNull(a: Dynamic, ?c: PosInfos): Void {
+      currentTest.done = true;
+      if (a != null) {
+        currentTest.success = false;
+        currentTest.error   = "Expected null, but was '" + a + "'";
+        currentTest.posInfos = c;
+        throw currentTest;
+      }
+    }
 
 }

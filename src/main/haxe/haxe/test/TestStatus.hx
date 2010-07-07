@@ -29,19 +29,19 @@ import haxe.Stack;
 import haxe.PosInfos;
 
 class TestStatus {
-	public var done: Bool;
-	public var success: Bool;
-	public var error: String;
-	public var method: String;
-	public var classname: String;
-	public var posInfos: PosInfos;
-	public var backtrace: String;
-	public var output: String;
+    public var done: Bool;
+    public var success: Bool;
+    public var error: String;
+    public var method: String;
+    public var classname: String;
+    public var posInfos: PosInfos;
+    public var backtrace: String;
+    public var output: String;
 
-	public function new() 	{
-		done    = false;
-		success = false;
-		output  = '';
-	}
+    public function new()     {
+        done    = false;
+        success = false;
+        output  = '';
+    }
 
 }

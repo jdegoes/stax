@@ -22,30 +22,30 @@ import haxe.unit.TestRunner;
 using Prelude;
 
 class PreludeTestCase extends TestCase {
-	public function new() {
-	  super();
-	}
-	
-	public function testCompose() {
-	  var f1 = function(i) { return i * 2; }
-	  var f2 = function(i) { return i - 1; }
-	  
-	  assertEquals(2, f1.compose(f2)(2));
-	}
-	
-	public function testCurry2() {
-	  var f = function(i1, i2, i3) { return i1 + i2 + i3; }
-	  
-	  assertEquals(3, f.curry()(2)(-2)(3));
-	}
-	
-	public function testFutureChaining() {
-	  var f1: Future<Int> = Future.create();
-	  
-	  var f2 = f1.map(function(i) { return Std.string(i); }).flatMap(function(s): Future<Bool> { return Future.create().deliver(s.length < 2); });
-	  
-	  f1.deliver(9);
-	  
-	  assertEquals(true, f2.value().get());
-	}
+    public function new() {
+      super();
+    }
+    
+    public function testCompose() {
+      var f1 = function(i) { return i * 2; }
+      var f2 = function(i) { return i - 1; }
+      
+      assertEquals(2, f1.compose(f2)(2));
+    }
+    
+    public function testCurry2() {
+      var f = function(i1, i2, i3) { return i1 + i2 + i3; }
+      
+      assertEquals(3, f.curry()(2)(-2)(3));
+    }
+    
+    public function testFutureChaining() {
+      var f1: Future<Int> = Future.create();
+      
+      var f2 = f1.map(function(i) { return Std.string(i); }).flatMap(function(s): Future<Bool> { return Future.create().deliver(s.length < 2); });
+      
+      f1.deliver(9);
+      
+      assertEquals(true, f2.value().get());
+    }
 }

@@ -31,65 +31,65 @@ class Stream<T> implements Collection<Stream<T>, T> {
   var _equal: Equal<T>;
   
   private function new(head: T, tail: Thunk<Stream<T>>, equal: Equal<T>) {
-		this._head  = head;
-	  this._thunk = tail.memoize();
-	  this._equal = equal;
-	}
-	
-	public static function cons<T>(head: T, tail: Thunk<Stream<T>>, ?equal: Equal<T>): Stream<T> {
-	  equal = if (equal == null) DynamicExtensions.EqualT(); else equal;
-	  
-	  return new Stream(head, tail, equal);
-	}
-	
-	public function empty(): Set<T> {
-	  return if (size == 0) this; else Set.create(_hasher, _equal);
-	}
-	
-	public function append(s: Stream<T>, t: T): Stream<T> {
-	  return cons(t, s);
-	}
-	
-	public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
-	  var acc = z;
-	  
-	  for (e in _map) {
-	    acc = f(acc, e._1);
-	  }
-	  
-	  return acc;
-	}
-	
-	public function add(t: T): Stream<T> {
-	  return if (contains(t)) this; else copyWithMod(_map.set(t, t));
-	}
-	
-	public function addAll(it: Iterable<T>): Stream<T> {
-	  var set = this;
-	  
-	  for (e in it) set = set.add(e);
-	  
-	  return set;
-	}
-	
-	public function remove(t: T): Stream<T> {
-	  return copyWithMod(_map.removeByKey(t));
-	}
-	
-	public function removeAll(it: Iterable<T>): Stream<T> {
-	  var set = this;
-	  
-	  for (e in it) set = set.remove(e);
-	  
-	  return set;
-	}
-	
-	public function iterator(): Iterator<T> {
-	  return FoldableExtensions.iterator(this);
-	}
-	
-	public function toString(): String {
-	  return Stream.ShowT(DynamicExtensions.ShowT()).show(this);
-	}
+        this._head  = head;
+      this._thunk = tail.memoize();
+      this._equal = equal;
+    }
+    
+    public static function cons<T>(head: T, tail: Thunk<Stream<T>>, ?equal: Equal<T>): Stream<T> {
+      equal = if (equal == null) DynamicExtensions.EqualT(); else equal;
+      
+      return new Stream(head, tail, equal);
+    }
+    
+    public function empty(): Set<T> {
+      return if (size == 0) this; else Set.create(_hasher, _equal);
+    }
+    
+    public function append(s: Stream<T>, t: T): Stream<T> {
+      return cons(t, s);
+    }
+    
+    public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
+      var acc = z;
+      
+      for (e in _map) {
+        acc = f(acc, e._1);
+      }
+      
+      return acc;
+    }
+    
+    public function add(t: T): Stream<T> {
+      return if (contains(t)) this; else copyWithMod(_map.set(t, t));
+    }
+    
+    public function addAll(it: Iterable<T>): Stream<T> {
+      var set = this;
+      
+      for (e in it) set = set.add(e);
+      
+      return set;
+    }
+    
+    public function remove(t: T): Stream<T> {
+      return copyWithMod(_map.removeByKey(t));
+    }
+    
+    public function removeAll(it: Iterable<T>): Stream<T> {
+      var set = this;
+      
+      for (e in it) set = set.remove(e);
+      
+      return set;
+    }
+    
+    public function iterator(): Iterator<T> {
+      return FoldableExtensions.iterator(this);
+    }
+    
+    public function toString(): String {
+      return Stream.ShowT(DynamicExtensions.ShowT()).show(this);
+    }
 }
 */

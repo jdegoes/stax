@@ -23,13 +23,13 @@ import haxe.text.xml.XMLNode;
 typedef HttpError = String
 
 interface Http<T> {
-	public function get(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
-	
-	public function post(url: String, data: String): Future<Either<HttpError, T>>;
-	
-	public function put(url: String, data: String): Future<Either<HttpError, T>>;
-	
-	public function delete(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
+    public function get(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
+    
+    public function post(url: String, data: String): Future<Either<HttpError, T>>;
+    
+    public function put(url: String, data: String): Future<Either<HttpError, T>>;
+    
+    public function delete(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
 }
 
 class HttpFactory {

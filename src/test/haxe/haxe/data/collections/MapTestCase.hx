@@ -26,131 +26,131 @@ using Prelude;
 using haxe.abstract.Foldable;
 
 class MapTestCase extends TestCase {
-	public function testSizeGrowsWhenAddingUniqueKeys(): Void {
-	  var m = map();
-	  
-	  for (i in 0...100) {
-	    assertEquals(i, m.size);
-	    
-	    m = m.set(i, "foo");
-	  }
-	  
-	  assertEquals(100, m.size);
-	}
-	
-	public function testSizeGrowsWhenAddingDuplicateKeys(): Void {
-	  var m = map().set(0, "foo");
-	  
-	  for (i in 0...100) m = m.set(0, "foo");
-	  
-	  assertEquals(1, m.size);
-	}
-	
-	public function testCanRetrieveValuesForKeys(): Void {
-	  var m = defaultMap();
-	  
-	  for (i in 0...100) {
-	    assertEquals("foo", m.get(i).getOrElse(function() return "bar"));
-	  }
-	}
-	
-	public function testSizeShrinksWhenRemovingKeys(): Void {
-	  var m = defaultMap();
-	  
-	  for (i in 0...100) {
-	    assertEquals(100 - i, m.size);
-	    
-	    m = m.removeByKey(i);
-	  }
-	  
-	  assertEquals(0, m.size);
-	}
-	
-	public function testLoadNeverExceedsMax(): Void {
-	  var m = map();
-	  
-	  for (i in 0...100) {
-	    m = m.set(i, "foo");
-	    
-	    assertTrue(m.load() <= Map.MaxLoad);
-	  }
-	}
-	
-	public function testContainsKeys(): Void {
-	  var m = map();
-	  
-	  for (i in 0...100) {
-	    assertFalse(m.containsKey(i));
-	    
-	    m = m.set(i, "foo");
-	    
-	    assertTrue(m.containsKey(i));
-	  }
-	}
-	
-	public function testAddingSameKeysAndSameValueDoesNotChangeMap(): Void {
-	  var m = defaultMap();
-	  
-	  for (i in 0...100) {
-	    var oldM = m;
-	    
-	    m = m.set(i, "foo");
-	    
-	    assertEquals(oldM, m);
-	    assertEquals(100, m.size);
-	  }
-	}
-	
-	public function testAddingSameKeyButDifferentValueUpdatesMap(): Void {
-	  var m = defaultMap();
-	  
-	  for (i in 0...100) {
-	    m = m.set(i, "bar");
+    public function testSizeGrowsWhenAddingUniqueKeys(): Void {
+      var m = map();
+      
+      for (i in 0...100) {
+        assertEquals(i, m.size);
+        
+        m = m.set(i, "foo");
+      }
+      
+      assertEquals(100, m.size);
+    }
+    
+    public function testSizeGrowsWhenAddingDuplicateKeys(): Void {
+      var m = map().set(0, "foo");
+      
+      for (i in 0...100) m = m.set(0, "foo");
+      
+      assertEquals(1, m.size);
+    }
+    
+    public function testCanRetrieveValuesForKeys(): Void {
+      var m = defaultMap();
+      
+      for (i in 0...100) {
+        assertEquals("foo", m.get(i).getOrElse(function() return "bar"));
+      }
+    }
+    
+    public function testSizeShrinksWhenRemovingKeys(): Void {
+      var m = defaultMap();
+      
+      for (i in 0...100) {
+        assertEquals(100 - i, m.size);
+        
+        m = m.removeByKey(i);
+      }
+      
+      assertEquals(0, m.size);
+    }
+    
+    public function testLoadNeverExceedsMax(): Void {
+      var m = map();
+      
+      for (i in 0...100) {
+        m = m.set(i, "foo");
+        
+        assertTrue(m.load() <= Map.MaxLoad);
+      }
+    }
+    
+    public function testContainsKeys(): Void {
+      var m = map();
+      
+      for (i in 0...100) {
+        assertFalse(m.containsKey(i));
+        
+        m = m.set(i, "foo");
+        
+        assertTrue(m.containsKey(i));
+      }
+    }
+    
+    public function testAddingSameKeysAndSameValueDoesNotChangeMap(): Void {
+      var m = defaultMap();
+      
+      for (i in 0...100) {
+        var oldM = m;
+        
+        m = m.set(i, "foo");
+        
+        assertEquals(oldM, m);
+        assertEquals(100, m.size);
+      }
+    }
+    
+    public function testAddingSameKeyButDifferentValueUpdatesMap(): Void {
+      var m = defaultMap();
+      
+      for (i in 0...100) {
+        m = m.set(i, "bar");
 
-	    assertEquals("bar", m.get(i).get());
-	    assertEquals(100, m.size);
-	  }
-	}
-	
-	public function testCanIterateThroughKeys(): Void {
-	  var m = defaultMap();
-	  
-	  var count = 4950;
-	  var iterated = 0;
-	  
-	  for (k in m.keys()) {
-	    count -= k;
-	    
-	    ++iterated;
-	  }
+        assertEquals("bar", m.get(i).get());
+        assertEquals(100, m.size);
+      }
+    }
+    
+    public function testCanIterateThroughKeys(): Void {
+      var m = defaultMap();
+      
+      var count = 4950;
+      var iterated = 0;
+      
+      for (k in m.keys()) {
+        count -= k;
+        
+        ++iterated;
+      }
 
-	  assertEquals(100, iterated);
-	  assertEquals(0,   count);
-	}
-	
-	public function testCanIterateThroughValues(): Void {
-	  var m = defaultMap();
-	  
-	  for (v in m.values()) {
-	    assertEquals("foo", v);
-	  }
-	}
-	
-	public function testFilter(): Void {
-	  var m = defaultMap().filter(function(t) { return t._1 < 50; });
-	  
-	  assertEquals(50, m.size);
-	}
-	
-	function defaultMap(): Map<Int, String> {
-	  var m = map();
-	  
-	  for (i in 0...100) m = m.set(i, "foo");
-	  
-	  return m;
-	}
-	
-	function map(): Map<Int, String> {
-	  return Map.create(Int.HasherT(), Int.EqualT(), String.HasherT(), String.EqualT());
-	}
+      assertEquals(100, iterated);
+      assertEquals(0,   count);
+    }
+    
+    public function testCanIterateThroughValues(): Void {
+      var m = defaultMap();
+      
+      for (v in m.values()) {
+        assertEquals("foo", v);
+      }
+    }
+    
+    public function testFilter(): Void {
+      var m = defaultMap().filter(function(t) { return t._1 < 50; });
+      
+      assertEquals(50, m.size);
+    }
+    
+    function defaultMap(): Map<Int, String> {
+      var m = map();
+      
+      for (i in 0...100) m = m.set(i, "foo");
+      
+      return m;
+    }
+    
+    function map(): Map<Int, String> {
+      return Map.create(Int.HasherT(), Int.EqualT(), String.HasherT(), String.EqualT());
+    }
 }
