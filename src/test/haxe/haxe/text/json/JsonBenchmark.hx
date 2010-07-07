@@ -17,8 +17,8 @@
 
 package haxe.text.json;
 
-import haxe.unit.TestCase;
-import haxe.unit.TestRunner;
+import haxe.test.TestCase;
+import haxe.test.TestRunner;
 
 import haxe.text.json.JValue;
 import haxe.text.json.Json;

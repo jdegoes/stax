@@ -1,6 +1,6 @@
 package haxe.text.html;
 
-import haxe.unit.TestCase;
+import haxe.test.TestCase;
 
 class HTMLParserTestCase extends TestCase {
   public function testToMakeSureHaXeIsntBreakingThings (): Void {

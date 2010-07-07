@@ -19,7 +19,7 @@ package haxe.data.collections;
 import Prelude;
 
 import haxe.abstract.Foldable;
-import haxe.unit.TestCase;
+import haxe.test.TestCase;
 import haxe.data.collections.Set;
 
 using Prelude;

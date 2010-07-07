@@ -16,8 +16,8 @@
 */
 import PreludeTest;
 
-import haxe.unit.TestCase;
-import haxe.unit.TestRunner;
+import haxe.test.TestCase;
+import haxe.test.TestRunner;
 
 import haxe.text.json.JsonTestCase;
 import haxe.io.log.LoggerTestCase;

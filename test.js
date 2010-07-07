@@ -95,6 +95,66 @@ haxe.Stack.makeStack = function(s) {
 	return m;
 }
 haxe.Stack.prototype.__class__ = haxe.Stack;
+if(!haxe.test) haxe.test = {}
+haxe.test.TestResult = function(p) { if( p === $_ ) return; {
+	this.m_tests = new List();
+	this.success = true;
+}}
+haxe.test.TestResult.__name__ = ["haxe","test","TestResult"];
+haxe.test.TestResult.prototype.add = function(t) {
+	this.m_tests.add(t);
+	if(!t.success) this.success = false;
+}
+haxe.test.TestResult.prototype.m_tests = null;
+haxe.test.TestResult.prototype.success = null;
+haxe.test.TestResult.prototype.toString = function() {
+	var buf = new StringBuf();
+	var failures = 0;
+	{ var $it1 = this.m_tests.iterator();
+	while( $it1.hasNext() ) { var test = $it1.next();
+	{
+		if(test.success == false) {
+			buf.b[buf.b.length] = "* ";
+			buf.b[buf.b.length] = test.classname;
+			buf.b[buf.b.length] = "::";
+			buf.b[buf.b.length] = test.method;
+			buf.b[buf.b.length] = "()";
+			buf.b[buf.b.length] = "\n";
+			buf.b[buf.b.length] = "ERR: ";
+			if(test.posInfos != null) {
+				buf.b[buf.b.length] = test.posInfos.fileName;
+				buf.b[buf.b.length] = ":";
+				buf.b[buf.b.length] = test.posInfos.lineNumber;
+				buf.b[buf.b.length] = "(";
+				buf.b[buf.b.length] = test.posInfos.className;
+				buf.b[buf.b.length] = ".";
+				buf.b[buf.b.length] = test.posInfos.methodName;
+				buf.b[buf.b.length] = ") - ";
+			}
+			buf.b[buf.b.length] = test.error;
+			buf.b[buf.b.length] = "\n";
+			if(test.backtrace != null) {
+				buf.b[buf.b.length] = test.backtrace;
+				buf.b[buf.b.length] = "\n";
+			}
+			buf.b[buf.b.length] = "\n";
+			failures++;
+		}
+	}
+	}}
+	buf.b[buf.b.length] = "\n";
+	if(failures == 0) buf.b[buf.b.length] = "OK ";
+	else buf.b[buf.b.length] = "FAILED ";
+	buf.b[buf.b.length] = this.m_tests.length;
+	buf.b[buf.b.length] = " tests, ";
+	buf.b[buf.b.length] = failures;
+	buf.b[buf.b.length] = " failed, ";
+	buf.b[buf.b.length] = (this.m_tests.length - failures);
+	buf.b[buf.b.length] = " success";
+	buf.b[buf.b.length] = "\n";
+	return buf.b.join("");
+}
+haxe.test.TestResult.prototype.__class__ = haxe.test.TestResult;
 if(!haxe.data) haxe.data = {}
 if(!haxe.data.transcode) haxe.data.transcode = {}
 haxe.data.transcode.BoolExtensions = function() { }
@@ -574,9 +634,9 @@ haxe.data.transcode.ExtractorHelpers.extractFieldValue = function(j,n,e,def) {
 	try {
 		return e.extract(fieldValue);
 	}
-	catch( $e1 ) {
+	catch( $e2 ) {
 		{
-			var err = $e1;
+			var err = $e2;
 			{
 				return e.extract(def);
 			}
@@ -1187,8 +1247,8 @@ haxe.text.json.JValueExtensions.fold = function(v,initial,f) {
 }
 haxe.text.json.JValueExtensions.path = function(v,s) {
 	var ss = s.split("/"), c = v;
-	{ var $it2 = ss.iterator();
-	while( $it2.hasNext() ) { var x = $it2.next();
+	{ var $it3 = ss.iterator();
+	while( $it3.hasNext() ) { var x = $it3.next();
 	if(x.length > 0) c = haxe.text.json.JValueExtensions.get(c,x);
 	}}
 	return c;
@@ -1423,6 +1483,72 @@ haxe.text.json.JValueExtensions.extractArray = function(v) {
 	}(this));
 }
 haxe.text.json.JValueExtensions.prototype.__class__ = haxe.text.json.JValueExtensions;
+haxe.test.TestCase = function(p) { if( p === $_ ) return; {
+	null;
+}}
+haxe.test.TestCase.__name__ = ["haxe","test","TestCase"];
+haxe.test.TestCase.prototype.after = function() {
+	null;
+}
+haxe.test.TestCase.prototype.afterAll = function() {
+	null;
+}
+haxe.test.TestCase.prototype.assertEquals = function(expected,actual,c) {
+	this.currentTest.done = true;
+	if(actual != expected) {
+		this.currentTest.success = false;
+		this.currentTest.error = ((("Expected '" + expected) + "' but was '") + actual) + "'";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertFalse = function(b,c) {
+	this.currentTest.done = true;
+	if(b == true) {
+		this.currentTest.success = false;
+		this.currentTest.error = "Expected false but was true";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertNotNull = function(a,c) {
+	this.currentTest.done = true;
+	if(a == null) {
+		this.currentTest.success = false;
+		this.currentTest.error = "Expected non-null, but was null";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertNull = function(a,c) {
+	this.currentTest.done = true;
+	if(a != null) {
+		this.currentTest.success = false;
+		this.currentTest.error = ("Expected null, but was '" + a) + "'";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertTrue = function(b,c) {
+	this.currentTest.done = true;
+	if(b == false) {
+		this.currentTest.success = false;
+		this.currentTest.error = "Expected true but was false";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.before = function() {
+	null;
+}
+haxe.test.TestCase.prototype.beforeAll = function() {
+	null;
+}
+haxe.test.TestCase.prototype.currentTest = null;
+haxe.test.TestCase.prototype.print = function(v) {
+	this.currentTest.output += Std.string(v);
+}
+haxe.test.TestCase.prototype.__class__ = haxe.test.TestCase;
 StringTools = function() { }
 StringTools.__name__ = ["StringTools"];
 StringTools.urlEncode = function(s) {
@@ -1522,60 +1648,13 @@ StringTools.hex = function(n,digits) {
 	return s;
 }
 StringTools.prototype.__class__ = StringTools;
-haxe.Public = function() { }
-haxe.Public.__name__ = ["haxe","Public"];
-haxe.Public.prototype.__class__ = haxe.Public;
-if(!haxe.unit) haxe.unit = {}
-haxe.unit.TestCase = function(p) { if( p === $_ ) return; {
-	null;
-}}
-haxe.unit.TestCase.__name__ = ["haxe","unit","TestCase"];
-haxe.unit.TestCase.prototype.assertEquals = function(expected,actual,c) {
-	this.currentTest.done = true;
-	if(actual != expected) {
-		this.currentTest.success = false;
-		this.currentTest.error = ((("expected '" + expected) + "' but was '") + actual) + "'";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.unit.TestCase.prototype.assertFalse = function(b,c) {
-	this.currentTest.done = true;
-	if(b == true) {
-		this.currentTest.success = false;
-		this.currentTest.error = "expected false but was true";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.unit.TestCase.prototype.assertTrue = function(b,c) {
-	this.currentTest.done = true;
-	if(b == false) {
-		this.currentTest.success = false;
-		this.currentTest.error = "expected true but was false";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.unit.TestCase.prototype.currentTest = null;
-haxe.unit.TestCase.prototype.print = function(v) {
-	haxe.unit.TestRunner.print(v);
-}
-haxe.unit.TestCase.prototype.setup = function() {
-	null;
-}
-haxe.unit.TestCase.prototype.tearDown = function() {
-	null;
-}
-haxe.unit.TestCase.prototype.__class__ = haxe.unit.TestCase;
-haxe.unit.TestCase.__interfaces__ = [haxe.Public];
 if(!haxe.data.collections) haxe.data.collections = {}
 haxe.data.collections.MapTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.data.collections.MapTestCase.__name__ = ["haxe","data","collections","MapTestCase"];
-haxe.data.collections.MapTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.data.collections.MapTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.data.collections.MapTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.MapTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.collections.MapTestCase.prototype.defaultMap = function() {
 	var m = this.map();
 	{
@@ -1619,8 +1698,8 @@ haxe.data.collections.MapTestCase.prototype.testCanIterateThroughKeys = function
 	var m = this.defaultMap();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it3 = m.keys().iterator();
-	while( $it3.hasNext() ) { var k = $it3.next();
+	{ var $it4 = m.keys().iterator();
+	while( $it4.hasNext() ) { var k = $it4.next();
 	{
 		count -= k;
 		++iterated;
@@ -1631,8 +1710,8 @@ haxe.data.collections.MapTestCase.prototype.testCanIterateThroughKeys = function
 }
 haxe.data.collections.MapTestCase.prototype.testCanIterateThroughValues = function() {
 	var m = this.defaultMap();
-	{ var $it4 = m.values().iterator();
-	while( $it4.hasNext() ) { var v = $it4.next();
+	{ var $it5 = m.values().iterator();
+	while( $it5.hasNext() ) { var v = $it5.next();
 	{
 		this.assertEquals("foo",v,{ fileName : "MapTestCase.hx", lineNumber : 135, className : "haxe.data.collections.MapTestCase", methodName : "testCanIterateThroughValues"});
 	}
@@ -1716,11 +1795,11 @@ haxe.data.collections.MapTestCase.prototype.testSizeShrinksWhenRemovingKeys = fu
 }
 haxe.data.collections.MapTestCase.prototype.__class__ = haxe.data.collections.MapTestCase;
 haxe.text.json.JsonTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.text.json.JsonTestCase.__name__ = ["haxe","text","json","JsonTestCase"];
-haxe.text.json.JsonTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.text.json.JsonTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.text.json.JsonTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.text.json.JsonTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.text.json.JsonTestCase.prototype.assertIdentity = function(x) {
 	this.assertLooksEqual(haxe.text.json.Json.decode(x),haxe.text.json.Json.decode(haxe.text.json.Json.encode(haxe.text.json.Json.decode(x))));
 }
@@ -1870,9 +1949,9 @@ haxe.text.json.JsonTestCase.prototype.testObjectFold = function() {
 			try {
 				$r = [haxe.text.json.JValueExtensions.extractKey(x)];
 			}
-			catch( $e5 ) {
+			catch( $e6 ) {
 				{
-					var e = $e5;
+					var e = $e6;
 					$r = [];
 				}
 			}
@@ -1885,9 +1964,9 @@ haxe.text.json.JsonTestCase.prototype.testObjectFold = function() {
 			try {
 				$r = [haxe.text.json.JValueExtensions.extractKey(x)];
 			}
-			catch( $e6 ) {
+			catch( $e7 ) {
 				{
-					var e = $e6;
+					var e = $e7;
 					$r = [];
 				}
 			}
@@ -1937,65 +2016,6 @@ haxe.text.json.JsonTestCase.prototype.testSanityOfParseInt = function() {
 	this.assertEquals(Std.parseInt("55462"),55462,{ fileName : "JsonTestCase.hx", lineNumber : 45, className : "haxe.text.json.JsonTestCase", methodName : "testSanityOfParseInt"});
 }
 haxe.text.json.JsonTestCase.prototype.__class__ = haxe.text.json.JsonTestCase;
-haxe.unit.TestResult = function(p) { if( p === $_ ) return; {
-	this.m_tests = new List();
-	this.success = true;
-}}
-haxe.unit.TestResult.__name__ = ["haxe","unit","TestResult"];
-haxe.unit.TestResult.prototype.add = function(t) {
-	this.m_tests.add(t);
-	if(!t.success) this.success = false;
-}
-haxe.unit.TestResult.prototype.m_tests = null;
-haxe.unit.TestResult.prototype.success = null;
-haxe.unit.TestResult.prototype.toString = function() {
-	var buf = new StringBuf();
-	var failures = 0;
-	{ var $it7 = this.m_tests.iterator();
-	while( $it7.hasNext() ) { var test = $it7.next();
-	{
-		if(test.success == false) {
-			buf.b[buf.b.length] = "* ";
-			buf.b[buf.b.length] = test.classname;
-			buf.b[buf.b.length] = "::";
-			buf.b[buf.b.length] = test.method;
-			buf.b[buf.b.length] = "()";
-			buf.b[buf.b.length] = "\n";
-			buf.b[buf.b.length] = "ERR: ";
-			if(test.posInfos != null) {
-				buf.b[buf.b.length] = test.posInfos.fileName;
-				buf.b[buf.b.length] = ":";
-				buf.b[buf.b.length] = test.posInfos.lineNumber;
-				buf.b[buf.b.length] = "(";
-				buf.b[buf.b.length] = test.posInfos.className;
-				buf.b[buf.b.length] = ".";
-				buf.b[buf.b.length] = test.posInfos.methodName;
-				buf.b[buf.b.length] = ") - ";
-			}
-			buf.b[buf.b.length] = test.error;
-			buf.b[buf.b.length] = "\n";
-			if(test.backtrace != null) {
-				buf.b[buf.b.length] = test.backtrace;
-				buf.b[buf.b.length] = "\n";
-			}
-			buf.b[buf.b.length] = "\n";
-			failures++;
-		}
-	}
-	}}
-	buf.b[buf.b.length] = "\n";
-	if(failures == 0) buf.b[buf.b.length] = "OK ";
-	else buf.b[buf.b.length] = "FAILED ";
-	buf.b[buf.b.length] = this.m_tests.length;
-	buf.b[buf.b.length] = " tests, ";
-	buf.b[buf.b.length] = failures;
-	buf.b[buf.b.length] = " failed, ";
-	buf.b[buf.b.length] = (this.m_tests.length - failures);
-	buf.b[buf.b.length] = " success";
-	buf.b[buf.b.length] = "\n";
-	return buf.b.join("");
-}
-haxe.unit.TestResult.prototype.__class__ = haxe.unit.TestResult;
 Reflect = function() { }
 Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
@@ -2458,11 +2478,11 @@ haxe.abstract.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
 }
 haxe.abstract.PartialFunction5ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction5ImplExtensions;
 haxe.data.collections.SetTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.data.collections.SetTestCase.__name__ = ["haxe","data","collections","SetTestCase"];
-haxe.data.collections.SetTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.data.collections.SetTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.data.collections.SetTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.SetTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.collections.SetTestCase.prototype.defaultSet = function() {
 	var s = this.set();
 	{
@@ -2874,11 +2894,11 @@ StringBuf.prototype.__class__ = StringBuf;
 if(!haxe.io) haxe.io = {}
 if(!haxe.io.log) haxe.io.log = {}
 haxe.io.log.LoggerTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.io.log.LoggerTestCase.__name__ = ["haxe","io","log","LoggerTestCase"];
-haxe.io.log.LoggerTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.io.log.LoggerTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.io.log.LoggerTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.io.log.LoggerTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.io.log.LoggerTestCase.prototype.doTest = function(handler,f) {
 	var invoked = false;
 	haxe.io.log.Logger.defaultHandlers.push(function(l,t,p) {
@@ -3100,6 +3120,107 @@ IntIter.prototype.next = function() {
 	return this.min++;
 }
 IntIter.prototype.__class__ = IntIter;
+haxe.test.TestRunner = function(p) { if( p === $_ ) return; {
+	this.result = new haxe.test.TestResult();
+	this.cases = new List();
+}}
+haxe.test.TestRunner.__name__ = ["haxe","test","TestRunner"];
+haxe.test.TestRunner.print = function(v) {
+	var msg = StringTools.htmlEscape(js.Boot.__string_rec(v,"")).split("\n").join("<br/>");
+	var d = document.getElementById("haxe:trace");
+	if(d == null) alert("haxe:trace element not found");
+	else d.innerHTML += msg;
+}
+haxe.test.TestRunner.customTrace = function(v,p) {
+	haxe.test.TestRunner.print(((((p.fileName + ":") + p.lineNumber) + ": ") + Std.string(v)) + "\n");
+}
+haxe.test.TestRunner.prototype.add = function(c) {
+	this.cases.add(c);
+	return this;
+}
+haxe.test.TestRunner.prototype.addAll = function(i) {
+	{ var $it17 = i.iterator();
+	while( $it17.hasNext() ) { var c = $it17.next();
+	this.cases.add(c);
+	}}
+	return this;
+}
+haxe.test.TestRunner.prototype.cases = null;
+haxe.test.TestRunner.prototype.result = null;
+haxe.test.TestRunner.prototype.run = function() {
+	this.result = new haxe.test.TestResult();
+	{ var $it18 = this.cases.iterator();
+	while( $it18.hasNext() ) { var c = $it18.next();
+	{
+		this.runCase(c);
+	}
+	}}
+	haxe.test.TestRunner.print(this.result.toString());
+	return this.result.success;
+}
+haxe.test.TestRunner.prototype.runCase = function(t) {
+	var old = $closure(haxe.Log,"trace");
+	haxe.Log.trace = $closure(haxe.test.TestRunner,"customTrace");
+	var cl = Type.getClass(t);
+	var fields = Type.getInstanceFields(cl);
+	haxe.test.TestRunner.print(("Class: " + Type.getClassName(cl)) + " ");
+	t.beforeAll();
+	{
+		var _g = 0;
+		while(_g < fields.length) {
+			var f = fields[_g];
+			++_g;
+			var fname = f;
+			var field = Reflect.field(t,f);
+			if(StringTools.startsWith(fname,"test") && Reflect.isFunction(field)) {
+				t.currentTest = new haxe.test.TestStatus();
+				t.currentTest.classname = Type.getClassName(cl);
+				t.currentTest.method = fname;
+				t.before();
+				try {
+					field.apply(t,new Array());
+					if(t.currentTest.done) {
+						t.currentTest.success = true;
+						haxe.test.TestRunner.print(".");
+					}
+					else {
+						t.currentTest.success = false;
+						t.currentTest.error = "(warning) no assert";
+						haxe.test.TestRunner.print("W");
+					}
+				}
+				catch( $e19 ) {
+					if( js.Boot.__instanceof($e19,haxe.test.TestStatus) ) {
+						var e = $e19;
+						{
+							haxe.test.TestRunner.print("F");
+							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+						}
+					} else {
+						var e = $e19;
+						{
+							haxe.test.TestRunner.print("E");
+							if(e.message != null) {
+								t.currentTest.error = ((("exception thrown: " + e) + " [") + e.message) + "]";
+							}
+							else {
+								t.currentTest.error = "exception thrown: " + e;
+							}
+							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+						}
+					}
+				}
+				haxe.test.TestRunner.print(t.currentTest.output);
+				this.result.add(t.currentTest);
+				t.after();
+			}
+		}
+	}
+	t.afterAll();
+	haxe.test.TestRunner.print("\n");
+	haxe.Log.trace = old;
+}
+haxe.test.TestRunner.prototype.__class__ = haxe.test.TestRunner;
 haxe.abstract.FoldableExtensions = function() { }
 haxe.abstract.FoldableExtensions.__name__ = ["haxe","abstract","FoldableExtensions"];
 haxe.abstract.FoldableExtensions.foldr = function(foldable,z,f) {
@@ -3124,6 +3245,17 @@ haxe.abstract.FoldableExtensions.filter = function(foldable,f) {
 haxe.abstract.FoldableExtensions.partition = function(foldable,f) {
 	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
 		return (f(b)?Tuple2.create(foldable.append(a._1,b),a._2):Tuple2.create(a._1,foldable.append(a._2,b)));
+	});
+}
+haxe.abstract.FoldableExtensions.partitionWhile = function(foldable,f) {
+	var partitioning = true;
+	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
+		return (partitioning?(f(b)?Tuple2.create(foldable.append(a._1,b),a._2):(function($this) {
+			var $r;
+			partitioning = false;
+			$r = Tuple2.create(a._1,foldable.append(a._2,b));
+			return $r;
+		}(this))):Tuple2.create(a._1,foldable.append(a._2,b)));
 	});
 }
 haxe.abstract.FoldableExtensions.map = function(foldable,f) {
@@ -3206,8 +3338,8 @@ haxe.abstract.FoldableExtensions.append = function(foldable,e) {
 }
 haxe.abstract.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
-	{ var $it17 = i.iterator();
-	while( $it17.hasNext() ) { var e = $it17.next();
+	{ var $it20 = i.iterator();
+	while( $it20.hasNext() ) { var e = $it20.next();
 	{
 		acc = acc.append(acc,e);
 	}
@@ -3346,7 +3478,7 @@ Std.prototype.__class__ = Std;
 TestSuite = function() { }
 TestSuite.__name__ = ["TestSuite"];
 TestSuite.main = function() {
-	var r = new haxe.unit.TestRunner();
+	var r = new haxe.test.TestRunner();
 	r.add(new PreludeTestCase());
 	r.add(new haxe.data.transcode.JValueTestCase());
 	r.add(new haxe.data.collections.MapTestCase());
@@ -3362,24 +3494,24 @@ Lambda = function() { }
 Lambda.__name__ = ["Lambda"];
 Lambda.array = function(it) {
 	var a = new Array();
-	{ var $it18 = it.iterator();
-	while( $it18.hasNext() ) { var i = $it18.next();
+	{ var $it21 = it.iterator();
+	while( $it21.hasNext() ) { var i = $it21.next();
 	a.push(i);
 	}}
 	return a;
 }
 Lambda.list = function(it) {
 	var l = new List();
-	{ var $it19 = it.iterator();
-	while( $it19.hasNext() ) { var i = $it19.next();
+	{ var $it22 = it.iterator();
+	while( $it22.hasNext() ) { var i = $it22.next();
 	l.add(i);
 	}}
 	return l;
 }
 Lambda.map = function(it,f) {
 	var l = new List();
-	{ var $it20 = it.iterator();
-	while( $it20.hasNext() ) { var x = $it20.next();
+	{ var $it23 = it.iterator();
+	while( $it23.hasNext() ) { var x = $it23.next();
 	l.add(f(x));
 	}}
 	return l;
@@ -3387,66 +3519,66 @@ Lambda.map = function(it,f) {
 Lambda.mapi = function(it,f) {
 	var l = new List();
 	var i = 0;
-	{ var $it21 = it.iterator();
-	while( $it21.hasNext() ) { var x = $it21.next();
+	{ var $it24 = it.iterator();
+	while( $it24.hasNext() ) { var x = $it24.next();
 	l.add(f(i++,x));
 	}}
 	return l;
 }
 Lambda.has = function(it,elt,cmp) {
 	if(cmp == null) {
-		{ var $it22 = it.iterator();
-		while( $it22.hasNext() ) { var x = $it22.next();
+		{ var $it25 = it.iterator();
+		while( $it25.hasNext() ) { var x = $it25.next();
 		if(x == elt) return true;
 		}}
 	}
 	else {
-		{ var $it23 = it.iterator();
-		while( $it23.hasNext() ) { var x = $it23.next();
+		{ var $it26 = it.iterator();
+		while( $it26.hasNext() ) { var x = $it26.next();
 		if(cmp(x,elt)) return true;
 		}}
 	}
 	return false;
 }
 Lambda.exists = function(it,f) {
-	{ var $it24 = it.iterator();
-	while( $it24.hasNext() ) { var x = $it24.next();
+	{ var $it27 = it.iterator();
+	while( $it27.hasNext() ) { var x = $it27.next();
 	if(f(x)) return true;
 	}}
 	return false;
 }
 Lambda.foreach = function(it,f) {
-	{ var $it25 = it.iterator();
-	while( $it25.hasNext() ) { var x = $it25.next();
+	{ var $it28 = it.iterator();
+	while( $it28.hasNext() ) { var x = $it28.next();
 	if(!f(x)) return false;
 	}}
 	return true;
 }
 Lambda.iter = function(it,f) {
-	{ var $it26 = it.iterator();
-	while( $it26.hasNext() ) { var x = $it26.next();
+	{ var $it29 = it.iterator();
+	while( $it29.hasNext() ) { var x = $it29.next();
 	f(x);
 	}}
 }
 Lambda.filter = function(it,f) {
 	var l = new List();
-	{ var $it27 = it.iterator();
-	while( $it27.hasNext() ) { var x = $it27.next();
+	{ var $it30 = it.iterator();
+	while( $it30.hasNext() ) { var x = $it30.next();
 	if(f(x)) l.add(x);
 	}}
 	return l;
 }
 Lambda.fold = function(it,f,first) {
-	{ var $it28 = it.iterator();
-	while( $it28.hasNext() ) { var x = $it28.next();
+	{ var $it31 = it.iterator();
+	while( $it31.hasNext() ) { var x = $it31.next();
 	first = f(x,first);
 	}}
 	return first;
 }
 Lambda.count = function(it) {
 	var n = 0;
-	{ var $it29 = it.iterator();
-	while( $it29.hasNext() ) { var _ = $it29.next();
+	{ var $it32 = it.iterator();
+	while( $it32.hasNext() ) { var _ = $it32.next();
 	++n;
 	}}
 	return n;
@@ -3570,102 +3702,12 @@ List.prototype.toString = function() {
 	return s.b.join("");
 }
 List.prototype.__class__ = List;
-haxe.unit.TestRunner = function(p) { if( p === $_ ) return; {
-	this.result = new haxe.unit.TestResult();
-	this.cases = new List();
-}}
-haxe.unit.TestRunner.__name__ = ["haxe","unit","TestRunner"];
-haxe.unit.TestRunner.print = function(v) {
-	var msg = StringTools.htmlEscape(js.Boot.__string_rec(v,"")).split("\n").join("<br/>");
-	var d = document.getElementById("haxe:trace");
-	if(d == null) alert("haxe:trace element not found");
-	else d.innerHTML += msg;
-}
-haxe.unit.TestRunner.customTrace = function(v,p) {
-	haxe.unit.TestRunner.print(((((p.fileName + ":") + p.lineNumber) + ": ") + Std.string(v)) + "\n");
-}
-haxe.unit.TestRunner.prototype.add = function(c) {
-	this.cases.add(c);
-}
-haxe.unit.TestRunner.prototype.cases = null;
-haxe.unit.TestRunner.prototype.result = null;
-haxe.unit.TestRunner.prototype.run = function() {
-	this.result = new haxe.unit.TestResult();
-	{ var $it30 = this.cases.iterator();
-	while( $it30.hasNext() ) { var c = $it30.next();
-	{
-		this.runCase(c);
-	}
-	}}
-	haxe.unit.TestRunner.print(this.result.toString());
-	return this.result.success;
-}
-haxe.unit.TestRunner.prototype.runCase = function(t) {
-	var old = $closure(haxe.Log,"trace");
-	haxe.Log.trace = $closure(haxe.unit.TestRunner,"customTrace");
-	var cl = Type.getClass(t);
-	var fields = Type.getInstanceFields(cl);
-	haxe.unit.TestRunner.print(("Class: " + Type.getClassName(cl)) + " ");
-	{
-		var _g = 0;
-		while(_g < fields.length) {
-			var f = fields[_g];
-			++_g;
-			var fname = f;
-			var field = Reflect.field(t,f);
-			if(StringTools.startsWith(fname,"test") && Reflect.isFunction(field)) {
-				t.currentTest = new haxe.unit.TestStatus();
-				t.currentTest.classname = Type.getClassName(cl);
-				t.currentTest.method = fname;
-				t.setup();
-				try {
-					field.apply(t,new Array());
-					if(t.currentTest.done) {
-						t.currentTest.success = true;
-						haxe.unit.TestRunner.print(".");
-					}
-					else {
-						t.currentTest.success = false;
-						t.currentTest.error = "(warning) no assert";
-						haxe.unit.TestRunner.print("W");
-					}
-				}
-				catch( $e31 ) {
-					if( js.Boot.__instanceof($e31,haxe.unit.TestStatus) ) {
-						var e = $e31;
-						{
-							haxe.unit.TestRunner.print("F");
-							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
-						}
-					} else {
-						var e = $e31;
-						{
-							haxe.unit.TestRunner.print("E");
-							if(e.message != null) {
-								t.currentTest.error = ((("exception thrown : " + e) + " [") + e.message) + "]";
-							}
-							else {
-								t.currentTest.error = "exception thrown : " + e;
-							}
-							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
-						}
-					}
-				}
-				this.result.add(t.currentTest);
-				t.tearDown();
-			}
-		}
-	}
-	haxe.unit.TestRunner.print("\n");
-	haxe.Log.trace = old;
-}
-haxe.unit.TestRunner.prototype.__class__ = haxe.unit.TestRunner;
 PreludeTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 PreludeTestCase.__name__ = ["PreludeTestCase"];
-PreludeTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) PreludeTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+PreludeTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) PreludeTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 PreludeTestCase.prototype.testCompose = function() {
 	var f1 = function(i) {
 		return i * 2;
@@ -3761,9 +3803,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e32 ) {
+	catch( $e33 ) {
 		{
-			var e = $e32;
+			var e = $e33;
 			{
 				cl = null;
 			}
@@ -3777,9 +3819,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e33 ) {
+	catch( $e34 ) {
 		{
-			var err = $e33;
+			var err = $e34;
 			{
 				e = null;
 			}
@@ -3873,9 +3915,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e34 ) {
+	catch( $e35 ) {
 		{
-			var e = $e34;
+			var e = $e35;
 			{
 				return false;
 			}
@@ -3960,9 +4002,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e35 ) {
+		catch( $e36 ) {
 			{
-				var e = $e35;
+				var e = $e36;
 				{
 					return "???";
 				}
@@ -4019,9 +4061,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e36 ) {
+	catch( $e37 ) {
 		{
-			var e = $e36;
+			var e = $e37;
 			{
 				if(cl == null) return false;
 			}
@@ -4104,11 +4146,11 @@ js.Boot.__init = function() {
 }
 js.Boot.prototype.__class__ = js.Boot;
 haxe.data.transcode.JValueTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.data.transcode.JValueTestCase.__name__ = ["haxe","data","transcode","JValueTestCase"];
-haxe.data.transcode.JValueTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.data.transcode.JValueTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.data.transcode.JValueTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.data.transcode.JValueTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.transcode.JValueTestCase.prototype.doTest = function(decomposer,extractor,values,eq) {
 	var _g = 0;
 	while(_g < values.length) {
@@ -4221,12 +4263,27 @@ haxe.text.json.JsonGenerator.generateObject = function() {
 	return haxe.text.json.JValue.JObject(h);
 }
 haxe.text.json.JsonGenerator.prototype.__class__ = haxe.text.json.JsonGenerator;
+haxe.test.TestStatus = function(p) { if( p === $_ ) return; {
+	this.done = false;
+	this.success = false;
+	this.output = "";
+}}
+haxe.test.TestStatus.__name__ = ["haxe","test","TestStatus"];
+haxe.test.TestStatus.prototype.backtrace = null;
+haxe.test.TestStatus.prototype.classname = null;
+haxe.test.TestStatus.prototype.done = null;
+haxe.test.TestStatus.prototype.error = null;
+haxe.test.TestStatus.prototype.method = null;
+haxe.test.TestStatus.prototype.output = null;
+haxe.test.TestStatus.prototype.posInfos = null;
+haxe.test.TestStatus.prototype.success = null;
+haxe.test.TestStatus.prototype.__class__ = haxe.test.TestStatus;
 haxe.abstract.PartialFunctionTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.abstract.PartialFunctionTestCase.__name__ = ["haxe","abstract","PartialFunctionTestCase"];
-haxe.abstract.PartialFunctionTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.abstract.PartialFunctionTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.abstract.PartialFunctionTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.abstract.PartialFunctionTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.abstract.PartialFunctionTestCase.prototype.testCallForPartialFunction1 = function() {
 	var f = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
 		return i > 0;
@@ -4563,8 +4620,8 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 		var keys1 = v1.keySet();
 		var keys2 = v2.keySet();
 		if(!haxe.data.collections.Set.EqualT(kequal).equal(keys1,keys2)) return false;
-		{ var $it37 = keys1.iterator();
-		while( $it37.hasNext() ) { var key = $it37.next();
+		{ var $it38 = keys1.iterator();
+		while( $it38.hasNext() ) { var key = $it38.next();
 		{
 			var v11 = OptionExtensions.get(v1.get(key));
 			var v21 = OptionExtensions.get(v2.get(key));
@@ -4634,8 +4691,8 @@ haxe.data.collections.Map.prototype.add = function(t) {
 }
 haxe.data.collections.Map.prototype.addAll = function(i) {
 	var map = this;
-	{ var $it38 = i.iterator();
-	while( $it38.hasNext() ) { var t = $it38.next();
+	{ var $it39 = i.iterator();
+	while( $it39.hasNext() ) { var t = $it39.next();
 	map = map.add(t);
 	}}
 	return map;
@@ -4648,8 +4705,8 @@ haxe.data.collections.Map.prototype.bucketFor = function(k) {
 }
 haxe.data.collections.Map.prototype.contains = function(t) {
 	var tupleEqual = Tuple2.EqualT(this.keyEqual,this.valueEqual);
-	{ var $it39 = this.entries().iterator();
-	while( $it39.hasNext() ) { var e = $it39.next();
+	{ var $it40 = this.entries().iterator();
+	while( $it40.hasNext() ) { var e = $it40.next();
 	{
 		if(tupleEqual.equal(e,t)) return true;
 	}
@@ -4728,8 +4785,8 @@ haxe.data.collections.Map.prototype.entries = function() {
 }
 haxe.data.collections.Map.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it40 = this.entries().iterator();
-	while( $it40.hasNext() ) { var e = $it40.next();
+	{ var $it41 = this.entries().iterator();
+	while( $it41.hasNext() ) { var e = $it41.next();
 	{
 		acc = f(acc,e);
 	}
@@ -4808,8 +4865,8 @@ haxe.data.collections.Map.prototype.rebalance = function() {
 				this._buckets.push([]);
 			}
 		}
-		{ var $it41 = all.iterator();
-		while( $it41.hasNext() ) { var e = $it41.next();
+		{ var $it42 = all.iterator();
+		while( $it42.hasNext() ) { var e = $it42.next();
 		{
 			var bucket = this.bucketFor(e._1);
 			this._buckets[bucket].push(e);
@@ -4822,16 +4879,16 @@ haxe.data.collections.Map.prototype.remove = function(t) {
 }
 haxe.data.collections.Map.prototype.removeAll = function(i) {
 	var map = this;
-	{ var $it42 = i.iterator();
-	while( $it42.hasNext() ) { var t = $it42.next();
+	{ var $it43 = i.iterator();
+	while( $it43.hasNext() ) { var t = $it43.next();
 	map = map.remove(t);
 	}}
 	return map;
 }
 haxe.data.collections.Map.prototype.removeAllByKey = function(i) {
 	var map = this;
-	{ var $it43 = i.iterator();
-	while( $it43.hasNext() ) { var k = $it43.next();
+	{ var $it44 = i.iterator();
+	while( $it44.hasNext() ) { var k = $it44.next();
 	map = map.removeByKey(k);
 	}}
 	return map;
@@ -5194,8 +5251,8 @@ ArrayExtensions.flatMap = function(a,f) {
 		while(_g < a.length) {
 			var e1 = a[_g];
 			++_g;
-			{ var $it44 = f(e1).iterator();
-			while( $it44.hasNext() ) { var e2 = $it44.next();
+			{ var $it45 = f(e1).iterator();
+			while( $it45.hasNext() ) { var e2 = $it45.next();
 			n.push(e2);
 			}}
 		}
@@ -6078,8 +6135,8 @@ IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
 	if(show == null) show = $closure(Std,"string");
 	var s = prefix;
 	var isFirst = true;
-	{ var $it45 = i.iterator();
-	while( $it45.hasNext() ) { var t = $it45.next();
+	{ var $it46 = i.iterator();
+	while( $it46.hasNext() ) { var t = $it46.next();
 	{
 		if(isFirst) isFirst = false;
 		else s += sep;
@@ -6099,8 +6156,8 @@ IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
 }
 IterableExtensions.toArray = function(i) {
 	var a = [];
-	{ var $it46 = i.iterator();
-	while( $it46.hasNext() ) { var e = $it46.next();
+	{ var $it47 = i.iterator();
+	while( $it47.hasNext() ) { var e = $it47.next();
 	a.push(e);
 	}}
 	return a;
@@ -6402,25 +6459,12 @@ Stax.errorT = function(msg) {
 	}
 }
 Stax.prototype.__class__ = Stax;
-haxe.unit.TestStatus = function(p) { if( p === $_ ) return; {
-	this.done = false;
-	this.success = false;
-}}
-haxe.unit.TestStatus.__name__ = ["haxe","unit","TestStatus"];
-haxe.unit.TestStatus.prototype.backtrace = null;
-haxe.unit.TestStatus.prototype.classname = null;
-haxe.unit.TestStatus.prototype.done = null;
-haxe.unit.TestStatus.prototype.error = null;
-haxe.unit.TestStatus.prototype.method = null;
-haxe.unit.TestStatus.prototype.posInfos = null;
-haxe.unit.TestStatus.prototype.success = null;
-haxe.unit.TestStatus.prototype.__class__ = haxe.unit.TestStatus;
 haxe.data.collections.ListTestCase = function(p) { if( p === $_ ) return; {
-	haxe.unit.TestCase.apply(this,[]);
+	haxe.test.TestCase.apply(this,[]);
 }}
 haxe.data.collections.ListTestCase.__name__ = ["haxe","data","collections","ListTestCase"];
-haxe.data.collections.ListTestCase.__super__ = haxe.unit.TestCase;
-for(var k in haxe.unit.TestCase.prototype ) haxe.data.collections.ListTestCase.prototype[k] = haxe.unit.TestCase.prototype[k];
+haxe.data.collections.ListTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.ListTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.collections.ListTestCase.prototype.assertListEquals = function(l1,l2) {
 	this.assertTrue(haxe.data.collections.List.EqualT(IntExtensions.EqualT(Int)).equal(l1,l2),{ fileName : "ListTestCase.hx", lineNumber : 140, className : "haxe.data.collections.ListTestCase", methodName : "assertListEquals"});
 }
@@ -6442,8 +6486,8 @@ haxe.data.collections.ListTestCase.prototype.testCanIterateThroughElements = fun
 	var l = this.defaultList();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it47 = l.iterator();
-	while( $it47.hasNext() ) { var k = $it47.next();
+	{ var $it48 = l.iterator();
+	while( $it48.hasNext() ) { var k = $it48.next();
 	{
 		count -= k;
 		++iterated;
@@ -6567,9 +6611,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e48 ) {
+	catch( $e49 ) {
 		{
-			var e = $e48;
+			var e = $e49;
 			{
 				
 				for(var i in this.h)
@@ -6612,8 +6656,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it49 = it;
-	while( $it49.hasNext() ) { var i = $it49.next();
+	{ var $it50 = it;
+	while( $it50.hasNext() ) { var i = $it50.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";

@@ -23,6 +23,7 @@
  * DAMAGE.
  */
 package haxe.test;
+
 import haxe.PosInfos;
 
 class TestCase {

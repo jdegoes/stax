@@ -17,7 +17,7 @@
 package haxe.abstract;
 
 import Prelude;
-import haxe.unit.TestCase;
+import haxe.test.TestCase;
 import haxe.abstract.PartialFunction;
 
 using Prelude;

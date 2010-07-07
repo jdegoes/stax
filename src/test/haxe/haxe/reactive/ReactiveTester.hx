@@ -2,8 +2,8 @@ package haxe.reactive;
 
 import Prelude;
 
-import haxe.unit.TestRunner;
-import haxe.unit.TestCase;
+import haxe.test.TestRunner;
+import haxe.test.TestCase;
 
 import haxe.reactive.Reactive;
 

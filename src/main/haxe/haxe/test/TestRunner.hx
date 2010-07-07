@@ -36,9 +36,9 @@ class TestRunner {
     static var tf: flash.TextField = null;
 #end
 
-    private static dynamic function print(v: Dynamic untyped {
+    private static dynamic function print(v: Dynamic) untyped {
         #if flash9
-            if(tf == null {
+            if(tf == null) {
                 tf = new flash.text.TextField();
                 tf.selectable = false;
                 tf.width = flash.Lib.current.stage.stageWidth;
@@ -48,7 +48,7 @@ class TestRunner {
             tf.appendText(v);
         #elseif flash
             var root = flash.Lib.current;
-            if(tf == null {
+            if(tf == null) {
                 root.createTextField("__tf",1048500,0,0,flash.Stage.width,flash.Stage.height+30);
                 tf = root.__tf;
                 tf.selectable = false;
@@ -56,7 +56,7 @@ class TestRunner {
             }
             var s = flash.Boot.__string_rec(v,"");
             tf.text += s;
-            while(tf.textHeight > flash.Stage.height {
+            while(tf.textHeight > flash.Stage.height) {
                 var lines = tf.text.split("\r");
                 lines.shift();
                 tf.text = lines.join("\n");
@@ -68,14 +68,14 @@ class TestRunner {
         #elseif js
             var msg = StringTools.htmlEscape(js.Boot.__string_rec(v,"")).split("\n").join("<br/>");
             var d = document.getElementById("haxe:trace");
-            if(d == null
-                alert("haxe:trace element not found")
+            if(d == null)
+                alert("haxe:trace element not found");
             else
                 d.innerHTML += msg;
         #end
     }
 
-    private static function customTrace(v, ?p: haxe.PosInfos {
+    private static function customTrace(v, ?p: haxe.PosInfos) {
         print(p.fileName+":"+p.lineNumber+": "+Std.string(v)+"\n");
     }
 
@@ -84,7 +84,7 @@ class TestRunner {
         cases = new List();
     }
 
-    public function add(c:TestCase: TestRunner {
+    public function add(c:TestCase): TestRunner {
         cases.add(c);
         
         return this;
@@ -98,14 +98,14 @@ class TestRunner {
 
     public function run(): Bool {
         result = new TestResult();
-        for (c in cases {
+        for (c in cases) {
             runCase(c);
         }
         print(result.toString());
         return result.success;
     }
 
-    function runCase(t:TestCase: Void     {
+    function runCase(t:TestCase): Void {
         var old = haxe.Log.trace;
         haxe.Log.trace = customTrace;
 
@@ -118,7 +118,8 @@ class TestRunner {
         for (f in fields) {
             var fname = f;
             var field = Reflect.field(t, f);
-            if (StringTools.startsWith(fname,"test") && Reflect.isFunction(field) {
+            
+            if (StringTools.startsWith(fname,"test") && Reflect.isFunction(field)) {
                 t.currentTest = new TestStatus();
                 t.currentTest.classname = Type.getClassName(cl);
                 t.currentTest.method = fname;
@@ -127,7 +128,7 @@ class TestRunner {
                 try {
                     Reflect.callMethod(t, field, new Array());
 
-                    if(t.currentTest.done {
+                    if (t.currentTest.done) {
                         t.currentTest.success = true;
                         print(".");
                     }
@@ -141,12 +142,13 @@ class TestRunner {
                     print("F");
                     t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
                 }
-                catch (e: Dynamic {
+                catch (e: Dynamic) {
                     print("E");
                     #if js
-                    if(e.message != null {
+                    if (e.message != null) {
                         t.currentTest.error = "exception thrown: "+e+" ["+e.message+"]";
-                    }else {
+                    }
+                    else {
                         t.currentTest.error = "exception thrown: "+e;
                     }
                     #else
@@ -154,7 +156,7 @@ class TestRunner {
                     #end
                     t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
                 }
-                print(currentTest.output);
+                print(t.currentTest.output);
                 result.add(t.currentTest);
                 t.after();
             }

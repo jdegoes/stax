@@ -18,7 +18,7 @@ package haxe.data.transcode;
 
 import Prelude;
 
-import haxe.unit.TestCase;
+import haxe.test.TestCase;
 import haxe.text.json.JValue;
 import haxe.data.collections.Set;
 import haxe.data.collections.Map;

@@ -16,8 +16,8 @@
 */
 package haxe.io.log;
 
-import haxe.unit.TestCase;
-import haxe.unit.TestRunner;
+import haxe.test.TestCase;
+import haxe.test.TestRunner;
 
 import Prelude;
 using Prelude;
