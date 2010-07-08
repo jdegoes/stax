@@ -787,6 +787,7 @@ class Future<T> {
   var _isSet: Bool;
   var _isCanceled: Bool;
   var _cancelers: Array<Void -> Bool>;
+  var _canceled: Array<Void -> Void>;
   
   public function new() {
     _listeners  = [];
@@ -819,8 +820,15 @@ class Future<T> {
    * canceled unless all cancelers return true. If the future is already done,
    * this method has no effect.
    */
-  public function cancelWith(f: Void -> Bool): Future<T> {
+  public function allowCancelOnlyIf(f: Void -> Bool): Future<T> {
     if (!isDone()) _cancelers.push(f);
+    
+    return this;
+  }
+  
+  public function ifCanceled(f: Void -> Void): Future<T> {
+    if (isCanceled()) f();
+    else if (!isDone()) _canceled.push(f);
     
     return this;
   }
@@ -830,14 +838,19 @@ class Future<T> {
    * @return true if the future is canceled, false otherwise.
    */
   public function cancel(): Bool {
-    return if (isDone()) false;             // <-- Already done, can't be canceled
-    else if (isCanceled()) true;            // <-- Already canceled
-    else {                                  // <-- Ask to see if everyone's OK with canceling
+    return if (isDone()) false;   // <-- Already done, can't be canceled
+    else if (isCanceled()) true;  // <-- Already canceled, nothing to do
+    else {                        // <-- Ask to see if everyone's OK with canceling
       var r = true;
              
       for (canceller in _cancelers) r = r && canceller();
       
-      if (r) _isCanceled = true;
+      if (r) {
+        // Everyone's OK with canceling, mark state & notify:
+        _isCanceled = true;
+      
+        for (canceled in _canceled) canceled();
+      }
              
       r;
     }
@@ -875,6 +888,7 @@ class Future<T> {
     var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { fut.deliver(f(t)); });
+    ifCanceled(function() { fut.cancel(); });
     
     return fut;
   }
@@ -885,12 +899,14 @@ class Future<T> {
     deliverTo(function(t: T) { 
       f(t).deliverTo(function(s: S) { 
         fut.deliver(s);
-      }).cancelWith(function() { 
+      }).allowCancelOnlyIf(function() { 
         return fut.cancel();
+      }).ifCanceled(function() {
+        fut.cancel();
       });
     });
     
-    cancelWith(function() { return fut.cancel(); });
+    ifCanceled(function() { fut.cancel(); });
     
     return fut;
   }
@@ -900,6 +916,8 @@ class Future<T> {
     
     deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.cancel(); });
     
+    ifCanceled(function() { fut.cancel(); });
+    
     return fut;
   }
   
@@ -908,25 +926,25 @@ class Future<T> {
     
     var f1 = this;
     
-    var synchZip = function() {
+    var deliverZip = function() {
       if (!zipped.isDone()) {
         if (f1.isDelivered() && f2.isDelivered()) {
           zipped.deliver(
             Tuple2.create(f1.value().get(), f2.value().get())
           );
         }
-        else if (f1.isCanceled() || f2.isCanceled()) {
-          zipped._isCanceled = true;
-        }
       }
     }
     
-    f1.deliverTo(function(v) { synchZip(); });
-    f2.deliverTo(function(v) { synchZip(); });
+    f1.deliverTo(function(v) { deliverZip(); });
+    f2.deliverTo(function(v) { deliverZip(); });
     
-    zipped.cancelWith(function() {
+    zipped.allowCancelOnlyIf(function() {
       return f1.cancel() || f2.cancel();
     });
+    
+    f1.ifCanceled(function() { zipped.cancel(); });
+    f2.ifCanceled(function() { zipped.cancel(); });
     
     return zipped;
   }

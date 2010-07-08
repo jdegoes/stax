@@ -67,7 +67,7 @@ private class ScheduledExecutorImpl implements ScheduledExecutor {
       future.deliver(f());
     }, ms);
     
-    future.cancelWith(
+    future.allowCancelOnlyIf(
       function() {
         return if (run) false;
         else {

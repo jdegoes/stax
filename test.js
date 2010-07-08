@@ -4052,7 +4052,7 @@ haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.once = function(f,m
 		run = true;
 		future.deliver(f());
 	},ms);
-	future.cancelWith(function() {
+	future.allowCancelOnlyIf(function() {
 		return (run?false:(function($this) {
 			var $r;
 			timer.stop();
@@ -6248,11 +6248,16 @@ Future.Dead = function() {
 Future.create = function() {
 	return new Future();
 }
+Future.prototype._canceled = null;
 Future.prototype._cancelers = null;
 Future.prototype._isCanceled = null;
 Future.prototype._isSet = null;
 Future.prototype._listeners = null;
 Future.prototype._result = null;
+Future.prototype.allowCancelOnlyIf = function(f) {
+	if(!this.isDone()) this._cancelers.push(f);
+	return this;
+}
 Future.prototype.cancel = function() {
 	return (this.isDone()?false:(this.isCanceled()?true:(function($this) {
 		var $r;
@@ -6265,14 +6270,20 @@ Future.prototype.cancel = function() {
 				r = r && canceller();
 			}
 		}
-		if(r) $this._isCanceled = true;
+		if(r) {
+			$this._isCanceled = true;
+			{
+				var _g = 0, _g1 = $this._canceled;
+				while(_g < _g1.length) {
+					var canceled = _g1[_g];
+					++_g;
+					canceled();
+				}
+			}
+		}
 		$r = r;
 		return $r;
 	}(this))));
-}
-Future.prototype.cancelWith = function(f) {
-	if(!this.isDone()) this._cancelers.push(f);
-	return this;
 }
 Future.prototype.deliver = function(t) {
 	return (this._isCanceled?this:(this._isSet?Stax.error("Future already delivered"):(function($this) {
@@ -6303,6 +6314,9 @@ Future.prototype.filter = function(f) {
 		if(f(t)) fut.deliver(t);
 		else fut.cancel();
 	});
+	this.ifCanceled(function() {
+		fut.cancel();
+	});
 	return fut;
 }
 Future.prototype.flatMap = function(f) {
@@ -6310,14 +6324,21 @@ Future.prototype.flatMap = function(f) {
 	this.deliverTo(function(t) {
 		f(t).deliverTo(function(s) {
 			fut.deliver(s);
-		}).cancelWith(function() {
+		}).allowCancelOnlyIf(function() {
 			return fut.cancel();
+		}).ifCanceled(function() {
+			fut.cancel();
 		});
 	});
-	this.cancelWith(function() {
-		return fut.cancel();
+	this.ifCanceled(function() {
+		fut.cancel();
 	});
 	return fut;
+}
+Future.prototype.ifCanceled = function(f) {
+	if(this.isCanceled()) f();
+	else if(!this.isDone()) this._canceled.push(f);
+	return this;
 }
 Future.prototype.isCanceled = function() {
 	return this._isCanceled;
@@ -6333,6 +6354,9 @@ Future.prototype.map = function(f) {
 	this.deliverTo(function(t) {
 		fut.deliver(f(t));
 	});
+	this.ifCanceled(function() {
+		fut.cancel();
+	});
 	return fut;
 }
 Future.prototype.value = function() {
@@ -6341,24 +6365,27 @@ Future.prototype.value = function() {
 Future.prototype.zip = function(f2) {
 	var zipped = new Future();
 	var f1 = this;
-	var synchZip = function() {
+	var deliverZip = function() {
 		if(!zipped.isDone()) {
 			if(f1.isDelivered() && f2.isDelivered()) {
 				zipped.deliver(Tuple2.create(OptionExtensions.get(f1.value()),OptionExtensions.get(f2.value())));
 			}
-			else if(f1.isCanceled() || f2.isCanceled()) {
-				zipped._isCanceled = true;
-			}
 		}
 	}
 	f1.deliverTo(function(v) {
-		synchZip();
+		deliverZip();
 	});
 	f2.deliverTo(function(v) {
-		synchZip();
+		deliverZip();
 	});
-	zipped.cancelWith(function() {
+	zipped.allowCancelOnlyIf(function() {
 		return f1.cancel() || f2.cancel();
+	});
+	f1.ifCanceled(function() {
+		zipped.cancel();
+	});
+	f2.ifCanceled(function() {
+		zipped.cancel();
 	});
 	return zipped;
 }
