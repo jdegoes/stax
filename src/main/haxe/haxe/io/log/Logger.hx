@@ -25,6 +25,7 @@ typedef LogHandler = LogLevel -> String -> PosInfos -> Void
 
 interface LoggerFacade {
   public function trace<T>(t: T, ?p: PosInfos): T;
+  
   public function debug(s: String, ?p: PosInfos): Void;
   public function info(s: String, ?p: PosInfos): Void;
   public function warning(s: String, ?p: PosInfos): Void;
@@ -61,15 +62,15 @@ class Logger {
   }
   
   /** Convenience function that creates a debug logger facade that traces all
-   * information using HaXe's built-in trace function (and the console, if the 
-   * target is JavaScript).
+   * information using HaXe's built-in trace function (and the browser console, 
+   * if the target is JavaScript or Flash).
    */
   public static function debug(): LoggerFacade {
     return Logger.create({
       level:    Debug.toThunk(),
       handlers: [
         LogHandlers.Trace 
-        #if js 
+        #if (js || flash)
         , LogHandlers.Console
         #end
       ]
@@ -108,15 +109,25 @@ class LogHandlers {
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
     (function(text, console: Dynamic) {
       switch (level) {
-        case All: if (console.debug != null) console.debug(text);
-        case Debug: if (console.debug != null) console.debug(text);
-        case Info: if (console.info != null) console.info(text);
-        case Warning: if (console.warn != null) console.warn(text);
-        case Error: if (console.error != null) console.error(text);
-        case Fatal: if (console.error != null) console.error(text);
-        case None: if (console.error != null) console.error(text);
+        case All, Debug:          if (console.debug != null) console.debug(text);
+        case Info:                if (console.info != null) console.info(text);
+        case Warning:             if (console.warn != null) console.warn(text);
+        case Error, Fatal, None:  if (console.error != null) console.error(text);
       }
     })(format(text, p), untyped __js__('console'));
+  }
+  #elseif flash
+  public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
+    (function(text, console: Dynamic) {
+      if (flash.external.ExternalInterface.available) {
+        switch (level) {
+          case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (console.debug) console.debug(text);})', text);
+          case Info:                flash.external.ExternalInterface.call('(function(text){if (console.warn) console.warn(text);})', text);
+          case Warning:             flash.external.ExternalInterface.call('(function(text){if (console.warn) console.warn(text);})', text);
+          case Error, Fatal, None:  flash.external.ExternalInterface.call('(function(text){if (console.error) console.error(text);})', text);
+        }
+      }
+    })(format(text, p));
   }
   #end
   

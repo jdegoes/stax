@@ -1503,6 +1503,23 @@ haxe.test.TestCase.prototype.assertEquals = function(expected,actual,equal,c) {
 		throw this.currentTest;
 	}
 }
+haxe.test.TestCase.prototype.assertException = function(f,msg,c) {
+	if(msg == null) msg = "Expected an exception, but nothing was thrown";
+	this.currentTest.done = true;
+	try {
+		f();
+		this.currentTest.success = false;
+		this.currentTest.error = msg;
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+	catch( $e4 ) {
+		{
+			var e = $e4;
+			null;
+		}
+	}
+}
 haxe.test.TestCase.prototype.assertFalse = function(b,msg,c) {
 	if(msg == null) msg = "Expected false but was true";
 	this.currentTest.done = true;
@@ -1548,23 +1565,6 @@ haxe.test.TestCase.prototype.beforeAll = function() {
 	null;
 }
 haxe.test.TestCase.prototype.currentTest = null;
-haxe.test.TestCase.prototype.expectException = function(f,msg,c) {
-	if(msg == null) msg = "Expected an exception, but nothing was thrown";
-	this.currentTest.done = true;
-	try {
-		f();
-		this.currentTest.success = false;
-		this.currentTest.error = msg;
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-	catch( $e4 ) {
-		{
-			var e = $e4;
-			null;
-		}
-	}
-}
 haxe.test.TestCase.prototype.print = function(v) {
 	this.currentTest.output += Std.string(v);
 }
@@ -4418,32 +4418,23 @@ haxe.io.log.LogHandlers.Console = function(level,text,p) {
 		var $e = (level);
 		switch( $e[1] ) {
 		case 0:
-		{
-			if(console.debug) console.debug(text1);
-		}break;
 		case 1:
 		{
-			if(console.debug) console.debug(text1);
+			if(console.debug != null) console.debug(text1);
 		}break;
 		case 2:
 		{
-			if(console.info) console.info(text1);
+			if(console.info != null) console.info(text1);
 		}break;
 		case 3:
 		{
-			if(console.warn) console.warn(text1);
+			if(console.warn != null) console.warn(text1);
 		}break;
 		case 4:
-		{
-			if(console.error) console.error(text1);
-		}break;
 		case 5:
-		{
-			if(console.error) console.error(text1);
-		}break;
 		case 6:
 		{
-			if(console.error) console.error(text1);
+			if(console.error != null) console.error(text1);
 		}break;
 		}
 	})(haxe.io.log.LogHandlers.format(text,p),console);
