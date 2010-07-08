@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Blab</title>
+        <style type="text/css">
+        
+        #submit-input {
+            height:         20px;
+            width:          100px;
+        }
+        
+        #parent {
+            position: absolute;
+            top: 10px;
+        }
+        
+        #main {
+            position:   absolute;
+            top: 10px;
+        }
+        
+        #inset-div-1 {
+            position: relative;
+            left:           50px;
+        }
+        </style>
+        <basefont color="red" size="5" />
+        <base href="www.google.com" />
+        <meta name="keywords" content="HTML, CSS, JavaScript" />
+    </head>
+    <body>
+    <div>
+        <span id="text">Click Me</span>
+    </div>
+<canvas id="canvas" width="300" height="300"></canvas> 
+    <div id="parent">
+        <div id="main" name="Primary Content" value="stuff">
+            <dir></dir>
+            <menu></menu>
+            <ul class="unordered-list class">
+                <li><p></p></li>
+                <li>
+                    <form>
+                        <fieldset>
+                            <legend>Personalia:</legend>
+                            <label for="dogs">Dogs</label>
+                            <textarea rows="2" cols="20">
+                                Ipsum Lorem
+                            </textarea>
+                        </fieldset>
+                    </form>
+                </li>
+                <li>
+                    <q>
+                        Here is a short quotation
+                    </q>
+                </li>
+                <li><span class="foo"></span></li>
+                <li>
+                    <form>
+                        <select>
+                          <option>Volvo</option>
+                          <option selected="selected">Saab</option>
+                          <option>Mercedes</option>
+                          <option>Audi</option>
+                        </select>
+                    </form>
+                    <font size="3" color="red">This is some text!</font>
+                </li>
+                <pre>
+                Text in a pre element
+                is displayed in a fixed-width
+                font, and it preserves
+                both      <del>spaces</del> <ins>s p a c e s</ins> and
+                line breaks
+                </pre>
+            </ul>
+            <ol class="ordered-list class">
+                <li><span></span></li>
+                <li><link id="link-element" rel="stylesheet" type="text/css" href="images" />
+                </li>
+                <li></li>
+            </ol>
+            <h1></h1>
+            <div id="inset-div-1">
+                <div>
+                    <ul class="unordered-list-2">
+                        <li>
+                            <button class="button" type="button">Click Me!</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div></div>
+    </div>
+    <div id="tertiary-div" style="display: inherit">
+        Foo Bar
+        <ul class="tertiary-unordered-list class">
+            <li><p></p></li>
+            <li>
+                  <img src="planets.gif" width="145" height="126" alt="Planets" usemap="#planetmap" />
+
+                  <map name="planetmap">
+                      <area shape="rect" coords="0,0,82,126" href="sun.htm" alt="Sun" />
+                      <area shape="circle" coords="90,58,3" href="mercur.htm" alt="Mercury" />
+                      <area shape="circle" coords="124,58,8" href="venus.htm" alt="Venus" />
+                  </map>
+            </li>
+            <li><span></span></li>
+            <li><span class="tertiary-foo"></span></li>
+            <li></li>
+        </ul>
+        <ol class="tertiary-ordered-list class">
+            <li><span></span></li>
+            <li><span></span></li>
+            <li><img src="angry.gif" alt="Angry face" /></li>
+        </ol>
+        <div title="Inset Div" id="tertiary-inset-div-1">
+            <div id="inlineStyleElement" style="color:red;">
+                <ul class="tertiary-unordered-list-2">
+                    <li>
+                        <a href="/products" target="_blank">Products</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form id="form-element" action="form_action.asp" method="get">
+            First name: <input type="text" name="fname" /><br />
+            Last name: <input type="text" name="lname" /><br />
+            <input id="submit-input" type="submit" value="Submit" />
+            <applet code="Bubbles.class" width="1" height="1">
+            Java applet that draws animated bubbles.
+            </applet>
+            <object classid="clsid:F08DF954-8592-11D1-B16A-00C0F0283628" id="Slider1" width="1" height="1">
+              <param name="BorderStyle" value="1" />
+              <param name="MousePointer" value="0" />
+              <param name="Enabled" value="1" />
+              <param name="Min" value="0" />
+              <param name="Max" value="10" />
+            </object>
+            <table border="1">
+                <col align="char" char="." charoff="2" />
+                <col align="char" char="." />
+                <thead>
+                    <caption>Monthly savings</caption>
+                        <tr>
+                        <th>Month</th>
+                        <th>Savings</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <td>January</td>
+                        <td>$100</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    <iframe src ="indexFrame.html" width="4%" height="20">
+      <p>Your browser does not support iframes.</p>
+    </iframe>
+    </div>
+    
+    noframes content
+    </noframes>
+    </frameset>
+    
+    <br />
+    <br />
+    <br />
+    <p></p>
+    <hr />
+    <p>This is some text.</p>
+    <br />
+    <div id="haxe:trace"></div>
+    <script type="text/javascript" src="dom.js"></script>
+    </body>
+</html>

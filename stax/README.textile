@@ -1,0 +1,77 @@
+h1. Stax v0.1
+
+Stax is a new standard library for HaXe designed for developers who prefer declarative programming and productivity over program size and speed.
+
+The standard library that comes with HaXe is pragmatically designed. The library is small, and there are only a few abstractions. As a result, the HaXe standard library is an excellent choice when the most important features are program size and performance.
+
+Stax lies on the other end of the spectrum. Stax emphasizes functional concepts, generic abstractions, productivity, composability, and testability. When these features are most important, Stax makes an excellent choice.
+
+h2. Getting Starting with Stax
+
+Stax includes a useful bundle of functionality in the Prelude. To get started using the functionality in the Prelude, simply add the following two lines to your applications:
+
+<pre>
+<code>
+  import Prelude;
+  using Prelude;
+</code>
+</pre>
+
+This brings a slew of functionality into your application:
+
+ * *Tuples*, of arity 1 - 5, which are ideal containers for a bundle of times when a class would be too heavyweight. <code>var t = Tuple2.create(23, "foo");</code>
+ * *Option*, which eliminates the need for <code>null</code> and makes code much safer. <code>var o = Some(23); var n = None;</code>
+ * *Future*, which makes it easy to chain asynchronous operations.
+ * *Conversions*, which enable you to convert between primitives. <code>var float = 12.toFloat();</code>
+ * *Array enhancements*, which allow you to write functional code with arrays. <code>[123, 24].map(function(i) return i * 2;);</code>
+ * *Function enhancements*, which allow you to manipulate functions like first-class values. <code>var h = f.compose(g); h.curry()(2)(3);</code>
+ * *Basic typeclasses*, which allow you to hash, order, and show all built-in HaXe primitives. <code>var hasher = Int.HasherT(); var hash = hasher.hash(3243);</code>
+ 
+The major abstractions introduced in the Prelude are covered in more depth in section 3.
+
+The above constitutes all the functionality built into the Prelude. However, Stax includes many more components, such as:
+
+ * A unified collections library, including immutable, fully-featured versions of Set, Map, and List.
+ * JSON encoding, decoding, and transformation;
+ * Functional reactive library;
+ * Logging;
+ * Configuration;
+ * IO;
+ * And more!
+
+h2. Using Prelude Abstractions
+
+h2. Stax Collections Library
+
+The Stax collections library, contained in the package _haxe.data.collections_, includes three types of collections:
+
+ * Lists (_haxe.data.collections.List_), which represent ordered sequences of elements;
+ * Sets (_haxe.data.collections.Set_), which represent unordered collections of unique elements;
+ * Maps (_haxe.data.collections.Map_), which represent partial functions from one type (the key) to another (the value).
+ 
+All collection are immutable, support arbitrary element types, and are unifed via a <code>Collection</code> interface, which provides access to functionality that is universally available across all kinds of collections (<code>add()</code>, <code>addAll()</code>, <code>remove()</code>, <code>removeAll()</code>, <code>size</code>,  <code>contains()</code>, and <code>iterator()</code>).
+
+Collections implement the <code>Foldable</code> interface, so it's possible to gain access to more advanced functionality by using the <code>Foldable</code> extensions:
+
+<pre>
+<code>
+  using haxe.abstract.Foldable;
+</code>
+</pre>
+
+Collections can be created through a static factory method on the collection classes named _create_. This function typically requires access to equal, hash, or ordering type classes for the specified element type(s).
+
+h2. Stax JavaScript
+
+Stax has a fully-typed representation of the vast majority of the DOM, including the latest W3C standards and widely supported non-standards.
+
+You can import this representation and helper functions with the following two lines of code:
+
+<pre>
+<code>
+  import haxe.js.Env;
+</code>
+</pre>
+
+The first line imports a <code>Env</code> class that provides access to top-level JavaScript objects and functions.  The second line imports the external declarations that inform HaXe how every element in the DOM is typed.
+
