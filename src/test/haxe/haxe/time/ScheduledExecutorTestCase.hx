@@ -34,7 +34,19 @@ class ScheduledExecutorTestCase extends TestCase {
       return 12;
     }, 10);
     
-    future.deliverTo(function(v) { trace("Received value: " + v); });
+    future.deliverTo(function(v) { trace("Successfully received value: " + v); });
+    
+    assertTrue(true);
+  }
+  
+  public function testOnceCanBeCanceled(): Void {
+    var future = _executor.once(function() {
+      return 12;
+    }, 10);
+    
+    future.deliverTo(function(v) { trace("Failed! Received value: " + v); });
+    
+    future.cancel();
     
     assertTrue(true);
   }

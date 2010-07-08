@@ -14,7 +14,7 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-using Lambda;
+using Prelude;
 
 typedef AnyRef = {}
 typedef CodeBlock = Void -> Void
@@ -334,7 +334,7 @@ class ArrayExtensions {
   public static function ShowT<T>(c: Class<Array<Dynamic>>, show: Show<T>): Show<Array<T>> {
     return ShowTypeclass.create({
       show: function(v: Array<T>) {
-        return "[" + v.map(function(e) { return show.show(e); }).array().join(", ") + "]";
+        return "[" + v.map(function(e) { return show.show(e); }).join(", ") + "]";
       }
     });
   }
@@ -816,7 +816,8 @@ class Future<T> {
   }
   
   /** Installs the specified canceler on the future. The future may not be
-   * canceled unless all cancelers return true.
+   * canceled unless all cancelers return true. If the future is already done,
+   * this method has no effect.
    */
   public function cancelWith(f: Void -> Bool): Future<T> {
     if (!isDone()) _cancelers.push(f);
@@ -871,7 +872,7 @@ class Future<T> {
   }
   
   public function map<S>(f: T -> S): Future<S> {
-    var fut: Future<S> = create();
+    var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { fut.deliver(f(t)); });
     
@@ -879,7 +880,7 @@ class Future<T> {
   }
   
   public function flatMap<S>(f: T -> Future<S>): Future<S> {
-    var fut: Future<S> = create();
+    var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { 
       f(t).deliverTo(function(s: S) { 
@@ -895,11 +896,39 @@ class Future<T> {
   }
   
   public function filter(f: T -> Bool): Future<T> {
-    var fut: Future<T> = create();
+    var fut: Future<T> = new Future();
     
     deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.cancel(); });
     
     return fut;
+  }
+  
+  public function zip<A>(f2: Future<A>): Future<Tuple2<T, A>> {
+    var zipped: Future<Tuple2<T, A>> = new Future();
+    
+    var f1 = this;
+    
+    var synchZip = function() {
+      if (!zipped.isDone()) {
+        if (f1.isDelivered() && f2.isDelivered()) {
+          zipped.deliver(
+            Tuple2.create(f1.value().get(), f2.value().get())
+          );
+        }
+        else if (f1.isCanceled() || f2.isCanceled()) {
+          zipped._isCanceled = true;
+        }
+      }
+    }
+    
+    f1.deliverTo(function(v) { synchZip(); });
+    f2.deliverTo(function(v) { synchZip(); });
+    
+    zipped.cancelWith(function() {
+      return f1.cancel() || f2.cancel();
+    });
+    
+    return zipped;
   }
   
   public function value(): Option<T> {

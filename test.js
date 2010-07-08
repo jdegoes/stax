@@ -3152,9 +3152,19 @@ haxe.time.ScheduledExecutorTestCase.prototype.testOnce = function() {
 		return 12;
 	},10);
 	future.deliverTo(function(v) {
-		haxe.Log.trace("Received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 37, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnce"});
+		haxe.Log.trace("Successfully received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 37, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnce"});
 	});
 	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 39, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnce"});
+}
+haxe.time.ScheduledExecutorTestCase.prototype.testOnceCanBeCanceled = function() {
+	var future = this._executor.once(function() {
+		return 12;
+	},10);
+	future.deliverTo(function(v) {
+		haxe.Log.trace("Failed! Received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 47, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnceCanBeCanceled"});
+	});
+	future.cancel();
+	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 51, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnceCanBeCanceled"});
 }
 haxe.time.ScheduledExecutorTestCase.prototype.__class__ = haxe.time.ScheduledExecutorTestCase;
 IntIter = function(min,max) { if( min === $_ ) return; {
@@ -5370,9 +5380,9 @@ ArrayExtensions.EqualT = function(c,equal) {
 }
 ArrayExtensions.ShowT = function(c,show) {
 	return ShowTypeclass.create({ show : function(v) {
-		return ("[" + Lambda.array(Lambda.map(v,function(e) {
+		return ("[" + ArrayExtensions.map(v,function(e) {
 			return show.show(e);
-		})).join(", ")) + "]";
+		}).join(", ")) + "]";
 	}});
 }
 ArrayExtensions.HasherT = function(c,hasher) {
@@ -6288,7 +6298,7 @@ Future.prototype.deliverTo = function(f) {
 	return this;
 }
 Future.prototype.filter = function(f) {
-	var fut = Future.create();
+	var fut = new Future();
 	this.deliverTo(function(t) {
 		if(f(t)) fut.deliver(t);
 		else fut.cancel();
@@ -6296,7 +6306,7 @@ Future.prototype.filter = function(f) {
 	return fut;
 }
 Future.prototype.flatMap = function(f) {
-	var fut = Future.create();
+	var fut = new Future();
 	this.deliverTo(function(t) {
 		f(t).deliverTo(function(s) {
 			fut.deliver(s);
@@ -6319,7 +6329,7 @@ Future.prototype.isDone = function() {
 	return this.isDelivered() || this.isCanceled();
 }
 Future.prototype.map = function(f) {
-	var fut = Future.create();
+	var fut = new Future();
 	this.deliverTo(function(t) {
 		fut.deliver(f(t));
 	});
@@ -6327,6 +6337,30 @@ Future.prototype.map = function(f) {
 }
 Future.prototype.value = function() {
 	return (this._isSet?Option.Some(this._result):Option.None);
+}
+Future.prototype.zip = function(f2) {
+	var zipped = new Future();
+	var f1 = this;
+	var synchZip = function() {
+		if(!zipped.isDone()) {
+			if(f1.isDelivered() && f2.isDelivered()) {
+				zipped.deliver(Tuple2.create(OptionExtensions.get(f1.value()),OptionExtensions.get(f2.value())));
+			}
+			else if(f1.isCanceled() || f2.isCanceled()) {
+				zipped._isCanceled = true;
+			}
+		}
+	}
+	f1.deliverTo(function(v) {
+		synchZip();
+	});
+	f2.deliverTo(function(v) {
+		synchZip();
+	});
+	zipped.cancelWith(function() {
+		return f1.cancel() || f2.cancel();
+	});
+	return zipped;
 }
 Future.prototype.__class__ = Future;
 FutureExtensions = function() { }
