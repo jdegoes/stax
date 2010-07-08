@@ -826,6 +826,9 @@ class Future<T> {
     return this;
   }
   
+  /** Installs a handler that will be called if and only if the future is
+   * successfully canceled.
+   */
   public function ifCanceled(f: Void -> Void): Future<T> {
     if (isCanceled()) f();
     else if (!isDone()) _canceled.push(f);
@@ -833,7 +836,8 @@ class Future<T> {
     return this;
   }
   
-  /** Attempts to cancel the future.
+  /** Attempts to cancel the future. This may succeed only if the future is
+   * not already delivered, and if all cancel conditions are satisfied.
    *
    * @return true if the future is canceled, false otherwise.
    */
