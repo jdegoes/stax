@@ -30,9 +30,12 @@ import haxe.PosInfos;
 using Prelude;
 
 class TestCase {
+  public var futureAsserts (default, null): Array<{future: Future<Dynamic>, min: Int, max: Int}>;
+  
   public var currentTest: TestStatus;
 
   public function new() {
+    futureAsserts = [];
   }
   
   public function beforeAll(): Void {
@@ -65,6 +68,10 @@ class TestCase {
     }
     catch (e: Dynamic) {
     }
+  }
+  
+  public function assertLater<T>(f: Future<T>, minMs: Int, maxMs: Int): Void {
+    futureAsserts.push({future: f, min: minMs, max: maxMs});
   }
 
   public function assertTrue(b: Bool, msg: String = "Expected true but was false", ?c: PosInfos): Void {

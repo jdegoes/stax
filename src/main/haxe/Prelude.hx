@@ -17,6 +17,7 @@
 using Lambda;
 
 typedef AnyRef = {}
+typedef CodeBlock = Void -> Void
 typedef Function<P1, R> = P1 -> R
 typedef Function1<P1, R> = P1 -> R
 typedef Function2<P1, P2, R> = P1 -> P2 -> R
@@ -28,6 +29,8 @@ typedef Function7<P1, P2, P3, P4, P5, P6, P7, R> = P1 -> P2 -> P3 -> P4 -> P5 ->
 typedef Function8<P1, P2, P3, P4, P5, P6, P7, P8, R> = P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> P8 -> R
 typedef Function9<P1, P2, P3, P4, P5, P6, P7, P8, P9, R> = P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> P8 -> P9 -> R
 typedef Function10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, R> = P1 -> P2 -> P3 -> P4 -> P5 -> P6 -> P7 -> P8 -> P9 -> P10 -> R
+
+typedef Reducer<T> = T -> T -> T
 
 typedef Factory<T> = Void -> T
 
@@ -779,29 +782,87 @@ class EitherExtensions {
 }
 
 class Future<T> {
-  private var _listeners: Array<T -> Void>;
-  private var _result: T;
-  private var _isSet: Bool;
+  var _listeners: Array<T -> Void>;
+  var _result: T;
+  var _isSet: Bool;
+  var _isCanceled: Bool;
+  var _cancelers: Array<Void -> Bool>;
   
   public function new() {
-    _listeners = [];
-    _result    = null;
-    _isSet     = false;
+    _listeners  = [];
+    _result     = null;
+    _isSet      = false;
+    _isCanceled = false;
+    _cancelers  = [];
+  }
+  
+  public static function Dead<T>() {
+    return new Future().cancel();
   }
   
   public function deliver(t: T): Future<T> {
-    if (_isSet) Stax.error("Future already delivered");
+    return if (_isCanceled) this;
+    else if (_isSet) Stax.error("Future already delivered");
+    else {    
+      _result = t;
+      _isSet  = true;
     
-    _result = t;
-    _isSet  = true;
+      for (l in _listeners) l(_result);
     
-    for (l in _listeners) l(_result);
-    
-    _listeners = [];
+      _listeners = [];
+      
+      this;
+    }
+  }
+  
+  /** Installs the specified canceler on the future. The future may not be
+   * canceled unless all cancelers return true.
+   */
+  public function cancelWith(f: Void -> Bool): Future<T> {
+    if (!isDone()) _cancelers.push(f);
     
     return this;
   }
   
+  /** Attempts to cancel the future.
+   *
+   * @return true if the future is canceled, false otherwise.
+   */
+  public function cancel(): Bool {
+    return if (isDone()) false;             // <-- Already done, can't be canceled
+    else if (isCanceled()) true;            // <-- Already canceled
+    else {                                  // <-- Ask to see if everyone's OK with canceling
+      var r = true;
+             
+      for (canceller in _cancelers) r = r && canceller();
+      
+      if (r) _isCanceled = true;
+             
+      r;
+    }
+  }
+  
+  /** Determines if the future is "done" -- that is, delivered or canceled.
+   */
+  public function isDone(): Bool {
+    return isDelivered() || isCanceled();
+  }
+  
+  /** Determines if the future is delivered.
+   */
+  public function isDelivered(): Bool {
+    return _isSet;
+  }
+  
+  /** Determines if the future is canceled.
+   */
+  public function isCanceled(): Bool {
+    return _isCanceled;
+  }
+  
+  /** Delivers the result of the future to the specified handler as soon as it
+   * is delivered.
+   */
   public function deliverTo(f: T -> Void): Future<T> {
     if (_isSet) f(_result);
     else _listeners.push(f);
@@ -820,7 +881,15 @@ class Future<T> {
   public function flatMap<S>(f: T -> Future<S>): Future<S> {
     var fut: Future<S> = create();
     
-    deliverTo(function(t: T) { f(t).deliverTo(function(s: S) { fut.deliver(s); }); });
+    deliverTo(function(t: T) { 
+      f(t).deliverTo(function(s: S) { 
+        fut.deliver(s);
+      }).cancelWith(function() { 
+        return fut.cancel();
+      });
+    });
+    
+    cancelWith(function() { return fut.cancel(); });
     
     return fut;
   }
@@ -828,7 +897,7 @@ class Future<T> {
   public function filter(f: T -> Bool): Future<T> {
     var fut: Future<T> = create();
     
-    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); });
+    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.cancel(); });
     
     return fut;
   }

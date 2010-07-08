@@ -25,6 +25,9 @@
 package haxe.test;
 
 import Reflect;
+import Prelude;
+
+using Prelude;
 
 class TestRunner {
     var result: TestResult;
@@ -105,63 +108,64 @@ class TestRunner {
         return result.success;
     }
 
-    function runCase(t:TestCase): Void {
+    function runCase(testCase:TestCase): Void {
         var old = haxe.Log.trace;
         haxe.Log.trace = customTrace;
 
-        var cl = Type.getClass(t);
+        var cl = Type.getClass(testCase);
         var fields = Type.getInstanceFields(cl);
 
         print("Class: "+Type.getClassName(cl)+" ");
-        t.beforeAll();
+        
+        testCase.beforeAll();
         
         for (f in fields) {
             var fname = f;
-            var field = Reflect.field(t, f);
+            var field = Reflect.field(testCase, f);
             
             if (StringTools.startsWith(fname,"test") && Reflect.isFunction(field)) {
-                t.currentTest = new TestStatus();
-                t.currentTest.classname = Type.getClassName(cl);
-                t.currentTest.method = fname;
-                t.before();
+                testCase.currentTest = new TestStatus();
+                testCase.currentTest.classname = Type.getClassName(cl);
+                testCase.currentTest.method = fname;
+                testCase.before();
 
                 try {
-                    Reflect.callMethod(t, field, new Array());
+                    Reflect.callMethod(testCase, field, []);
 
-                    if (t.currentTest.done) {
-                        t.currentTest.success = true;
+                    if (testCase.currentTest.done) {
+                        testCase.currentTest.success = true;
                         print(".");
                     }
                     else {
-                        t.currentTest.success = false;
-                        t.currentTest.error = "(warning) no assert";
+                        testCase.currentTest.success = false;
+                        testCase.currentTest.error = "(warning) no assert";
                         print("W");
                     }
                 }
                 catch (e: TestStatus) {
                     print("F");
-                    t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+                    testCase.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
                 }
                 catch (e: Dynamic) {
                     print("E");
                     #if js
                     if (e.message != null) {
-                        t.currentTest.error = "exception thrown: "+e+" ["+e.message+"]";
+                        testCase.currentTest.error = "exception thrown: "+e+" ["+e.message+"]";
                     }
                     else {
-                        t.currentTest.error = "exception thrown: "+e;
+                        testCase.currentTest.error = "exception thrown: "+e;
                     }
                     #else
-                    t.currentTest.error = "exception thrown: "+e;
+                    testCase.currentTest.error = "exception thrown: "+e;
                     #end
-                    t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+                    testCase.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
                 }
-                print(t.currentTest.output);
-                result.add(t.currentTest);
-                t.after();
+                print(testCase.currentTest.output);
+                result.add(testCase.currentTest);
+                testCase.after();
             }
         }
-        t.afterAll();
+        testCase.afterAll();
 
         print("\n");
         haxe.Log.trace = old;

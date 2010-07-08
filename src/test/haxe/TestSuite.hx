@@ -26,6 +26,7 @@ import haxe.data.collections.SetTestCase;
 import haxe.data.collections.ListTestCase;
 import haxe.data.transcode.JValueTestCase;
 import haxe.abstract.PartialFunctionTestCase;
+import haxe.time.ScheduledExecutorTestCase;
 
 class TestSuite {
   public static function main (): Void {
@@ -37,7 +38,8 @@ class TestSuite {
       new ListTestCase(),
       new LoggerTestCase(),
       new JsonTestCase(),
-      new PartialFunctionTestCase()
+      new PartialFunctionTestCase(),
+      new ScheduledExecutorTestCase()
     ]).run();
   }
 }

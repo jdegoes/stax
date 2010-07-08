@@ -1484,7 +1484,7 @@ haxe.text.json.JValueExtensions.extractArray = function(v) {
 }
 haxe.text.json.JValueExtensions.prototype.__class__ = haxe.text.json.JValueExtensions;
 haxe.test.TestCase = function(p) { if( p === $_ ) return; {
-	null;
+	this.futureAsserts = [];
 }}
 haxe.test.TestCase.__name__ = ["haxe","test","TestCase"];
 haxe.test.TestCase.prototype.after = function() {
@@ -1530,6 +1530,9 @@ haxe.test.TestCase.prototype.assertFalse = function(b,msg,c) {
 		throw this.currentTest;
 	}
 }
+haxe.test.TestCase.prototype.assertLater = function(f,minMs,maxMs) {
+	this.futureAsserts.push({ future : f, min : minMs, max : maxMs});
+}
 haxe.test.TestCase.prototype.assertNotNull = function(a,c) {
 	this.currentTest.done = true;
 	if(a == null) {
@@ -1565,6 +1568,7 @@ haxe.test.TestCase.prototype.beforeAll = function() {
 	null;
 }
 haxe.test.TestCase.prototype.currentTest = null;
+haxe.test.TestCase.prototype.futureAsserts = null;
 haxe.test.TestCase.prototype.print = function(v) {
 	this.currentTest.output += Std.string(v);
 }
@@ -3126,6 +3130,27 @@ haxe.data.collections.Set.prototype.toString = function() {
 }
 haxe.data.collections.Set.prototype.__class__ = haxe.data.collections.Set;
 haxe.data.collections.Set.__interfaces__ = [haxe.data.collections.Collection];
+if(!haxe.time) haxe.time = {}
+haxe.time.ScheduledExecutorTestCase = function(p) { if( p === $_ ) return; {
+	haxe.test.TestCase.apply(this,[]);
+}}
+haxe.time.ScheduledExecutorTestCase.__name__ = ["haxe","time","ScheduledExecutorTestCase"];
+haxe.time.ScheduledExecutorTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.time.ScheduledExecutorTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+haxe.time.ScheduledExecutorTestCase.prototype._executor = null;
+haxe.time.ScheduledExecutorTestCase.prototype.beforeAll = function() {
+	this._executor = haxe.time.ScheduledExecutorFactory.create();
+}
+haxe.time.ScheduledExecutorTestCase.prototype.testOnce = function() {
+	var future = this._executor.once(function() {
+		return 12;
+	},10);
+	future.deliverTo(function(v) {
+		haxe.Log.trace("Received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 37, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnce"});
+	});
+	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 39, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnce"});
+}
+haxe.time.ScheduledExecutorTestCase.prototype.__class__ = haxe.time.ScheduledExecutorTestCase;
 IntIter = function(min,max) { if( min === $_ ) return; {
 	this.min = min;
 	this.max = max;
@@ -3140,6 +3165,40 @@ IntIter.prototype.next = function() {
 	return this.min++;
 }
 IntIter.prototype.__class__ = IntIter;
+haxe.Timer = function(time_ms) { if( time_ms === $_ ) return; {
+	this.id = haxe.Timer.arr.length;
+	haxe.Timer.arr[this.id] = this;
+	this.timerId = window.setInterval(("haxe.Timer.arr[" + this.id) + "].run();",time_ms);
+}}
+haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.delay = function(f,time_ms) {
+	var t = new haxe.Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	}
+	return t;
+}
+haxe.Timer.stamp = function() {
+	return Date.now().getTime() / 1000;
+}
+haxe.Timer.prototype.id = null;
+haxe.Timer.prototype.run = function() {
+	null;
+}
+haxe.Timer.prototype.stop = function() {
+	if(this.id == null) return;
+	window.clearInterval(this.timerId);
+	haxe.Timer.arr[this.id] = null;
+	if(this.id > 100 && this.id == haxe.Timer.arr.length - 1) {
+		var p = this.id - 1;
+		while(p >= 0 && haxe.Timer.arr[p] == null) p--;
+		haxe.Timer.arr = haxe.Timer.arr.slice(0,p + 1);
+	}
+	this.id = null;
+}
+haxe.Timer.prototype.timerId = null;
+haxe.Timer.prototype.__class__ = haxe.Timer;
 haxe.test.TestRunner = function(p) { if( p === $_ ) return; {
 	this.result = new haxe.test.TestResult();
 	this.cases = new List();
@@ -3178,34 +3237,34 @@ haxe.test.TestRunner.prototype.run = function() {
 	haxe.test.TestRunner.print(this.result.toString());
 	return this.result.success;
 }
-haxe.test.TestRunner.prototype.runCase = function(t) {
+haxe.test.TestRunner.prototype.runCase = function(testCase) {
 	var old = $closure(haxe.Log,"trace");
 	haxe.Log.trace = $closure(haxe.test.TestRunner,"customTrace");
-	var cl = Type.getClass(t);
+	var cl = Type.getClass(testCase);
 	var fields = Type.getInstanceFields(cl);
 	haxe.test.TestRunner.print(("Class: " + Type.getClassName(cl)) + " ");
-	t.beforeAll();
+	testCase.beforeAll();
 	{
 		var _g = 0;
 		while(_g < fields.length) {
 			var f = fields[_g];
 			++_g;
 			var fname = f;
-			var field = Reflect.field(t,f);
+			var field = Reflect.field(testCase,f);
 			if(StringTools.startsWith(fname,"test") && Reflect.isFunction(field)) {
-				t.currentTest = new haxe.test.TestStatus();
-				t.currentTest.classname = Type.getClassName(cl);
-				t.currentTest.method = fname;
-				t.before();
+				testCase.currentTest = new haxe.test.TestStatus();
+				testCase.currentTest.classname = Type.getClassName(cl);
+				testCase.currentTest.method = fname;
+				testCase.before();
 				try {
-					field.apply(t,new Array());
-					if(t.currentTest.done) {
-						t.currentTest.success = true;
+					field.apply(testCase,[]);
+					if(testCase.currentTest.done) {
+						testCase.currentTest.success = true;
 						haxe.test.TestRunner.print(".");
 					}
 					else {
-						t.currentTest.success = false;
-						t.currentTest.error = "(warning) no assert";
+						testCase.currentTest.success = false;
+						testCase.currentTest.error = "(warning) no assert";
 						haxe.test.TestRunner.print("W");
 					}
 				}
@@ -3214,29 +3273,29 @@ haxe.test.TestRunner.prototype.runCase = function(t) {
 						var e = $e20;
 						{
 							haxe.test.TestRunner.print("F");
-							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+							testCase.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
 						}
 					} else {
 						var e = $e20;
 						{
 							haxe.test.TestRunner.print("E");
 							if(e.message != null) {
-								t.currentTest.error = ((("exception thrown: " + e) + " [") + e.message) + "]";
+								testCase.currentTest.error = ((("exception thrown: " + e) + " [") + e.message) + "]";
 							}
 							else {
-								t.currentTest.error = "exception thrown: " + e;
+								testCase.currentTest.error = "exception thrown: " + e;
 							}
-							t.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
+							testCase.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
 						}
 					}
 				}
-				haxe.test.TestRunner.print(t.currentTest.output);
-				this.result.add(t.currentTest);
-				t.after();
+				haxe.test.TestRunner.print(testCase.currentTest.output);
+				this.result.add(testCase.currentTest);
+				testCase.after();
 			}
 		}
 	}
-	t.afterAll();
+	testCase.afterAll();
 	haxe.test.TestRunner.print("\n");
 	haxe.Log.trace = old;
 }
@@ -3498,7 +3557,7 @@ Std.prototype.__class__ = Std;
 TestSuite = function() { }
 TestSuite.__name__ = ["TestSuite"];
 TestSuite.main = function() {
-	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase()]).run();
+	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase(),new haxe.time.ScheduledExecutorTestCase()]).run();
 }
 TestSuite.prototype.__class__ = TestSuite;
 Lambda = function() { }
@@ -3946,6 +4005,73 @@ Type.enumIndex = function(e) {
 	return e[1];
 }
 Type.prototype.__class__ = Type;
+haxe.time.ScheduledExecutor = function() { }
+haxe.time.ScheduledExecutor.__name__ = ["haxe","time","ScheduledExecutor"];
+haxe.time.ScheduledExecutor.prototype.forever = null;
+haxe.time.ScheduledExecutor.prototype.once = null;
+haxe.time.ScheduledExecutor.prototype.repeat = null;
+haxe.time.ScheduledExecutor.prototype.__class__ = haxe.time.ScheduledExecutor;
+haxe.time.ScheduledExecutorFactory = function() { }
+haxe.time.ScheduledExecutorFactory.__name__ = ["haxe","time","ScheduledExecutorFactory"];
+haxe.time.ScheduledExecutorFactory.create = function() {
+	return new haxe.time._ScheduledExecutor.ScheduledExecutorImpl();
+}
+haxe.time.ScheduledExecutorFactory.prototype.__class__ = haxe.time.ScheduledExecutorFactory;
+if(!haxe.time._ScheduledExecutor) haxe.time._ScheduledExecutor = {}
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl = function(p) { if( p === $_ ) return; {
+	null;
+}}
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.__name__ = ["haxe","time","_ScheduledExecutor","ScheduledExecutorImpl"];
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.forever = function(seed,f,ms) {
+	var future = new Future();
+	var result = seed;
+	var timer = new haxe.Timer(ms);
+	timer.run = function() {
+		result = f(result);
+		if(future.isCanceled()) {
+			timer.stop();
+			future.deliver(result);
+		}
+	}
+	return future;
+}
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.once = function(f,ms) {
+	var run = false;
+	var future = new Future();
+	var timer = haxe.Timer.delay(function() {
+		run = true;
+		future.deliver(f());
+	},ms);
+	future.cancelWith(function() {
+		return (run?false:(function($this) {
+			var $r;
+			timer.stop();
+			$r = true;
+			return $r;
+		}(this)));
+	});
+	return future;
+}
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.repeat = function(seed,f,ms,times) {
+	var future = new Future();
+	return (times > 0?(function($this) {
+		var $r;
+		var result = seed;
+		var timer = new haxe.Timer(ms);
+		timer.run = function() {
+			result = f(result);
+			--times;
+			if(times == 0) {
+				timer.stop();
+				future.deliver(result);
+			}
+		}
+		$r = future;
+		return $r;
+	}(this)):future.deliver(seed));
+}
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.__class__ = haxe.time._ScheduledExecutor.ScheduledExecutorImpl;
+haxe.time._ScheduledExecutor.ScheduledExecutorImpl.__interfaces__ = [haxe.time.ScheduledExecutor];
 js.Boot = function() { }
 js.Boot.__name__ = ["js","Boot"];
 js.Boot.__unhtml = function(s) {
@@ -6102,28 +6228,59 @@ Future = function(p) { if( p === $_ ) return; {
 	this._listeners = [];
 	this._result = null;
 	this._isSet = false;
+	this._isCanceled = false;
+	this._cancelers = [];
 }}
 Future.__name__ = ["Future"];
+Future.Dead = function() {
+	return new Future().cancel();
+}
 Future.create = function() {
 	return new Future();
 }
+Future.prototype._cancelers = null;
+Future.prototype._isCanceled = null;
 Future.prototype._isSet = null;
 Future.prototype._listeners = null;
 Future.prototype._result = null;
-Future.prototype.deliver = function(t) {
-	if(this._isSet) Stax.error("Future already delivered");
-	this._result = t;
-	this._isSet = true;
-	{
-		var _g = 0, _g1 = this._listeners;
-		while(_g < _g1.length) {
-			var l = _g1[_g];
-			++_g;
-			l(this._result);
+Future.prototype.cancel = function() {
+	return (this.isDone()?false:(this.isCanceled()?true:(function($this) {
+		var $r;
+		var r = true;
+		{
+			var _g = 0, _g1 = $this._cancelers;
+			while(_g < _g1.length) {
+				var canceller = _g1[_g];
+				++_g;
+				r = r && canceller();
+			}
 		}
-	}
-	this._listeners = [];
+		if(r) $this._isCanceled = true;
+		$r = r;
+		return $r;
+	}(this))));
+}
+Future.prototype.cancelWith = function(f) {
+	if(!this.isDone()) this._cancelers.push(f);
 	return this;
+}
+Future.prototype.deliver = function(t) {
+	return (this._isCanceled?this:(this._isSet?Stax.error("Future already delivered"):(function($this) {
+		var $r;
+		$this._result = t;
+		$this._isSet = true;
+		{
+			var _g = 0, _g1 = $this._listeners;
+			while(_g < _g1.length) {
+				var l = _g1[_g];
+				++_g;
+				l($this._result);
+			}
+		}
+		$this._listeners = [];
+		$r = $this;
+		return $r;
+	}(this))));
 }
 Future.prototype.deliverTo = function(f) {
 	if(this._isSet) f(this._result);
@@ -6134,6 +6291,7 @@ Future.prototype.filter = function(f) {
 	var fut = Future.create();
 	this.deliverTo(function(t) {
 		if(f(t)) fut.deliver(t);
+		else fut.cancel();
 	});
 	return fut;
 }
@@ -6142,9 +6300,23 @@ Future.prototype.flatMap = function(f) {
 	this.deliverTo(function(t) {
 		f(t).deliverTo(function(s) {
 			fut.deliver(s);
+		}).cancelWith(function() {
+			return fut.cancel();
 		});
 	});
+	this.cancelWith(function() {
+		return fut.cancel();
+	});
 	return fut;
+}
+Future.prototype.isCanceled = function() {
+	return this._isCanceled;
+}
+Future.prototype.isDelivered = function() {
+	return this._isSet;
+}
+Future.prototype.isDone = function() {
+	return this.isDelivered() || this.isCanceled();
 }
 Future.prototype.map = function(f) {
 	var fut = Future.create();
@@ -6803,6 +6975,7 @@ js.Boot.__init();
 }
 haxe.text.json.Json.encodeObject = FunctionExtensions.compose($closure(haxe.text.json.Json,"encode"),$closure(haxe.text.json.Json,"fromObject"));
 haxe.text.json.Json.decodeObject = FunctionExtensions.compose($closure(haxe.text.json.Json,"toObject"),$closure(haxe.text.json.Json,"decode"));
+haxe.Timer.arr = new Array();
 js.Lib.onerror = null;
 haxe.io.log.Logger.defaultHandlers = [];
 haxe.io.log.Logger.defaultLevel = haxe.io.log.LogLevel.Warning;
