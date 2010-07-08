@@ -24,78 +24,106 @@
  */
 package haxe.test;
 
+import Prelude;
 import haxe.PosInfos;
 
+using Prelude;
+
 class TestCase {
-    public var currentTest: TestStatus;
+  public var currentTest: TestStatus;
 
-    public function new() {
-    }
+  public function new() {
+  }
+  
+  public function beforeAll(): Void {
+  }
+
+  public function before(): Void {
+  }
+
+  public function after(): Void {
+  }
+  
+  public function afterAll(): Void {
+  }
+
+  public function print(v: Dynamic) {
+    currentTest.output += Std.string(v);
+  }
+  
+  public function assertException(f: Void -> Void, msg: String = "Expected an exception, but nothing was thrown", ?c: PosInfos): Void {
+    currentTest.done = true;
     
-    public function beforeAll(): Void {
+    try {
+      f();
+      
+      currentTest.success  = false;
+      currentTest.error    = msg;
+      currentTest.posInfos = c;
+      
+      throw currentTest;
     }
+    catch (e: Dynamic) {
+    }
+  }
 
-    public function before(): Void {
-    }
-
-    public function after(): Void {
-    }
+  public function assertTrue(b: Bool, msg: String = "Expected true but was false", ?c: PosInfos): Void {
+    currentTest.done = true;
     
-    public function afterAll(): Void {
+    if (b == false) {
+      currentTest.success  = false;
+      currentTest.error    = msg;
+      currentTest.posInfos = c;
+      
+      throw currentTest;
     }
+  }
 
-    public function print(v: Dynamic) {
-        currentTest.output += Std.string(v);
-    }
-
-    public function assertTrue(b: Bool, ?c: PosInfos): Void {
-        currentTest.done = true;
-        if (b == false){
-            currentTest.success = false;
-            currentTest.error   = "Expected true but was false";
-            currentTest.posInfos = c;
-            throw currentTest;
-        }
-    }
-
-    public function assertFalse(b: Bool, ?c: PosInfos): Void {
-        currentTest.done = true;
-        if (b == true){
-            currentTest.success = false;
-            currentTest.error   = "Expected false but was true";
-            currentTest.posInfos = c;
-            throw currentTest;
-        }
-    }
-
-    public function assertEquals<T>(expected: T, actual: T,  ?c: PosInfos): Void     {
-        currentTest.done = true;
-        if (actual != expected){
-            currentTest.success = false;
-            currentTest.error   = "Expected '" + expected + "' but was '" + actual + "'";
-            currentTest.posInfos = c;
-            throw currentTest;
-        }
-    }
+  public function assertFalse(b: Bool, msg: String = "Expected false but was true", ?c: PosInfos): Void {
+    currentTest.done = true;
     
-    public function assertNotNull(a: Dynamic, ?c: PosInfos): Void {
-      currentTest.done = true;
-      if (a == null) {
-        currentTest.success = false;
-        currentTest.error   = "Expected non-null, but was null";
-        currentTest.posInfos = c;
-        throw currentTest;
-      }
+    if (b == true) {
+      currentTest.success  = false;
+      currentTest.error    = msg;
+      currentTest.posInfos = c;
+      
+      throw currentTest;
     }
-    
-    public function assertNull(a: Dynamic, ?c: PosInfos): Void {
-      currentTest.done = true;
-      if (a != null) {
-        currentTest.success = false;
-        currentTest.error   = "Expected null, but was '" + a + "'";
-        currentTest.posInfos = c;
-        throw currentTest;
-      }
-    }
+  }
 
+  public function assertEquals<T>(expected: T, actual: T,  ?equal: Equal<T>, ?c: PosInfos): Void     {
+    equal = (if (equal == null) DynamicExtensions.EqualT(); else equal);
+    
+    currentTest.done = true;
+    
+    if (equal.notEqual(actual, expected)) {
+      currentTest.success  = false;
+      currentTest.error    = "Expected '" + expected + "' but was '" + actual + "'";
+      currentTest.posInfos = c;
+      
+      throw currentTest;
+    }
+  }
+  
+  public function assertNotNull(a: Dynamic, ?c: PosInfos): Void {
+    currentTest.done = true;
+    
+    if (a == null) {
+      currentTest.success  = false;
+      currentTest.error    = "Expected non-null, but was null";
+      currentTest.posInfos = c;
+      
+      throw currentTest;
+    }
+  }
+  
+  public function assertNull(a: Dynamic, ?c: PosInfos): Void {
+    currentTest.done = true;
+    if (a != null) {
+      currentTest.success = false;
+      currentTest.error   = "Expected null, but was '" + a + "'";
+      currentTest.posInfos = c;
+      throw currentTest;
+    }
+  }
 }

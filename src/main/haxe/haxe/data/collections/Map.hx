@@ -19,15 +19,17 @@ package haxe.data.collections;
 import Prelude;
 
 import haxe.abstract.Foldable;
+import haxe.abstract.PartialFunction;
 import haxe.data.collections.Collection;
 
 using Prelude;
 using haxe.abstract.Foldable;
+using haxe.abstract.PartialFunction;
 
 /** A cross-platform, immutable map with support for arbitrary keys.
  * TODO: Use an array of lists to avoid unnecessary copying when adding/removing elements.
  */
-class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
+class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements PartialFunction<K, V> {
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
   
@@ -94,6 +96,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
   var _buckets: Array<Array<Tuple2<K, V>>>;
   
   var _size: Int;
+  var _pf: PartialFunction1<K, V>;
   
   public static function create<K, V>(?khasher: Hasher<K>, ?kequal: Equal<K>, ?vhasher: Hasher<V>, ?vequal: Equal<V>) {
     var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherT(); else khasher;
@@ -112,10 +115,45 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
   }
   
   private function new(khasher: Hasher<K>, kequal: Equal<K>, vhasher: Hasher<V>, vequal: Equal<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
+    var self = this;
+    
     this.keyHasher = khasher; this.keyEqual = kequal; this.valueHasher = vhasher; this.valueEqual = vequal;
     
     this._size    = size;
     this._buckets = buckets;
+    this._pf      = [Tuple2.create(
+      containsKey,
+      function(k) {
+        return switch(self.get(k)) {
+          case Some(v): v;
+          case None:    Stax.error("No value for this key");
+        }
+      }
+    )].toPartialFunction();
+  }
+  
+  public function isDefinedAt(k: K): Bool {
+    return _pf.isDefinedAt(k);
+  }
+  
+  public function orElse(that: PartialFunction1<K, V>): PartialFunction1<K, V> {
+    return _pf.orElse(that);
+  }
+  
+  public function orAlways(f: K -> V): PartialFunction1<K, V> {
+    return _pf.orAlways(f);
+  }
+  
+  public function orAlwaysC(v: Thunk<V>): PartialFunction1<K, V> {
+    return _pf.orAlwaysC(v);
+  }
+  
+  public function call(k: K): V {
+    return _pf.call(k);
+  }
+    
+  public function toFunction(): K -> Option<V> {
+    return get;
   }
   
   public function empty(): Map<K, V> {
@@ -219,10 +257,10 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>> {
     return None;
   }
   
-  public function getOrElse(k: K, def: V): V {
+  public function getOrElse(k: K, def: Thunk<V>): V {
     return switch (get(k)) {
       case Some(v): v;
-      case None: def;
+      case None: def();
     }
   }
   
