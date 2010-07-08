@@ -95,6 +95,12 @@ haxe.Stack.makeStack = function(s) {
 	return m;
 }
 haxe.Stack.prototype.__class__ = haxe.Stack;
+StaxTestSuite = function() { }
+StaxTestSuite.__name__ = ["StaxTestSuite"];
+StaxTestSuite.main = function() {
+	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase(),new haxe.time.ScheduledExecutorTestCase()]).run();
+}
+StaxTestSuite.prototype.__class__ = StaxTestSuite;
 if(!haxe.test) haxe.test = {}
 haxe.test.TestResult = function(p) { if( p === $_ ) return; {
 	this.m_tests = new List();
@@ -3554,12 +3560,6 @@ Std.random = function(x) {
 	return Math.floor(Math.random() * x);
 }
 Std.prototype.__class__ = Std;
-TestSuite = function() { }
-TestSuite.__name__ = ["TestSuite"];
-TestSuite.main = function() {
-	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase(),new haxe.time.ScheduledExecutorTestCase()]).run();
-}
-TestSuite.prototype.__class__ = TestSuite;
 Lambda = function() { }
 Lambda.__name__ = ["Lambda"];
 Lambda.array = function(it) {
@@ -6981,4 +6981,4 @@ haxe.io.log.Logger.defaultHandlers = [];
 haxe.io.log.Logger.defaultLevel = haxe.io.log.LogLevel.Warning;
 haxe.data.collections.Map.MaxLoad = 10;
 haxe.data.collections.Map.MinLoad = 1;
-$Main.init = TestSuite.main();
+$Main.init = StaxTestSuite.main();
