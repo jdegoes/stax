@@ -337,7 +337,7 @@ haxe.data.transcode.OptionExtensions = function() { }
 haxe.data.transcode.OptionExtensions.__name__ = ["haxe","data","transcode","OptionExtensions"];
 haxe.data.transcode.OptionExtensions.DecomposerT = function(c,d) {
 	return haxe.data.transcode.DecomposerTypeclass.create({ decompose : function(v) {
-		return OptionExtensions.getOrElse(OptionExtensions.map(v,d.decompose),FunctionExtensions.toThunk(haxe.text.json.JValue.JNull));
+		return OptionExtensions.getOrElse(OptionExtensions.map(v,d.decompose),DynamicExtensions.toThunk(haxe.text.json.JValue.JNull));
 	}});
 }
 haxe.data.transcode.OptionExtensions.ExtractorT = function(c,e) {
@@ -636,7 +636,7 @@ haxe.data.transcode.JValueExtensions.prototype.__class__ = haxe.data.transcode.J
 haxe.data.transcode.ExtractorHelpers = function() { }
 haxe.data.transcode.ExtractorHelpers.__name__ = ["haxe","data","transcode","ExtractorHelpers"];
 haxe.data.transcode.ExtractorHelpers.extractFieldValue = function(j,n,e,def) {
-	var fieldValue = haxe.text.json.JValueExtensions.getOrElse(j,n,FunctionExtensions.toThunk(def));
+	var fieldValue = haxe.text.json.JValueExtensions.getOrElse(j,n,DynamicExtensions.toThunk(def));
 	try {
 		return e.extract(fieldValue);
 	}
@@ -652,14 +652,9 @@ haxe.data.transcode.ExtractorHelpers.extractFieldValue = function(j,n,e,def) {
 haxe.data.transcode.ExtractorHelpers.prototype.__class__ = haxe.data.transcode.ExtractorHelpers;
 FunctionExtensions = function() { }
 FunctionExtensions.__name__ = ["FunctionExtensions"];
-FunctionExtensions.toThunk = function(t) {
-	return function() {
-		return t;
-	}
-}
-FunctionExtensions.toFunction = function(t) {
-	return function(s) {
-		return t;
+FunctionExtensions.toFunction1 = function(f) {
+	return function(v) {
+		return f();
 	}
 }
 FunctionExtensions.compose = function(f1,f2) {
@@ -4454,7 +4449,7 @@ haxe.abstract.PartialFunctionTestCase.prototype.testOrAlwaysCForPartialFunction1
 	},function(i) {
 		return i * i;
 	})]);
-	this.assertTrue(f.orAlwaysC(FunctionExtensions.toThunk(9)).isDefinedAt(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 55, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrAlwaysCForPartialFunction1"});
+	this.assertTrue(f.orAlwaysC(DynamicExtensions.toThunk(9)).isDefinedAt(-2),null,{ fileName : "PartialFunctionTestCase.hx", lineNumber : 55, className : "haxe.abstract.PartialFunctionTestCase", methodName : "testOrAlwaysCForPartialFunction1"});
 }
 haxe.abstract.PartialFunctionTestCase.prototype.testOrElseForPartialFunction1 = function() {
 	var f1 = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create(function(i) {
@@ -4515,7 +4510,7 @@ haxe.io.log.Logger.create = function(config) {
 	return new haxe.io.log.LoggerBridge(haxe.io.log.LogHandlers.filter(haxe.io.log.LogHandlers.composite(config.handlers),config.level));
 }
 haxe.io.log.Logger.debug = function() {
-	return haxe.io.log.Logger.create({ level : FunctionExtensions.toThunk(haxe.io.log.LogLevel.Debug), handlers : [haxe.io.log.LogHandlers.Trace,haxe.io.log.LogHandlers.Console]});
+	return haxe.io.log.Logger.create({ level : DynamicExtensions.toThunk(haxe.io.log.LogLevel.Debug), handlers : [haxe.io.log.LogHandlers.Trace,haxe.io.log.LogHandlers.Console]});
 }
 haxe.io.log.Logger.prototype.__class__ = haxe.io.log.Logger;
 haxe.io.log.LoggerBridge = function(h) { if( h === $_ ) return; {
@@ -5164,6 +5159,16 @@ DynamicExtensions.memoize = function(t) {
 			result = t();
 		}
 		return result;
+	}
+}
+DynamicExtensions.toThunk = function(t) {
+	return function() {
+		return t;
+	}
+}
+DynamicExtensions.toConstantFunction = function(t) {
+	return function(s) {
+		return t;
 	}
 }
 DynamicExtensions.prototype.__class__ = DynamicExtensions;
@@ -6271,15 +6276,7 @@ Future.prototype.cancel = function() {
 			}
 		}
 		if(r) {
-			$this._isCanceled = true;
-			{
-				var _g = 0, _g1 = $this._canceled;
-				while(_g < _g1.length) {
-					var canceled = _g1[_g];
-					++_g;
-					canceled();
-				}
-			}
+			$this.forceCancel();
 		}
 		$r = r;
 		return $r;
@@ -6324,16 +6321,28 @@ Future.prototype.flatMap = function(f) {
 	this.deliverTo(function(t) {
 		f(t).deliverTo(function(s) {
 			fut.deliver(s);
-		}).allowCancelOnlyIf(function() {
-			return fut.cancel();
 		}).ifCanceled(function() {
 			fut.cancel();
 		});
 	});
 	this.ifCanceled(function() {
-		fut.cancel();
+		fut.forceCancel();
 	});
 	return fut;
+}
+Future.prototype.forceCancel = function() {
+	if(!this._isCanceled) {
+		this._isCanceled = true;
+		{
+			var _g = 0, _g1 = this._canceled;
+			while(_g < _g1.length) {
+				var canceled = _g1[_g];
+				++_g;
+				canceled();
+			}
+		}
+	}
+	return this;
 }
 Future.prototype.ifCanceled = function(f) {
 	if(this.isCanceled()) f();
@@ -6355,7 +6364,7 @@ Future.prototype.map = function(f) {
 		fut.deliver(f(t));
 	});
 	this.ifCanceled(function() {
-		fut.cancel();
+		fut.forceCancel();
 	});
 	return fut;
 }
@@ -6382,10 +6391,10 @@ Future.prototype.zip = function(f2) {
 		return f1.cancel() || f2.cancel();
 	});
 	f1.ifCanceled(function() {
-		zipped.cancel();
+		zipped.forceCancel();
 	});
 	f2.ifCanceled(function() {
-		zipped.cancel();
+		zipped.forceCancel();
 	});
 	return zipped;
 }

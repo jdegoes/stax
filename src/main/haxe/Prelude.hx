@@ -113,6 +113,16 @@ class DynamicExtensions {
       return result;
     }
   }
+  public static function toThunk<T>(t: T): Thunk<T> {
+    return function() {
+      return t;
+    }
+  }  
+  public static function toConstantFunction<S, T>(t: T): Function<S, T> {
+    return function(s: S) {
+      return t;
+    }
+  }
 }
 
 class BoolExtensions {
@@ -428,16 +438,11 @@ class ArrayExtensions {
   }
 }
 class FunctionExtensions {
-  public static function toThunk<T>(t: T): Thunk<T> {
-    return function() {
-      return t;
+  public static function toFunction1<A, B>(f: Void -> B): Function<A, B> {
+    return function(v) {
+      return f();
     }
   }  
-  public static function toFunction<S, T>(t: T): Function<S, T> {
-    return function(s: S) {
-      return t;
-    }
-  }
   public static function compose<U, V, W>(f1: Function<V, W>, f2: Function<U, V>): Function<U, W> {
     return function(u: U): W {
       return f1(f2(u));
@@ -781,6 +786,15 @@ class EitherExtensions {
   }
 }
 
+/** 
+ * An asynchronous operation that may complete in the future unless 
+ * successfully canceled.
+ * <p>
+ * Futures can be combined and chained together to form complicated 
+ * asynchronous control flows. Often used operations are map() and
+ * flatMap().
+ * <p>
+ */
 class Future<T> {
   var _listeners: Array<T -> Void>;
   var _result: T;
@@ -797,10 +811,15 @@ class Future<T> {
     _cancelers  = [];
   }
   
-  public static function Dead<T>() {
+  /** Creates a "dead" future that is canceled and will never be delivered.
+   */
+  public static function dead<T>() {
     return new Future().cancel();
   }
   
+  /** Delivers the value of the future to anyone awaiting it. If the value has
+   * already been delivered, this method will throw an exception.
+   */
   public function deliver(t: T): Future<T> {
     return if (_isCanceled) this;
     else if (_isSet) Stax.error("Future already delivered");
@@ -816,9 +835,9 @@ class Future<T> {
     }
   }
   
-  /** Installs the specified canceler on the future. The future may not be
-   * canceled unless all cancelers return true. If the future is already done,
-   * this method has no effect.
+  /** Installs the specified canceler on the future. Under ordinary 
+   * circumstances, the future will not be canceled unless all cancelers 
+   * return true. If the future is already done, this method has no effect.
    */
   public function allowCancelOnlyIf(f: Void -> Bool): Future<T> {
     if (!isDone()) _cancelers.push(f);
@@ -827,7 +846,7 @@ class Future<T> {
   }
   
   /** Installs a handler that will be called if and only if the future is
-   * successfully canceled.
+   * canceled.
    */
   public function ifCanceled(f: Void -> Void): Future<T> {
     if (isCanceled()) f();
@@ -851,9 +870,7 @@ class Future<T> {
       
       if (r) {
         // Everyone's OK with canceling, mark state & notify:
-        _isCanceled = true;
-      
-        for (canceled in _canceled) canceled();
+        forceCancel();
       }
              
       r;
@@ -888,73 +905,105 @@ class Future<T> {
     return this;
   }
   
+  /** Uses the specified function to transform the result of this future into
+   * a different value, returning a future of that value.
+   * <p>
+   * urlLoader.load("image.png").map(function(data){return new Image(data);}).deliverTo(function(image){imageContainer.add(image);});
+   */
   public function map<S>(f: T -> S): Future<S> {
     var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { fut.deliver(f(t)); });
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() { fut.forceCancel(); });
     
     return fut;
   }
   
+  /** Maps the result of this future to another future, and returns future
+   * of the result of that future. Useful when chaining together multiple
+   * asynchronous operations that must be completed sequentially.
+   * <p>
+   * <pre>
+   * <code>
+   * urlLoader.load("config.xml").flatMap(function(xml){
+   *   return urlLoader.load(parse(xml).mediaUrl);
+   * }).deliverTo(function(loadedMedia){
+   *   container.add(loadedMedia);
+   * });
+   * </code>
+   * </pre>
+   */
   public function flatMap<S>(f: T -> Future<S>): Future<S> {
     var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { 
       f(t).deliverTo(function(s: S) { 
         fut.deliver(s);
-      }).allowCancelOnlyIf(function() { 
-        return fut.cancel();
       }).ifCanceled(function() {
-        fut.cancel();
+        fut.forceCancel();
       });
     });
     
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() { fut.forceCancel(); });
     
     return fut;
   }
   
+  /** Returns a new future that will be delivered only if the result of this
+   * future is accepted by the specified filter (otherwise, the new future
+   * will be canceled).
+   */
   public function filter(f: T -> Bool): Future<T> {
     var fut: Future<T> = new Future();
     
-    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.cancel(); });
+    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.forceCancel(); });
     
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() { fut.forceCancel(); });
     
     return fut;
   }
   
+  /** Zips this future and the specified future into another future, whose 
+   * result is a tuple of the individual results of the futures.
+   */
   public function zip<A>(f2: Future<A>): Future<Tuple2<T, A>> {
     var zipped: Future<Tuple2<T, A>> = new Future();
     
     var f1 = this;
     
     var deliverZip = function() {
-      if (!zipped.isDone()) {
-        if (f1.isDelivered() && f2.isDelivered()) {
-          zipped.deliver(
-            Tuple2.create(f1.value().get(), f2.value().get())
-          );
-        }
+      if (f1.isDelivered() && f2.isDelivered()) {
+        zipped.deliver(
+          Tuple2.create(f1.value().get(), f2.value().get())
+        );
       }
     }
     
-    f1.deliverTo(function(v) { deliverZip(); });
-    f2.deliverTo(function(v) { deliverZip(); });
+    f1.deliverTo(function(v) deliverZip());
+    f2.deliverTo(function(v) deliverZip());
     
-    zipped.allowCancelOnlyIf(function() {
-      return f1.cancel() || f2.cancel();
-    });
+    zipped.allowCancelOnlyIf(function() return f1.cancel() || f2.cancel());
     
-    f1.ifCanceled(function() { zipped.cancel(); });
-    f2.ifCanceled(function() { zipped.cancel(); });
+    f1.ifCanceled(function() zipped.forceCancel());
+    f2.ifCanceled(function() zipped.forceCancel());
     
     return zipped;
   }
   
+  /** Retrieves the value of the future, as an option.
+   */
   public function value(): Option<T> {
     return if (_isSet) Some(_result) else None;
+  }
+  
+  private function forceCancel(): Future<T> {
+    if (!_isCanceled) {
+      _isCanceled = true;
+  
+      for (canceled in _canceled) canceled();
+    }
+    
+    return this;
   }
   
   public static function create<T>(): Future<T> {
