@@ -563,6 +563,10 @@ class Function5Extensions {
   }
 }
 
+/** An option represents an optional value -- the value may or may not be 
+ * present. Option is a much safer alternative to null that often enables
+ * reduction in code size and increase in code clarity.
+ */
 enum Option<T> {
   None;
   Some(v: T);
@@ -680,6 +684,10 @@ class OptionExtensions {
   }
 }
 
+/** Either represents a type that is either a "left" value or a "right" value, 
+ * but not both. Either is often used to represent success/failure, where the 
+ * left side represents failure, and the right side represents success.
+ */
 enum Either<A, B> {
   Left(v: A);
   Right(v: B);
@@ -899,7 +907,8 @@ class Future<T> {
    * is delivered.
    */
   public function deliverTo(f: T -> Void): Future<T> {
-    if (_isSet) f(_result);
+    if (isCanceled()) return this;
+    else if (isDelivered()) f(_result);
     else _listeners.push(f);
     
     return this;
