@@ -514,7 +514,7 @@ class EventStream<T> {
      * @param optStart  An optional start value.
      */
     public function filterRepeats(?optStart: T): EventStream<T> {
-        return filterRepeatsBy(optStart, Filter.isEqual);
+        return filterRepeatsBy(optStart, cast DynamicExtensions.EqualT().equal);
     }
     
     /**

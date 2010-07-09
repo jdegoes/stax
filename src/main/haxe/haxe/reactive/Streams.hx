@@ -18,6 +18,10 @@ package haxe.reactive;
 import Prelude;
 
 import haxe.reactive.Reactive;
+import haxe.data.collections.Collection;
+
+using Prelude;
+using haxe.abstract.Foldable;
 
 class Streams {
     private function new() { }
