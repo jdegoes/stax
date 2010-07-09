@@ -3142,6 +3142,24 @@ haxe.time.ScheduledExecutorTestCase.prototype._executor = null;
 haxe.time.ScheduledExecutorTestCase.prototype.beforeAll = function() {
 	this._executor = haxe.time.ScheduledExecutorFactory.create();
 }
+haxe.time.ScheduledExecutorTestCase.prototype.testForever = function() {
+	var future = null;
+	var count = 0;
+	future = this._executor.forever(function() {
+		++count;
+		if(count > 1) {
+			haxe.Log.trace("Failed!",{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 88, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testForever"});
+		}
+		future.cancel();
+	},10);
+	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 94, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testForever"});
+}
+haxe.time.ScheduledExecutorTestCase.prototype.testForeverCanBeCanceled = function() {
+	var future = this._executor.forever(function() {
+		haxe.Log.trace("Failed!",{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 74, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testForeverCanBeCanceled"});
+	},10);
+	this.assertTrue(future.cancel(),null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 77, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testForeverCanBeCanceled"});
+}
 haxe.time.ScheduledExecutorTestCase.prototype.testOnce = function() {
 	var future = this._executor.once(function() {
 		return 12;
@@ -3158,8 +3176,25 @@ haxe.time.ScheduledExecutorTestCase.prototype.testOnceCanBeCanceled = function()
 	future.deliverTo(function(v) {
 		haxe.Log.trace("Failed! Received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 47, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnceCanBeCanceled"});
 	});
-	future.cancel();
-	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 51, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnceCanBeCanceled"});
+	this.assertTrue(future.cancel(),null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 49, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testOnceCanBeCanceled"});
+}
+haxe.time.ScheduledExecutorTestCase.prototype.testRepeat = function() {
+	var future = this._executor.repeat(0,function(count) {
+		return count + 1;
+	},10,3);
+	future.deliverTo(function(v) {
+		if(v != 3) haxe.Log.trace("Failed! Value should be 3: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 57, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testRepeat"});
+	});
+	this.assertTrue(true,null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 59, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testRepeat"});
+}
+haxe.time.ScheduledExecutorTestCase.prototype.testRepeatCanBeCanceled = function() {
+	var future = this._executor.repeat(0,function(count) {
+		return count + 1;
+	},10,3);
+	future.deliverTo(function(v) {
+		haxe.Log.trace("Failed! Received value: " + v,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 67, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testRepeatCanBeCanceled"});
+	});
+	this.assertTrue(future.cancel(),null,{ fileName : "ScheduledExecutorTestCase.hx", lineNumber : 69, className : "haxe.time.ScheduledExecutorTestCase", methodName : "testRepeatCanBeCanceled"});
 }
 haxe.time.ScheduledExecutorTestCase.prototype.__class__ = haxe.time.ScheduledExecutorTestCase;
 IntIter = function(min,max) { if( min === $_ ) return; {
@@ -4015,32 +4050,26 @@ haxe.time.ScheduledExecutor.__name__ = ["haxe","time","ScheduledExecutor"];
 haxe.time.ScheduledExecutor.prototype.forever = null;
 haxe.time.ScheduledExecutor.prototype.once = null;
 haxe.time.ScheduledExecutor.prototype.repeat = null;
+haxe.time.ScheduledExecutor.prototype.repeatWhile = null;
 haxe.time.ScheduledExecutor.prototype.__class__ = haxe.time.ScheduledExecutor;
 haxe.time.ScheduledExecutorFactory = function() { }
 haxe.time.ScheduledExecutorFactory.__name__ = ["haxe","time","ScheduledExecutorFactory"];
 haxe.time.ScheduledExecutorFactory.create = function() {
-	return new haxe.time._ScheduledExecutor.ScheduledExecutorImpl();
+	return new haxe.time.ScheduledExecutorImpl();
 }
 haxe.time.ScheduledExecutorFactory.prototype.__class__ = haxe.time.ScheduledExecutorFactory;
-if(!haxe.time._ScheduledExecutor) haxe.time._ScheduledExecutor = {}
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl = function(p) { if( p === $_ ) return; {
+haxe.time.ScheduledExecutorImpl = function(p) { if( p === $_ ) return; {
 	null;
 }}
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.__name__ = ["haxe","time","_ScheduledExecutor","ScheduledExecutorImpl"];
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.forever = function(seed,f,ms) {
+haxe.time.ScheduledExecutorImpl.__name__ = ["haxe","time","ScheduledExecutorImpl"];
+haxe.time.ScheduledExecutorImpl.prototype.forever = function(f,ms) {
 	var future = new Future();
-	var result = seed;
 	var timer = new haxe.Timer(ms);
-	timer.run = function() {
-		result = f(result);
-		if(future.isCanceled()) {
-			timer.stop();
-			future.deliver(result);
-		}
-	}
+	future.ifCanceled($closure(timer,"stop"));
+	timer.run = f;
 	return future;
 }
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.once = function(f,ms) {
+haxe.time.ScheduledExecutorImpl.prototype.once = function(f,ms) {
 	var run = false;
 	var future = new Future();
 	var timer = haxe.Timer.delay(function() {
@@ -4057,12 +4086,13 @@ haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.once = function(f,m
 	});
 	return future;
 }
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.repeat = function(seed,f,ms,times) {
+haxe.time.ScheduledExecutorImpl.prototype.repeat = function(seed,f,ms,times) {
 	var future = new Future();
 	return (times > 0?(function($this) {
 		var $r;
 		var result = seed;
 		var timer = new haxe.Timer(ms);
+		future.ifCanceled($closure(timer,"stop"));
 		timer.run = function() {
 			result = f(result);
 			--times;
@@ -4075,8 +4105,26 @@ haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.repeat = function(s
 		return $r;
 	}(this)):future.deliver(seed));
 }
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.prototype.__class__ = haxe.time._ScheduledExecutor.ScheduledExecutorImpl;
-haxe.time._ScheduledExecutor.ScheduledExecutorImpl.__interfaces__ = [haxe.time.ScheduledExecutor];
+haxe.time.ScheduledExecutorImpl.prototype.repeatWhile = function(seed,f,ms,pred) {
+	var future = new Future();
+	return (pred(seed)?(function($this) {
+		var $r;
+		var result = seed;
+		var timer = new haxe.Timer(ms);
+		future.ifCanceled($closure(timer,"stop"));
+		timer.run = function() {
+			result = f(result);
+			if(!pred(result)) {
+				timer.stop();
+				future.deliver(result);
+			}
+		}
+		$r = future;
+		return $r;
+	}(this)):future.deliver(seed));
+}
+haxe.time.ScheduledExecutorImpl.prototype.__class__ = haxe.time.ScheduledExecutorImpl;
+haxe.time.ScheduledExecutorImpl.__interfaces__ = [haxe.time.ScheduledExecutor];
 js.Boot = function() { }
 js.Boot.__name__ = ["js","Boot"];
 js.Boot.__unhtml = function(s) {
@@ -6245,9 +6293,10 @@ Future = function(p) { if( p === $_ ) return; {
 	this._isSet = false;
 	this._isCanceled = false;
 	this._cancelers = [];
+	this._canceled = [];
 }}
 Future.__name__ = ["Future"];
-Future.Dead = function() {
+Future.dead = function() {
 	return new Future().cancel();
 }
 Future.create = function() {
@@ -6301,7 +6350,8 @@ Future.prototype.deliver = function(t) {
 	}(this))));
 }
 Future.prototype.deliverTo = function(f) {
-	if(this._isSet) f(this._result);
+	if(this.isCanceled()) return this;
+	else if(this.isDelivered()) f(this._result);
 	else this._listeners.push(f);
 	return this;
 }
@@ -6309,10 +6359,10 @@ Future.prototype.filter = function(f) {
 	var fut = new Future();
 	this.deliverTo(function(t) {
 		if(f(t)) fut.deliver(t);
-		else fut.cancel();
+		else fut.forceCancel();
 	});
 	this.ifCanceled(function() {
-		fut.cancel();
+		fut.forceCancel();
 	});
 	return fut;
 }
@@ -6322,7 +6372,7 @@ Future.prototype.flatMap = function(f) {
 		f(t).deliverTo(function(s) {
 			fut.deliver(s);
 		}).ifCanceled(function() {
-			fut.cancel();
+			fut.forceCancel();
 		});
 	});
 	this.ifCanceled(function() {
@@ -6375,10 +6425,8 @@ Future.prototype.zip = function(f2) {
 	var zipped = new Future();
 	var f1 = this;
 	var deliverZip = function() {
-		if(!zipped.isDone()) {
-			if(f1.isDelivered() && f2.isDelivered()) {
-				zipped.deliver(Tuple2.create(OptionExtensions.get(f1.value()),OptionExtensions.get(f2.value())));
-			}
+		if(f1.isDelivered() && f2.isDelivered()) {
+			zipped.deliver(Tuple2.create(OptionExtensions.get(f1.value()),OptionExtensions.get(f2.value())));
 		}
 	}
 	f1.deliverTo(function(v) {

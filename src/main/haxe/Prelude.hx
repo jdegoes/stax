@@ -817,6 +817,7 @@ class Future<T> {
     _isSet      = false;
     _isCanceled = false;
     _cancelers  = [];
+    _canceled   = [];
   }
   
   /** Creates a "dead" future that is canceled and will never be delivered.
@@ -973,7 +974,9 @@ class Future<T> {
   }
   
   /** Zips this future and the specified future into another future, whose 
-   * result is a tuple of the individual results of the futures.
+   * result is a tuple of the individual results of the futures. Useful when
+   * an operation requires the result of two futures, but each future may
+   * execute independently of the other.
    */
   public function zip<A>(f2: Future<A>): Future<Tuple2<T, A>> {
     var zipped: Future<Tuple2<T, A>> = new Future();

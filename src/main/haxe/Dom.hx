@@ -2387,14 +2387,14 @@ extern interface History {
 }
 //Tested
 extern interface Location {
-    public var hash             (default, null): String;
-    public var host             (default, null): String;
-    public var hostname         (default, null): String;
-    public var href             (default, null): String;
-    public var pathname         (default, null): String;
-    public var port             (default, null): String;
-    public var protocol         (default, null): String;
-    public var search           (default, null): String;
+    public var hash             (default, default): String;
+    public var host             (default, default): String;
+    public var hostname         (default, default): String;
+    public var href             (default, default): String;
+    public var pathname         (default, default): String;
+    public var port             (default, default): String;
+    public var protocol         (default, default): String;
+    public var search           (default, default): String;
     
     public function assign(url: String): Void;
     
