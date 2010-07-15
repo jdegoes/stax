@@ -35,7 +35,7 @@ class BehaviorCollection {
     }
     
     public static function concatB<C, T>(b1: Behavior<Collection<C, T>>, b2: Behavior<Collection<C, T>>): Behavior<Collection<C, T>> {
-        return b1.zip(b2).map(function(v) { return cast v._1.concat(v._2); });
+        return b1.zip(b2).map(function(c) { return cast c._1.concat(c._2); });
     }
     /*
     public static function join<C, T>(b: Behavior<Collection<C, T>>, char: String): Behavior<String> {
@@ -43,7 +43,7 @@ class BehaviorCollection {
     }
     */
     public static function size<C, T>(b: Behavior<Collection<C, T>>): Behavior<Int> {
-        return b.map(function(c) { return c.size(); });
+        return b.map(function(c) { return c.size; });
     }
     /*
     public static function zipB<C, T, B>(b1: Behavior<List<T>>, b2: Behavior<List<B>>): Behavior<List<Tuple2<T, B>>> {
@@ -119,8 +119,12 @@ class BehaviorCollection {
         return b.map(function(c) { return c.each(f); });
     }
     */
-    public static function map<C, T, Z>(b: Behavior<Collection<C, T>>, f: T -> Z): Behavior<Collection<C, Z>> {
+    public static function map<C, T>(b: Behavior<Collection<C, T>>, f: T -> T): Behavior<Collection<C, T>> {
         return b.map(function(c) { return cast c.map(f); });
+    }
+    
+    public static function mapTo<C, T, Z>(b: Behavior<Collection<C, T>>, t: Void -> Collection<C, Z>, f: T -> Z): Behavior<Collection<C, Z>> {
+        return b.map(function(c) { return cast c.mapTo(t, f); });
     }
     /*
     public static function partition<C, T>(b: Behavior<Collection<C, T>>, filter: T -> Bool): Behavior<Tuple2<Collection<C, T>, Collection<C, T>>> {

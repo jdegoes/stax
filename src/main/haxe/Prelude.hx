@@ -363,6 +363,17 @@ class ArrayExtensions {
     return n;
   }
   
+  public static function size<T>(a: Array<T>): Int {
+    var count: Int = 0;
+    
+    if (a != []) {
+      for (e in a) {
+        count++;
+      }
+    }
+    return count;
+  }
+  
   public static function map<T, S>(a: Array<T>, f: T -> S): Array<S> {
     var n: Array<S> = [];
     

@@ -16,10 +16,10 @@
 package haxe.reactive;
 
 import Prelude;
-
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
+using haxe.data.collections.IterableExtensions;
 using Prelude;
 using haxe.abstract.Foldable;
 
@@ -53,7 +53,7 @@ class Streams {
      * sendEvent() on such a stream will throw an exception.
      */
     public static function zero<T>(): EventStream<T> {
-        return create(function(pulse: Pulse<Dynamic>): Propagation<T> { throw 'zeroE : received a value; zeroE should not receive a value; the value was ' + pulse.value; return doNotPropagate; });            
+        return Streams.create(function(pulse: Pulse<Dynamic>): Propagation<T> { throw 'zeroE : received a value; zeroE should not receive a value; the value was ' + pulse.value; return doNotPropagate; });            
     }
     
     /**
@@ -62,7 +62,7 @@ class Streams {
     public static function one<T>(val: T): EventStream<T> {
         var sent = false;
         
-        var stream = create(
+        var stream = Streams.create(
             function(pulse: Pulse<Dynamic>): Propagation<T> {
                 if (sent) {
                     throw 'Streams.one: received an extra value';
@@ -96,7 +96,7 @@ class Streams {
      * @param sources   (Optional) Source streams.
      */
     public static function constant<I, O>(value: O, sources: Iterable<EventStream<I>> = null): EventStream<O> {
-        return create(
+        return Streams.create(
             function(pulse: Pulse<I>): Propagation<O> {
                 return propagate(pulse.withValue(value));
             },
@@ -127,7 +127,7 @@ class Streams {
      *                      zero EventStream.
      */
     public static function cond<T>(conditions: Iterable<Tuple2<EventStream<Bool>, EventStream<T>>>): EventStream<T> {
-        return switch (conditions.headOpt()) {
+        return switch (conditions.headOption()) {
             case None:    Streams.zero();
             case Some(h): StreamBool.ifTrue(h._1, h._2, cond(conditions.tail()));
         }

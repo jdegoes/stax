@@ -19,6 +19,7 @@ import Prelude;
 import haxe.reactive.Streams;
 
 using Prelude;
+using haxe.data.collections.IterableExtensions;
 
 typedef Timeout = {}
 
@@ -719,9 +720,9 @@ class EventStream<T> {
      * @param elements  The elements to use in time shifting.
      */
     public function shiftWith(elements: Iterable<T>): EventStream<T> {
-        var n = elements.size();
-        
         var queue: Array<T> = elements.toArray();
+        
+        var n = queue.length;
         
         return Streams.create(
             function(pulse: Pulse<T>): Propagation<T> {
