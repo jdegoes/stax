@@ -114,6 +114,26 @@ class List<T> implements Collection<List<T>, T> {
     return cons(head);
   }
   
+  public function prependAll(iterable: Iterable<T>): List<T> {
+    var result = this;
+    
+    var array = iterable.toArray();
+    
+    array.reverse();
+    
+    for (e in array) result = result.cons(e);
+    
+    return result;
+  }
+  
+  public function prependAllR(iterable: Iterable<T>): List<T> {
+    var result = this;
+    
+    for (e in iterable) result = result.cons(e);
+    
+    return result;
+  }
+  
   public function append(a: List<T>, b: T): List<T> {
     return a.add(b);
   }
@@ -280,6 +300,14 @@ class List<T> implements Collection<List<T>, T> {
     
     return r;
   }
+  
+  /** Retrieves a list of gaps in this sequence.
+   * 
+   * @param f Called with every two consecutive elements to retrieve a list of gaps.
+   */
+  public function gaps<G>(f: T -> T -> List<G>, ?equal: Equal<G>): List<G> {
+    return zip(drop(1)).flatMapTo(List.nil(equal), function(tuple) return f(tuple._1, tuple._2));
+	}
   
   /** Returns a list that contains all the elements of this list, sorted by
    * the specified ordering function.
