@@ -23,7 +23,7 @@ import haxe.Timer;
 import Prelude;
 
 /** A scheduled executor service, which can be used to execute tasks at 
- * specified times into the future.
+ * specified times in the future.
  */
 interface ScheduledExecutor {
   /** Executes the function a single time the specified number of milliseconds 
@@ -36,12 +36,20 @@ interface ScheduledExecutor {
    */
   public function repeat<T>(seed: T, f: T -> T, ms: Int, times: Int): Future<T>;
   
-  /** Executes the reducer an infinite number of times, each invocation 
-   * separated by the specified number of milliseconds, returning a future of 
-   * the complete reduction (which will be available only if and when the 
-   * execution is canceled).
+  /** Executes the reducer while a predicate holds true for the reduction, each 
+   * invocation separated by the specified number of milliseconds, returning a
+   * future of the completed reduction.
+   * <p>
+   * The result of the future is always the first reduction for which the 
+   * predicate holds false.
    */
-  public function forever<T>(seed: T, f: T -> T, ms: Int): Future<T>;
+  public function repeatWhile<T>(seed: T, f: T -> T, ms: Int, pred: T -> Bool): Future<T>;
+  
+  /** Executes the function an infinite number of times, each invocation 
+   * separated by the specified number of milliseconds. The future will not 
+   * return anything, but may be canceled in order to terminate the schedule.
+   */
+  public function forever(f: Void -> Void, ms: Int): Future<Void>;
 }
 
 #if !neko
@@ -52,7 +60,7 @@ class ScheduledExecutorFactory {
   }
 }
 
-private class ScheduledExecutorImpl implements ScheduledExecutor {
+class ScheduledExecutorImpl implements ScheduledExecutor {
   public function new() {
   }
   
@@ -88,15 +96,17 @@ private class ScheduledExecutorImpl implements ScheduledExecutor {
       var result = seed;
       
       var timer = new Timer(ms);
+      
+      future.ifCanceled(timer.stop);
   
       timer.run = function() {
         result = f(result);
-      
+    
         --times;
-      
+    
         if (times == 0) {
           timer.stop();
-        
+      
           future.deliver(result);
         }
       }
@@ -106,22 +116,39 @@ private class ScheduledExecutorImpl implements ScheduledExecutor {
     else future.deliver(seed);
   }
   
-  public function forever<T>(seed: T, f: T -> T, ms: Int): Future<T> {
+  public function repeatWhile<T>(seed: T, f: T -> T, ms: Int, pred: T -> Bool): Future<T> {
     var future = new Future();
-    
-    var result = seed;
+
+    return if (pred(seed)) {
+      var result = seed;
+      
+      var timer = new Timer(ms);
+      
+      future.ifCanceled(timer.stop);
+  
+      timer.run = function() {
+        result = f(result);
+        
+        if (!pred(result)) {
+          timer.stop();
+          
+          future.deliver(result);
+        }
+      }
+      
+      future;
+    }
+    else future.deliver(seed);
+  }
+  
+  public function forever(f: Void -> Void, ms: Int): Future<Void> {
+    var future: Future<Void> = new Future();
       
     var timer = new Timer(ms);
+    
+    future.ifCanceled(timer.stop);
   
-    timer.run = function() {
-      result = f(result);
-      
-      if (future.isCanceled()) {
-        timer.stop();
-        
-        future.deliver(result);
-      }
-    }
+    timer.run = f;
     
     return future;
   }

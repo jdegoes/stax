@@ -113,11 +113,33 @@ class DynamicExtensions {
       return result;
     }
   }
+  public static function toThunk<T>(t: T): Thunk<T> {
+    return function() {
+      return t;
+    }
+  }  
+  public static function toConstantFunction<S, T>(t: T): Function<S, T> {
+    return function(s: S) {
+      return t;
+    }
+  }
 }
 
 class BoolExtensions {
   public static function toInt(v: Bool): Float { return if (v) 1 else 0; }
   public static function toString(v: Bool): String { return Std.string(v); }
+  
+  public static function ifTrue<T>(v: Bool, f: Thunk<T>): Option<T> {
+    return if (v) Some(f()) else None;
+  }
+  
+  public static function ifFalse<T>(v: Bool, f: Thunk<T>): Option<T> {
+    return if (!v) Some(f()) else None;
+  }
+  
+  public static function ifElse<T>(v: Bool, f1: Thunk<T>, f2: Thunk<T>): T {
+    return if (v) f1() else f2();
+  }
   
   public static function OrderT(c: Enum<Bool>): Order<Bool> {
     return OrderTypeclass.create({
@@ -155,6 +177,23 @@ class IntExtensions {
   public static function toFloat(v: Int): Float { return v; }
   public static function toString(v: Int): String { return Std.string(v); }
   
+  public static function to(start: Int, end: Int): Iterable<Int> {
+    return {
+      iterator: function() {
+        var cur = start;
+    
+        return {
+          hasNext: function(): Bool { return cur <= end; },      
+          next:    function(): Int  { var next = cur; ++cur; return next; }
+        }
+      }
+    }
+  }
+  
+  public static function until(start: Int, end: Int): Iterable<Int> {
+    return to(start, end - 1);
+  }
+  
   public static function OrderT(c: Class<Int>): Order<Int> {
     return OrderTypeclass.create({
       compare: function(v1: Int, v2: Int) {
@@ -185,6 +224,7 @@ class IntExtensions {
   }
 }
 class FloatExtensions {
+  public static function round(v: Float): Int { return Math.round(v); }
   public static function max(v1: Float, v2: Float): Float { return if (v2 > v1) v2; else v1; }
   public static function min(v1: Float, v2: Float): Float { return if (v2 < v1) v2; else v1; }
   public static function toInt(v: Float): Int { return Std.int(v); }
@@ -228,6 +268,24 @@ class StringExtensions {
   }
   public static function endsWith(v: String, frag: String): Bool {
     return if (v.length >= frag.length && frag == v.substr(v.length - frag.length)) true else false;
+  }
+  public static function urlEncode(v: String): String {
+    return StringTools.urlEncode(v);
+  }
+  public static function urlDecode(v: String): String {
+    return StringTools.urlDecode(v);
+  }  
+  public static function htmlEscape(v: String): String {
+    return StringTools.htmlEscape(v);
+  }
+  public static function htmlUnescape(v: String): String {
+    return StringTools.htmlUnescape(v);
+  }
+  public static function trim(v: String): String {
+    return StringTools.trim(v);
+  }
+  public static function contains(v: String, s: String): Bool {
+    return v.indexOf(s) != -1;
   }
   
   public static function OrderT(c: Class<String>): Order<String> {
@@ -432,23 +490,36 @@ class ArrayExtensions {
     return copy;
   }
   
+  public static function snapshot<T>(a: Array<T>): Array<T> {
+    return [].concat(a);
+  }
+  
+  public static function first<T>(a: Array<T>): T {
+    return a[0];
+  }
+  
+  public static function last<T>(a: Array<T>): T {
+    return a[a.length - 1];
+  }
+  
   public static function contains<T>(a: Array<T>, t: T): Bool {
     for (e in a) if (e == t) return true;
     
     return false;
   }
+  
+  public static function foreach<T>(a: Array<T>, f: T -> Void): Array<T> {
+    for (e in a) f(e);
+    
+    return a;
+  }
 }
 class FunctionExtensions {
-  public static function toThunk<T>(t: T): Thunk<T> {
-    return function() {
-      return t;
+  public static function toFunction1<A, B>(f: Void -> B): Function<A, B> {
+    return function(v) {
+      return f();
     }
   }  
-  public static function toFunction<S, T>(t: T): Function<S, T> {
-    return function(s: S) {
-      return t;
-    }
-  }
   public static function compose<U, V, W>(f1: Function<V, W>, f2: Function<U, V>): Function<U, W> {
     return function(u: U): W {
       return f1(f2(u));
@@ -569,6 +640,10 @@ class Function5Extensions {
   }
 }
 
+/** An option represents an optional value -- the value may or may not be 
+ * present. Option is a much safer alternative to null that often enables
+ * reduction in code size and increase in code clarity.
+ */
 enum Option<T> {
   None;
   Some(v: T);
@@ -664,6 +739,16 @@ class OptionExtensions {
     }
   }
   
+  public static function zip<T, S>(o1: Option<T>, o2: Option<S>): Option<Tuple2<T, S>> {
+    return switch (o1) {
+      case None: None;
+      case Some(v1): switch (o2) {
+        case None: None;
+        case Some(v2): Some(v1.entuple(v2));
+      }
+    }
+  }
+  
   public static function get<T>(o: Option<T>): T {
     return switch (o) {
       case None: Stax.error("Error: Option is empty");
@@ -678,6 +763,13 @@ class OptionExtensions {
     }
   }
   
+  public static function getOrElseC<T>(o: Option<T>, c: T): T {
+    return switch(o) {
+      case None:    c;
+      case Some(v): v;
+    }
+  }
+  
   public static function isEmpty<T>(o: Option<T>): Bool {
     return switch(o) {
       case None:    true;
@@ -686,6 +778,10 @@ class OptionExtensions {
   }
 }
 
+/** Either represents a type that is either a "left" value or a "right" value, 
+ * but not both. Either is often used to represent success/failure, where the 
+ * left side represents failure, and the right side represents success.
+ */
 enum Either<A, B> {
   Left(v: A);
   Right(v: B);
@@ -792,6 +888,15 @@ class EitherExtensions {
   }
 }
 
+/** 
+ * An asynchronous operation that may complete in the future unless 
+ * successfully canceled.
+ * <p>
+ * Futures can be combined and chained together to form complicated 
+ * asynchronous control flows. Often used operations are map() and
+ * flatMap().
+ * <p>
+ */
 class Future<T> {
   var _listeners: Array<T -> Void>;
   var _result: T;
@@ -806,12 +911,18 @@ class Future<T> {
     _isSet      = false;
     _isCanceled = false;
     _cancelers  = [];
+    _canceled   = [];
   }
   
-  public static function Dead<T>() {
+  /** Creates a "dead" future that is canceled and will never be delivered.
+   */
+  public static function dead<T>() {
     return new Future().cancel();
   }
   
+  /** Delivers the value of the future to anyone awaiting it. If the value has
+   * already been delivered, this method will throw an exception.
+   */
   public function deliver(t: T): Future<T> {
     return if (_isCanceled) this;
     else if (_isSet) Stax.error("Future already delivered");
@@ -827,9 +938,12 @@ class Future<T> {
     }
   }
   
-  /** Installs the specified canceler on the future. The future may not be
-   * canceled unless all cancelers return true. If the future is already done,
-   * this method has no effect.
+  /** Installs the specified canceler on the future. Under ordinary 
+   * circumstances, the future will not be canceled unless all cancelers 
+   * return true. If the future is already done, this method has no effect.
+   * <p>
+   * This method does not normally need to be called. It's provided primarily
+   * for the implementation of future primitives.
    */
   public function allowCancelOnlyIf(f: Void -> Bool): Future<T> {
     if (!isDone()) _cancelers.push(f);
@@ -838,7 +952,13 @@ class Future<T> {
   }
   
   /** Installs a handler that will be called if and only if the future is
-   * successfully canceled.
+   * canceled. 
+   * <p> 
+   * This method does not normally need to be called, since there is no 
+   * difference between a future being canceled and a future taking an 
+   * arbitrarily long amount of time to evaluate. It's provided primarily
+   * for implementation of future primitives to save resources when it's
+   * explicitly known the result of a future will not be used.
    */
   public function ifCanceled(f: Void -> Void): Future<T> {
     if (isCanceled()) f();
@@ -849,6 +969,8 @@ class Future<T> {
   
   /** Attempts to cancel the future. This may succeed only if the future is
    * not already delivered, and if all cancel conditions are satisfied.
+   * <p>
+   * If a future is canceled, the result will never be delivered.
    *
    * @return true if the future is canceled, false otherwise.
    */
@@ -862,9 +984,7 @@ class Future<T> {
       
       if (r) {
         // Everyone's OK with canceling, mark state & notify:
-        _isCanceled = true;
-      
-        for (canceled in _canceled) canceled();
+        forceCancel();
       }
              
       r;
@@ -893,79 +1013,122 @@ class Future<T> {
    * is delivered.
    */
   public function deliverTo(f: T -> Void): Future<T> {
-    if (_isSet) f(_result);
+    if (isCanceled()) return this;
+    else if (isDelivered()) f(_result);
     else _listeners.push(f);
     
     return this;
   }
   
+  /** Uses the specified function to transform the result of this future into
+   * a different value, returning a future of that value.
+   * <p>
+   * urlLoader.load("image.png").map(function(data) return new Image(data)).deliverTo(function(image) imageContainer.add(image));
+   */
   public function map<S>(f: T -> S): Future<S> {
     var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { fut.deliver(f(t)); });
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() { fut.forceCancel(); });
     
     return fut;
   }
   
+  /** Maps the result of this future to another future, and returns a future
+   * of the result of that future. Useful when chaining together multiple
+   * asynchronous operations that must be completed sequentially.
+   * <p>
+   * <pre>
+   * <code>
+   * urlLoader.load("config.xml").flatMap(function(xml){
+   *   return urlLoader.load(parse(xml).mediaUrl);
+   * }).deliverTo(function(loadedMedia){
+   *   container.add(loadedMedia);
+   * });
+   * </code>
+   * </pre>
+   */
   public function flatMap<S>(f: T -> Future<S>): Future<S> {
     var fut: Future<S> = new Future();
     
     deliverTo(function(t: T) { 
       f(t).deliverTo(function(s: S) { 
         fut.deliver(s);
-      }).allowCancelOnlyIf(function() { 
-        return fut.cancel();
       }).ifCanceled(function() {
-        fut.cancel();
+        fut.forceCancel();
       });
     });
     
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() { fut.forceCancel(); });
     
     return fut;
   }
   
+  /** Returns a new future that will be delivered only if the result of this
+   * future is accepted by the specified filter (otherwise, the new future
+   * will be canceled).
+   */
   public function filter(f: T -> Bool): Future<T> {
     var fut: Future<T> = new Future();
     
-    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.cancel(); });
+    deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.forceCancel(); });
     
-    ifCanceled(function() { fut.cancel(); });
+    ifCanceled(function() fut.forceCancel());
     
     return fut;
   }
   
+  /** Zips this future and the specified future into another future, whose 
+   * result is a tuple of the individual results of the futures. Useful when
+   * an operation requires the result of two futures, but each future may
+   * execute independently of the other.
+   */
   public function zip<A>(f2: Future<A>): Future<Tuple2<T, A>> {
     var zipped: Future<Tuple2<T, A>> = new Future();
     
     var f1 = this;
     
     var deliverZip = function() {
-      if (!zipped.isDone()) {
-        if (f1.isDelivered() && f2.isDelivered()) {
-          zipped.deliver(
-            Tuple2.create(f1.value().get(), f2.value().get())
-          );
-        }
+      if (f1.isDelivered() && f2.isDelivered()) {
+        zipped.deliver(
+          Tuple2.create(f1.value().get(), f2.value().get())
+        );
       }
     }
     
-    f1.deliverTo(function(v) { deliverZip(); });
-    f2.deliverTo(function(v) { deliverZip(); });
+    f1.deliverTo(function(v) deliverZip());
+    f2.deliverTo(function(v) deliverZip());
     
-    zipped.allowCancelOnlyIf(function() {
-      return f1.cancel() || f2.cancel();
-    });
+    zipped.allowCancelOnlyIf(function() return f1.cancel() || f2.cancel());
     
-    f1.ifCanceled(function() { zipped.cancel(); });
-    f2.ifCanceled(function() { zipped.cancel(); });
+    f1.ifCanceled(function() zipped.forceCancel());
+    f2.ifCanceled(function() zipped.forceCancel());
     
     return zipped;
   }
   
+  /** Retrieves the value of the future, as an option.
+   */
   public function value(): Option<T> {
     return if (_isSet) Some(_result) else None;
+  }
+  
+  public function toOption(): Option<T> {
+    return value();
+  }
+  
+  public function toArray(): Array<T> {
+    return value().toArray();
+  }
+  
+  private function forceCancel(): Future<T> {
+    if (!_isCanceled) {
+      _isCanceled = true;
+  
+      for (canceled in _canceled) canceled();
+    }
+    
+    return this;
   }
   
   public static function create<T>(): Future<T> {

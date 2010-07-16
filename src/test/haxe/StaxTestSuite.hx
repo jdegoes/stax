@@ -26,6 +26,12 @@ import haxe.data.collections.ListTestCase;
 import haxe.data.transcode.JValueTestCase;
 import haxe.abstract.PartialFunctionTestCase;
 import haxe.time.ScheduledExecutorTestCase;
+import haxe.net.UrlTestCase;
+import haxe.util.StringExtensionsTestCase;
+
+#if js
+import js.io.IFrameIOTestCase;
+#end
 
 class StaxTestSuite {
   public static function main (): Void {
@@ -38,7 +44,12 @@ class StaxTestSuite {
       new LoggerTestCase(),
       new JsonTestCase(),
       new PartialFunctionTestCase(),
-      new ScheduledExecutorTestCase()
+      new ScheduledExecutorTestCase(),
+      new UrlTestCase(),
+      new StringExtensionsTestCase()
+      #if js
+      , new IFrameIOTestCase()
+      #end
     ]).run();
   }
 }

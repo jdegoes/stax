@@ -264,6 +264,13 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     }
   }
   
+  public function getOrElseC(k: K, c: V): V {
+    return switch (get(k)) {
+      case Some(v): v;
+      case None: c;
+    }
+  }
+  
   public function contains(t: Tuple2<K, V>): Bool {
     var tupleEqual = Tuple2.EqualT(keyEqual, valueEqual);
     

@@ -88,10 +88,8 @@ class FoldableExtensions {
     });
   }
   
-  public static function mapTo<A, B, C, D>(src: Foldable<A, B>, factory: Factory<Foldable<C, D>>, f: B -> D) {
-    var dest = factory();
-    
-    return src.foldl(dest.empty(), function(a, b) {
+  public static function mapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> D): C {
+    return src.foldl(cast dest, function(a, b) {
       return dest.append(a, f(b));
     });
   }
@@ -106,10 +104,8 @@ class FoldableExtensions {
     });
   }
   
-  public static function flatMapTo<A, B, C, D>(src: Foldable<A, B>, factory: Factory<Foldable<C, D>>, f: B -> Foldable<C, D>): C {
-    var dest = factory();
-    
-    return src.foldl(dest.empty(), function(a, b) {
+  public static function flatMapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> Foldable<C, D>): C {
+    return src.foldl(cast dest, function(a, b) {
       return f(b).foldl(a, function(a, b) {
         return dest.append(a, b);
       });

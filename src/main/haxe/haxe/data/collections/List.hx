@@ -64,11 +64,16 @@ class List<T> implements Collection<List<T>, T> {
   }
   
   public var size (getSize, null): Int;
+  
   public var head (getHead, null): T;
-  public var last (getLast, null): T;
   public var tail (getTail, null): List<T>;
-  public var headOption (getHeadOption, null): Option<T>;
-  public var lastOption (getLastOption, null): Option<T>;
+  
+  public var first (getHead, null): T;
+  public var last  (getLast, null): T;
+  
+  public var headOption  (getHeadOption, null): Option<T>;
+  public var firstOption (getHeadOption, null): Option<T>;
+  public var lastOption  (getLastOption, null): Option<T>;
   
   public var equal (default, null): Equal<T>;
   
@@ -107,6 +112,26 @@ class List<T> implements Collection<List<T>, T> {
   /** Synonym for cons. */
   public function prepend(head: T): List<T> {
     return cons(head);
+  }
+  
+  public function prependAll(iterable: Iterable<T>): List<T> {
+    var result = this;
+    
+    var array = iterable.toArray();
+    
+    array.reverse();
+    
+    for (e in array) result = result.cons(e);
+    
+    return result;
+  }
+  
+  public function prependAllR(iterable: Iterable<T>): List<T> {
+    var result = this;
+    
+    for (e in iterable) result = result.cons(e);
+    
+    return result;
   }
   
   public function append(a: List<T>, b: T): List<T> {
@@ -223,6 +248,35 @@ class List<T> implements Collection<List<T>, T> {
     return this.addAll(l);
   }
   
+  /** Override Foldable to provide higher performance: */
+  public function drop(n: Int): List<T> {
+    var cur = this;
+    
+    for (i in 0...Math.min(size, n).toInt()) {
+      cur = cur.tail;
+    }
+    
+    return cur;
+  }
+  
+  /** Override Foldable to provide higher performance: */
+  public function dropWhile(pred: T -> Bool): List<T> {
+    var cur = this;
+    
+    for (i in 0...size) {
+      if (pred(cur.head)) return cur;
+      
+      cur = cur.tail;
+    }
+    
+    return cur;
+  }
+  
+  /** Override Foldable to provide higher performance: */
+  public function take(n: Int): List<T> {
+    return reverse().drop(size - n);
+  }
+  
   /** Returns a list that contains all the elements of this list in reverse 
    * order */
   public function reverse(): List<T> {
@@ -247,6 +301,14 @@ class List<T> implements Collection<List<T>, T> {
     return r;
   }
   
+  /** Retrieves a list of gaps in this sequence.
+   * 
+   * @param f Called with every two consecutive elements to retrieve a list of gaps.
+   */
+  public function gaps<G>(f: T -> T -> List<G>, ?equal: Equal<G>): List<G> {
+    return zip(drop(1)).flatMapTo(List.nil(equal), function(tuple) return f(tuple._1, tuple._2));
+	}
+  
   /** Returns a list that contains all the elements of this list, sorted by
    * the specified ordering function.
    */
@@ -255,7 +317,13 @@ class List<T> implements Collection<List<T>, T> {
     
     a.sort(order.compare);
     
-    return empty().addAll(a);
+    var result = empty();
+    
+    for (i in 0...a.length) {
+      result = result.cons(a[a.length - 1 - i]);
+    }
+    
+    return result;
   }
   
   public function iterator(): Iterator<T> {

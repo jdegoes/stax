@@ -17,7 +17,7 @@
 
 package haxe;
 
-import haxe.Dom;
+import Dom;
 import js.Env;
 
 import haxe.test.TestRunner;
