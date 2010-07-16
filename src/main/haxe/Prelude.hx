@@ -481,10 +481,6 @@ class ArrayExtensions {
     return a[a.length - 1];
   }
   
-  public static function size<T>(a: Array<T>): Int {
-    return a.length;
-  }
-  
   public static function contains<T>(a: Array<T>, t: T): Bool {
     for (e in a) if (e == t) return true;
     

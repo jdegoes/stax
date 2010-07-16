@@ -29,12 +29,12 @@ class IterableExtensions {
 	  return size;
 	}
 	
-	public static function foldl<T, Z>(iter: Iterable<T>, itInit: Z, mapper: Z -> T -> Z): Z {
-    var init = itInit;
+	public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
+    var folded = seed;
     
-    for (e in iter) { init = mapper(init, e); }
+    for (e in iter) { folded = mapper(folded, e); }
     
-    return init;
+    return folded;
   }
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
