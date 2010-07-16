@@ -1,11 +1,22 @@
-import test.TestCase.hx;
-import test.testRunner.hx;
+package haxe.test.resources;
 
-public class CollectionTester {
+import haxe.test.TestCase;
+import haxe.test.TestRunner;
+import haxe.reactive.BehaviorCollection;
+
+class CollectionTester extends TestCase {
   
+  public function new():Void {
+      super();
+  }
+  
+  public function testThatTraceWorks(): Void {
+    trace("Trace is working");
+    assertTrue(true);
+  }
 }
 
-public class BCollectionTester {
+class BCollectionTester {
 	public static function main():Void {
 		var tr = new haxe.test.TestRunner();
 	    

@@ -16,6 +16,7 @@
 package haxe.reactive;
 
 import haxe.reactive.Reactive;
+using haxe.data.collections.IterableExtensions;
 
 class BehaviorBool {
     private function new() { }

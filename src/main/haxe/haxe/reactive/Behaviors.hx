@@ -19,6 +19,8 @@ import Prelude;
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
+using haxe.data.collections.IterableExtensions;
+
 class Behaviors {
     private function new() { }
     
@@ -44,7 +46,7 @@ class Behaviors {
      *                      == true, else an 'ifFalse' Behavior.
      */
     public static function cond<T>(conditions: Iterable<Tuple2<Behavior<Bool>, Behavior<T>>>, elseB: Behavior<T>): Behavior<T> {
-        return switch (conditions.headOpt()) {
+        return switch (conditions.headOption()) {
             case None:    elseB;
             case Some(h): BehaviorBool.ifTrue(h._1, h._2, cond(conditions.tail(), elseB));
         }
@@ -58,7 +60,7 @@ class Behaviors {
      */
     public static function zipN<T>(behaviors: Iterable<Behavior<T>>): Behavior<Iterable<T>> {
         var zipValueNow = function(): Iterable<T> {
-            return behaviors.map(function(b) { return b.valueNow(); }).strict();
+            return behaviors.map(function(b) { return b.valueNow(); });
         }
         
         return Streams.create(
