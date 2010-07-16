@@ -1,16 +1,16 @@
 package js;
 
-import haxe.Dom;
+import Dom;
 
 class Env {
     /** Top level objects */
-    public static var canvas    : HTMLCanvasElement   = untyped __js__('document.getElementById("canvas")'); 
-    public static var document  : Document = untyped __js__('document');
-    public static var screen    : Screen   = untyped __js__('screen');
-    public static var window    : Window   = untyped __js__('window');
-    public static var navigator : Navigator= untyped __js__('navigator');
-    public static var history   : History  = untyped __js__('history');
-    public static var location  : Location = untyped __js__('location');
+    public static var document:       Document          = untyped __js__('document');
+    public static var documentHtml:   HTMLDocument      = untyped __js__('document');
+    public static var screen:         Screen            = untyped __js__('screen');
+    public static var window:         Window            = untyped __js__('window');
+    public static var navigator:      Navigator         = untyped __js__('navigator');
+    public static var history:        History           = untyped __js__('history');
+    public static var location:       Location          = untyped __js__('location');
     
     /** Top level values */
     public static var JInfinity : Dynamic  = untyped __js__('Infinity');
@@ -82,6 +82,20 @@ class Env {
 
             null;
         }
+    }
+    
+    public static function contentDocumentOf(iframe: HTMLIFrameElement): Document {
+      return if (iframe.contentDocument != null) {
+        iframe.contentDocument;
+      }
+      else if (iframe.contentWindow != null) {
+        iframe.contentWindow.document;
+      }
+      else if (untyped iframe.document != null) {
+        untyped iframe.document;
+      }
+      else { throw "Cannot find iframe content document for " + iframe; null; }
+      
     }
 }
 

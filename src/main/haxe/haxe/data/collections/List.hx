@@ -64,11 +64,16 @@ class List<T> implements Collection<List<T>, T> {
   }
   
   public var size (getSize, null): Int;
+  
   public var head (getHead, null): T;
-  public var last (getLast, null): T;
   public var tail (getTail, null): List<T>;
-  public var headOption (getHeadOption, null): Option<T>;
-  public var lastOption (getLastOption, null): Option<T>;
+  
+  public var first (getHead, null): T;
+  public var last  (getLast, null): T;
+  
+  public var headOption  (getHeadOption, null): Option<T>;
+  public var firstOption (getHeadOption, null): Option<T>;
+  public var lastOption  (getLastOption, null): Option<T>;
   
   public var equal (default, null): Equal<T>;
   
@@ -221,6 +226,35 @@ class List<T> implements Collection<List<T>, T> {
   /** Override Foldable to provide higher performance: */
   public function concat(l: List<T>): List<T> {
     return this.addAll(l);
+  }
+  
+  /** Override Foldable to provide higher performance: */
+  public function drop(n: Int): List<T> {
+    var cur = this;
+    
+    for (i in 0...Math.min(size, n).toInt()) {
+      cur = cur.tail;
+    }
+    
+    return cur;
+  }
+  
+  /** Override Foldable to provide higher performance: */
+  public function dropWhile(pred: T -> Bool): List<T> {
+    var cur = this;
+    
+    for (i in 0...size) {
+      if (pred(cur.head)) return cur;
+      
+      cur = cur.tail;
+    }
+    
+    return cur;
+  }
+  
+  /** Override Foldable to provide higher performance: */
+  public function take(n: Int): List<T> {
+    return reverse().drop(size - n);
   }
   
   /** Returns a list that contains all the elements of this list in reverse 

@@ -129,6 +129,18 @@ class BoolExtensions {
   public static function toInt(v: Bool): Float { return if (v) 1 else 0; }
   public static function toString(v: Bool): String { return Std.string(v); }
   
+  public static function ifTrue<T>(v: Bool, f: Thunk<T>): Option<T> {
+    return if (v) Some(f()) else None;
+  }
+  
+  public static function ifFalse<T>(v: Bool, f: Thunk<T>): Option<T> {
+    return if (!v) Some(f()) else None;
+  }
+  
+  public static function ifElse<T>(v: Bool, f1: Thunk<T>, f2: Thunk<T>): T {
+    return if (v) f1() else f2();
+  }
+  
   public static function OrderT(c: Enum<Bool>): Order<Bool> {
     return OrderTypeclass.create({
       compare: function(v1: Bool, v2: Bool) {
@@ -195,6 +207,7 @@ class IntExtensions {
   }
 }
 class FloatExtensions {
+  public static function round(v: Float): Int { return Math.round(v); }
   public static function max(v1: Float, v2: Float): Float { return if (v2 > v1) v2; else v1; }
   public static function min(v1: Float, v2: Float): Float { return if (v2 < v1) v2; else v1; }
   public static function toInt(v: Float): Int { return Std.int(v); }
@@ -238,6 +251,24 @@ class StringExtensions {
   }
   public static function endsWith(v: String, frag: String): Bool {
     return if (v.length >= frag.length && frag == v.substr(v.length - frag.length)) true else false;
+  }
+  public static function urlEncode(v: String): String {
+    return StringTools.urlEncode(v);
+  }
+  public static function urlDecode(v: String): String {
+    return StringTools.urlDecode(v);
+  }  
+  public static function htmlEscape(v: String): String {
+    return StringTools.htmlEscape(v);
+  }
+  public static function htmlUnescape(v: String): String {
+    return StringTools.htmlUnescape(v);
+  }
+  public static function trim(v: String): String {
+    return StringTools.trim(v);
+  }
+  public static function contains(v: String, s: String): Bool {
+    return v.indexOf(s) != -1;
   }
   
   public static function OrderT(c: Class<String>): Order<String> {
@@ -431,10 +462,28 @@ class ArrayExtensions {
     return copy;
   }
   
+  public static function first<T>(a: Array<T>): T {
+    return a[0];
+  }
+  
+  public static function last<T>(a: Array<T>): T {
+    return a[a.length - 1];
+  }
+  
+  public static function size<T>(a: Array<T>): Int {
+    return a.length;
+  }
+  
   public static function contains<T>(a: Array<T>, t: T): Bool {
     for (e in a) if (e == t) return true;
     
     return false;
+  }
+  
+  public static function foreach<T>(a: Array<T>, f: T -> Void): Array<T> {
+    for (e in a) f(e);
+    
+    return a;
   }
 }
 class FunctionExtensions {
@@ -662,6 +711,16 @@ class OptionExtensions {
     }
   }
   
+  public static function zip<T, S>(o1: Option<T>, o2: Option<S>): Option<Tuple2<T, S>> {
+    return switch (o1) {
+      case None: None;
+      case Some(v1): switch (o2) {
+        case None: None;
+        case Some(v2): Some(v1.entuple(v2));
+      }
+    }
+  }
+  
   public static function get<T>(o: Option<T>): T {
     return switch (o) {
       case None: Stax.error("Error: Option is empty");
@@ -672,6 +731,13 @@ class OptionExtensions {
   public static function getOrElse<T>(o: Option<T>, thunk: Thunk<T>): T {
     return switch(o) {
       case None: thunk();
+      case Some(v): v;
+    }
+  }
+  
+  public static function getOrElseC<T>(o: Option<T>, c: T): T {
+    return switch(o) {
+      case None:    c;
       case Some(v): v;
     }
   }
@@ -847,6 +913,9 @@ class Future<T> {
   /** Installs the specified canceler on the future. Under ordinary 
    * circumstances, the future will not be canceled unless all cancelers 
    * return true. If the future is already done, this method has no effect.
+   * <p>
+   * This method does not normally need to be called. It's provided primarily
+   * for the implementation of future primitives.
    */
   public function allowCancelOnlyIf(f: Void -> Bool): Future<T> {
     if (!isDone()) _cancelers.push(f);
@@ -855,7 +924,13 @@ class Future<T> {
   }
   
   /** Installs a handler that will be called if and only if the future is
-   * canceled.
+   * canceled. 
+   * <p> 
+   * This method does not normally need to be called, since there is no 
+   * difference between a future being canceled and a future taking an 
+   * arbitrarily long amount of time to evaluate. It's provided primarily
+   * for implementation of future primitives to save resources when it's
+   * explicitly known the result of a future will not be used.
    */
   public function ifCanceled(f: Void -> Void): Future<T> {
     if (isCanceled()) f();
@@ -866,6 +941,8 @@ class Future<T> {
   
   /** Attempts to cancel the future. This may succeed only if the future is
    * not already delivered, and if all cancel conditions are satisfied.
+   * <p>
+   * If a future is canceled, the result will never be delivered.
    *
    * @return true if the future is canceled, false otherwise.
    */
@@ -918,7 +995,7 @@ class Future<T> {
   /** Uses the specified function to transform the result of this future into
    * a different value, returning a future of that value.
    * <p>
-   * urlLoader.load("image.png").map(function(data){return new Image(data);}).deliverTo(function(image){imageContainer.add(image);});
+   * urlLoader.load("image.png").map(function(data) return new Image(data)).deliverTo(function(image) imageContainer.add(image));
    */
   public function map<S>(f: T -> S): Future<S> {
     var fut: Future<S> = new Future();
@@ -929,7 +1006,7 @@ class Future<T> {
     return fut;
   }
   
-  /** Maps the result of this future to another future, and returns future
+  /** Maps the result of this future to another future, and returns a future
    * of the result of that future. Useful when chaining together multiple
    * asynchronous operations that must be completed sequentially.
    * <p>
@@ -968,7 +1045,7 @@ class Future<T> {
     
     deliverTo(function(t: T) { if (f(t)) fut.deliver(t); else fut.forceCancel(); });
     
-    ifCanceled(function() { fut.forceCancel(); });
+    ifCanceled(function() fut.forceCancel());
     
     return fut;
   }
@@ -1006,6 +1083,14 @@ class Future<T> {
    */
   public function value(): Option<T> {
     return if (_isSet) Some(_result) else None;
+  }
+  
+  public function toOption(): Option<T> {
+    return value();
+  }
+  
+  public function toArray(): Array<T> {
+    return value().toArray();
   }
   
   private function forceCancel(): Future<T> {

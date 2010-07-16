@@ -98,7 +98,7 @@ haxe.Stack.prototype.__class__ = haxe.Stack;
 StaxTestSuite = function() { }
 StaxTestSuite.__name__ = ["StaxTestSuite"];
 StaxTestSuite.main = function() {
-	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase(),new haxe.time.ScheduledExecutorTestCase()]).run();
+	(new haxe.test.TestRunner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.abstract.PartialFunctionTestCase(),new haxe.time.ScheduledExecutorTestCase(),new haxe.net.UrlTestCase(),new haxe.util.StringExtensionsTestCase(),new js.io.IFrameIOTestCase()]).run();
 }
 StaxTestSuite.prototype.__class__ = StaxTestSuite;
 if(!haxe.test) haxe.test = {}
@@ -161,6 +161,216 @@ haxe.test.TestResult.prototype.toString = function() {
 	return buf.b.join("");
 }
 haxe.test.TestResult.prototype.__class__ = haxe.test.TestResult;
+haxe.test.TestCase = function(p) { if( p === $_ ) return; {
+	this.futureAsserts = [];
+}}
+haxe.test.TestCase.__name__ = ["haxe","test","TestCase"];
+haxe.test.TestCase.prototype.after = function() {
+	null;
+}
+haxe.test.TestCase.prototype.afterAll = function() {
+	null;
+}
+haxe.test.TestCase.prototype.assertEquals = function(expected,actual,equal,c) {
+	equal = ((equal == null?DynamicExtensions.EqualT():equal));
+	this.currentTest.done = true;
+	if(equal.notEqual(actual,expected)) {
+		this.currentTest.success = false;
+		this.currentTest.error = ((("Expected '" + expected) + "' but was '") + actual) + "'";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertException = function(f,msg,c) {
+	if(msg == null) msg = "Expected an exception, but nothing was thrown";
+	this.currentTest.done = true;
+	try {
+		f();
+		this.currentTest.success = false;
+		this.currentTest.error = msg;
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+	catch( $e2 ) {
+		{
+			var e = $e2;
+			null;
+		}
+	}
+}
+haxe.test.TestCase.prototype.assertFalse = function(b,msg,c) {
+	if(msg == null) msg = "Expected false but was true";
+	this.currentTest.done = true;
+	if(b == true) {
+		this.currentTest.success = false;
+		this.currentTest.error = msg;
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertLater = function(f,minMs,maxMs) {
+	this.futureAsserts.push({ future : f, min : minMs, max : maxMs});
+}
+haxe.test.TestCase.prototype.assertNotNull = function(a,c) {
+	this.currentTest.done = true;
+	if(a == null) {
+		this.currentTest.success = false;
+		this.currentTest.error = "Expected non-null, but was null";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertNull = function(a,c) {
+	this.currentTest.done = true;
+	if(a != null) {
+		this.currentTest.success = false;
+		this.currentTest.error = ("Expected null, but was '" + a) + "'";
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.assertTrue = function(b,msg,c) {
+	if(msg == null) msg = "Expected true but was false";
+	this.currentTest.done = true;
+	if(b == false) {
+		this.currentTest.success = false;
+		this.currentTest.error = msg;
+		this.currentTest.posInfos = c;
+		throw this.currentTest;
+	}
+}
+haxe.test.TestCase.prototype.before = function() {
+	null;
+}
+haxe.test.TestCase.prototype.beforeAll = function() {
+	null;
+}
+haxe.test.TestCase.prototype.currentTest = null;
+haxe.test.TestCase.prototype.futureAsserts = null;
+haxe.test.TestCase.prototype.print = function(v) {
+	this.currentTest.output += Std.string(v);
+}
+haxe.test.TestCase.prototype.__class__ = haxe.test.TestCase;
+if(!haxe.util) haxe.util = {}
+haxe.util.StringExtensionsTestCase = function(p) { if( p === $_ ) return; {
+	haxe.test.TestCase.apply(this,[]);
+}}
+haxe.util.StringExtensionsTestCase.__name__ = ["haxe","util","StringExtensionsTestCase"];
+haxe.util.StringExtensionsTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.util.StringExtensionsTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+haxe.util.StringExtensionsTestCase.prototype.testChars = function() {
+	var result = haxe.util.StringExtensions.chars("foob");
+	var iterator = result.iterator();
+	this.assertEquals("f",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 44, className : "haxe.util.StringExtensionsTestCase", methodName : "testChars"});
+	this.assertEquals("o",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 45, className : "haxe.util.StringExtensionsTestCase", methodName : "testChars"});
+	this.assertEquals("o",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 46, className : "haxe.util.StringExtensionsTestCase", methodName : "testChars"});
+	this.assertEquals("b",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 47, className : "haxe.util.StringExtensionsTestCase", methodName : "testChars"});
+	this.assertFalse(iterator.hasNext(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 49, className : "haxe.util.StringExtensionsTestCase", methodName : "testChars"});
+}
+haxe.util.StringExtensionsTestCase.prototype.testChunk = function() {
+	var result = haxe.util.StringExtensions.chunk("foobarblah",3);
+	var iterator = result.iterator();
+	this.assertEquals("foo",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 33, className : "haxe.util.StringExtensionsTestCase", methodName : "testChunk"});
+	this.assertEquals("bar",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 34, className : "haxe.util.StringExtensionsTestCase", methodName : "testChunk"});
+	this.assertEquals("bla",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 35, className : "haxe.util.StringExtensionsTestCase", methodName : "testChunk"});
+	this.assertEquals("h",iterator.next(),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 36, className : "haxe.util.StringExtensionsTestCase", methodName : "testChunk"});
+}
+haxe.util.StringExtensionsTestCase.prototype.testString = function() {
+	this.assertEquals("foobar",haxe.util.StringExtensions.string(haxe.util.StringExtensions.chars("foobar")),null,{ fileName : "StringExtensionsTestCase.hx", lineNumber : 53, className : "haxe.util.StringExtensionsTestCase", methodName : "testString"});
+}
+haxe.util.StringExtensionsTestCase.prototype.__class__ = haxe.util.StringExtensionsTestCase;
+EReg = function(r,opt) { if( r === $_ ) return; {
+	opt = opt.split("u").join("");
+	this.r = new RegExp(r,opt);
+}}
+EReg.__name__ = ["EReg"];
+EReg.prototype.customReplace = function(s,f) {
+	var buf = new StringBuf();
+	while(true) {
+		if(!this.match(s)) break;
+		buf.b[buf.b.length] = this.matchedLeft();
+		buf.b[buf.b.length] = f(this);
+		s = this.matchedRight();
+	}
+	buf.b[buf.b.length] = s;
+	return buf.b.join("");
+}
+EReg.prototype.match = function(s) {
+	this.r.m = this.r.exec(s);
+	this.r.s = s;
+	this.r.l = RegExp.leftContext;
+	this.r.r = RegExp.rightContext;
+	return (this.r.m != null);
+}
+EReg.prototype.matched = function(n) {
+	return (this.r.m != null && n >= 0 && n < this.r.m.length?this.r.m[n]:(function($this) {
+		var $r;
+		throw "EReg::matched";
+		return $r;
+	}(this)));
+}
+EReg.prototype.matchedLeft = function() {
+	if(this.r.m == null) throw "No string matched";
+	if(this.r.l == null) return this.r.s.substr(0,this.r.m.index);
+	return this.r.l;
+}
+EReg.prototype.matchedPos = function() {
+	if(this.r.m == null) throw "No string matched";
+	return { pos : this.r.m.index, len : this.r.m[0].length}
+}
+EReg.prototype.matchedRight = function() {
+	if(this.r.m == null) throw "No string matched";
+	if(this.r.r == null) {
+		var sz = this.r.m.index + this.r.m[0].length;
+		return this.r.s.substr(sz,this.r.s.length - sz);
+	}
+	return this.r.r;
+}
+EReg.prototype.r = null;
+EReg.prototype.replace = function(s,by) {
+	return s.replace(this.r,by);
+}
+EReg.prototype.split = function(s) {
+	var d = "#__delim__#";
+	return s.replace(this.r,d).split(d);
+}
+EReg.prototype.__class__ = EReg;
+if(!haxe.net) haxe.net = {}
+haxe.net.UrlTools = function() { }
+haxe.net.UrlTools.__name__ = ["haxe","net","UrlTools"];
+haxe.net.UrlTools.parseUrl = function(s) {
+	var nonNull = function(s1) {
+		return (s1 == null?"":s1);
+	}
+	return (haxe.net.UrlTools.UrlPattern.match(s)?(function($this) {
+		var $r;
+		var port = nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Port));
+		$r = Option.Some({ hash : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Hash)), host : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Hostname)) + ((port == ""?"":":" + port)), hostname : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Hostname)), href : s, pathname : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Pathname)), port : port, protocol : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Protocol)), search : nonNull(haxe.net.UrlTools.UrlPattern.matched(haxe.net.UrlTools.Search))});
+		return $r;
+	}(this)):Option.None);
+}
+haxe.net.UrlTools.toUrl = function(parsed) {
+	return parsed.href;
+}
+haxe.net.UrlTools.fromQueryString = function(query) {
+	return (!StringExtensions.startsWith(query,"?")?{ }:ArrayExtensions.foldl(ArrayExtensions.flatMap(query.substr(1).split("&"),function(kv) {
+		var a = ArrayExtensions.map(kv.split("="),function(s) {
+			return StringExtensions.urlDecode(s);
+		});
+		return (a.length == 0?[]:(a.length == 1?[DynamicExtensions.entuple(a[0],"")]:[DynamicExtensions.entuple(a[0],a[1])]));
+	}),{ },function(o,t) {
+		o[t._1] = t._2;
+		return o;
+	}));
+}
+haxe.net.UrlTools.toQueryString = function(query) {
+	return ArrayExtensions.foldl(Reflect.fields(query),"?",function(url,fieldName) {
+		var fieldValue = Reflect.field(query,fieldName);
+		var rest = (StringTools.urlEncode(fieldName) + "=") + StringTools.urlEncode(fieldValue);
+		return url + ((url == "?"?rest:"&" + rest));
+	});
+}
+haxe.net.UrlTools.prototype.__class__ = haxe.net.UrlTools;
 if(!haxe.data) haxe.data = {}
 if(!haxe.data.transcode) haxe.data.transcode = {}
 haxe.data.transcode.BoolExtensions = function() { }
@@ -640,9 +850,9 @@ haxe.data.transcode.ExtractorHelpers.extractFieldValue = function(j,n,e,def) {
 	try {
 		return e.extract(fieldValue);
 	}
-	catch( $e2 ) {
+	catch( $e3 ) {
 		{
-			var err = $e2;
+			var err = $e3;
 			{
 				return e.extract(def);
 			}
@@ -1248,8 +1458,8 @@ haxe.text.json.JValueExtensions.fold = function(v,initial,f) {
 }
 haxe.text.json.JValueExtensions.path = function(v,s) {
 	var ss = s.split("/"), c = v;
-	{ var $it3 = ss.iterator();
-	while( $it3.hasNext() ) { var x = $it3.next();
+	{ var $it4 = ss.iterator();
+	while( $it4.hasNext() ) { var x = $it4.next();
 	if(x.length > 0) c = haxe.text.json.JValueExtensions.get(c,x);
 	}}
 	return c;
@@ -1484,96 +1694,6 @@ haxe.text.json.JValueExtensions.extractArray = function(v) {
 	}(this));
 }
 haxe.text.json.JValueExtensions.prototype.__class__ = haxe.text.json.JValueExtensions;
-haxe.test.TestCase = function(p) { if( p === $_ ) return; {
-	this.futureAsserts = [];
-}}
-haxe.test.TestCase.__name__ = ["haxe","test","TestCase"];
-haxe.test.TestCase.prototype.after = function() {
-	null;
-}
-haxe.test.TestCase.prototype.afterAll = function() {
-	null;
-}
-haxe.test.TestCase.prototype.assertEquals = function(expected,actual,equal,c) {
-	equal = ((equal == null?DynamicExtensions.EqualT():equal));
-	this.currentTest.done = true;
-	if(equal.notEqual(actual,expected)) {
-		this.currentTest.success = false;
-		this.currentTest.error = ((("Expected '" + expected) + "' but was '") + actual) + "'";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.test.TestCase.prototype.assertException = function(f,msg,c) {
-	if(msg == null) msg = "Expected an exception, but nothing was thrown";
-	this.currentTest.done = true;
-	try {
-		f();
-		this.currentTest.success = false;
-		this.currentTest.error = msg;
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-	catch( $e4 ) {
-		{
-			var e = $e4;
-			null;
-		}
-	}
-}
-haxe.test.TestCase.prototype.assertFalse = function(b,msg,c) {
-	if(msg == null) msg = "Expected false but was true";
-	this.currentTest.done = true;
-	if(b == true) {
-		this.currentTest.success = false;
-		this.currentTest.error = msg;
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.test.TestCase.prototype.assertLater = function(f,minMs,maxMs) {
-	this.futureAsserts.push({ future : f, min : minMs, max : maxMs});
-}
-haxe.test.TestCase.prototype.assertNotNull = function(a,c) {
-	this.currentTest.done = true;
-	if(a == null) {
-		this.currentTest.success = false;
-		this.currentTest.error = "Expected non-null, but was null";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.test.TestCase.prototype.assertNull = function(a,c) {
-	this.currentTest.done = true;
-	if(a != null) {
-		this.currentTest.success = false;
-		this.currentTest.error = ("Expected null, but was '" + a) + "'";
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.test.TestCase.prototype.assertTrue = function(b,msg,c) {
-	if(msg == null) msg = "Expected true but was false";
-	this.currentTest.done = true;
-	if(b == false) {
-		this.currentTest.success = false;
-		this.currentTest.error = msg;
-		this.currentTest.posInfos = c;
-		throw this.currentTest;
-	}
-}
-haxe.test.TestCase.prototype.before = function() {
-	null;
-}
-haxe.test.TestCase.prototype.beforeAll = function() {
-	null;
-}
-haxe.test.TestCase.prototype.currentTest = null;
-haxe.test.TestCase.prototype.futureAsserts = null;
-haxe.test.TestCase.prototype.print = function(v) {
-	this.currentTest.output += Std.string(v);
-}
-haxe.test.TestCase.prototype.__class__ = haxe.test.TestCase;
 StringTools = function() { }
 StringTools.__name__ = ["StringTools"];
 StringTools.urlEncode = function(s) {
@@ -2160,6 +2280,65 @@ haxe.Log.clear = function() {
 	js.Boot.__clear_trace();
 }
 haxe.Log.prototype.__class__ = haxe.Log;
+if(typeof js=='undefined') js = {}
+if(!js.io) js.io = {}
+js.io.IFrameIOTestCase = function(p) { if( p === $_ ) return; {
+	haxe.test.TestCase.apply(this,[]);
+}}
+js.io.IFrameIOTestCase.__name__ = ["js","io","IFrameIOTestCase"];
+js.io.IFrameIOTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) js.io.IFrameIOTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+js.io.IFrameIOTestCase.prototype.XtestSendOfLargeStringPacketIsReceived = function() {
+	var string = "";
+	{
+		var _g = 0;
+		while(_g < 1000) {
+			var i = _g++;
+			string += "91234";
+		}
+	}
+	var self = this;
+	this.iframeIO1.receiveMessage(function(data) {
+		self.assertEquals(string,data,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 91, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+		haxe.Log.trace("Successfully tested send of large packet",{ fileName : "IFrameIOTestCase.hx", lineNumber : 93, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+	},"about:blank");
+	this.iframeIO2.postMessage(string,"about:blank",this.window1);
+	this.assertTrue(true,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 100, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+}
+js.io.IFrameIOTestCase.prototype.afterAll = function() {
+	null;
+}
+js.io.IFrameIOTestCase.prototype.beforeAll = function() {
+	var d = js.Env.documentHtml;
+	var body = d.getElementsByTagName("body")[0];
+	var iframe1 = d.createElement("iframe");
+	var iframe2 = d.createElement("iframe");
+	iframe1.setAttribute("src","about:blank");
+	iframe2.setAttribute("src","about:blank");
+	body.appendChild(iframe1);
+	body.appendChild(iframe2);
+	var doc1 = js.Env.contentDocumentOf(iframe1);
+	var doc2 = js.Env.contentDocumentOf(iframe2);
+	this.window1 = doc1.defaultView;
+	this.window2 = doc2.defaultView;
+	this.iframeIO1 = new js.io.IFrameIO(this.window1);
+	this.iframeIO2 = new js.io.IFrameIO(this.window2);
+}
+js.io.IFrameIOTestCase.prototype.iframeIO1 = null;
+js.io.IFrameIOTestCase.prototype.iframeIO2 = null;
+js.io.IFrameIOTestCase.prototype.testSendOfTinyStringPacketIsReceived = function() {
+	var self = this;
+	this.iframeIO1.receiveMessage(function(data) {
+		self.assertEquals("foo",data,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 68, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+		haxe.Log.trace("Successfully tested send of tiny packet",{ fileName : "IFrameIOTestCase.hx", lineNumber : 70, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+		self.XtestSendOfLargeStringPacketIsReceived();
+	},"about:blank");
+	this.iframeIO2.postMessage("foo","about:blank",this.window1);
+	this.assertTrue(true,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 79, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+}
+js.io.IFrameIOTestCase.prototype.window1 = null;
+js.io.IFrameIOTestCase.prototype.window2 = null;
+js.io.IFrameIOTestCase.prototype.__class__ = js.io.IFrameIOTestCase;
 haxe.data.collections.SetTestCase = function(p) { if( p === $_ ) return; {
 	haxe.test.TestCase.apply(this,[]);
 }}
@@ -2603,6 +2782,25 @@ haxe.abstract.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
 	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(def);
 }
 haxe.abstract.PartialFunction5ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction5ImplExtensions;
+Selection = function() { }
+Selection.__name__ = ["Selection"];
+Selection.prototype.addRange = null;
+Selection.prototype.anchorNode = null;
+Selection.prototype.anchorOffset = null;
+Selection.prototype.collapse = null;
+Selection.prototype.collapseToEnd = null;
+Selection.prototype.collapseToStart = null;
+Selection.prototype.deleteFromDocument = null;
+Selection.prototype.focusNode = null;
+Selection.prototype.focusOffset = null;
+Selection.prototype.getRangeAt = null;
+Selection.prototype.isCollapsed = null;
+Selection.prototype.rangeCount = null;
+Selection.prototype.removeAllRanges = null;
+Selection.prototype.removeRange = null;
+Selection.prototype.selectAllChildren = null;
+Selection.prototype.stringifier = null;
+Selection.prototype.__class__ = Selection;
 haxe.abstract.Foldable = function() { }
 haxe.abstract.Foldable.__name__ = ["haxe","abstract","Foldable"];
 haxe.abstract.Foldable.prototype.append = null;
@@ -2706,10 +2904,35 @@ haxe.data.collections.List.prototype.contains = function(t) {
 	}
 	return false;
 }
+haxe.data.collections.List.prototype.drop = function(n) {
+	var cur = this;
+	{
+		var _g1 = 0, _g = FloatExtensions.toInt(Math.min(this.getSize(),n));
+		while(_g1 < _g) {
+			var i = _g1++;
+			cur = cur.getTail();
+		}
+	}
+	return cur;
+}
+haxe.data.collections.List.prototype.dropWhile = function(pred) {
+	var cur = this;
+	{
+		var _g1 = 0, _g = this.getSize();
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(pred(cur.getHead())) return cur;
+			cur = cur.getTail();
+		}
+	}
+	return cur;
+}
 haxe.data.collections.List.prototype.empty = function() {
 	return (this.getSize() == 0?this:haxe.data.collections.List.nil(this.equal));
 }
 haxe.data.collections.List.prototype.equal = null;
+haxe.data.collections.List.prototype.first = null;
+haxe.data.collections.List.prototype.firstOption = null;
 haxe.data.collections.List.prototype.foldl = function(z,f) {
 	var acc = z;
 	var cur = this;
@@ -2814,13 +3037,16 @@ haxe.data.collections.List.prototype.sort = function(order) {
 	return this.empty().addAll(a);
 }
 haxe.data.collections.List.prototype.tail = null;
+haxe.data.collections.List.prototype.take = function(n) {
+	return this.reverse().drop(this.getSize() - n);
+}
 haxe.data.collections.List.prototype.toString = function() {
 	return haxe.data.collections.List.ShowT(DynamicExtensions.ShowT()).show(this);
 }
 haxe.data.collections.List.prototype.zip = function(that) {
 	var len = IntExtensions.min(this.getSize(),that.getSize());
-	var iterator1 = haxe.abstract.FoldableExtensions.drop(this.reverse(),IntExtensions.max(0,this.getSize() - len)).iterator();
-	var iterator2 = haxe.abstract.FoldableExtensions.drop(that.reverse(),IntExtensions.max(0,that.getSize() - len)).iterator();
+	var iterator1 = this.reverse().drop(IntExtensions.max(0,this.getSize() - len)).iterator();
+	var iterator2 = that.reverse().drop(IntExtensions.max(0,that.getSize() - len)).iterator();
 	var r = haxe.data.collections.List.create(Tuple2.EqualT(this.equal,that.equal));
 	{
 		var _g = 0;
@@ -2833,7 +3059,258 @@ haxe.data.collections.List.prototype.zip = function(that) {
 }
 haxe.data.collections.List.prototype.__class__ = haxe.data.collections.List;
 haxe.data.collections.List.__interfaces__ = [haxe.data.collections.Collection];
+DynamicExtensions = function() { }
+DynamicExtensions.__name__ = ["DynamicExtensions"];
+DynamicExtensions.ShowT = function() {
+	return ShowTypeclass.create({ show : function(d) {
+		return Std.string(d);
+	}});
+}
+DynamicExtensions.HasherT = function() {
+	return HasherTypeclass.create({ hash : function(d) {
+		return StringExtensions.HasherT(String).hash(DynamicExtensions.ShowT().show(d));
+	}});
+}
+DynamicExtensions.EqualT = function() {
+	return EqualTypeclass.create({ equal : function(d1,d2) {
+		return d1 == d2;
+	}});
+}
+DynamicExtensions.withEffect = function(t,f) {
+	f(t);
+	return t;
+}
+DynamicExtensions.withEffectP = function(a,f) {
+	f(a);
+	return a;
+}
+DynamicExtensions.into = function(a,f) {
+	return f(a);
+}
+DynamicExtensions.isInstanceOf = function(o,c) {
+	return Std["is"](o,c);
+}
+DynamicExtensions.entuple = function(a,b) {
+	return Tuple2.create(a,b);
+}
+DynamicExtensions.memoize = function(t) {
+	var evaled = false;
+	var result = null;
+	return function() {
+		if(!evaled) {
+			evaled = true;
+			result = t();
+		}
+		return result;
+	}
+}
+DynamicExtensions.toThunk = function(t) {
+	return function() {
+		return t;
+	}
+}
+DynamicExtensions.toConstantFunction = function(t) {
+	return function(s) {
+		return t;
+	}
+}
+DynamicExtensions.prototype.__class__ = DynamicExtensions;
+EqualTypeclass = function() { }
+EqualTypeclass.__name__ = ["EqualTypeclass"];
+EqualTypeclass.create = function(equal) {
+	return { equal : equal.equal, notEqual : function(v1,v2) {
+		return !equal.equal(v1,v2);
+	}}
+}
+EqualTypeclass.prototype.__class__ = EqualTypeclass;
 if(!haxe.data.collections._List) haxe.data.collections._List = {}
+haxe.data.collections._List.Nil = function(equal) { if( equal === $_ ) return; {
+	haxe.data.collections.List.apply(this,[equal]);
+}}
+haxe.data.collections._List.Nil.__name__ = ["haxe","data","collections","_List","Nil"];
+haxe.data.collections._List.Nil.__super__ = haxe.data.collections.List;
+for(var k in haxe.data.collections.List.prototype ) haxe.data.collections._List.Nil.prototype[k] = haxe.data.collections.List.prototype[k];
+haxe.data.collections._List.Nil.prototype.__class__ = haxe.data.collections._List.Nil;
+js.io.IFrameIO = function(w) { if( w === $_ ) return; {
+	this.bindTarget = OptionExtensions.getOrElse(OptionExtensions.toOption(w),DynamicExtensions.toThunk(js.Env.window));
+	this.executor = haxe.time.ScheduledExecutorFactory.create();
+	this.fragmentsToSend = js.io.IFrameIO.newFragmentsList();
+	this.fragmentsReceived = haxe.data.collections.Map.create(js.io._IFrameIO.MessageKey.HasherT(),js.io._IFrameIO.MessageKey.EqualT());
+	this.receivers = new Hash();
+	this.senderFuture = this.executor.forever($closure(this,"sender"),20);
+	this.receiverFuture = this.executor.forever($closure(this,"receiver"),10);
+}}
+js.io.IFrameIO.__name__ = ["js","io","IFrameIO"];
+js.io.IFrameIO.messageKeyFrom = function(o) {
+	return new js.io._IFrameIO.MessageKey(StringExtensions.toInt(o.messageId),o.from,o.to,StringExtensions.toInt(o.fragmentCount));
+}
+js.io.IFrameIO.prototype.analyzeReceivedFragments = function(messageKey,fragments) {
+	if(fragments.length == messageKey.fragmentCount) {
+		fragments.sort(function(a,b) {
+			return StringExtensions.toInt(a.fragmentId) - StringExtensions.toInt(b.fragmentId);
+		});
+		var fullData = ArrayExtensions.foldl(fragments,"",function(a,b) {
+			return a + b.data;
+		});
+		var message = haxe.text.json.Json.decodeObject(fullData);
+		var domain = this.extractDomain(fragments[0].from);
+		if(this.receivers.exists(domain)) {
+			ArrayExtensions.foreach(this.receivers.get(domain),function(r) {
+				r(message);
+			});
+		}
+		this.fragmentsReceived.removeByKey(messageKey);
+	}
+}
+js.io.IFrameIO.prototype.b = null;
+js.io.IFrameIO.prototype.bindTarget = null;
+js.io.IFrameIO.prototype.checkForMissingFragments = function() {
+	{ var $it15 = this.fragmentsReceived.values().iterator();
+	while( $it15.hasNext() ) { var fragments = $it15.next();
+	{
+		fragments.sort(function(a,b) {
+			return StringExtensions.toInt(a.fragmentId) - StringExtensions.toInt(b.fragmentId);
+		});
+		var firstFrag = fragments[0];
+		var fragCount = StringExtensions.toInt(firstFrag.fragmentCount);
+		var missing = ArrayExtensions.foldl(fragments,0,function(sum,frag) {
+			return sum + StringExtensions.toInt(frag.fragmentId);
+		}) != FloatExtensions.round(((1 + fragCount) * (fragCount / 2)));
+		var missingLast = StringExtensions.toInt(ArrayExtensions.last(fragments).fragmentId) != fragments.length;
+		if(missing) {
+			if(this.b != true) {
+				this.b = true;
+				haxe.Log.trace("Missed fragment!",{ fileName : "IFrameIO.hx", lineNumber : 210, className : "js.io.IFrameIO", methodName : "checkForMissingFragments"});
+			}
+		}
+	}
+	}}
+}
+js.io.IFrameIO.prototype.executor = null;
+js.io.IFrameIO.prototype.extractDomain = function(url) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.net.UrlTools.parseUrl(url));
+		switch( $e[1] ) {
+		case 1:
+		var parsed = $e[2];
+		{
+			$r = parsed.hostname;
+		}break;
+		case 0:
+		{
+			$r = url;
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+js.io.IFrameIO.prototype.fragmentsReceived = null;
+js.io.IFrameIO.prototype.fragmentsReceivedFor = function(messageKey) {
+	if(!this.fragmentsReceived.containsKey(messageKey)) {
+		this.fragmentsReceived = this.fragmentsReceived.set(messageKey,[]);
+	}
+	return OptionExtensions.get(this.fragmentsReceived.get(messageKey));
+}
+js.io.IFrameIO.prototype.fragmentsToSend = null;
+js.io.IFrameIO.prototype.postMessage = function(data,to,iframe) {
+	var from = this.bindTarget.location.href;
+	var fragmentId = 1;
+	var fragments = haxe.util.StringExtensions.chunk(haxe.text.json.Json.encodeObject(data),500);
+	var encoded = haxe.abstract.FoldableExtensions.mapTo(fragments,js.io.IFrameIO.newFragmentsList,function(chunk) {
+		return DynamicExtensions.entuple(iframe,{ type : "delivery", from : from, to : to, messageId : IntExtensions.toString(js.io.IFrameIO.lastMessageId), fragmentId : IntExtensions.toString((fragmentId++)), fragmentCount : IntExtensions.toString(fragments.getSize()), data : chunk});
+	});
+	this.fragmentsToSend = this.fragmentsToSend.concat(encoded);
+	haxe.Log.trace("chunk count = " + this.fragmentsToSend.getSize(),{ fileName : "IFrameIO.hx", lineNumber : 95, className : "js.io.IFrameIO", methodName : "postMessage"});
+	++js.io.IFrameIO.lastMessageId;
+	return this;
+}
+js.io.IFrameIO.prototype.receiveMessage = function(f,targetOrigin) {
+	var self = this;
+	var domain = this.extractDomain(targetOrigin);
+	var r = (this.receivers.exists(domain)?this.receivers.get(domain):DynamicExtensions.withEffect([],function(r) {
+		self.receivers.set(domain,r);
+	}));
+	r.push(f);
+	return this;
+}
+js.io.IFrameIO.prototype.receiver = function() {
+	var hash = this.bindTarget.location.hash;
+	if(hash.length > 1) {
+		var query = "?" + hash.substr(1);
+		var unknown = haxe.net.UrlTools.fromQueryString(query);
+		if(unknown.type == "delivery") {
+			var packet = unknown;
+			var messageKey = js.io.IFrameIO.messageKeyFrom(packet);
+			var fragments = this.fragmentsReceivedFor(messageKey);
+			fragments.push(packet);
+			this.analyzeReceivedFragments(messageKey,fragments);
+		}
+		else if(unknown.type == "request") {
+			var packet = unknown;
+			var messageKey = js.io.IFrameIO.messageKeyFrom(packet);
+		}
+		else if(unknown.type == "receipt") {
+			var packet = unknown;
+			var messageKey = js.io.IFrameIO.messageKeyFrom(packet);
+		}
+		this.bindTarget.location.hash = "#";
+	}
+}
+js.io.IFrameIO.prototype.receiverFuture = null;
+js.io.IFrameIO.prototype.receivers = null;
+js.io.IFrameIO.prototype.sender = function() {
+	var $e = (this.fragmentsToSend.getHeadOption());
+	switch( $e[1] ) {
+	case 0:
+	{
+		null;
+	}break;
+	case 1:
+	var tuple = $e[2];
+	{
+		this.fragmentsToSend = this.fragmentsToSend.drop(1);
+		var window = tuple._1;
+		var fragment = tuple._2;
+		window.location.href = (fragment.to + "#") + haxe.net.UrlTools.toQueryString(fragment).substr(1);
+	}break;
+	}
+}
+js.io.IFrameIO.prototype.senderFuture = null;
+js.io.IFrameIO.prototype.stop = function() {
+	this.senderFuture.cancel();
+	this.receiverFuture.cancel();
+	return this;
+}
+js.io.IFrameIO.prototype.__class__ = js.io.IFrameIO;
+if(!js.io._IFrameIO) js.io._IFrameIO = {}
+js.io._IFrameIO.MessageKey = function(messageId,from,to,fragmentCount) { if( messageId === $_ ) return; {
+	this.messageId = messageId;
+	this.from = from;
+	this.to = to;
+	this.fragmentCount = fragmentCount;
+}}
+js.io._IFrameIO.MessageKey.__name__ = ["js","io","_IFrameIO","MessageKey"];
+js.io._IFrameIO.MessageKey.HasherT = function() {
+	var intHasher = IntExtensions.HasherT(Int);
+	var stringHasher = StringExtensions.HasherT(String);
+	return HasherTypeclass.create({ hash : function(v) {
+		return ((intHasher.hash(v.messageId) * stringHasher.hash(v.from)) * stringHasher.hash(v.to)) * intHasher.hash(v.fragmentCount);
+	}});
+}
+js.io._IFrameIO.MessageKey.EqualT = function() {
+	return EqualTypeclass.create({ equal : function(v1,v2) {
+		return v1.messageId == v2.messageId && v1.from == v2.from && v1.to == v2.to && v1.fragmentCount == v2.fragmentCount;
+	}});
+}
+js.io._IFrameIO.MessageKey.prototype.fragmentCount = null;
+js.io._IFrameIO.MessageKey.prototype.from = null;
+js.io._IFrameIO.MessageKey.prototype.messageId = null;
+js.io._IFrameIO.MessageKey.prototype.to = null;
+js.io._IFrameIO.MessageKey.prototype.__class__ = js.io._IFrameIO.MessageKey;
 haxe.data.collections._List.Cons = function(equal,head,tail) { if( equal === $_ ) return; {
 	haxe.data.collections.List.apply(this,[equal]);
 	this._head = head;
@@ -2873,13 +3350,6 @@ haxe.data.collections._List.Cons.prototype.getTail = function() {
 	return this._tail;
 }
 haxe.data.collections._List.Cons.prototype.__class__ = haxe.data.collections._List.Cons;
-haxe.data.collections._List.Nil = function(equal) { if( equal === $_ ) return; {
-	haxe.data.collections.List.apply(this,[equal]);
-}}
-haxe.data.collections._List.Nil.__name__ = ["haxe","data","collections","_List","Nil"];
-haxe.data.collections._List.Nil.__super__ = haxe.data.collections.List;
-for(var k in haxe.data.collections.List.prototype ) haxe.data.collections._List.Nil.prototype[k] = haxe.data.collections.List.prototype[k];
-haxe.data.collections._List.Nil.prototype.__class__ = haxe.data.collections._List.Nil;
 haxe.data.transcode.ExtractorTypeclass = function() { }
 haxe.data.transcode.ExtractorTypeclass.__name__ = ["haxe","data","transcode","ExtractorTypeclass"];
 haxe.data.transcode.ExtractorTypeclass.create = function(e) {
@@ -3078,8 +3548,8 @@ haxe.data.collections.Set.prototype.add = function(t) {
 }
 haxe.data.collections.Set.prototype.addAll = function(it) {
 	var set = this;
-	{ var $it15 = it.iterator();
-	while( $it15.hasNext() ) { var e = $it15.next();
+	{ var $it16 = it.iterator();
+	while( $it16.hasNext() ) { var e = $it16.next();
 	set = set.add(e);
 	}}
 	return set;
@@ -3099,8 +3569,8 @@ haxe.data.collections.Set.prototype.empty = function() {
 haxe.data.collections.Set.prototype.equal = null;
 haxe.data.collections.Set.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it16 = this._map.iterator();
-	while( $it16.hasNext() ) { var e = $it16.next();
+	{ var $it17 = this._map.iterator();
+	while( $it17.hasNext() ) { var e = $it17.next();
 	{
 		acc = f(acc,e._1);
 	}
@@ -3119,8 +3589,8 @@ haxe.data.collections.Set.prototype.remove = function(t) {
 }
 haxe.data.collections.Set.prototype.removeAll = function(it) {
 	var set = this;
-	{ var $it17 = it.iterator();
-	while( $it17.hasNext() ) { var e = $it17.next();
+	{ var $it18 = it.iterator();
+	while( $it18.hasNext() ) { var e = $it18.next();
 	set = set.remove(e);
 	}}
 	return set;
@@ -3211,6 +3681,36 @@ IntIter.prototype.next = function() {
 	return this.min++;
 }
 IntIter.prototype.__class__ = IntIter;
+haxe.util.StringExtensions = function() { }
+haxe.util.StringExtensions.__name__ = ["haxe","util","StringExtensions"];
+haxe.util.StringExtensions.chunk = function(str,len) {
+	var start = 0;
+	var end = IntExtensions.min((start + len),str.length);
+	return (end == 0?haxe.data.collections.List.nil(StringExtensions.EqualT(String)):(function($this) {
+		var $r;
+		var prefix = str.substr(start,end);
+		var rest = str.substr(end);
+		$r = haxe.util.StringExtensions.chunk(rest,len).prepend(prefix);
+		return $r;
+	}(this)));
+}
+haxe.util.StringExtensions.chars = function(str) {
+	var a = [];
+	{
+		var _g1 = 0, _g = str.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			a.push(str.charAt(i));
+		}
+	}
+	return IterableExtensions.toList(a,StringExtensions.EqualT(String));
+}
+haxe.util.StringExtensions.string = function(l) {
+	return l.foldr("",function(b,a) {
+		return b + a;
+	});
+}
+haxe.util.StringExtensions.prototype.__class__ = haxe.util.StringExtensions;
 haxe.Timer = function(time_ms) { if( time_ms === $_ ) return; {
 	this.id = haxe.Timer.arr.length;
 	haxe.Timer.arr[this.id] = this;
@@ -3264,8 +3764,8 @@ haxe.test.TestRunner.prototype.add = function(c) {
 	return this;
 }
 haxe.test.TestRunner.prototype.addAll = function(i) {
-	{ var $it18 = i.iterator();
-	while( $it18.hasNext() ) { var c = $it18.next();
+	{ var $it19 = i.iterator();
+	while( $it19.hasNext() ) { var c = $it19.next();
 	this.cases.add(c);
 	}}
 	return this;
@@ -3274,8 +3774,8 @@ haxe.test.TestRunner.prototype.cases = null;
 haxe.test.TestRunner.prototype.result = null;
 haxe.test.TestRunner.prototype.run = function() {
 	this.result = new haxe.test.TestResult();
-	{ var $it19 = this.cases.iterator();
-	while( $it19.hasNext() ) { var c = $it19.next();
+	{ var $it20 = this.cases.iterator();
+	while( $it20.hasNext() ) { var c = $it20.next();
 	{
 		this.runCase(c);
 	}
@@ -3314,15 +3814,15 @@ haxe.test.TestRunner.prototype.runCase = function(testCase) {
 						haxe.test.TestRunner.print("W");
 					}
 				}
-				catch( $e20 ) {
-					if( js.Boot.__instanceof($e20,haxe.test.TestStatus) ) {
-						var e = $e20;
+				catch( $e21 ) {
+					if( js.Boot.__instanceof($e21,haxe.test.TestStatus) ) {
+						var e = $e21;
 						{
 							haxe.test.TestRunner.print("F");
 							testCase.currentTest.backtrace = haxe.Stack.toString(haxe.Stack.exceptionStack());
 						}
 					} else {
-						var e = $e20;
+						var e = $e21;
 						{
 							haxe.test.TestRunner.print("E");
 							if(e.message != null) {
@@ -3463,8 +3963,8 @@ haxe.abstract.FoldableExtensions.append = function(foldable,e) {
 }
 haxe.abstract.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
-	{ var $it21 = i.iterator();
-	while( $it21.hasNext() ) { var e = $it21.next();
+	{ var $it22 = i.iterator();
+	while( $it22.hasNext() ) { var e = $it22.next();
 	{
 		acc = acc.append(acc,e);
 	}
@@ -3604,24 +4104,24 @@ Lambda = function() { }
 Lambda.__name__ = ["Lambda"];
 Lambda.array = function(it) {
 	var a = new Array();
-	{ var $it22 = it.iterator();
-	while( $it22.hasNext() ) { var i = $it22.next();
+	{ var $it23 = it.iterator();
+	while( $it23.hasNext() ) { var i = $it23.next();
 	a.push(i);
 	}}
 	return a;
 }
 Lambda.list = function(it) {
 	var l = new List();
-	{ var $it23 = it.iterator();
-	while( $it23.hasNext() ) { var i = $it23.next();
+	{ var $it24 = it.iterator();
+	while( $it24.hasNext() ) { var i = $it24.next();
 	l.add(i);
 	}}
 	return l;
 }
 Lambda.map = function(it,f) {
 	var l = new List();
-	{ var $it24 = it.iterator();
-	while( $it24.hasNext() ) { var x = $it24.next();
+	{ var $it25 = it.iterator();
+	while( $it25.hasNext() ) { var x = $it25.next();
 	l.add(f(x));
 	}}
 	return l;
@@ -3629,66 +4129,66 @@ Lambda.map = function(it,f) {
 Lambda.mapi = function(it,f) {
 	var l = new List();
 	var i = 0;
-	{ var $it25 = it.iterator();
-	while( $it25.hasNext() ) { var x = $it25.next();
+	{ var $it26 = it.iterator();
+	while( $it26.hasNext() ) { var x = $it26.next();
 	l.add(f(i++,x));
 	}}
 	return l;
 }
 Lambda.has = function(it,elt,cmp) {
 	if(cmp == null) {
-		{ var $it26 = it.iterator();
-		while( $it26.hasNext() ) { var x = $it26.next();
+		{ var $it27 = it.iterator();
+		while( $it27.hasNext() ) { var x = $it27.next();
 		if(x == elt) return true;
 		}}
 	}
 	else {
-		{ var $it27 = it.iterator();
-		while( $it27.hasNext() ) { var x = $it27.next();
+		{ var $it28 = it.iterator();
+		while( $it28.hasNext() ) { var x = $it28.next();
 		if(cmp(x,elt)) return true;
 		}}
 	}
 	return false;
 }
 Lambda.exists = function(it,f) {
-	{ var $it28 = it.iterator();
-	while( $it28.hasNext() ) { var x = $it28.next();
+	{ var $it29 = it.iterator();
+	while( $it29.hasNext() ) { var x = $it29.next();
 	if(f(x)) return true;
 	}}
 	return false;
 }
 Lambda.foreach = function(it,f) {
-	{ var $it29 = it.iterator();
-	while( $it29.hasNext() ) { var x = $it29.next();
+	{ var $it30 = it.iterator();
+	while( $it30.hasNext() ) { var x = $it30.next();
 	if(!f(x)) return false;
 	}}
 	return true;
 }
 Lambda.iter = function(it,f) {
-	{ var $it30 = it.iterator();
-	while( $it30.hasNext() ) { var x = $it30.next();
+	{ var $it31 = it.iterator();
+	while( $it31.hasNext() ) { var x = $it31.next();
 	f(x);
 	}}
 }
 Lambda.filter = function(it,f) {
 	var l = new List();
-	{ var $it31 = it.iterator();
-	while( $it31.hasNext() ) { var x = $it31.next();
+	{ var $it32 = it.iterator();
+	while( $it32.hasNext() ) { var x = $it32.next();
 	if(f(x)) l.add(x);
 	}}
 	return l;
 }
 Lambda.fold = function(it,f,first) {
-	{ var $it32 = it.iterator();
-	while( $it32.hasNext() ) { var x = $it32.next();
+	{ var $it33 = it.iterator();
+	while( $it33.hasNext() ) { var x = $it33.next();
 	first = f(x,first);
 	}}
 	return first;
 }
 Lambda.count = function(it) {
 	var n = 0;
-	{ var $it33 = it.iterator();
-	while( $it33.hasNext() ) { var _ = $it33.next();
+	{ var $it34 = it.iterator();
+	while( $it34.hasNext() ) { var _ = $it34.next();
 	++n;
 	}}
 	return n;
@@ -3844,7 +4344,6 @@ PreludeTestCase.prototype.testFutureChaining = function() {
 	this.assertEquals(true,OptionExtensions.get(f2.value()),null,{ fileName : "PreludeTest.hx", lineNumber : 49, className : "PreludeTestCase", methodName : "testFutureChaining"});
 }
 PreludeTestCase.prototype.__class__ = PreludeTestCase;
-if(typeof js=='undefined') js = {}
 js.Lib = function() { }
 js.Lib.__name__ = ["js","Lib"];
 js.Lib.isIE = null;
@@ -3913,9 +4412,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e34 ) {
+	catch( $e35 ) {
 		{
-			var e = $e34;
+			var e = $e35;
 			{
 				cl = null;
 			}
@@ -3929,9 +4428,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e35 ) {
+	catch( $e36 ) {
 		{
-			var err = $e35;
+			var err = $e36;
 			{
 				e = null;
 			}
@@ -4025,9 +4524,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e36 ) {
+	catch( $e37 ) {
 		{
-			var e = $e36;
+			var e = $e37;
 			{
 				return false;
 			}
@@ -4192,9 +4691,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e37 ) {
+		catch( $e38 ) {
 			{
-				var e = $e37;
+				var e = $e38;
 				{
 					return "???";
 				}
@@ -4251,9 +4750,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e38 ) {
+	catch( $e39 ) {
 		{
-			var e = $e38;
+			var e = $e39;
 			{
 				if(cl == null) return false;
 			}
@@ -4719,62 +5218,155 @@ haxe.io.log.LogHandlers.intLevel = function(level) {
 	}(this));
 }
 haxe.io.log.LogHandlers.prototype.__class__ = haxe.io.log.LogHandlers;
-EReg = function(r,opt) { if( r === $_ ) return; {
-	opt = opt.split("u").join("");
-	this.r = new RegExp(r,opt);
-}}
-EReg.__name__ = ["EReg"];
-EReg.prototype.customReplace = function(s,f) {
-	var buf = new StringBuf();
-	while(true) {
-		if(!this.match(s)) break;
-		buf.b[buf.b.length] = this.matchedLeft();
-		buf.b[buf.b.length] = f(this);
-		s = this.matchedRight();
-	}
-	buf.b[buf.b.length] = s;
-	return buf.b.join("");
+js.Env = function() { }
+js.Env.__name__ = ["js","Env"];
+js.Env.alert = function(a) {
+	alert(Std.string(a));
 }
-EReg.prototype.match = function(s) {
-	this.r.m = this.r.exec(s);
-	this.r.s = s;
-	this.r.l = RegExp.leftContext;
-	this.r.r = RegExp.rightContext;
-	return (this.r.m != null);
+js.Env.decodeURI = function(uri) {
+	return decodeURI(uri);
 }
-EReg.prototype.matched = function(n) {
-	return (this.r.m != null && n >= 0 && n < this.r.m.length?this.r.m[n]:(function($this) {
+js.Env.decodeURIComponent = function(uriComponent) {
+	return decodeURIComponent(uriComponent);
+}
+js.Env.encodeURI = function(uri) {
+	return encodeURI(uri);
+}
+js.Env.encodeURIComponent = function(uriComponent) {
+	return encodeURIComponent(uriComponent);
+}
+js.Env.escape = function(string) {
+	return escape(string);
+}
+js.Env.unescape = function(string) {
+	return unescape(string);
+}
+js.Env.eval = function(string) {
+	return eval(string);
+}
+js.Env.isFinite = function(number) {
+	return isFinite(number);
+}
+js.Env.isNaN = function(number) {
+	return isNaN(number);
+}
+js.Env.createXMLHttpRequest = function() {
+	return (js.Env.window.XMLHttpRequest?new XMLHttpRequest():(js.Env.window.ActiveXObject?(function($this) {
 		var $r;
-		throw "EReg::matched";
+		try {
+			$r = new ActiveXObject("Msxml2.XMLHTTP");
+		}
+		catch( $e40 ) {
+			{
+				var e = $e40;
+				$r = (function($this) {
+					var $r;
+					try {
+						$r = new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					catch( $e41 ) {
+						{
+							var e1 = $e41;
+							$r = (function($this) {
+								var $r;
+								throw "Unable to create XMLHttpRequest object.";
+								$r = null;
+								return $r;
+							}($this));
+						}
+					}
+					return $r;
+				}($this));
+			}
+		}
 		return $r;
-	}(this)));
+	}(this)):(function($this) {
+		var $r;
+		throw "Unable to create XMLHttpRequest object.";
+		$r = null;
+		return $r;
+	}(this))));
 }
-EReg.prototype.matchedLeft = function() {
-	if(this.r.m == null) throw "No string matched";
-	if(this.r.l == null) return this.r.s.substr(0,this.r.m.index);
-	return this.r.l;
+js.Env.contentDocumentOf = function(iframe) {
+	return (iframe.contentDocument != null?iframe.contentDocument:(iframe.contentWindow != null?iframe.contentWindow.document:(iframe.document != null?iframe.document:(function($this) {
+		var $r;
+		throw "Cannot find iframe content document for " + iframe;
+		$r = null;
+		return $r;
+	}(this)))));
 }
-EReg.prototype.matchedPos = function() {
-	if(this.r.m == null) throw "No string matched";
-	return { pos : this.r.m.index, len : this.r.m[0].length}
-}
-EReg.prototype.matchedRight = function() {
-	if(this.r.m == null) throw "No string matched";
-	if(this.r.r == null) {
-		var sz = this.r.m.index + this.r.m[0].length;
-		return this.r.s.substr(sz,this.r.s.length - sz);
-	}
-	return this.r.r;
-}
-EReg.prototype.r = null;
-EReg.prototype.replace = function(s,by) {
-	return s.replace(this.r,by);
-}
-EReg.prototype.split = function(s) {
-	var d = "#__delim__#";
-	return s.replace(this.r,d).split(d);
-}
-EReg.prototype.__class__ = EReg;
+js.Env.prototype.__class__ = js.Env;
+js.States = function() { }
+js.States.__name__ = ["js","States"];
+js.States.prototype.__class__ = js.States;
+js.ExceptionCode = function(p) { if( p === $_ ) return; {
+	null;
+}}
+js.ExceptionCode.__name__ = ["js","ExceptionCode"];
+js.ExceptionCode.prototype.__class__ = js.ExceptionCode;
+js.NodeType = function() { }
+js.NodeType.__name__ = ["js","NodeType"];
+js.NodeType.prototype.__class__ = js.NodeType;
+js.DocumentPosition = function() { }
+js.DocumentPosition.__name__ = ["js","DocumentPosition"];
+js.DocumentPosition.prototype.__class__ = js.DocumentPosition;
+js.DerivationMethod = function() { }
+js.DerivationMethod.__name__ = ["js","DerivationMethod"];
+js.DerivationMethod.prototype.__class__ = js.DerivationMethod;
+js.OperationType = function() { }
+js.OperationType.__name__ = ["js","OperationType"];
+js.OperationType.prototype.__class__ = js.OperationType;
+js.ErrorState = function() { }
+js.ErrorState.__name__ = ["js","ErrorState"];
+js.ErrorState.prototype.__class__ = js.ErrorState;
+js.ReadyState = function() { }
+js.ReadyState.__name__ = ["js","ReadyState"];
+js.ReadyState.prototype.__class__ = js.ReadyState;
+js.EventExceptionCode = function() { }
+js.EventExceptionCode.__name__ = ["js","EventExceptionCode"];
+js.EventExceptionCode.prototype.__class__ = js.EventExceptionCode;
+js.DeltaModeCode = function() { }
+js.DeltaModeCode.__name__ = ["js","DeltaModeCode"];
+js.DeltaModeCode.prototype.__class__ = js.DeltaModeCode;
+js.InputModeCode = function() { }
+js.InputModeCode.__name__ = ["js","InputModeCode"];
+js.InputModeCode.prototype.__class__ = js.InputModeCode;
+js.KeyLocationCode = function() { }
+js.KeyLocationCode.__name__ = ["js","KeyLocationCode"];
+js.KeyLocationCode.prototype.__class__ = js.KeyLocationCode;
+js.PhaseType = function() { }
+js.PhaseType.__name__ = ["js","PhaseType"];
+js.PhaseType.prototype.__class__ = js.PhaseType;
+js.AttrChangeType = function() { }
+js.AttrChangeType.__name__ = ["js","AttrChangeType"];
+js.AttrChangeType.prototype.__class__ = js.AttrChangeType;
+js.AcceptNodeConstants = function() { }
+js.AcceptNodeConstants.__name__ = ["js","AcceptNodeConstants"];
+js.AcceptNodeConstants.prototype.__class__ = js.AcceptNodeConstants;
+js.WhatToShowConstants = function() { }
+js.WhatToShowConstants.__name__ = ["js","WhatToShowConstants"];
+js.WhatToShowConstants.prototype.__class__ = js.WhatToShowConstants;
+js.RangeExceptionCode = function() { }
+js.RangeExceptionCode.__name__ = ["js","RangeExceptionCode"];
+js.RangeExceptionCode.prototype.__class__ = js.RangeExceptionCode;
+js.CompareHow = function() { }
+js.CompareHow.__name__ = ["js","CompareHow"];
+js.CompareHow.prototype.__class__ = js.CompareHow;
+js.RuleType = function() { }
+js.RuleType.__name__ = ["js","RuleType"];
+js.RuleType.prototype.__class__ = js.RuleType;
+js.CSSValueType = function() { }
+js.CSSValueType.__name__ = ["js","CSSValueType"];
+js.CSSValueType.prototype.__class__ = js.CSSValueType;
+js.PrimitiveType = function() { }
+js.PrimitiveType.__name__ = ["js","PrimitiveType"];
+js.PrimitiveType.prototype.__class__ = js.PrimitiveType;
+js.UpdateStatus = function() { }
+js.UpdateStatus.__name__ = ["js","UpdateStatus"];
+js.UpdateStatus.prototype.__class__ = js.UpdateStatus;
+js.ErrorSeverity = function() { }
+js.ErrorSeverity.__name__ = ["js","ErrorSeverity"];
+js.ErrorSeverity.prototype.__class__ = js.ErrorSeverity;
 haxe.data.collections.Map = function(khasher,kequal,vhasher,vequal,buckets,size) { if( khasher === $_ ) return; {
 	var self = this;
 	this.keyHasher = khasher;
@@ -4823,8 +5415,8 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 		var keys1 = v1.keySet();
 		var keys2 = v2.keySet();
 		if(!haxe.data.collections.Set.EqualT(kequal).equal(keys1,keys2)) return false;
-		{ var $it39 = keys1.iterator();
-		while( $it39.hasNext() ) { var key = $it39.next();
+		{ var $it42 = keys1.iterator();
+		while( $it42.hasNext() ) { var key = $it42.next();
 		{
 			var v11 = OptionExtensions.get(v1.get(key));
 			var v21 = OptionExtensions.get(v2.get(key));
@@ -4895,8 +5487,8 @@ haxe.data.collections.Map.prototype.add = function(t) {
 }
 haxe.data.collections.Map.prototype.addAll = function(i) {
 	var map = this;
-	{ var $it40 = i.iterator();
-	while( $it40.hasNext() ) { var t = $it40.next();
+	{ var $it43 = i.iterator();
+	while( $it43.hasNext() ) { var t = $it43.next();
 	map = map.add(t);
 	}}
 	return map;
@@ -4912,8 +5504,8 @@ haxe.data.collections.Map.prototype.call = function(k) {
 }
 haxe.data.collections.Map.prototype.contains = function(t) {
 	var tupleEqual = Tuple2.EqualT(this.keyEqual,this.valueEqual);
-	{ var $it41 = this.entries().iterator();
-	while( $it41.hasNext() ) { var e = $it41.next();
+	{ var $it44 = this.entries().iterator();
+	while( $it44.hasNext() ) { var e = $it44.next();
 	{
 		if(tupleEqual.equal(e,t)) return true;
 	}
@@ -4992,8 +5584,8 @@ haxe.data.collections.Map.prototype.entries = function() {
 }
 haxe.data.collections.Map.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it42 = this.entries().iterator();
-	while( $it42.hasNext() ) { var e = $it42.next();
+	{ var $it45 = this.entries().iterator();
+	while( $it45.hasNext() ) { var e = $it45.next();
 	{
 		acc = f(acc,e);
 	}
@@ -5026,6 +5618,27 @@ haxe.data.collections.Map.prototype.getOrElse = function(k,def) {
 		case 0:
 		{
 			$r = def();
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+haxe.data.collections.Map.prototype.getOrElseC = function(k,c) {
+	return (function($this) {
+		var $r;
+		var $e = ($this.get(k));
+		switch( $e[1] ) {
+		case 1:
+		var v = $e[2];
+		{
+			$r = v;
+		}break;
+		case 0:
+		{
+			$r = c;
 		}break;
 		default:{
 			$r = null;
@@ -5084,8 +5697,8 @@ haxe.data.collections.Map.prototype.rebalance = function() {
 				this._buckets.push([]);
 			}
 		}
-		{ var $it43 = all.iterator();
-		while( $it43.hasNext() ) { var e = $it43.next();
+		{ var $it46 = all.iterator();
+		while( $it46.hasNext() ) { var e = $it46.next();
 		{
 			var bucket = this.bucketFor(e._1);
 			this._buckets[bucket].push(e);
@@ -5098,16 +5711,16 @@ haxe.data.collections.Map.prototype.remove = function(t) {
 }
 haxe.data.collections.Map.prototype.removeAll = function(i) {
 	var map = this;
-	{ var $it44 = i.iterator();
-	while( $it44.hasNext() ) { var t = $it44.next();
+	{ var $it47 = i.iterator();
+	while( $it47.hasNext() ) { var t = $it47.next();
 	map = map.remove(t);
 	}}
 	return map;
 }
 haxe.data.collections.Map.prototype.removeAllByKey = function(i) {
 	var map = this;
-	{ var $it45 = i.iterator();
-	while( $it45.hasNext() ) { var k = $it45.next();
+	{ var $it48 = i.iterator();
+	while( $it48.hasNext() ) { var k = $it48.next();
 	map = map.removeByKey(k);
 	}}
 	return map;
@@ -5164,62 +5777,6 @@ haxe.data.collections.Map.prototype.values = function() {
 }
 haxe.data.collections.Map.prototype.__class__ = haxe.data.collections.Map;
 haxe.data.collections.Map.__interfaces__ = [haxe.abstract.PartialFunction1,haxe.data.collections.Collection];
-DynamicExtensions = function() { }
-DynamicExtensions.__name__ = ["DynamicExtensions"];
-DynamicExtensions.ShowT = function() {
-	return ShowTypeclass.create({ show : function(d) {
-		return Std.string(d);
-	}});
-}
-DynamicExtensions.HasherT = function() {
-	return HasherTypeclass.create({ hash : function(d) {
-		return StringExtensions.HasherT(String).hash(DynamicExtensions.ShowT().show(d));
-	}});
-}
-DynamicExtensions.EqualT = function() {
-	return EqualTypeclass.create({ equal : function(d1,d2) {
-		return d1 == d2;
-	}});
-}
-DynamicExtensions.withEffect = function(t,f) {
-	f(t);
-	return t;
-}
-DynamicExtensions.withEffectP = function(a,f) {
-	f(a);
-	return a;
-}
-DynamicExtensions.into = function(a,f) {
-	return f(a);
-}
-DynamicExtensions.isInstanceOf = function(o,c) {
-	return Std["is"](o,c);
-}
-DynamicExtensions.entuple = function(a,b) {
-	return Tuple2.create(a,b);
-}
-DynamicExtensions.memoize = function(t) {
-	var evaled = false;
-	var result = null;
-	return function() {
-		if(!evaled) {
-			evaled = true;
-			result = t();
-		}
-		return result;
-	}
-}
-DynamicExtensions.toThunk = function(t) {
-	return function() {
-		return t;
-	}
-}
-DynamicExtensions.toConstantFunction = function(t) {
-	return function(s) {
-		return t;
-	}
-}
-DynamicExtensions.prototype.__class__ = DynamicExtensions;
 BoolExtensions = function() { }
 BoolExtensions.__name__ = ["BoolExtensions"];
 BoolExtensions.toInt = function(v) {
@@ -5227,6 +5784,15 @@ BoolExtensions.toInt = function(v) {
 }
 BoolExtensions.toString = function(v) {
 	return Std.string(v);
+}
+BoolExtensions.ifTrue = function(v,f) {
+	return (v?Option.Some(f()):Option.None);
+}
+BoolExtensions.ifFalse = function(v,f) {
+	return (!v?Option.Some(f()):Option.None);
+}
+BoolExtensions.ifElse = function(v,f1,f2) {
+	return (v?f1():f2());
 }
 BoolExtensions.OrderT = function(c) {
 	return OrderTypeclass.create({ compare : function(v1,v2) {
@@ -5289,6 +5855,9 @@ IntExtensions.HasherT = function(c) {
 IntExtensions.prototype.__class__ = IntExtensions;
 FloatExtensions = function() { }
 FloatExtensions.__name__ = ["FloatExtensions"];
+FloatExtensions.round = function(v) {
+	return Math.round(v);
+}
 FloatExtensions.max = function(v1,v2) {
 	return (v2 > v1?v2:v1);
 }
@@ -5338,6 +5907,24 @@ StringExtensions.startsWith = function(v,frag) {
 }
 StringExtensions.endsWith = function(v,frag) {
 	return (v.length >= frag.length && frag == v.substr(v.length - frag.length)?true:false);
+}
+StringExtensions.urlEncode = function(v) {
+	return StringTools.urlEncode(v);
+}
+StringExtensions.urlDecode = function(v) {
+	return StringTools.urlDecode(v);
+}
+StringExtensions.htmlEscape = function(v) {
+	return StringTools.htmlEscape(v);
+}
+StringExtensions.htmlUnescape = function(v) {
+	return StringTools.htmlUnescape(v);
+}
+StringExtensions.trim = function(v) {
+	return StringTools.trim(v);
+}
+StringExtensions.contains = function(v,s) {
+	return v.indexOf(s) != -1;
 }
 StringExtensions.OrderT = function(c) {
 	return OrderTypeclass.create({ compare : function(v1,v2) {
@@ -5483,8 +6070,8 @@ ArrayExtensions.flatMap = function(a,f) {
 		while(_g < a.length) {
 			var e1 = a[_g];
 			++_g;
-			{ var $it46 = f(e1).iterator();
-			while( $it46.hasNext() ) { var e2 = $it46.next();
+			{ var $it49 = f(e1).iterator();
+			while( $it49.hasNext() ) { var e2 = $it49.next();
 			n.push(e2);
 			}}
 		}
@@ -5532,6 +6119,15 @@ ArrayExtensions.append = function(a,t) {
 	copy.push(t);
 	return copy;
 }
+ArrayExtensions.first = function(a) {
+	return a[0];
+}
+ArrayExtensions.last = function(a) {
+	return a[a.length - 1];
+}
+ArrayExtensions.size = function(a) {
+	return a.length;
+}
 ArrayExtensions.contains = function(a,t) {
 	{
 		var _g = 0;
@@ -5542,6 +6138,17 @@ ArrayExtensions.contains = function(a,t) {
 		}
 	}
 	return false;
+}
+ArrayExtensions.foreach = function(a,f) {
+	{
+		var _g = 0;
+		while(_g < a.length) {
+			var e = a[_g];
+			++_g;
+			f(e);
+		}
+	}
+	return a;
 }
 ArrayExtensions.prototype.__class__ = ArrayExtensions;
 Function2Extensions = function() { }
@@ -5939,6 +6546,45 @@ OptionExtensions.flatMap = function(o,f) {
 		return $r;
 	}(this));
 }
+OptionExtensions.zip = function(o1,o2) {
+	return (function($this) {
+		var $r;
+		var $e = (o1);
+		switch( $e[1] ) {
+		case 0:
+		{
+			$r = Option.None;
+		}break;
+		case 1:
+		var v1 = $e[2];
+		{
+			$r = (function($this) {
+				var $r;
+				var $e = (o2);
+				switch( $e[1] ) {
+				case 0:
+				{
+					$r = Option.None;
+				}break;
+				case 1:
+				var v2 = $e[2];
+				{
+					$r = Option.Some(DynamicExtensions.entuple(v1,v2));
+				}break;
+				default:{
+					$r = null;
+				}break;
+				}
+				return $r;
+			}($this));
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
 OptionExtensions.get = function(o) {
 	return (function($this) {
 		var $r;
@@ -5968,6 +6614,27 @@ OptionExtensions.getOrElse = function(o,thunk) {
 		case 0:
 		{
 			$r = thunk();
+		}break;
+		case 1:
+		var v = $e[2];
+		{
+			$r = v;
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+OptionExtensions.getOrElseC = function(o,c) {
+	return (function($this) {
+		var $r;
+		var $e = (o);
+		switch( $e[1] ) {
+		case 0:
+		{
+			$r = c;
 		}break;
 		case 1:
 		var v = $e[2];
@@ -6418,6 +7085,12 @@ Future.prototype.map = function(f) {
 	});
 	return fut;
 }
+Future.prototype.toArray = function() {
+	return OptionExtensions.toArray(this.value());
+}
+Future.prototype.toOption = function() {
+	return this.value();
+}
 Future.prototype.value = function() {
 	return (this._isSet?Option.Some(this._result):Option.None);
 }
@@ -6468,8 +7141,8 @@ IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
 	if(show == null) show = $closure(Std,"string");
 	var s = prefix;
 	var isFirst = true;
-	{ var $it47 = i.iterator();
-	while( $it47.hasNext() ) { var t = $it47.next();
+	{ var $it50 = i.iterator();
+	while( $it50.hasNext() ) { var t = $it50.next();
 	{
 		if(isFirst) isFirst = false;
 		else s += sep;
@@ -6489,8 +7162,8 @@ IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
 }
 IterableExtensions.toArray = function(i) {
 	var a = [];
-	{ var $it48 = i.iterator();
-	while( $it48.hasNext() ) { var e = $it48.next();
+	{ var $it51 = i.iterator();
+	while( $it51.hasNext() ) { var e = $it51.next();
 	a.push(e);
 	}}
 	return a;
@@ -6760,14 +7433,6 @@ OrderTypeclass.create = function(cmp) {
 	}}
 }
 OrderTypeclass.prototype.__class__ = OrderTypeclass;
-EqualTypeclass = function() { }
-EqualTypeclass.__name__ = ["EqualTypeclass"];
-EqualTypeclass.create = function(equal) {
-	return { equal : equal.equal, notEqual : function(v1,v2) {
-		return !equal.equal(v1,v2);
-	}}
-}
-EqualTypeclass.prototype.__class__ = EqualTypeclass;
 ShowTypeclass = function() { }
 ShowTypeclass.__name__ = ["ShowTypeclass"];
 ShowTypeclass.create = function(show) {
@@ -6792,6 +7457,44 @@ Stax.errorT = function(msg) {
 	}
 }
 Stax.prototype.__class__ = Stax;
+haxe.net.UrlTestCase = function(p) { if( p === $_ ) return; {
+	haxe.test.TestCase.apply(this,[]);
+}}
+haxe.net.UrlTestCase.__name__ = ["haxe","net","UrlTestCase"];
+haxe.net.UrlTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.net.UrlTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+haxe.net.UrlTestCase.prototype.testParseUrl1 = function() {
+	var p = OptionExtensions.get(haxe.net.UrlTools.parseUrl("ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top"));
+	this.assertEquals("#top",p.hash,null,{ fileName : "UrlTestCase.hx", lineNumber : 31, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("eau.ww.eesd.gov.calgary",p.host,null,{ fileName : "UrlTestCase.hx", lineNumber : 32, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("eau.ww.eesd.gov.calgary",p.hostname,null,{ fileName : "UrlTestCase.hx", lineNumber : 33, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top",p.href,null,{ fileName : "UrlTestCase.hx", lineNumber : 34, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("/home/smith/budget.wk1",p.pathname,null,{ fileName : "UrlTestCase.hx", lineNumber : 35, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("",p.port,null,{ fileName : "UrlTestCase.hx", lineNumber : 36, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("ftp:",p.protocol,null,{ fileName : "UrlTestCase.hx", lineNumber : 37, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+	this.assertEquals("?foo=bar",p.search,null,{ fileName : "UrlTestCase.hx", lineNumber : 38, className : "haxe.net.UrlTestCase", methodName : "testParseUrl1"});
+}
+haxe.net.UrlTestCase.prototype.testParseUrl2 = function() {
+	var p = OptionExtensions.get(haxe.net.UrlTools.parseUrl("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top"));
+	this.assertEquals("#top",p.hash,null,{ fileName : "UrlTestCase.hx", lineNumber : 44, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("eau.ww.eesd.gov.calgary:923",p.host,null,{ fileName : "UrlTestCase.hx", lineNumber : 45, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("eau.ww.eesd.gov.calgary",p.hostname,null,{ fileName : "UrlTestCase.hx", lineNumber : 46, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top",p.href,null,{ fileName : "UrlTestCase.hx", lineNumber : 47, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("/home/smith/budget.wk1",p.pathname,null,{ fileName : "UrlTestCase.hx", lineNumber : 48, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("923",p.port,null,{ fileName : "UrlTestCase.hx", lineNumber : 49, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("ftp:",p.protocol,null,{ fileName : "UrlTestCase.hx", lineNumber : 50, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+	this.assertEquals("?foo=bar",p.search,null,{ fileName : "UrlTestCase.hx", lineNumber : 51, className : "haxe.net.UrlTestCase", methodName : "testParseUrl2"});
+}
+haxe.net.UrlTestCase.prototype.testQueryStringBijection = function() {
+	var self = this;
+	var identity = FunctionExtensions.compose($closure(haxe.net.UrlTools,"toQueryString"),$closure(haxe.net.UrlTools,"fromQueryString"));
+	var test = function(s) {
+		self.assertEquals(s,identity(s),null,{ fileName : "UrlTestCase.hx", lineNumber : 59, className : "haxe.net.UrlTestCase", methodName : "testQueryStringBijection"});
+	}
+	test("?foo=bar");
+	test("?foo=");
+}
+haxe.net.UrlTestCase.prototype.__class__ = haxe.net.UrlTestCase;
 haxe.data.collections.ListTestCase = function(p) { if( p === $_ ) return; {
 	haxe.test.TestCase.apply(this,[]);
 }}
@@ -6819,8 +7522,8 @@ haxe.data.collections.ListTestCase.prototype.testCanIterateThroughElements = fun
 	var l = this.defaultList();
 	var count = 4950;
 	var iterated = 0;
-	{ var $it49 = l.iterator();
-	while( $it49.hasNext() ) { var k = $it49.next();
+	{ var $it52 = l.iterator();
+	while( $it52.hasNext() ) { var k = $it52.next();
 	{
 		count -= k;
 		++iterated;
@@ -6944,9 +7647,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e50 ) {
+	catch( $e53 ) {
 		{
-			var e = $e50;
+			var e = $e53;
 			{
 				
 				for(var i in this.h)
@@ -6989,8 +7692,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it51 = it;
-	while( $it51.hasNext() ) { var i = $it51.next();
+	{ var $it54 = it;
+	while( $it54.hasNext() ) { var i = $it54.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -7091,12 +7794,180 @@ js.Boot.__init();
 		return f(msg,[url+":"+line]);
 	}
 }
+haxe.net.UrlTools.UrlPattern = new EReg("^([a-zA-Z]+:)(?:[/][/])([^:?/#\\s]*)(?:[:](\\d+))?(/[^\\s?#]+)?([?][^\\s#]+)?(#.*)?$","i");
+haxe.net.UrlTools.Protocol = 1;
+haxe.net.UrlTools.Hostname = 2;
+haxe.net.UrlTools.Port = 3;
+haxe.net.UrlTools.Pathname = 4;
+haxe.net.UrlTools.Search = 5;
+haxe.net.UrlTools.Hash = 6;
 haxe.text.json.Json.encodeObject = FunctionExtensions.compose($closure(haxe.text.json.Json,"encode"),$closure(haxe.text.json.Json,"fromObject"));
 haxe.text.json.Json.decodeObject = FunctionExtensions.compose($closure(haxe.text.json.Json,"toObject"),$closure(haxe.text.json.Json,"decode"));
+js.io.IFrameIO.lastMessageId = 1;
+js.io.IFrameIO.newFragmentsList = haxe.data.collections.List.factory();
 haxe.Timer.arr = new Array();
 js.Lib.onerror = null;
 haxe.io.log.Logger.defaultHandlers = [];
 haxe.io.log.Logger.defaultLevel = haxe.io.log.LogLevel.Warning;
+js.Env.document = document;
+js.Env.documentHtml = document;
+js.Env.screen = screen;
+js.Env.window = window;
+js.Env.navigator = navigator;
+js.Env.history = history;
+js.Env.location = location;
+js.Env.JInfinity = Infinity;
+js.Env.JNaN = NaN;
+js.Env.JUndefined = undefined;
+js.States.UNSENT = 0;
+js.States.OPENED = 1;
+js.States.HEADERS_RECEIVED = 2;
+js.States.LOADING = 3;
+js.States.DONE = 4;
+js.ExceptionCode.INDEX_SIZE_ERR = 1;
+js.ExceptionCode.DOMSTRING_SIZE_ERR = 2;
+js.ExceptionCode.HIERARCHY_REQUEST_ERR = 3;
+js.ExceptionCode.WRONG_DOCUMENT_ERR = 4;
+js.ExceptionCode.INVALID_CHARACTER_ERR = 5;
+js.ExceptionCode.NO_DATA_ALLOWED_ERR = 6;
+js.ExceptionCode.NO_MODIFICATION_ALLOWED_ERR = 7;
+js.ExceptionCode.NOT_FOUND_ERR = 8;
+js.ExceptionCode.NOT_SUPPORTED_ERR = 9;
+js.ExceptionCode.INUSE_ATTRIBUTE_ERR = 10;
+js.ExceptionCode.INVALID_STATE_ERR = 11;
+js.ExceptionCode.SYNTAX_ERR = 12;
+js.ExceptionCode.INVALID_MODIFICATION_ERR = 13;
+js.ExceptionCode.NAMESPACE_ERR = 14;
+js.ExceptionCode.INVALID_ACCESS_ERR = 15;
+js.ExceptionCode.VALIDATION_ERR = 16;
+js.ExceptionCode.TYPE_MISMATCH_ERR = 17;
+js.NodeType.ELEMENT_NODE = 1;
+js.NodeType.ATTRIBUTE_NODE = 2;
+js.NodeType.TEXT_NODE = 3;
+js.NodeType.CDATA_SECTION_NODE = 4;
+js.NodeType.ENTITY_REFERENCE_NODE = 5;
+js.NodeType.ENTITY_NODE = 6;
+js.NodeType.PROCESSING_INSTRUCTION_NODE = 7;
+js.NodeType.COMMENT_NODE = 8;
+js.NodeType.DOCUMENT_NODE = 9;
+js.NodeType.DOCUMENT_TYPE_NODE = 10;
+js.NodeType.DOCUMENT_FRAGMENT_NODE = 11;
+js.NodeType.NOTATION_NODE = 12;
+js.DocumentPosition.DOCUMENT_POSITION_DISCONNECTED = 1;
+js.DocumentPosition.DOCUMENT_POSITION_PRECEDING = 2;
+js.DocumentPosition.DOCUMENT_POSITION_FOLLOWING = 4;
+js.DocumentPosition.DOCUMENT_POSITION_CONTAINS = 8;
+js.DocumentPosition.DOCUMENT_POSITION_CONTAINED_BY = 16;
+js.DocumentPosition.DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 32;
+js.DerivationMethod.DERIVATION_RESTRICTION = 1;
+js.DerivationMethod.DERIVATION_EXTENSION = 2;
+js.DerivationMethod.DERIVATION_UNION = 4;
+js.DerivationMethod.DERIVATION_LIST = 8;
+js.OperationType.NODE_CLONED = 1;
+js.OperationType.NODE_IMPORTED = 2;
+js.OperationType.NODE_DELETED = 3;
+js.OperationType.NODE_RENAMED = 4;
+js.OperationType.NODE_ADOPTED = 5;
+js.ErrorState.NETWORK_EMPTY = 0;
+js.ErrorState.NETWORK_IDLE = 1;
+js.ErrorState.NETWORK_LOADING = 2;
+js.ErrorState.NETWORK_NO_SOURCE = 3;
+js.ReadyState.CONNECTING = 0;
+js.ReadyState.OPEN = 1;
+js.ReadyState.CLOSED = 2;
+js.EventExceptionCode.UNSPECIFIED_EVENT_TYPE_ERR = 0;
+js.DeltaModeCode.DOM_DELTA_PIXEL = 0;
+js.DeltaModeCode.DOM_DELTA_Line = 1;
+js.DeltaModeCode.DOM_DELTA_Page = 2;
+js.InputModeCode.DOM_INPUT_METHOD_UNKNOWN = 0;
+js.InputModeCode.DOM_INPUT_METHOD_KEYBOARD = 1;
+js.InputModeCode.DOM_INPUT_METHOD_PASTE = 2;
+js.InputModeCode.DOM_INPUT_METHOD_DROP = 3;
+js.InputModeCode.DOM_INPUT_METHOD_IME = 4;
+js.InputModeCode.DOM_INPUT_METHOD_OPTION = 5;
+js.InputModeCode.DOM_INPUT_METHOD_HANDWRITING = 6;
+js.InputModeCode.DOM_INPUT_METHOD_VOICE = 7;
+js.InputModeCode.DOM_INPUT_METHOD_MULTIMODAL = 8;
+js.InputModeCode.DOM_INPUT_METHOD_SCRIPT = 9;
+js.KeyLocationCode.DOM_KEY_LOCATION_STANDARD = 0;
+js.KeyLocationCode.DOM_KEY_LOCATION_LEFT = 1;
+js.KeyLocationCode.DOM_KEY_LOCATION_RIGHT = 2;
+js.KeyLocationCode.DOM_KEY_LOCATION_NUMPAD = 3;
+js.KeyLocationCode.DOM_KEY_LOCATION_MOBILE = 4;
+js.KeyLocationCode.DOM_KEY_LOCATION_JOYSTICK = 5;
+js.PhaseType.CAPTURING_PHASE = 1;
+js.PhaseType.AT_TARGET = 2;
+js.PhaseType.BUBBLING_PHASE = 3;
+js.AttrChangeType.MODIFICATION = 1;
+js.AttrChangeType.ADDITION = 2;
+js.AttrChangeType.REMOVAL = 3;
+js.AcceptNodeConstants.FILTER_ACCEPT = 1;
+js.AcceptNodeConstants.FILTER_REJECT = 2;
+js.AcceptNodeConstants.FILTER_SKIP = 1;
+js.WhatToShowConstants.SHOW_ALL = -1;
+js.WhatToShowConstants.SHOW_ELEMENT = 1;
+js.WhatToShowConstants.SHOW_ATTRIBUTE = 2;
+js.WhatToShowConstants.SHOW_TEXT = 4;
+js.WhatToShowConstants.SHOW_CDATA_SECTION = 8;
+js.WhatToShowConstants.SHOW_ENTITY_REFERENCE = 16;
+js.WhatToShowConstants.SHOW_ENTITY = 32;
+js.WhatToShowConstants.SHOW_PROCESSING_INSTRUCTION = 64;
+js.WhatToShowConstants.SHOW_COMMENT = 128;
+js.WhatToShowConstants.SHOW_DOCUMENT = 256;
+js.WhatToShowConstants.SHOW_DOCUMENT_TYPE = 512;
+js.WhatToShowConstants.SHOW_DOCUMENT_FRAGMENT = 1024;
+js.WhatToShowConstants.SHOW_NOTATION = 2048;
+js.RangeExceptionCode.BAD_BOUNDARYPOINTS_ERR = 1;
+js.RangeExceptionCode.INVALID_NODE_TYPE_ERR = 2;
+js.CompareHow.START_TO_START = 0;
+js.CompareHow.START_TO_END = 1;
+js.CompareHow.END_TO_END = 2;
+js.CompareHow.END_TO_START = 3;
+js.RuleType.UNKNOWN_RULE = 0;
+js.RuleType.STYLE_RULE = 1;
+js.RuleType.CHARSET_RULE = 2;
+js.RuleType.IMPORT_RULE = 3;
+js.RuleType.MEDIA_RULE = 4;
+js.RuleType.FONT_FACE_RULE = 5;
+js.RuleType.PAGE_RULE = 6;
+js.CSSValueType.CSS_INHERIT = 0;
+js.CSSValueType.CSS_PRIMITIVE_VALUE = 1;
+js.CSSValueType.CSS_VALUE_LIST = 2;
+js.CSSValueType.CSS_CUSTOM = 3;
+js.PrimitiveType.CSS_UNKNOWN = 0;
+js.PrimitiveType.CSS_NUMBER = 1;
+js.PrimitiveType.CSS_PERCENTAGE = 2;
+js.PrimitiveType.CSS_EMS = 3;
+js.PrimitiveType.CSS_EXS = 4;
+js.PrimitiveType.CSS_PX = 5;
+js.PrimitiveType.CSS_CM = 6;
+js.PrimitiveType.CSS_MM = 7;
+js.PrimitiveType.CSS_IN = 8;
+js.PrimitiveType.CSS_PT = 9;
+js.PrimitiveType.CSS_PC = 10;
+js.PrimitiveType.CSS_DEG = 11;
+js.PrimitiveType.CSS_RAD = 12;
+js.PrimitiveType.CSS_GRAD = 13;
+js.PrimitiveType.CSS_MS = 14;
+js.PrimitiveType.CSS_S = 15;
+js.PrimitiveType.CSS_HZ = 16;
+js.PrimitiveType.CSS_KHZ = 17;
+js.PrimitiveType.CSS_DIMENSION = 18;
+js.PrimitiveType.CSS_STRING = 19;
+js.PrimitiveType.CSS_URI = 20;
+js.PrimitiveType.CSS_IDENT = 21;
+js.PrimitiveType.CSS_ATTR = 22;
+js.PrimitiveType.CSS_COUNTER = 23;
+js.PrimitiveType.CSS_RECT = 24;
+js.PrimitiveType.CSS_RGBCOLOR = 25;
+js.UpdateStatus.UNCACHED = 0;
+js.UpdateStatus.IDLE = 1;
+js.UpdateStatus.CHECKING = 2;
+js.UpdateStatus.DOWNLOADING = 3;
+js.UpdateStatus.UPDATEREADY = 4;
+js.ErrorSeverity.SEVERITY_WARNING = 1;
+js.ErrorSeverity.SEVERITY_ERROR = 2;
+js.ErrorSeverity.SEVERITY_FATAL_ERROR = 3;
 haxe.data.collections.Map.MaxLoad = 10;
 haxe.data.collections.Map.MinLoad = 1;
 $Main.init = StaxTestSuite.main();

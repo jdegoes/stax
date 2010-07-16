@@ -46,7 +46,8 @@ interface ScheduledExecutor {
   public function repeatWhile<T>(seed: T, f: T -> T, ms: Int, pred: T -> Bool): Future<T>;
   
   /** Executes the function an infinite number of times, each invocation 
-   * separated by the specified number of milliseconds.
+   * separated by the specified number of milliseconds. The future will not 
+   * return anything, but may be canceled in order to terminate the schedule.
    */
   public function forever(f: Void -> Void, ms: Int): Future<Void>;
 }
