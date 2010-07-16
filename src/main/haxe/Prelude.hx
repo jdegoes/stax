@@ -473,6 +473,10 @@ class ArrayExtensions {
     return copy;
   }
   
+  public static function snapshot<T>(a: Array<T>): Array<T> {
+    return [].concat(a);
+  }
+  
   public static function first<T>(a: Array<T>): T {
     return a[0];
   }

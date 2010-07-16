@@ -190,11 +190,3 @@ class IterableExtensions {
 	  return false;
 	}
 }
-
-class ArrayExtensions {
-  public static function snapshot<T>(a: Array<T>): Array<T> {
-    var array:Array<T> = a;
-    
-    return array;
-  }
-}
