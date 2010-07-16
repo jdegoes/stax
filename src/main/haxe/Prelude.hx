@@ -177,6 +177,23 @@ class IntExtensions {
   public static function toFloat(v: Int): Float { return v; }
   public static function toString(v: Int): String { return Std.string(v); }
   
+  public static function to(start: Int, end: Int): Iterable<Int> {
+    return {
+      iterator: function() {
+        var cur = start;
+    
+        return {
+          hasNext: function(): Bool { return cur <= end; },      
+          next:    function(): Int  { var next = cur; ++cur; return next; }
+        }
+      }
+    }
+  }
+  
+  public static function until(start: Int, end: Int): Iterable<Int> {
+    return to(start, end - 1);
+  }
+  
   public static function OrderT(c: Class<Int>): Order<Int> {
     return OrderTypeclass.create({
       compare: function(v1: Int, v2: Int) {

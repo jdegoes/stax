@@ -317,7 +317,13 @@ class List<T> implements Collection<List<T>, T> {
     
     a.sort(order.compare);
     
-    return empty().addAll(a);
+    var result = empty();
+    
+    for (i in 0...a.length) {
+      result = result.cons(a[a.length - 1 - i]);
+    }
+    
+    return result;
   }
   
   public function iterator(): Iterator<T> {

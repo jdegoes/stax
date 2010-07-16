@@ -139,6 +139,30 @@ class IterableExtensions {
     });
   }
   
+  public static function flatMap<T, Z>(iter: Iterable<T>, f: T -> Iterable<Z>): Iterable<Z> {
+    return foldl(iter, [], function(a, b) {
+      for (e in f(b)) a.push(e);
+      
+      return a;
+    });
+  }
+  
+  public static function zip<T1, T2>(iter1: Iterable<T1>, iter2: Iterable<T2>): Iterable<Tuple2<T1, T2>> {
+    var i1 = iter1.iterator();
+    var i2 = iter2.iterator();
+    
+    var result = [];
+    
+    while (i1.hasNext() && i2.hasNext()) {
+      var t1 = i1.next();
+      var t2 = i2.next();
+      
+      result.push(t1.entuple(t2));
+    }
+    
+    return result;
+  }
+  
   public static function append<T>(iter: Iterable<T>, e: T): Iterable<T> {
     return foldr(iter, [e], function(b, a) {
       a.unshift(b);
