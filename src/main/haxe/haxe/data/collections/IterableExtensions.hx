@@ -91,6 +91,17 @@ class IterableExtensions {
     return result;
   }
   
+  public static function take<T>(iter: Iterable<T>, n: Int): Iterable<T> {
+    var iterator = iter.iterator();
+    var result = [];
+    
+    for (i in 0...(n)) {
+      if (iterator.hasNext()) { result.push(iterator.next()); };
+    }
+    
+    return result;
+  }
+  
   
   public static function tail<T>(iter: Iterable<T>): Iterable<T> {
     return switch (tailOption(iter)) {
@@ -120,7 +131,7 @@ class IterableExtensions {
     while (iterator.hasNext()) {
       var element = iterator.next();
       
-      if (exists(result, function(a, b) { return a == b; }, element)) { result.push(element); };
+      if (!exists(result, function(a, b) { return a == b; }, element)) { result.push(element); };
     }
     
     return result;
@@ -128,6 +139,10 @@ class IterableExtensions {
   
   public static function at<T>(iter: Iterable<T>, index: Int): T {
     var result: T = null;
+    
+    if (index < 0) index = size(iter) - (-1 * index);
+    trace(index);
+    
     var curIndex  = 0;
     for (e in iter) {
       if (index == curIndex) {

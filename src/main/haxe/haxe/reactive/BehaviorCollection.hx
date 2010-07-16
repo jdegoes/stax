@@ -122,7 +122,7 @@ class BehaviorCollection {
     public static function map<C, T>(b: Behavior<Collection<C, T>>, f: T -> T): Behavior<Collection<C, T>> {
         return b.map(function(c) { return cast c.map(f); });
     }
-    
+    /*
     public static function mapTo<C, T, Z>(b: Behavior<Collection<C, T>>, t: Void -> Collection<C, Z>, f: T -> Z): Behavior<Collection<C, Z>> {
         return b.map(function(c) { return cast c.mapTo(t, f); });
     }

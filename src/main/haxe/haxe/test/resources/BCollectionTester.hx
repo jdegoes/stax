@@ -53,10 +53,60 @@ class CollectionTester extends TestCase {
   
   public function testThatItXTailWorks(): Void {
     var i: Iterable<Int> = [1, 2, 3, 4, 5];
-    var t: Iterable<Int> = [];
-    trace(t.foldl(2, function(a, b) {return [b].push(a); }));
-    trace(i.tailOption());
+    
     assertEquals(Std.string(i.tail()), '[2,3,4,5]');
+  }
+  
+  public function testThatItXTakeWorks(): Void {
+    var i: Iterable<Int> = [1, 2, 3, 4, 5];
+    
+    assertEquals(Std.string(i.take(3)), '[1,2,3]');
+    
+    var i = [1];
+    
+    assertEquals(Std.string(i.take(3)), '[1]');
+    
+    var i = [];
+    
+    assertEquals(Std.string(i.take(3)), '[]');
+  }
+  
+  public function testThatItXDropWorks(): Void {
+    var i: Iterable<Int> = [1, 2, 3, 4, 5];
+    
+    assertEquals('[4,5]', Std.string(i.drop(3)));
+    
+    var i = [1];
+    
+    assertEquals(Std.string(i.drop(3)), '[]');
+  }
+  
+  public function testThatItXExistsWorks(): Void {
+    var i: Iterable<Int> = [1, 2, 3, 4, 5];
+    
+    assertTrue(i.exists(function(a, b) {return a == b;}, 2));
+    
+    assertFalse(i.exists(function(a,b) {return a < b;}, 1));
+  }
+  
+  public function testThatItXNubWorks(): Void {
+    var a: Iterable<Int> = [1, 2, 3, 4, 5, 4, 3, 2, 1, 5, 6, 7, 8, 6, 5, 4, 3, 2];
+
+    assertEquals(8, a.nub().size());
+  }
+  
+  public function testThatItXAtWorks(): Void {
+    var a: Iterable<Int> = [1, 2, 3, 4, 5, 4, 3, 2, 1, 5, 6, 7, 8, 6, 5, 4, 3, 2];
+    
+    assertEquals(6, a.at(10));
+    
+    assertEquals(5, a.at(-4));
+  }
+  
+  public function testThatItXMapWorks(): Void {
+    var a: Iterable<Int> = [6, 5, 4, 3, 2];
+    
+    assertEquals('[12,10,8,6,4]', Std.string(a.map(function(a) { return a * 2; })));
   }
   
 }
