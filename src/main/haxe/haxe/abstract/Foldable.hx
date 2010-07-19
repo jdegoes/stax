@@ -162,6 +162,19 @@ class FoldableExtensions {
     });
   }
   
+  public static function scanl<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+	  var accum = init;
+	  var result = [init];
+	  
+	  for (e in a) {
+	    result.push(f(e, accum));
+	  }
+	  
+	  return cast result;
+	}
+	
   public static function elements<A, B>(foldable: Foldable<A, B>): Iterable<B> {
     return toArray(foldable);
   }
