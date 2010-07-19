@@ -175,6 +175,62 @@ class FoldableExtensions {
 	  return cast result;
 	}
 	
+	public static function scanr<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+    a.reverse();
+    
+	  var accum = init;
+	  var result = [init];
+	  
+	  for (e in a) {
+	    result.push(f(e, accum));
+	  }
+	  
+	  return cast result;
+	}
+  
+	public static function scanl1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    var iterator = a.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
+	}
+	
+	public static function scanr1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+    a.reverse();
+    
+    var iterator = a.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
+	}
+	
   public static function elements<A, B>(foldable: Foldable<A, B>): Iterable<B> {
     return toArray(foldable);
   }

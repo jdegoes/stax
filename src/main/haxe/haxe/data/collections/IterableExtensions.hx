@@ -268,17 +268,21 @@ class IterableExtensions {
 	}
 	
 	public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
-	  var iterator = iter.iterator();
-	  var init = iterator.next(); 
-	  
-	  var accum = init;
-	  var result = [init];
-	  
-	  while (iterator.hasNext()) {
-	    result.push(f(iterator.next(), accum));
-	  }
-	  
-	  return result;
+    var iterator = iter.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
 	}
 	
 	public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
