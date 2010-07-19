@@ -18,6 +18,7 @@ package haxe.data.collections;
 
 import Prelude;
 
+//using haxe.abstract.Foldable;
 using Prelude;
 
 class IterableExtensions {
@@ -35,6 +36,15 @@ class IterableExtensions {
     for (e in iter) { folded = mapper(folded, e); }
     
     return folded;
+  }
+  
+  public static function concat<T, Z>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<Iterable<T>> {
+    var result = [];
+    
+    result.push(iter1);
+    result.push(iter2);
+    
+    return result;
   }
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
@@ -233,5 +243,30 @@ class IterableExtensions {
 	    if (iterator.next() == true) { return true; }; 
 	  }
 	  return false;
+	}
+	
+	public static function scanl<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
+	  var accum = init;
+	  var result = [init];
+	  
+	  for (e in iter) {
+	    result.push(f(e, accum));
+	  }
+	  
+	  return result;
+	}
+	
+	public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
+	  var iterator = iter.iterator();
+	  var init = iterator.next(); 
+	  
+	  var accum = init;
+	  var result = [init];
+	  
+	  while (iterator.hasNext()) {
+	    result.push(f(iterator.next(), accum));
+	  }
+	  
+	  return result;
 	}
 }

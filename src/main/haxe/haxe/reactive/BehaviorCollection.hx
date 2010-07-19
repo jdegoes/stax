@@ -48,7 +48,6 @@ class BehaviorCollection {
         return b.map(function(c) { return cast c.add(element); });
     }
     
-    
     public static function count<C, T>(b: Behavior<Collection<C, T>>, predicate: T -> Bool): Behavior<Int> {
         return b.map(function(c) { return c.count(predicate); });
     }
