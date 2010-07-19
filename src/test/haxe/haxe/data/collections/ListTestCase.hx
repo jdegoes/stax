@@ -136,6 +136,22 @@ class ListTestCase extends TestCase {
       }
     }
     
+    public function testZip(): Void {
+      var l = defaultList().zip(defaultList().drop(1));
+      
+      var i1 = 0, i2 = 1;
+      
+      var equal = Tuple2.EqualT(Int.EqualT(), Int.EqualT());
+      
+      for (z in l) {
+        assertEquals(z, i1.entuple(i2), equal);
+        
+        ++i1; ++i2;
+      }
+      
+      assertEquals(99, l.size);
+    }
+    
     function assertListEquals(l1: List<Int>, l2: List<Int>) {
       assertTrue(List.EqualT(Int.EqualT()).equal(l1, l2));
     }

@@ -140,6 +140,28 @@ class FoldableExtensions {
     });
   }
   
+  public static function count<A, B>(foldable: Foldable<A, B>, f: B -> Bool): Int {
+    return foldable.foldl(0, function(a, b) {
+      return a + (if (f(b)) 1 else 0);
+    });
+  }
+  
+  public static function countWhile<A, B>(foldable: Foldable<A, B>, f: B -> Bool): Int {
+    var counting = true;
+    
+    return foldable.foldl(0, function(a, b) {
+      return if (!counting) a;
+      else {
+        if (f(b)) a + 1;
+        else {
+          counting = false;
+          
+          a;
+        }
+      }
+    });
+  }
+  
   public static function elements<A, B>(foldable: Foldable<A, B>): Iterable<B> {
     return toArray(foldable);
   }
