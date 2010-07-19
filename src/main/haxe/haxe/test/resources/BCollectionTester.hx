@@ -133,6 +133,11 @@ class CollectionTester extends TestCase {
     assertEquals('[2,5,6,7,8]', Std.string(a.scanr1(function(a, b) { return a + b; })));
   }
   
+  public function testThatItXExistsPWorks(): Void {
+    var a: Iterable<Int> = [6, 5, 4, 3, 2];
+    
+    assertEquals(true, a.existsP(2, function(a, b) { return a == b; }));
+  }
 }
 
 class BCollectionTester {

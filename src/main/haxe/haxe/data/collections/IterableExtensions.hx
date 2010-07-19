@@ -299,4 +299,20 @@ class IterableExtensions {
 	  return result;
 	}
 	
+	public static function existsP<T>(iter:Iterable<T>, ref: T, f: T -> T -> Bool): Bool {
+	  var result:Bool = false;
+	  
+	  for (e in iter) {
+	    if (f(e, ref)) result = true;
+	  }
+	  
+	  return result;
+	}
+	/*  Under Progress
+	public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+	  return foldl(iter, null, function(a, b) {
+	    if (f(a, b)) return a.p;
+	  });
+	}
+	*/
 }

@@ -310,6 +310,21 @@ class FoldableExtensions {
     }
   }
   
+  public static function existsP<A, B>(foldable:Foldable<A, B>, ref: B, f: B -> B -> Bool): Bool {
+	  var result:Bool = false;
+	  var a = toArray(foldable);
+	  
+	  for (e in a) {
+	    if (f(e, ref)) result = true;
+	  }
+	  
+	  return result;
+	}
+  
+  public static function member<A, B>(foldable: Foldable<A, B>, member: B): Bool {
+    return exists(foldable, function(e) { return e == member; });
+  }
+  
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
     show = if (show == null) DynamicExtensions.ShowT().show; else show;
     
