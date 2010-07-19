@@ -26,83 +26,33 @@ using haxe.abstract.Foldable;
 class BehaviorCollection {
     private function new() { }
     
-    public static function take<C, T>(behavior: Behavior<Collection<C, T>>, n: Int): Behavior<Collection<C, T>> {
-        return behavior.map(function(c) { return cast c.take(n); });
-    }
-    
-    public static function drop<C, T>(behavior: Behavior<Collection<C, T>>, n: Int): Behavior<Collection<C, T>> {
-        return behavior.map(function(c) { return cast c.drop(n); });
-    }
+
     
     public static function concatB<C, T>(b1: Behavior<Collection<C, T>>, b2: Behavior<Collection<C, T>>): Behavior<Collection<C, T>> {
         return b1.zip(b2).map(function(c) { return cast c._1.concat(c._2); });
     }
-    /*
+    
     public static function join<C, T>(b: Behavior<Collection<C, T>>, char: String): Behavior<String> {
-        return b.map(function(v) { return v.join(char); });
+        return b.map(function(c) { return c.mkString(char); });
     }
-    */
+    
     public static function size<C, T>(b: Behavior<Collection<C, T>>): Behavior<Int> {
         return b.map(function(c) { return c.size; });
     }
-    /*
+    
     public static function zipB<C, T, B>(b1: Behavior<List<T>>, b2: Behavior<List<B>>): Behavior<List<Tuple2<T, B>>> {
-        return b1.zip(b2).map(function(v) { return v._1.zip(v._2); });
-    }
-    
-    
-    public static function zip3B<C, T, B, D>(b1: Behavior<List<T>>, b2: Behavior<List<B>>, b3: Behavior<List<D>>): Behavior<List<Tuple3<T, B, D>>> {
-        return b1.zip3(b2, b3).map(function(v) { return v._1.zip3(v._2, v._3); });
-    }
-    
-    public static function zip4B<C, T, B, D, E>(b1: Behavior<List<T>>, b2: Behavior<List<B>>, b3: Behavior<List<D>>, b4: Behavior<List<E>>): Behavior<List<Tuple4<T, B, D, E>>> {
-        return b1.zip4(b2, b3, b4).map(function(v) { return v._1.zip4(v._2, v._3, v._4); });
-    }
-    
-    public static function zip5B<C, T, B, D, E, F>(b1: Behavior<List<T>>, b2: Behavior<List<B>>, b3: Behavior<List<D>>, b4: Behavior<List<E>>, b5: Behavior<List<F>>): Behavior<List<Tuple5<T, B, D, E, F>>> {
-        return b1.zip5(b2, b3, b4, b5).map(function(v) { return v._1.zip5(v._2, v._3, v._4, v._5); });
+        return b1.zip(b2).map(function(c) { return c._1.zip(c._2); });
     }
     
     public static function append<C, T>(b: Behavior<Collection<C, T>>, element: T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.append(element); });
+        return b.map(function(c) { return cast c.add(element); });
     }
     
-    public static function cons<C, T>(b: Behavior<Collection<C, T>>, element: T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.cons(element); });
-    }
-    
-    public static function headOpt<C, T>(b: Behavior<Collection<C, T>>): Behavior<Option<T>> {
-        return b.map(function(c: Collection<C, T>): Option<T> { return c.headOpt(); });
-    }
-    
-    public static function firstOpt<C, T>(b: Behavior<Collection<C, T>>): Behavior<Option<T>> {
-        return headOpt(b);
-    }
-    
-    public static function slice<C, T>(b: Behavior<Collection<C, T>>, start: Int, ?stop: Int = null): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.slice(start, stop); });
-    }
-    
-    public static function lastOpt<C, T>(b: Behavior<Collection<C, T>>): Behavior<Option<T>> {
-        return b.map(function(c: Collection<C, T>): Option<T> { return c.lastOpt(); });
-    }
-
-    public static function countWhile<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> Bool): Behavior<Int> {
-        return b.map(function(c) { return c.countWhile(cmp); });
-    }
-    
-    public static function dropWhile<C, T>(b: Behavior<Collection<C, T>>, dropper: T -> Bool): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.dropWhile(dropper); });
-    }
-    
-    public static function takeWhile<C, T>(b: Behavior<Collection<C, T>>, taker: T -> Bool): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.takeWhile(taker); });
-    }
     
     public static function count<C, T>(b: Behavior<Collection<C, T>>, predicate: T -> Bool): Behavior<Int> {
         return b.map(function(c) { return c.count(predicate); });
     }
-    
+    /*
     public static function all<C, T>(b: Behavior<Collection<C, T>>, tester: T -> Bool): Behavior<Bool> {
         return b.map(function(c) { return c.all(tester); });
     }
