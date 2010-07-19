@@ -60,11 +60,11 @@ class BehaviorCollection {
     public static function any<C, T>(b: Behavior<Collection<C, T>>, tester: T -> Bool): Behavior<Bool> {
         return b.map(function(c) { return c.forAny(tester); });
     }
-    /*
-    public static function forEach<C, T>(b: Behavior<Collection<C, T>>, f: T -> Void): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.forEach(f); });
-    }
     
+    public static function forEach<C, T>(b: Behavior<Collection<C, T>>, f: T -> Void): Behavior<Collection<C, T>> {
+        return b.map(function(c) { return c.foreach(f); });
+    }
+    /*
     public static function each<C, T>(b: Behavior<Collection<C, T>>, f: T -> Void): Behavior<Collection<C, T>> {
         return b.map(function(c) { return c.each(f); });
     }
