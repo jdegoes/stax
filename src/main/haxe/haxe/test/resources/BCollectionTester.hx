@@ -121,6 +121,18 @@ class CollectionTester extends TestCase {
     assertEquals('[6,11,10,9,8]', Std.string(a.scanl1(function(a, b) { return a + b; })));
   }
   
+  public function testThatItXScanrWorks(): Void {
+    var a: Iterable<Int> = [6, 5, 4, 3, 2];
+    
+    assertEquals('[1,3,4,5,6,7]', Std.string(a.scanr(1, function(a, b) { return a + b; })));
+  }
+  
+  public function testThatItXScanr1Works(): Void {
+    var a: Iterable<Int> = [6, 5, 4, 3, 2];
+    
+    assertEquals('[2,5,6,7,8]', Std.string(a.scanr1(function(a, b) { return a + b; })));
+  }
+  
 }
 
 class BCollectionTester {

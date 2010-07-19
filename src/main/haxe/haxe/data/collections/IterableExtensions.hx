@@ -256,6 +256,17 @@ class IterableExtensions {
 	  return result;
 	}
 	
+	public static function scanr<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
+	  var accum = init;
+	  var result = [init];
+	  
+	  for (e in reversed(iter)) {
+	    result.push(f(e, accum));
+	  }
+	  
+	  return result;
+	}
+	
 	public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
 	  var iterator = iter.iterator();
 	  var init = iterator.next(); 
@@ -269,4 +280,19 @@ class IterableExtensions {
 	  
 	  return result;
 	}
+	
+	public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
+	  var iterator = reversed(iter).iterator();
+	  var init = iterator.next(); 
+	  
+	  var accum = init;
+	  var result = [init];
+	  
+	  while (iterator.hasNext()) {
+	    result.push(f(iterator.next(), accum));
+	  }
+	  
+	  return result;
+	}
+	
 }
