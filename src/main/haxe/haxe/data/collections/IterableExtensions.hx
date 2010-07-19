@@ -141,7 +141,6 @@ class IterableExtensions {
     var result: T = null;
     
     if (index < 0) index = size(iter) - (-1 * index);
-    trace(index);
     
     var curIndex  = 0;
     for (e in iter) {

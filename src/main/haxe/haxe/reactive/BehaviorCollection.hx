@@ -62,36 +62,30 @@ class BehaviorCollection {
     }
     
     public static function forEach<C, T>(b: Behavior<Collection<C, T>>, f: T -> Void): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.foreach(f); });
+        return b.map(function(c) { return cast c.foreach(f); });
     }
-    /*
+    
     public static function each<C, T>(b: Behavior<Collection<C, T>>, f: T -> Void): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.each(f); });
+        return b.map(function(c) { return cast c.foreach(f); });
     }
-    */
+    
     public static function map<C, T>(b: Behavior<Collection<C, T>>, f: T -> T): Behavior<Collection<C, T>> {
         return b.map(function(c) { return cast c.map(f); });
     }
-    /*
-    public static function mapTo<C, T, Z>(b: Behavior<Collection<C, T>>, t: Void -> Collection<C, Z>, f: T -> Z): Behavior<Collection<C, Z>> {
+    
+    public static function mapTo<C, T, Z>(b: Behavior<Collection<C, T>>, t: Collection<C, Z>, f: T -> Z): Behavior<Collection<C, Z>> {
         return b.map(function(c) { return cast c.mapTo(t, f); });
     }
-    /*
+    
     public static function partition<C, T>(b: Behavior<Collection<C, T>>, filter: T -> Bool): Behavior<Tuple2<Collection<C, T>, Collection<C, T>>> {
-        return b.map(function(c) { return c.partition(filter); });
+        return b.map(function(c) { return cast c.partition(filter); });
     }
-    
-    public static function partitionWhile<C, T>(b: Behavior<Collection<C, T>>, filter: T -> Bool): Behavior<Tuple2<Collection<C, T>, Collection<C, T>>> {
-        return b.map(function(c) { return c.partitionWhile(filter); });
-    }
-    
+
     public static function filter<C, T>(b: Behavior<Collection<C, T>>, f: T -> Bool): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.filter(f); });
+        return b.map(function(c) { return cast c.filter(f); });
     }
     
-    public static function filterWhile<C, T>(b: Behavior<Collection<C, T>>, f: T -> Bool): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.filterWhile(f); });
-    }
+    /*
     
     public static function flatMap<C, T, Z>(b: Behavior<Collection<C, T>>, f: T -> Collection<C, Z>): Behavior<Collection<C, Z>> {
         return b.map(function(c) { return c.flatMap(f); });
