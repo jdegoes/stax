@@ -426,7 +426,7 @@ class ArrayExtensions {
     
     if (a != []) {
       for (e in a) {
-        count++;
+        ++count;
       }
     }
     return count;

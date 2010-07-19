@@ -72,18 +72,36 @@ class IterableExtensions {
   public static function tailOption<T>(iter: Iterable<T>): Option<Iterable<T>> {
     var iterator = iter.iterator();
     
-    if (!iterator.hasNext()) return None;
+    return if (!iterator.hasNext()) None;
+           else Some(drop(iter, 1));
+  }
+  
+  public static function drop<T>(iter: Iterable<T>, n: Int): Iterable<T> {
+    var iterator = iter.iterator();
     
-    iterator.next();
-    
-    var result: Iterable<T> = [];
-    
-    while (iterator.hasNext()) {
-      append(result, iterator.next());
+    while (iterator.hasNext() && n > 0) {
+      iterator.next();
+      --n;
     }
     
-    return Some(result);
+    var result = [];
+    
+    while (iterator.hasNext()) result.push(iterator.next());
+    
+    return result;
   }
+  
+  public static function take<T>(iter: Iterable<T>, n: Int): Iterable<T> {
+    var iterator = iter.iterator();
+    var result = [];
+    
+    for (i in 0...(n)) {
+      if (iterator.hasNext()) { result.push(iterator.next()); };
+    }
+    
+    return result;
+  }
+  
   
   public static function tail<T>(iter: Iterable<T>): Iterable<T> {
     return switch (tailOption(iter)) {
@@ -113,7 +131,7 @@ class IterableExtensions {
     while (iterator.hasNext()) {
       var element = iterator.next();
       
-      if (exists(result, function(a, b) { return a == b; }, element)) { result.push(element); };
+      if (!exists(result, function(a, b) { return a == b; }, element)) { result.push(element); };
     }
     
     return result;
@@ -121,6 +139,10 @@ class IterableExtensions {
   
   public static function at<T>(iter: Iterable<T>, index: Int): T {
     var result: T = null;
+    
+    if (index < 0) index = size(iter) - (-1 * index);
+    trace(index);
+    
     var curIndex  = 0;
     for (e in iter) {
       if (index == curIndex) {
@@ -164,10 +186,10 @@ class IterableExtensions {
   }
   
   public static function append<T>(iter: Iterable<T>, e: T): Iterable<T> {
-    return foldr(iter, [e], function(b, a) {
-      a.unshift(b);
+    return foldr(iter, [e], function(a, b) {
+      b.unshift(a);
       
-      return a;
+      return b;
     });
   }
   
@@ -189,7 +211,7 @@ class IterableExtensions {
 	
 	public static function reversed<T>(iter: Iterable<T>): Iterable<T> {
 	  return foldl(iter, [], function(a, b) {
-      a.push(b);
+      a.unshift(b);
       
       return a;
 	  });
