@@ -252,7 +252,7 @@ class List<T> implements Collection<List<T>, T> {
   public function drop(n: Int): List<T> {
     var cur = this;
     
-    for (i in 0...Math.min(size, n).toInt()) {
+    for (i in 0...size.min(n)) {
       cur = cur.tail;
     }
     
@@ -280,9 +280,7 @@ class List<T> implements Collection<List<T>, T> {
   /** Returns a list that contains all the elements of this list in reverse 
    * order */
   public function reverse(): List<T> {
-    return foldl(empty(), function(a, b) {
-      return a.cons(b);
-    });
+    return foldl(empty(), function(a, b) return a.cons(b));
   }
   
   /** Zips this list and the specified list into a list of tuples. */

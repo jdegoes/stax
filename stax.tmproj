@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>src/main/haxe/Prelude.hx</string>
+	<string>src/main/haxe/js/io/IFrameIO.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -26,42 +26,70 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>28</integer>
 				<key>line</key>
-				<integer>350</integer>
+				<integer>181</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>337</integer>
+			<integer>164</integer>
+		</dict>
+		<key>src/main/haxe/haxe/abstract/Foldable.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>2</integer>
+				<key>line</key>
+				<integer>105</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>91</integer>
+		</dict>
+		<key>src/main/haxe/haxe/data/collections/IterableExtensions.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>163</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>166</integer>
 		</dict>
 		<key>src/main/haxe/haxe/data/collections/List.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>5</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>296</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>277</integer>
 		</dict>
 		<key>src/main/haxe/haxe/data/collections/Map.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>19</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>269</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>237</integer>
 		</dict>
 		<key>src/main/haxe/haxe/data/collections/Set.hx</key>
 		<dict>
@@ -133,34 +161,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>src/main/haxe/haxe/text/Parser.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>178</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>66</integer>
-		</dict>
-		<key>src/main/haxe/haxe/text/ParserCombinators.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>5</integer>
-				<key>line</key>
-				<integer>19</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>src/main/haxe/haxe/text/json/JValue.hx</key>
 		<dict>
 			<key>caret</key>
@@ -188,6 +188,20 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>159</integer>
+		</dict>
+		<key>src/main/haxe/js/io/IFrameIO.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>106</integer>
+				<key>line</key>
+				<integer>127</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>114</integer>
 		</dict>
 		<key>src/test/haxe/PreludeTest.hx</key>
 		<dict>
@@ -217,6 +231,20 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>src/test/haxe/haxe/data/collections/ListTestCase.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>150</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>16</integer>
+		</dict>
 		<key>src/test/haxe/haxe/text/json/JsonTestCase.hx</key>
 		<dict>
 			<key>caret</key>
@@ -231,28 +259,35 @@
 			<key>firstVisibleLine</key>
 			<integer>150</integer>
 		</dict>
+		<key>src/test/haxe/js/io/IFrameIOTestCase.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>53</integer>
+				<key>line</key>
+				<integer>71</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>57</integer>
+		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>src/main/haxe/haxe/text/ParserCombinators.hx</string>
-		<string>src/main/haxe/haxe/text/Parser.hx</string>
-		<string>src/main/haxe/haxe/test/mock/Mock.hx</string>
-		<string>src/main/haxe/haxe/io/log/Logger.hx</string>
-		<string>src/main/haxe/haxe/io/http/Http.hx</string>
-		<string>src/main/haxe/Prelude.hx</string>
-		<string>src/main/haxe/haxe/io/file/File.hx</string>
+		<string>src/main/haxe/js/io/IFrameIO.hx</string>
+		<string>src/test/haxe/js/io/IFrameIOTestCase.hx</string>
+		<string>src/main/haxe/haxe/data/collections/IterableExtensions.hx</string>
 		<string>src/main/haxe/haxe/data/collections/List.hx</string>
+		<string>src/test/haxe/haxe/data/collections/ListTestCase.hx</string>
+		<string>src/main/haxe/haxe/abstract/Foldable.hx</string>
 		<string>src/main/haxe/haxe/data/collections/Map.hx</string>
-		<string>src/main/haxe/haxe/data/collections/Set.hx</string>
-		<string>src/test/haxe/haxe/text/json/JsonTestCase.hx</string>
-		<string>src/main/haxe/haxe/text/json/Json.hx</string>
-		<string>src/main/haxe/haxe/text/json/JValue.hx</string>
-		<string>src/test/haxe/PreludeTest.hx</string>
-		<string>src/test/haxe/TestSuite.hx</string>
+		<string>src/main/haxe/Prelude.hx</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{49, 296}, {1271, 853}}</string>
+	<string>{{22, 307}, {1271, 853}}</string>
 </dict>
 </plist>
