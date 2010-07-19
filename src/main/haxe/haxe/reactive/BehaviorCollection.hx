@@ -85,24 +85,23 @@ class BehaviorCollection {
         return b.map(function(c) { return cast c.filter(f); });
     }
     
-    /*
-    
-    public static function flatMap<C, T, Z>(b: Behavior<Collection<C, T>>, f: T -> Collection<C, Z>): Behavior<Collection<C, Z>> {
-        return b.map(function(c) { return c.flatMap(f); });
+    public static function flatMap<C, T>(b: Behavior<Collection<C, T>>, f: T -> Collection<C, T>): Behavior<Collection<C, T>> {
+        return b.map(function(c) { return cast c.flatMap(f); });
     }
+    
     
     public static function toArray<C, T>(b: Behavior<Collection<C, T>>): Behavior<Array<T>> {
         return b.map(function(c) { return c.toArray(); });
     }
     
-    public static function foldr<C, T, Z>(b: Behavior<Collection<C, T>>, initial: Z, f: Z -> T -> Z): Behavior<Z> {
-        return b.map(function(c) { return c.foldr(initial, f); });
+    public static function foldr<C, T, Z>(b: Behavior<Collection<C, T>>, initial: Z, f: T -> Z -> Z): Behavior<Z> {
+        return b.map(function(c) { return cast c.foldr(initial, f); });
     }
     
     public static function foldl<C, T, Z>(b: Behavior<Collection<C, T>>, initial: Z, f: Z -> T -> Z): Behavior<Z> {
         return b.map(function(c) { return c.foldl(initial, f); });
     }
-    
+    /*
     public static function scanl<C, T>(b: Behavior<Collection<C, T>>, initial: T, f: T -> T -> T): Behavior<Collection<C, T>> {
         return b.map(function(c) { return c.scanl(initial, f); });
     }
