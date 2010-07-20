@@ -1,0 +1,178 @@
+/*
+ HaXe library written by Franco Ponticelli <franco.ponticelli@gmail.com>
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the
+ distribution.
+
+ THIS SOFTWARE IS PROVIDED BY FRANCO PONTICELLI "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SOCIAL MEDIA NETWORKS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+package haxe.test;
+
+import haxe.test.Dispatcher;
+
+import Prelude;
+
+using Prelude;
+using haxe.abstract.PredicateExtensions;
+
+/**
+* The Runner class performs a set of tests. The tests can be added using add or addFixtures.
+* Once all the tests are register they are axecuted on the run() call.
+* Note that Runner does not provide any visual output. To visualize the test results use one of
+* the classes in the utest.ui package.
+* @todo complete documentation
+*/
+class Runner {
+	var fixtures(default, null) : Array<TestFixture<Dynamic>>;
+
+	/**
+	* Event object that monitors the progress of the runner.
+	*/
+	public var onProgress(default, null) : Dispatcher<{ result : TestResult, done : Int, totals : Int }>;
+	/**
+	* Event object that monitors when the runner starts.
+	*/
+	public var onStart(default, null)    : Dispatcher<Runner>;
+	/**
+	* Event object that monitors when the runner ends. This event takes into account async calls
+	* performed during the tests.
+	*/
+	public var onComplete(default, null) : Dispatcher<Runner>;
+	/**
+	* The number of fixtures registered.
+	*/
+	public var length(default, null)      : Int;
+	/**
+	* Instantiates a Runner onject.
+	*/
+	public function new() {
+		fixtures   = new Array();
+		onProgress = new Dispatcher();
+		onStart    = new Dispatcher();
+		onComplete = new Dispatcher();
+		length = 0;
+	}
+
+  public function addAll(tests : Iterable<Dynamic>, setup = "setup", teardown = "teardown", prefix = "test", ?pattern : EReg): Runner {
+    for (test in tests) {
+      add(test, setup, teardown, prefix, pattern);
+    }
+    
+    return this;
+  }
+
+	/**
+	* Adds a new test case.
+	* @param	test: must be a not null object
+	* @param	setup: string name of the setup function (defaults to "setup")
+	* @param	teardown: string name of the teardown function (defaults to "teardown")
+	* @param	prefix: prefix for methods that are tests (defaults to "test")
+	* @param	pattern: a regular expression that discriminates the names of test
+	* 			functions; when set,  the prefix parameter is meaningless
+	*/
+	public function add(test : Dynamic, setup = "setup", teardown = "teardown", prefix = "test", ?pattern : EReg): Runner {
+		if(!Reflect.isObject(test)) throw "can't add a null object as a test case";
+		if(!isMethod(test, setup))
+			setup = null;
+		if(!isMethod(test, teardown))
+			teardown = null;
+		
+		if (Reflect.field(test, 'beforeAll') != null) {
+		  addFixture(new TestFixture(test, 'beforeAll', false));
+		}
+		
+		var patternMatches = function(field: String): Option<Bool> return pattern.toOption().map(function(p) return p.match(field));
+    var prefixMatches  = function(field: String): Option<Bool> return Some(field.startsWith(prefix));
+
+    var fieldIsTest   = function(field: String) return patternMatches(field).orElseC(prefixMatches(field)).getOrElseC(false);
+    var fieldIsMethod = isMethod.curry()(test);
+
+    var fixtures = Type.getInstanceFields(Type.getClass(test)).filter(fieldIsTest.and(fieldIsMethod)).map(function(field) {
+    	return new TestFixture(test, field, setup, teardown);
+    });
+    
+		/*var fixtures: Array<TestFixture<Dynamic>> = [];
+		
+		var fields = Type.getInstanceFields(Type.getClass(test));
+		if(pattern == null) {
+			for(field in fields) {
+				if(!StringTools.startsWith(field, prefix)) continue;
+				if(!isMethod(test, field)) continue;
+				fixtures.push(new TestFixture(test, field, setup, teardown));
+			}
+		} else {
+			for(field in fields) {
+				if(!pattern.match(field)) continue;
+				if(!isMethod(test, field)) continue;
+				fixtures.push(new TestFixture(test, field, setup, teardown));
+			}
+		}*/
+		
+		addFixtures(fixtures);
+		
+		if (Reflect.field(test, 'afterAll') != null) {
+		  
+		}
+		
+		return this;
+	}
+
+	public function addFixture(fixture : TestFixture<Dynamic>): Runner {
+		fixtures.push(fixture);
+		length++;
+		
+		return this;
+	}
+	
+	public function addFixtures(fixtures : Iterable<TestFixture<Dynamic>>): Runner {
+	  for (fixture in fixtures) addFixture(fixture);
+	  
+	  return this;
+	}
+
+	public function getFixture(index : Int) {
+		return fixtures[index];
+	}
+
+	function isMethod(test : Dynamic, name : String) {
+		try {
+			return Reflect.isFunction(Reflect.field(test, name));
+		} catch(e : Dynamic) {
+			return false;
+		}
+	}
+
+	var pos : Int;
+	public function run(): Runner {
+		pos = 0;
+		onStart.dispatch(this);
+		runNext();
+		
+		return this;
+	}
+
+	function runNext() {
+		if(fixtures.length > pos)
+			runFixture(fixtures[pos++]);
+		else
+			onComplete.dispatch(this);
+	}
+
+	function runFixture(fixture : TestFixture<Dynamic>) {
+		var handler = new TestHandler(fixture);
+		handler.onComplete.add(testComplete);
+		handler.execute();
+	}
+
+	function testComplete(h : TestHandler<Dynamic>) {
+		onProgress.dispatch({ result : TestResult.ofHandler(h), done : pos, totals : length });
+		runNext();
+	}
+}

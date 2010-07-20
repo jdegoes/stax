@@ -20,7 +20,7 @@ package haxe;
 import Dom;
 import js.Env;
 
-import haxe.test.TestRunner;
+
 import haxe.test.TestCase;
 
 class DomTest extends TestCase {

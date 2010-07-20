@@ -16,7 +16,8 @@
 */
 import PreludeTest;
 
-import haxe.test.TestRunner;
+import haxe.test.Runner;
+import haxe.test.ui.Report;
 
 import haxe.text.json.JsonTestCase;
 import haxe.io.log.LoggerTestCase;
@@ -35,7 +36,7 @@ import js.io.IFrameIOTestCase;
 
 class StaxTestSuite {
   public static function main (): Void {
-    (new TestRunner()).addAll([
+    var runner = (new Runner()).addAll([
       new PreludeTestCase(),
       new JValueTestCase(),
       new MapTestCase(),
@@ -50,6 +51,10 @@ class StaxTestSuite {
       #if js
       , new IFrameIOTestCase()
       #end
-    ]).run();
+    ]);
+    
+    Report.create(runner);
+    
+    runner.run();
   }
 }

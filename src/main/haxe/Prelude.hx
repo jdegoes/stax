@@ -16,6 +16,10 @@
 */
 using Prelude;
 
+enum Unit {
+  Unit;
+}
+
 typedef AnyRef = {}
 typedef CodeBlock = Void -> Void
 typedef Function<P1, R> = P1 -> R
@@ -756,6 +760,30 @@ class OptionExtensions {
     }
   }
   
+  public static function orElse<T>(o1: Option<T>, thunk: Thunk<Option<T>>): Option<T> {
+    return switch (o1) {
+      case None: thunk();
+      
+      case Some(v): o1;
+    }
+  }
+  
+  public static function orElseC<T>(o1: Option<T>, o2: Option<T>): Option<T> {
+    return OptionExtensions.orElse(o1, o2.toThunk());
+  }
+  
+  public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<T, S> {
+    return switch (o1) {
+      case None: EitherExtensions.toRight(thunk());
+      
+      case Some(v): EitherExtensions.toLeft(v);
+    }
+  }
+  
+  public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<T, S> {
+    return OptionExtensions.orEither(o1, c.toThunk());
+  }
+  
   public static function getOrElse<T>(o: Option<T>, thunk: Thunk<T>): T {
     return switch(o) {
       case None: thunk();
@@ -764,10 +792,7 @@ class OptionExtensions {
   }
   
   public static function getOrElseC<T>(o: Option<T>, c: T): T {
-    return switch(o) {
-      case None:    c;
-      case Some(v): v;
-    }
+    return OptionExtensions.getOrElse(o, c.toThunk());
   }
   
   public static function isEmpty<T>(o: Option<T>): Bool {
@@ -865,11 +890,32 @@ class EitherExtensions {
     }
   }
   
+  public static function isLeft<A, B>(e: Either<A, B>): Bool {
+    return switch (e) {
+      case Left(_):  true;
+      case Right(_): false;
+    }
+  }
+  
+  public static function isRight<A, B>(e: Either<A, B>): Bool {
+    return switch (e) {
+      case Left(_):  false;
+      case Right(_): true;
+    }
+  }
+  
   public static function right<A, B>(e: Either<A, B>): Option<B> {
     return switch (e) {
       case Right(v): Some(v);
       
       default: None;
+    }
+  }
+  
+  public static function mapLeft<A, B, C>(e: Either<A, B>, f: A -> C): Either<C, B> {
+    return switch (e) {
+      case Left(v): Left(f(v));
+      case Right(v): Right(v);
     }
   }
   
@@ -880,10 +926,49 @@ class EitherExtensions {
     }
   }
   
+  public static function mapRight<A, B, D>(e: Either<A, B>, f: B -> D): Either<A, D> {
+    return switch (e) {
+      case Left(v): Left(v);
+      case Right(v): Right(f(v));
+    }
+  }
+  
   public static function flatMap<A, B, C, D>(e: Either<A, B>, f1: A -> Either<C, D>, f2: B -> Either<C, D>): Either<C, D> {
     return switch (e) {
       case Left(v): f1(v);
       case Right(v): f2(v);
+    }
+  }
+  
+  /** Composes two Eithers together. In case of conflicts, "failure" (left) 
+   * always wins.
+   */
+  public static function composeLeft<A, B>(e1: Either<A, B>, e2: Either<A, B>, ac: A -> A -> A, bc: B -> B -> B): Either<A, B> {
+    return switch (e1) {
+      case Left(v1): switch (e2) {
+        case Left(v2): Left(ac(v1, v2));
+        case Right(v2): Left(v1);
+      }
+      case Right(v1): switch (e2) {
+        case Left(v2): Left(v2);
+        case Right(v2): Right(bc(v1, v2));
+      }
+    }
+  }
+  
+  /** Composes two Eithers together. In case of conflicts, "success" (right) 
+   * always wins.
+   */
+  public static function composeRight<A, B>(e1: Either<A, B>, e2: Either<A, B>, ac: A -> A -> A, bc: B -> B -> B): Either<A, B> {
+    return switch (e1) {
+      case Left(v1): switch (e2) {
+        case Left(v2): Left(ac(v1, v2));
+        case Right(v2): Right(v2);
+      }
+      case Right(v1): switch (e2) {
+        case Left(v2): Right(v1);
+        case Right(v2): Right(bc(v1, v2));
+      }
     }
   }
 }

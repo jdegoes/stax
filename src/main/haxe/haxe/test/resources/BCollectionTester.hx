@@ -1,7 +1,7 @@
 package haxe.test.resources;
 
 import haxe.test.TestCase;
-import haxe.test.TestRunner;
+
 import haxe.reactive.BehaviorCollection;
 
 using haxe.data.collections.IterableExtensions;

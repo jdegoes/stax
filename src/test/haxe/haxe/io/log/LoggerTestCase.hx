@@ -16,13 +16,11 @@
 */
 package haxe.io.log;
 
-import haxe.test.TestCase;
-import haxe.test.TestRunner;
-
 import Prelude;
-using Prelude;
-
+import haxe.test.TestCase;
 import haxe.io.log.Logger;
+
+using Prelude;
 
 class LoggerTestCase extends TestCase {
   public function testLogDebug() {

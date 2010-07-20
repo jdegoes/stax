@@ -1,6 +1,5 @@
 /*
  HaXe library written by John A. De Goes <john@socialmedia.com>
- Contributed by Social Media Networks
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -14,37 +13,42 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package haxe.util;
+
 import Prelude;
 
 import haxe.test.TestCase;
 
+using haxe.util.StringExtensions;
+
 using Prelude;
 
-class PreludeTestCase extends TestCase {
-    public function new() {
-      super();
-    }
+class StringExtensionsTestCase extends TestCase {
+  public function testChunk() {
+    var result = 'foobarblah'.chunk(3);
     
-    public function testCompose() {
-      var f1 = function(i) { return i * 2; }
-      var f2 = function(i) { return i - 1; }
-      
-      assertEquals(2, f1.compose(f2)(2));
-    }
+    var iterator = result.iterator();
     
-    public function testCurry2() {
-      var f = function(i1, i2, i3) { return i1 + i2 + i3; }
-      
-      assertEquals(3, f.curry()(2)(-2)(3));
-    }
+    assertEquals('foo', iterator.next());
+    assertEquals('bar', iterator.next());
+    assertEquals('bla', iterator.next());
+    assertEquals('h',   iterator.next());
+  }
+  
+  public function testChars() {
+    var result = 'foob'.chars();
     
-    public function testFutureChaining() {
-      var f1: Future<Int> = Future.create();
-      
-      var f2 = f1.map(function(i) { return Std.string(i); }).flatMap(function(s): Future<Bool> { return Future.create().deliver(s.length < 2); });
-      
-      f1.deliver(9);
-      
-      assertEquals(true, f2.value().get());
-    }
+    var iterator = result.iterator();
+    
+    assertEquals('f', iterator.next());
+    assertEquals('o', iterator.next());
+    assertEquals('o', iterator.next());
+    assertEquals('b', iterator.next());
+    
+    assertFalse(iterator.hasNext());
+  }
+  
+  public function testString() {
+    assertEquals('foobar', 'foobar'.chars().string());
+  }
 }

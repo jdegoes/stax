@@ -16,8 +16,56 @@
 */
 package haxe.abstract;
 
-typedef Condition1<A>             = Function<A, Bool>
-typedef Condition2<A, B>          = Function2<A, B, Bool>
-typedef Condition3<A, B, C>       = Function3<A, B, C, Bool>
-typedef Condition4<A, B, C, D>    = Function4<A, B, C, D, Bool>
-typedef Condition5<A, B, C, D, E> = Function5<A, B, C, D, E, Bool>
+import Prelude;
+
+import haxe.abstract.Predicate;
+
+using Prelude;
+
+class Predicate1Extensions {
+  public static function and<T>(p1: Predicate<T>, p2: Predicate<T>): Predicate<T> {
+    return function(value) {
+      return p1(value) && p2(value);
+    }
+  }
+  
+  public static function andAll<T>(p1: Predicate<T>, ps: Iterable<Predicate<T>>): Predicate<T> {
+    return function(value) {
+      var result = p1(value);
+      
+      for (p in ps) {
+        if (!result) break;
+        
+        result = result && p(value);
+      }
+      
+      return result;
+    }
+  }
+  
+  public static function or<T>(p1: Predicate<T>, p2: Predicate<T>): Predicate<T> {
+    return function(value) {
+      return p1(value) || p2(value);
+    }
+  }
+  
+  public static function orAny<T>(p1: Predicate<T>, ps: Iterable<Predicate<T>>): Predicate<T> {
+    return function(value) {
+      var result = p1(value);
+      
+      for (p in ps) {
+        if (result) break;
+        
+        result = result || p(value);
+      }
+      
+      return result;
+    }
+  }
+  
+  public static function negate<T>(p: Predicate<T>): Predicate<T> {
+    return function(value) {
+      return !p(value);
+    }
+  }
+}

@@ -1,6 +1,5 @@
 /*
  HaXe library written by John A. De Goes <john@socialmedia.com>
- Contributed by Social Media Networks
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -14,32 +13,39 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-import PreludeTest;
+package haxe.util;
 
-import haxe.test.TestCase;
-import haxe.test.TestRunner;
+import Prelude;
+import haxe.data.collections.List;
 
-import haxe.text.json.JsonTestCase;
-import haxe.io.log.LoggerTestCase;
-import haxe.data.collections.MapTestCase;
-import haxe.data.collections.SetTestCase;
-import haxe.data.collections.ListTestCase;
-import haxe.data.transcode.JValueTestCase;
-import haxe.abstract.PartialFunctionTestCase;
-import haxe.time.ScheduledExecutorTestCase;
+using Prelude;
+using haxe.abstract.Foldable;
 
-class TestSuite {
-  public static function main (): Void {
-    (new TestRunner()).addAll([
-      new PreludeTestCase(),
-      new JValueTestCase(),
-      new MapTestCase(),
-      new SetTestCase(),
-      new ListTestCase(),
-      new LoggerTestCase(),
-      new JsonTestCase(),
-      new PartialFunctionTestCase(),
-      new ScheduledExecutorTestCase()
-    ]).run();
-  }
+class StringExtensions {
+	public static function chunk(str: String, len: Int): List<String> {
+	  var start = 0;
+	  var end   = (start + len).min(str.length);
+	  
+	  return if (end == 0) List.nil(String.EqualT());
+	         else {
+	           var prefix = str.substr(start, end);
+	           var rest   = str.substr(end);
+	    
+	           chunk(rest, len).prepend(prefix);
+	         }
+	}
+	
+	public static function chars(str: String): List<String> {
+	  var a = [];
+	  
+	  for (i in 0...str.length) {
+	    a.push(str.charAt(i));
+	  }
+	  
+	  return a.toList(String.EqualT());
+	}
+	
+	public static function string(l: List<String>): String {
+	  return l.foldr('', function(b, a) return b + a);
+	}
 }
