@@ -93,7 +93,7 @@ class TestCase {
 	}
 
 	public function assertThrowsException(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
-	  Assert.raises(method, type, msg, pos);
+	  Assert.throwsException(method, type, msg, pos);
 	}
 
 	public function assertEqualsOneOf<T>(value : T, possibilities : Array<T>, ?msg : String , ?pos : PosInfos) {
@@ -128,11 +128,11 @@ class TestCase {
 		return Assert.notDelivered(future, timeout, pos);
 	}
 	
-	public static function fail(msg = "failure expected", ?pos : PosInfos) {
+	public function fail(msg = "failure expected", ?pos : PosInfos) {
 		Assert.fail(msg, pos);
 	}
 
-	public static function warn(msg) {
+	public function warn(msg) {
 		Assert.warn(msg);
 	}
 }

@@ -510,7 +510,7 @@ class Assert {
 	* react throwing an error. This assert guarantees that the error is of the
 	* correct type (or Dynamic if non is specified).
 	* <pre>
-	* Assert.raises(function() { throw "Error!"; }, String);
+	* Assert.throwsException(function() { throw "Error!"; }, String);
 	* </pre>
 	* @param method: A method that generates the exception.
 	* @param type: The type of the expected error. Defaults to Dynamic (catch all).
@@ -519,7 +519,7 @@ class Assert {
 	* unless you know what you are doing.
 	* @todo test the optional type parameter
 	*/
-	public static function raises(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
+	public static function throwsException(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
 		if(type == null)
 			type = String;
 		try {
