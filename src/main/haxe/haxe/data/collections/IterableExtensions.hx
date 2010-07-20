@@ -308,11 +308,17 @@ class IterableExtensions {
 	  
 	  return result;
 	}
-	/*  Under Progress
+
 	public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-	  return foldl(iter, null, function(a, b) {
-	    if (f(a, b)) return a.p;
+	  return foldl(iter, [], function(a, b) {
+	    return if(existsP(a, b, f)) {
+	      a;
+	    }
+	    else {
+	      a.push(b);
+	      a;
+	    }
 	  });
 	}
-	*/
+
 }

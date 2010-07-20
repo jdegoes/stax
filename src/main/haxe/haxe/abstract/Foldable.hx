@@ -312,6 +312,7 @@ class FoldableExtensions {
   
   public static function existsP<A, B>(foldable:Foldable<A, B>, ref: B, f: B -> B -> Bool): Bool {
 	  var result:Bool = false;
+	  
 	  var a = toArray(foldable);
 	  
 	  for (e in a) {
@@ -325,6 +326,21 @@ class FoldableExtensions {
     return exists(foldable, function(e) { return e == member; });
   }
   
+  public static function nubBy<A, B>(foldable:Foldable<A, B>, f: B -> B -> Bool): A {
+	  return foldable.foldl(foldable.empty(), function(a: A, b: B): A {
+	    return if (existsP( cast a, b, f)) {
+	      a;
+	    }
+	    else {
+	      foldable.append(a, b);
+	    }
+	  });
+	}
+	
+	public static function nub<A, B>(foldable:Foldable<A, B>): A {
+	  return nubBy(foldable, function (a, b) { return a == b; });
+	}
+  
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
     show = if (show == null) DynamicExtensions.ShowT().show; else show;
     
@@ -336,4 +352,6 @@ class FoldableExtensions {
       return a + prefix + show(b);
     });
   }
+
+  
 }
