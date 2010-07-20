@@ -60,9 +60,9 @@ class Runner {
 		length = 0;
 	}
 
-  public function addAll(tests : Iterable<Dynamic>, setup = "setup", teardown = "teardown", prefix = "test", ?pattern : EReg): Runner {
+  public function addAll(tests : Iterable<Dynamic>, prefix = "test", ?pattern : EReg): Runner {
     for (test in tests) {
-      add(test, setup, teardown, prefix, pattern);
+      add(test, prefix, pattern);
     }
     
     return this;
@@ -71,18 +71,12 @@ class Runner {
 	/**
 	* Adds a new test case.
 	* @param	test: must be a not null object
-	* @param	setup: string name of the setup function (defaults to "setup")
-	* @param	teardown: string name of the teardown function (defaults to "teardown")
 	* @param	prefix: prefix for methods that are tests (defaults to "test")
 	* @param	pattern: a regular expression that discriminates the names of test
-	* 			functions; when set,  the prefix parameter is meaningless
+	* 			  functions; when set, the prefix parameter is meaningless
 	*/
-	public function add(test : Dynamic, setup = "setup", teardown = "teardown", prefix = "test", ?pattern : EReg): Runner {
+	public function add(test : Dynamic, prefix = "test", ?pattern : EReg): Runner {
 		if(!Reflect.isObject(test)) throw "can't add a null object as a test case";
-		if(!isMethod(test, setup))
-			setup = null;
-		if(!isMethod(test, teardown))
-			teardown = null;
 		
 		var patternMatches = function(field: String): Option<Bool> return pattern.toOption().map(function(p) return p.match(field));
     var prefixMatches  = function(field: String): Option<Bool> return Some(field.startsWith(prefix));
@@ -95,7 +89,7 @@ class Runner {
     var getMethodByName = addBeforeAll(test, addAfterAll(test, [testMethods.length], findMethodByName.curry()(test)));
     
     var methodFixtures = testMethods.map(function(field) {
-    	return new TestFixture(test, field, getMethodByName(field), setup, teardown);
+    	return new TestFixture(test, field, getMethodByName(field), 'before', 'after');
     });
 		
 		addFixtures(methodFixtures);
