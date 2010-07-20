@@ -176,7 +176,7 @@ class TestHandler<T> {
 	}
 
 	function tested() {
-		if(results.length == 0 && fixture.expectAssertions)
+		if(results.length == 0)
 			results.add(Warning("no assertions"));
 		onTested.dispatch(this);
 		completed();

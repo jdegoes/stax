@@ -17,6 +17,7 @@
 package haxe.time;
 
 import Prelude;
+import haxe.test.Assert;
 import haxe.test.TestCase;
 import haxe.time.ScheduledExecutor;
 
@@ -52,11 +53,13 @@ class ScheduledExecutorTestCase extends TestCase {
   public function testRepeat(): Void {
     var future = _executor.repeat(0, function(count) {
       return count + 1;
-    }, 10, 3);
+    }, 1, 3);
     
-    future.deliverTo(function(v) { if (v != 3) trace("Failed! Value should be 3: " + v); });
-    
-    assertTrue(true);
+    assertDelivered(future,
+      function(v) {
+        Assert.equals(3, v);
+      }
+    );
   }
   
   public function testRepeatCanBeCanceled(): Void {

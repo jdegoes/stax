@@ -24,19 +24,17 @@ class TestFixture<T> {
 	public var method(default, null): Void -> Void;
 	public var setup(default, null): String;
 	public var teardown(default, null): String;
-	public var expectAssertions(default, null): Bool;
 	
 	public var onTested(default, null) : Dispatcher<TestHandler<T>>;
 	public var onTimeout(default, null) : Dispatcher<TestHandler<T>>;
 	public var onComplete(default, null) : Dispatcher<TestHandler<T>>;
 	
-	public function new(target : T, methodName: String, method : Void -> Void, ?setup : String, ?teardown : String, ?expectAssertions: Bool = true) {
+	public function new(target : T, methodName: String, method : Void -> Void, ?setup : String, ?teardown : String) {
 		this.target     = target;
 		this.methodName = methodName;
 		this.method     = method;
 		this.setup      = setup;
 		this.teardown   = teardown;
-		this.expectAssertions = expectAssertions;
 		
 		this.onTested   = new Dispatcher();
 		this.onTimeout  = new Dispatcher();

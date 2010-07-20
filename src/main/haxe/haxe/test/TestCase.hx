@@ -45,7 +45,7 @@ class TestCase {
   
   public function assertThat<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
     switch (cond(obj)) {
-      case Left(msg):  Assert.isTrue(false, msg, pos);
+      case Left(msg):  Assert.isTrue(false, 'Cause: ' + msg, pos);
       case Right(msg): Assert.isTrue(true, msg, pos);
     }
   }
@@ -84,7 +84,7 @@ class TestCase {
 	}
 	
 	public function assertMatches(pattern : EReg, value : Dynamic, ?msg : String , ?pos : PosInfos) {
-	  Assert.match(pattern, value, msg, pos);
+	  Assert.matches(pattern, value, msg, pos);
 	}
 
 	public function assertFloatEquals(expected : Float, value : Float, ?approx : Float, ?msg : String , ?pos : PosInfos) : Void {
@@ -92,7 +92,7 @@ class TestCase {
 	}
 	
 	public function assertLooksLike(expected : {}, value : {}, ?recursive : Bool, ?msg : String, ?pos : PosInfos) {
-	  Assert.same(expected, value, recursive, msg, pos);
+	  Assert.looksLike(expected, value, recursive, msg, pos);
 	}
 
 	public function assertThrowsException(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
@@ -100,15 +100,15 @@ class TestCase {
 	}
 
 	public function assertEqualsOneOf<T>(value : T, possibilities : Array<T>, ?msg : String , ?pos : PosInfos) {
-	  Assert.allows(possibilities, value, msg, pos);
+	  Assert.equalsOneOf(value, possibilities, msg, pos);
 	}
 
-	public function assertContains<T>(values : Array<T>, match : T, ?msg : String , ?pos : PosInfos) {
-	  Assert.contains(match, values, msg, pos);
+	public function assertContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
+	  Assert.contains(values, match, msg, pos);
 	}
 	
-	public function assertNotContains<T>(values : Array<T>, match : T, ?msg : String , ?pos : PosInfos) {
-	  Assert.notContains(match, values, msg, pos);
+	public function assertNotContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
+	  Assert.notContains(values, match, msg, pos);
 	}
 	
 	public function assertStringContains(match : String, value : String, ?msg : String , ?pos : PosInfos) {
@@ -119,11 +119,15 @@ class TestCase {
 		Assert.stringSequence(sequence, value, msg, pos);
 	}
 	
-	public function assertLater(f : Void->Void, ?timeout : Int) {
-		return Assert.createAsync(f, timeout);
+	public function assertDelivered<T>(future: Future<T>, assertions: T -> Void, ?timeout : Int) {
+		return Assert.delivered(future, assertions, timeout);
+	}
+	
+	public static function fail(msg = "failure expected", ?pos : PosInfos) {
+		Assert.fail(msg, pos);
 	}
 
-	public function assertLaterWithEvent<T>(f : T -> Void, ?timeout : Int) {
-		return Assert.createEvent(f, timeout);
+	public static function warn(msg) {
+		Assert.warn(msg);
 	}
 }

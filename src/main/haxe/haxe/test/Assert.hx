@@ -15,9 +15,13 @@
 */
 package haxe.test;
 
+import Prelude;
 import haxe.io.Bytes;
 import haxe.test.Assertation;
 import haxe.PosInfos;
+
+using Prelude;
+
 
 /**
 * This class contains only static members used to perform assertations inside a test method.
@@ -144,7 +148,7 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function match(pattern : EReg, value : Dynamic, ?msg : String , ?pos : PosInfos) {
+	public static function matches(pattern : EReg, value : Dynamic, ?msg : String , ?pos : PosInfos) {
 		if(msg == null) msg = "the value " + q(value) + "does not match the provided pattern";
 		isTrue(pattern.match(value), msg, pos);
 	}
@@ -481,7 +485,7 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function same(expected : Dynamic, value : Dynamic, ?recursive : Bool, ?msg : String, ?pos : PosInfos) {
+	public static function looksLike(expected : Dynamic, value : Dynamic, ?recursive : Bool, ?msg : String, ?pos : PosInfos) {
 		if (null == recursive)
 			recursive = true;
 		var status = { recursive : recursive, path : '', error : null };
@@ -528,7 +532,7 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function allows<T>(possibilities : Array<T>, value : T, ?msg : String , ?pos : PosInfos) {
+	public static function equalsOneOf<T>(value : T, possibilities : Array<T>, ?msg : String , ?pos : PosInfos) {
 		if(Lambda.has(possibilities, value)) {
 			isTrue(true, msg, pos);
 		} else {
@@ -543,7 +547,7 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function contains<T>(match : T, values : Array<T>, ?msg : String , ?pos : PosInfos) {
+	public static function contains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
 		if(Lambda.has(values, match)) {
 			isTrue(true, msg, pos);
 		} else {
@@ -559,7 +563,7 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function notContains<T>(match : T, values : Array<T>, ?msg : String , ?pos : PosInfos) {
+	public static function notContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
 		if(!Lambda.has(values, match)) {
 			isTrue(true, msg, pos);
 		} else {
@@ -646,6 +650,14 @@ class Assert {
 	*/
 	public static dynamic function createAsync(f : Void->Void, ?timeout : Int) {
 		return function(){};
+	}
+	
+	public static function delivered<T>(future: Future<T>, assertions: T -> Void, ?timeout: Int) {
+	  var f = createAsync(function() {
+	    assertions(future.value().get());
+	  }, timeout);
+	  
+	  future.deliverTo(function(value) { f(); });
 	}
 	/**
 	* Creates an asynchronous context for test execution of an event like method.
