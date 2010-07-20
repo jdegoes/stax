@@ -15,30 +15,37 @@
 */
 package haxe.test;
 
-import haxe.test.Assertation;
-
 /**
 * @todo add documentation
 */
-class TestResult {
-	public var pack          : String;
-	public var cls           : String;
-	public var method        : String;
-	public var setup         : String;
-	public var teardown      : String;
-	public var assertations  : List<Assertation>;
+class TestFixture<T> {
+	public var target(default, null): T;
+	public var methodName(default, null): String;
+	public var method(default, null): Void -> Void;
+	public var setup(default, null): String;
+	public var teardown(default, null): String;
+	public var expectAssertions(default, null): Bool;
+	
+	public var onTested(default, null) : Dispatcher<TestHandler<T>>;
+	public var onTimeout(default, null) : Dispatcher<TestHandler<T>>;
+	public var onComplete(default, null) : Dispatcher<TestHandler<T>>;
+	
+	public function new(target : T, methodName: String, method : Void -> Void, ?setup : String, ?teardown : String, ?expectAssertions: Bool = true) {
+		this.target     = target;
+		this.methodName = methodName;
+		this.method     = method;
+		this.setup      = setup;
+		this.teardown   = teardown;
+		this.expectAssertions = expectAssertions;
+		
+		this.onTested   = new Dispatcher();
+		this.onTimeout  = new Dispatcher();
+		this.onComplete = new Dispatcher();
+	}
 
-	public function new();
-
-	public static function ofHandler(handler : TestHandler<Dynamic>) {
-		var r = new TestResult();
-		var path = Type.getClassName(Type.getClass(handler.fixture.target)).split('.');
-		r.cls           = path.pop();
-		r.pack          = path.join('.');
-		r.method        = handler.fixture.methodName;
-		r.setup         = handler.fixture.setup;
-		r.teardown      = handler.fixture.teardown;
-		r.assertations  = handler.results;
-		return r;
+	function checkMethod(name : String, arg : String) {
+		var field = Reflect.field(target, name);
+		if(field == null)              throw arg + " function " + name + " is not a field of target";
+		if(!Reflect.isFunction(field)) throw arg + " function " + name + " is not a function";
 	}
 }

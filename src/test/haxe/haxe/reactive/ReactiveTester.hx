@@ -2,7 +2,7 @@ package haxe.reactive;
 
 import Prelude;
 
-import haxe.test.TestRunner;
+
 import haxe.test.TestCase;
 
 import haxe.reactive.Reactive;

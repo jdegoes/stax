@@ -13,32 +13,50 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.test;
+package haxe.test.ui;
 
-import haxe.test.Assertation;
+import haxe.test.Runner;
+import haxe.test.ui.common.IReport;
+import haxe.test.ui.text.HtmlReport;
+import haxe.test.ui.text.PrintReport;
+import haxe.test.ui.common.HeaderDisplayMode;
 
-/**
-* @todo add documentation
-*/
-class TestResult {
-	public var pack          : String;
-	public var cls           : String;
-	public var method        : String;
-	public var setup         : String;
-	public var teardown      : String;
-	public var assertations  : List<Assertation>;
+#if php
+import php.Web;
+#elseif neko
+import neko.Web;
+#end
 
-	public function new();
-
-	public static function ofHandler(handler : TestHandler<Dynamic>) {
-		var r = new TestResult();
-		var path = Type.getClassName(Type.getClass(handler.fixture.target)).split('.');
-		r.cls           = path.pop();
-		r.pack          = path.join('.');
-		r.method        = handler.fixture.methodName;
-		r.setup         = handler.fixture.setup;
-		r.teardown      = handler.fixture.teardown;
-		r.assertations  = handler.results;
-		return r;
+class Report
+{
+	public static function create(runner : Runner, ?displaySuccessResults : SuccessResultsDisplayMode, ?headerDisplayMode : HeaderDisplayMode) : IReport<Dynamic>
+	{
+		var report : IReport<Dynamic>;
+#if (php || neko)
+		if (!Web.isModNeko)
+			report = new PrintReport(runner);
+		else
+			report = new HtmlReport(runner, true);
+#elseif js
+		report = new HtmlReport(runner, true);
+#elseif flash
+		if(flash.external.ExternalInterface.available)
+			report = new HtmlReport(runner, true);
+		else
+			report = new PrintReport(runner);
+#else
+		report = new PrintReport(runner);
+#end
+		if (null == displaySuccessResults)
+			report.displaySuccessResults = ShowSuccessResultsWithNoErrors;
+		else
+			report.displaySuccessResults = displaySuccessResults;
+			
+		if (null == headerDisplayMode)
+			report.displayHeader = ShowHeaderWithResults;
+		else
+			report.displayHeader = headerDisplayMode;
+			
+		return report;
 	}
 }

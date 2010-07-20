@@ -13,32 +13,16 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.test;
+package haxe.test.ui.common;
 
-import haxe.test.Assertation;
+enum HeaderDisplayMode {
+	AlwaysShowHeader;
+	NeverShowHeader;
+	ShowHeaderWithResults;
+}
 
-/**
-* @todo add documentation
-*/
-class TestResult {
-	public var pack          : String;
-	public var cls           : String;
-	public var method        : String;
-	public var setup         : String;
-	public var teardown      : String;
-	public var assertations  : List<Assertation>;
-
-	public function new();
-
-	public static function ofHandler(handler : TestHandler<Dynamic>) {
-		var r = new TestResult();
-		var path = Type.getClassName(Type.getClass(handler.fixture.target)).split('.');
-		r.cls           = path.pop();
-		r.pack          = path.join('.');
-		r.method        = handler.fixture.methodName;
-		r.setup         = handler.fixture.setup;
-		r.teardown      = handler.fixture.teardown;
-		r.assertations  = handler.results;
-		return r;
-	}
+enum SuccessResultsDisplayMode {
+	AlwaysShowSuccessResults;
+	NeverShowSuccessResults;
+	ShowSuccessResultsWithNoErrors;
 }

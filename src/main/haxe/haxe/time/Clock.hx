@@ -14,37 +14,17 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-import Prelude;
+package haxe.time;
 
-import haxe.test.TestCase;
+interface Clock {
+  public function now(): Date;
+}
 
-using Prelude;
-
-class PreludeTestCase extends TestCase {
-    public function new() {
-      super();
-    }
-    
-    public function testCompose() {
-      var f1 = function(i) { return i * 2; }
-      var f2 = function(i) { return i - 1; }
-      
-      assertEquals(2, f1.compose(f2)(2));
-    }
-    
-    public function testCurry2() {
-      var f = function(i1, i2, i3) { return i1 + i2 + i3; }
-      
-      assertEquals(3, f.curry()(2)(-2)(3));
-    }
-    
-    public function testFutureChaining() {
-      var f1: Future<Int> = Future.create();
-      
-      var f2 = f1.map(function(i) { return Std.string(i); }).flatMap(function(s): Future<Bool> { return Future.create().deliver(s.length < 2); });
-      
-      f1.deliver(9);
-      
-      assertEquals(true, f2.value().get());
-    }
+class SystemClock implements Clock {
+  public function new() {
+  }
+  
+  public function now(): Date {
+    return Date.now();
+  }
 }
