@@ -268,17 +268,21 @@ class IterableExtensions {
 	}
 	
 	public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
-	  var iterator = iter.iterator();
-	  var init = iterator.next(); 
-	  
-	  var accum = init;
-	  var result = [init];
-	  
-	  while (iterator.hasNext()) {
-	    result.push(f(iterator.next(), accum));
-	  }
-	  
-	  return result;
+    var iterator = iter.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
 	}
 	
 	public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
@@ -295,4 +299,26 @@ class IterableExtensions {
 	  return result;
 	}
 	
+	public static function existsP<T>(iter:Iterable<T>, ref: T, f: T -> T -> Bool): Bool {
+	  var result:Bool = false;
+	  
+	  for (e in iter) {
+	    if (f(e, ref)) result = true;
+	  }
+	  
+	  return result;
+	}
+
+	public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+	  return foldl(iter, [], function(a, b) {
+	    return if(existsP(a, b, f)) {
+	      a;
+	    }
+	    else {
+	      a.push(b);
+	      a;
+	    }
+	  });
+	}
+
 }

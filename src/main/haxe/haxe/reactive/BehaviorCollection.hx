@@ -100,29 +100,21 @@ class BehaviorCollection {
     public static function foldl<C, T, Z>(b: Behavior<Collection<C, T>>, initial: Z, f: Z -> T -> Z): Behavior<Z> {
         return b.map(function(c) { return c.foldl(initial, f); });
     }
-    /*
+    
     public static function scanl<C, T>(b: Behavior<Collection<C, T>>, initial: T, f: T -> T -> T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.scanl(initial, f); });
+        return b.map(function(c) { return cast c.scanl(initial, f); });
     }
     
     public static function scanr<C, T>(b: Behavior<Collection<C, T>>, initial: T, f: T -> T -> T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.scanr(initial, f); });
+        return b.map(function(c) { return cast c.scanr(initial, f); });
     }
     
     public static function scanrP<C, T>(b: Behavior<Collection<C, T>>,  f: T -> T -> T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.scanrP(f); });
+        return b.map(function(c) { return cast c.scanr1(f); });
     }
     
     public static function scanlP<C, T>(b: Behavior<Collection<C, T>>,  f: T -> T -> T): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.scanlP(f); });
-    }
-    
-    public static function groupBy<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> T -> Bool): Behavior<Collection<C, Collection<C, T>>> {
-        return b.map(function(c) { return c.groupBy(cmp); });
-    }
-    
-    public static function group<C, T>(b: Behavior<Collection<C, T>>): Behavior<Collection<C, Collection<C, T>>> {
-        return b.map(function(c) { return c.group(); });
+        return b.map(function(c) { return cast c.scanl1(f); });
     }
     
     public static function member<C, T>(b: Behavior<Collection<C, T>>, element: T): Behavior<Bool> {
@@ -140,7 +132,7 @@ class BehaviorCollection {
     public static function find<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> Bool): Behavior<Option<T>> {
         return b.map(function(c) { return c.find(cmp); });
     }
-    
+    /*
     public static function nubBy<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> T -> Bool): Behavior<Collection<C, T>> {
         return b.map(function(c) { return c.nubBy(cmp); });
     }

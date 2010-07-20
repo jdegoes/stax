@@ -175,6 +175,62 @@ class FoldableExtensions {
 	  return cast result;
 	}
 	
+	public static function scanr<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+    a.reverse();
+    
+	  var accum = init;
+	  var result = [init];
+	  
+	  for (e in a) {
+	    result.push(f(e, accum));
+	  }
+	  
+	  return cast result;
+	}
+  
+	public static function scanl1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    var iterator = a.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
+	}
+	
+	public static function scanr1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+    a.reverse();
+    
+    var iterator = a.iterator();
+    var accum = null;
+    var result = [];
+    
+    while (iterator.hasNext()) {
+      if (result[0] == null) {
+        
+        var first = iterator.next(); 
+        result.push(first); 
+        accum = first;
+      }
+      else result.push(f(iterator.next(), accum));
+    }
+    
+	  return cast result;
+	}
+	
   public static function elements<A, B>(foldable: Foldable<A, B>): Iterable<B> {
     return toArray(foldable);
   }
@@ -254,6 +310,37 @@ class FoldableExtensions {
     }
   }
   
+  public static function existsP<A, B>(foldable:Foldable<A, B>, ref: B, f: B -> B -> Bool): Bool {
+	  var result:Bool = false;
+	  
+	  var a = toArray(foldable);
+	  
+	  for (e in a) {
+	    if (f(e, ref)) result = true;
+	  }
+	  
+	  return result;
+	}
+  
+  public static function member<A, B>(foldable: Foldable<A, B>, member: B): Bool {
+    return exists(foldable, function(e) { return e == member; });
+  }
+  
+  public static function nubBy<A, B>(foldable:Foldable<A, B>, f: B -> B -> Bool): A {
+	  return foldable.foldl(foldable.empty(), function(a: A, b: B): A {
+	    return if (existsP( cast a, b, f)) {
+	      a;
+	    }
+	    else {
+	      foldable.append(a, b);
+	    }
+	  });
+	}
+	
+	public static function nub<A, B>(foldable:Foldable<A, B>): A {
+	  return nubBy(foldable, function (a, b) { return a == b; });
+	}
+  
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
     show = if (show == null) DynamicExtensions.ShowT().show; else show;
     
@@ -265,4 +352,6 @@ class FoldableExtensions {
       return a + prefix + show(b);
     });
   }
+
+  
 }
