@@ -30,6 +30,12 @@ class IterableExtensions {
 	  return size;
 	}
 	
+	public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
+	  return foldl(iter, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+	    return if (f(b)) append(a, b); else a;
+	  });
+	}
+	
 	public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
     var folded = seed;
     
@@ -303,7 +309,7 @@ class IterableExtensions {
 	  var result:Bool = false;
 	  
 	  for (e in iter) {
-	    if (f(e, ref)) result = true;
+	    if (f(ref, e)) result = true;
 	  }
 	  
 	  return result;
@@ -318,6 +324,18 @@ class IterableExtensions {
 	      a.push(b);
 	      a;
 	    }
+	  });
+	}
+	
+	public static function intersectBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+	  return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+	    return if (existsP(iter2, b, f)) append(a, b); else a;
+	  });
+	}
+	
+	public static function intersect<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
+	  return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+	    return if (existsP(iter2, b, function(a, b) { return a == b; })) append(a, b); else a;
 	  });
 	}
 

@@ -328,7 +328,7 @@ class FoldableExtensions {
   
   public static function nubBy<A, B>(foldable:Foldable<A, B>, f: B -> B -> Bool): A {
 	  return foldable.foldl(foldable.empty(), function(a: A, b: B): A {
-	    return if (existsP( cast a, b, f)) {
+	    return if (existsP(cast a, b, f)) {
 	      a;
 	    }
 	    else {
@@ -339,6 +339,18 @@ class FoldableExtensions {
 	
 	public static function nub<A, B>(foldable:Foldable<A, B>): A {
 	  return nubBy(foldable, function (a, b) { return a == b; });
+	}
+  
+  public static function intersectBy<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>, f: B -> B -> Bool): A {
+	  return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
+	    return if (existsP(foldable2, b, f)) append(cast a, b); else a;
+	  });
+	}
+	
+	public static function intersect<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>): A {
+	  return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
+	    return if (existsP(foldable2, b, function(a, b) { return a == b; })) append(cast a, b); else a;
+	  });
 	}
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {

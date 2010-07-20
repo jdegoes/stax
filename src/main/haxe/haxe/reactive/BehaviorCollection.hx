@@ -132,23 +132,24 @@ class BehaviorCollection {
     public static function find<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> Bool): Behavior<Option<T>> {
         return b.map(function(c) { return c.find(cmp); });
     }
-    /*
+    
     public static function nubBy<C, T>(b: Behavior<Collection<C, T>>, cmp: T -> T -> Bool): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.nubBy(cmp); });
+        return b.map(function(c) { return cast c.nubBy(cmp); });
     }
     
     public static function nub<C, T>(b: Behavior<Collection<C, T>>): Behavior<Collection<C, T>> {
-        return b.map(function(c) { return c.nub(); });
+        return b.map(function(c) { return cast c.nub(); });
     }
     
+    
     public static function intersectB<C, T>(b1: Behavior<Collection<C, T>>, b2: Behavior<Collection<C, T>>): Behavior<Collection<C, T>> {
-        return b1.zip(b2).map(function(c) { return c._1.intersect(v._2); });
+        return b1.zip(b2).map(function(c) { return cast c._1.intersect(c._2); });
     }
     
     public static function intersectByB<C, T>(b1: Behavior<Collection<C, T>>, b2: Behavior<Collection<C, T>>, cmp: T -> T -> Bool): Behavior<Collection<C, T>> {
-        return b1.zip(b2).map(function(c) { return c._1.intersectBy(v._2, cmp); });
+        return b1.zip(b2).map(function(c) { return cast c._1.intersectBy(c._2, cmp); });
     }
-    
+    /*
     public static function unionByB<C, T>(b1: Behavior<Collection<C, T>>, b2: Behavior<Collection<C, T>>, cmp: T -> T -> Bool): Behavior<Collection<C, T>> {
         return b1.zip(b2).map(function(c) { return c._1.unionBy(v._2, cmp); });
     }
