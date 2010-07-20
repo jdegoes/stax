@@ -661,6 +661,11 @@ class Assert {
 		return function(){};
 	}
 	
+	
+  /** Asserts the future is delivered within the specified time frame. All 
+   * assertions relating to the deliverable should be contained within the 
+   * passed in function.
+   */
 	public static function delivered<T>(future: Future<T>, assertions: T -> Void, ?timeout: Int) {
 	  var f = createAsync(function() {
 	    assertions(future.value().get());
@@ -668,6 +673,31 @@ class Assert {
 	  
 	  future.deliverTo(function(value) { f(); });
 	}
+	
+  /** Asserts the future is canceled within the specified time frame. All 
+   * assertions should be contained within the passed in function.
+   */
+	public static function canceled<T>(future: Future<T>, assertions: Void -> Void, ?timeout: Int) {
+	  future.ifCanceled(createAsync(assertions, timeout));
+	}
+	
+	/** Asserts the future is not delivered within the specified time frame.
+	 */
+	public static function notDelivered<T>(future: Future<T>, ?timeout: Int, ?pos: PosInfos) {
+	  var f = createAsync(function() {
+	    if (future.isDelivered()) {
+	      Assert.fail('Did not expect delivery of: ' + future.value().get(), pos);
+	    }
+	    else {
+	      Assert.isTrue(true);
+	    }
+	  }, timeout + 10);
+	  
+	  haxe.Timer.delay(f, timeout);
+	  
+	  future.deliverTo(function(value) { f(); });
+	}
+	
 	/**
 	* Creates an asynchronous context for test execution of an event like method.
 	* Assertions should be included in the passed function.

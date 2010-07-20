@@ -33,21 +33,23 @@ class ScheduledExecutorTestCase extends TestCase {
   public function testOnce(): Void {
     var future = _executor.once(function() {
       return 12;
-    }, 10);
+    }, 1);
     
-    future.deliverTo(function(v) { trace("Successfully received value: " + v); });
-    
-    assertTrue(true);
+    Assert.delivered(future,
+      function(v) {
+        Assert.equals(12, v);
+      }
+    );
   }
   
   public function testOnceCanBeCanceled(): Void {
     var future = _executor.once(function() {
       return 12;
-    }, 10);
+    }, 1);
     
-    future.deliverTo(function(v) { trace("Failed! Received value: " + v); });
+    Assert.notDelivered(future);
     
-    assertTrue(future.cancel());
+    future.cancel();
   }
   
   public function testRepeat(): Void {
@@ -55,7 +57,7 @@ class ScheduledExecutorTestCase extends TestCase {
       return count + 1;
     }, 1, 3);
     
-    assertDelivered(future,
+    Assert.delivered(future,
       function(v) {
         Assert.equals(3, v);
       }
@@ -65,35 +67,35 @@ class ScheduledExecutorTestCase extends TestCase {
   public function testRepeatCanBeCanceled(): Void {
     var future = _executor.repeat(0, function(count) {
       return count + 1;
-    }, 10, 3);
+    }, 1, 3);
     
-    future.deliverTo(function(v) { trace("Failed! Received value: " + v); });
+    Assert.notDelivered(future);
     
-    assertTrue(future.cancel());
+    future.cancel();
   }
   
   public function testForeverCanBeCanceled(): Void {
-    var future = _executor.forever(function() { 
-      trace("Failed!");
-    }, 10);
+    var future = _executor.forever(function() { }, 1);
     
-    assertTrue(future.cancel());
+    Assert.notDelivered(future);
+    
+    future.cancel();
   }
   
   public function testForever(): Void {
-    var future = null;
+    var future: Future<Void> = null;
     var count = 0;
     
     future = _executor.forever(function() { 
       ++count;
       
-      if (count > 1) {
-        trace("Failed!");
-      }
-      
       future.cancel();
-    }, 10);
+    }, 1);
     
-    assertTrue(true);
+    Assert.canceled(future,
+      function() {
+        Assert.equals(1, count);
+      }
+    );
   }
 }

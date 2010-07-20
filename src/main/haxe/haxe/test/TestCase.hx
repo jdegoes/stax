@@ -120,6 +120,14 @@ class TestCase {
 		return Assert.delivered(future, assertions, timeout);
 	}
 	
+	public function assertCanceled<T>(future: Future<T>, assertions: Void -> Void, ?timeout : Int) {
+		return Assert.canceled(future, assertions, timeout);
+	}
+	
+	public function assertNotDelivered<T>(future: Future<T>, ?timeout : Int, ?pos : PosInfos) {
+		return Assert.notDelivered(future, timeout, pos);
+	}
+	
 	public static function fail(msg = "failure expected", ?pos : PosInfos) {
 		Assert.fail(msg, pos);
 	}
