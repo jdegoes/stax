@@ -18,6 +18,7 @@ package haxe.test;
 import Prelude;
 import haxe.io.Bytes;
 import haxe.test.Assertation;
+import haxe.test.MustMatchers;
 import haxe.PosInfos;
 
 using Prelude;
@@ -40,6 +41,14 @@ class Assert {
 	* by other classes of the utest library.
 	*/
 	public static var results : List<Assertation>;
+	
+	public static function that<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
+    switch (cond(obj)) {
+      case Left(msg):  Assert.isTrue(false, 'Cause: ' + msg, pos);
+      case Right(msg): Assert.isTrue(true, msg, pos);
+    }
+  }
+	
 	/**
 	* Asserts successfully when the condition is true.
 	* @param cond: The condition to test

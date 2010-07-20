@@ -22,7 +22,7 @@ import haxe.test.MustMatchers;
 using Prelude;
 
 class MustMatcherExtensions {
-	public static function not<T>(c: MustMatcher<T>): MustMatcher<T> {
+	public static function negate<T>(c: MustMatcher<T>): MustMatcher<T> {
 	  return function(value) {
 	    return c(value).map(
   	    function(err) { return err; },

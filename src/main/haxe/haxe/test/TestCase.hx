@@ -40,14 +40,11 @@ class TestCase {
   }
   
   public function not<T>(c: MustMatcher<T>): MustMatcher<T> {
-    return MustMatcherExtensions.not(c);
+    return MustMatcherExtensions.negate(c);
   }
   
   public function assertThat<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
-    switch (cond(obj)) {
-      case Left(msg):  Assert.isTrue(false, 'Cause: ' + msg, pos);
-      case Right(msg): Assert.isTrue(true, msg, pos);
-    }
+    Assert.that(obj, cond, msg, pos);
   }
   
   public function assertTrue(cond : Bool, ?msg : String, ?pos : PosInfos) {
