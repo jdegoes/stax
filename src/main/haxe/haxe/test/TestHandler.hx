@@ -32,17 +32,17 @@ class TestHandler<T> {
 
 	public function new(fixture : TestFixture<T>) {
 		if(fixture == null) throw "fixture argument is null";
-		this.fixture  = fixture;
-		results       = new List();
-		asyncStack    = new List();
-		onTested   = new Dispatcher();
-		onTimeout  = new Dispatcher();
-		onComplete = new Dispatcher();
+		this.fixture    = fixture;
+		this.results    = new List();
+		this.asyncStack = new List();
+		this.onTested   = fixture.onTested;
+		this.onTimeout  = fixture.onTimeout;
+		this.onComplete = fixture.onComplete;
 	}
 
 	public function execute() {
 		try {
-			executeMethod(fixture.setup);
+			executeMethodByName(fixture.setup);
 			try {
 				executeMethod(fixture.method);
 			} catch (e : Dynamic) {
@@ -159,12 +159,19 @@ class TestHandler<T> {
 		};
 	}
 
-	function executeMethod(name : String) {
+	function executeMethodByName(name : String) {
 		if(name == null) return;
 		var method = Reflect.field(fixture.target, name);
 		if (method != null) {
 		  bindHandler();
 		  Reflect.callMethod(fixture.target, method, []);
+		}
+	}
+	
+	function executeMethod(f : Void -> Void) {
+	  if (f != null) {
+		  bindHandler();
+		  f();
 		}
 	}
 
@@ -183,7 +190,7 @@ class TestHandler<T> {
 
 	function completed() {
 		try {
-			executeMethod(fixture.teardown);
+			executeMethodByName(fixture.teardown);
 		} catch(e : Dynamic) {
 			results.add(TeardownError(e, exceptionStack(2))); // TODO check the correct number of functions is popped from the stack
 		}

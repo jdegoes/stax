@@ -35,7 +35,7 @@ class TestResult {
 		var path = Type.getClassName(Type.getClass(handler.fixture.target)).split('.');
 		r.cls           = path.pop();
 		r.pack          = path.join('.');
-		r.method        = handler.fixture.method;
+		r.method        = handler.fixture.methodName;
 		r.setup         = handler.fixture.setup;
 		r.teardown      = handler.fixture.teardown;
 		r.assertations  = handler.results;

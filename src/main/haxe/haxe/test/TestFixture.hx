@@ -19,18 +19,28 @@ package haxe.test;
 * @todo add documentation
 */
 class TestFixture<T> {
-	public var target(default, null)   : T;
-	public var method(default, null)   : String;
-	public var setup(default, null)    : String;
-	public var teardown(default, null) : String;
+	public var target(default, null): T;
+	public var methodName(default, null): String;
+	public var method(default, null): Void -> Void;
+	public var setup(default, null): String;
+	public var teardown(default, null): String;
 	public var expectAssertions(default, null): Bool;
 	
-	public function new(target : T, method : String, ?setup : String, ?teardown : String, ?expectAssertions: Bool = true) {
-		this.target    = target;
-		this.method    = method;
-		this.setup     = setup;
-		this.teardown  = teardown;
+	public var onTested(default, null) : Dispatcher<TestHandler<T>>;
+	public var onTimeout(default, null) : Dispatcher<TestHandler<T>>;
+	public var onComplete(default, null) : Dispatcher<TestHandler<T>>;
+	
+	public function new(target : T, methodName: String, method : Void -> Void, ?setup : String, ?teardown : String, ?expectAssertions: Bool = true) {
+		this.target     = target;
+		this.methodName = methodName;
+		this.method     = method;
+		this.setup      = setup;
+		this.teardown   = teardown;
 		this.expectAssertions = expectAssertions;
+		
+		this.onTested   = new Dispatcher();
+		this.onTimeout  = new Dispatcher();
+		this.onComplete = new Dispatcher();
 	}
 
 	function checkMethod(name : String, arg : String) {

@@ -84,42 +84,21 @@ class Runner {
 		if(!isMethod(test, teardown))
 			teardown = null;
 		
-		if (Reflect.field(test, 'beforeAll') != null) {
-		  addFixture(new TestFixture(test, 'beforeAll', false));
-		}
-		
 		var patternMatches = function(field: String): Option<Bool> return pattern.toOption().map(function(p) return p.match(field));
     var prefixMatches  = function(field: String): Option<Bool> return Some(field.startsWith(prefix));
 
     var fieldIsTest   = function(field: String) return patternMatches(field).orElseC(prefixMatches(field)).getOrElseC(false);
     var fieldIsMethod = isMethod.curry()(test);
 
-    var fixtures = Type.getInstanceFields(Type.getClass(test)).filter(fieldIsTest.and(fieldIsMethod)).map(function(field) {
-    	return new TestFixture(test, field, setup, teardown);
-    });
+    var testMethods = Type.getInstanceFields(Type.getClass(test)).filter(fieldIsTest.and(fieldIsMethod));
     
-		/*var fixtures: Array<TestFixture<Dynamic>> = [];
+    var getMethodByName = addBeforeAll(test, addAfterAll(test, [testMethods.length], findMethodByName.curry()(test)));
+    
+    var methodFixtures = testMethods.map(function(field) {
+    	return new TestFixture(test, field, getMethodByName(field), setup, teardown);
+    });
 		
-		var fields = Type.getInstanceFields(Type.getClass(test));
-		if(pattern == null) {
-			for(field in fields) {
-				if(!StringTools.startsWith(field, prefix)) continue;
-				if(!isMethod(test, field)) continue;
-				fixtures.push(new TestFixture(test, field, setup, teardown));
-			}
-		} else {
-			for(field in fields) {
-				if(!pattern.match(field)) continue;
-				if(!isMethod(test, field)) continue;
-				fixtures.push(new TestFixture(test, field, setup, teardown));
-			}
-		}*/
-		
-		addFixtures(fixtures);
-		
-		if (Reflect.field(test, 'afterAll') != null) {
-		  
-		}
+		addFixtures(methodFixtures);
 		
 		return this;
 	}
@@ -174,5 +153,74 @@ class Runner {
 	function testComplete(h : TestHandler<Dynamic>) {
 		onProgress.dispatch({ result : TestResult.ofHandler(h), done : pos, totals : length });
 		runNext();
+	}
+	
+	function addBeforeAll(test: Dynamic, f: String -> (Void -> Void)): String -> (Void -> Void) {
+	  if (Reflect.field(test, 'beforeAll') != null) {
+      var beforeAll = findMethodByName(test, 'beforeAll');
+      var totalTests = 0;
+      
+      var runBeforeAll = function() {
+        ++totalTests;
+        
+        if (totalTests == 1) {
+          beforeAll();
+        }
+      }
+      
+      return function(name) {
+        var method = f(name);
+        
+        return function() {        
+          runBeforeAll();
+          
+          method();
+        }
+      }
+    }
+    
+    return f;
+	}
+	
+	function addAfterAll(test: Dynamic, totalTestsHolder: Array<Int>, f: String -> (Void -> Void)): String -> (Void -> Void) {
+	  if (Reflect.field(test, 'afterAll') != null) {
+      var afterAll = findMethodByName(test, 'afterAll');
+      
+      var runAfterAll = function() {
+        --totalTestsHolder[0];
+        
+        if (totalTestsHolder[0] == 0) {
+          afterAll();
+        }
+      }
+      
+      return function(name) {
+        var method = f(name);
+        
+        return function() {        
+          try {
+            method();
+          }
+          catch (e: Dynamic) {
+            runAfterAll();
+          
+            throw e;
+          }
+          
+          runAfterAll();
+        }
+      }
+    }
+    
+    return f;
+	}
+	
+	static function findMethodByName(test: Dynamic, name: String): Void -> Void {
+	  return function() {
+	    var method = Reflect.field(test, name);
+  		if (method != null) {
+  		  Reflect.callMethod(test, method, []);
+  		}
+	  }
 	}
 }
