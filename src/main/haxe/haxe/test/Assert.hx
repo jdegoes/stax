@@ -42,6 +42,12 @@ class Assert {
 	*/
 	public static var results : List<Assertation>;
 	
+	/**
+	 * Asserts that the specified condition holds.
+	 * <pre>
+	 * Assert.that(2, Must.equal(1).or(Must.beNull())); // Fails with: 'Cause: ((2 != 1) && (2 != null))'
+	 * </pre>
+	 */
 	public static function that<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
     switch (cond(obj)) {
       case Left(msg):  Assert.isTrue(false, 'Cause: ' + msg, pos);
