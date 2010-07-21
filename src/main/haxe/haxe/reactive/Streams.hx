@@ -33,9 +33,9 @@ class Streams {
      * @param sources   (Optional) The sources.
      *
      */
-    public static function create<I, O>(updater: Pulse<I> -> Propagation<O>, sources: Iterable<EventStream<I>> = null): EventStream<O> {
+    public static function create<I, O>(updater: Pulse<I> -> Propagation<O>, sources: Iterable<Stream<I>> = null): Stream<O> {
         var sourceEvents = if (sources == null) null else (sources.toArray());
-        return new EventStream<O>(cast updater, sourceEvents);
+        return new Stream<O>(cast updater, sourceEvents);
     }
     
     /**
@@ -43,23 +43,23 @@ class Streams {
      *
      * @param sources
      */
-    public static function identity<T>(sources: Iterable<EventStream<T>> = null): EventStream<T> {
+    public static function identity<T>(sources: Iterable<Stream<T>> = null): Stream<T> {
         var sourceArray = if (sources == null) null else (sources.toArray());
-        return new EventStream<T>(function(pulse) { return propagate(pulse); }, sourceArray);
+        return new Stream<T>(function(pulse) { return propagate(pulse); }, sourceArray);
     }
     
     /**
      * Creates an event stream that will never have any events. Calling 
      * sendEvent() on such a stream will throw an exception.
      */
-    public static function zero<T>(): EventStream<T> {
+    public static function zero<T>(): Stream<T> {
         return Streams.create(function(pulse: Pulse<Dynamic>): Propagation<T> { throw 'zeroE : received a value; zeroE should not receive a value; the value was ' + pulse.value; return doNotPropagate; });            
     }
     
     /**
      * Creates an event stream that will send a single value.
      */
-    public static function one<T>(val: T): EventStream<T> {
+    public static function one<T>(val: T): Stream<T> {
         var sent = false;
         
         var stream = Streams.create(
@@ -83,7 +83,7 @@ class Streams {
      * Merges the specified streams, or returns a zero stream if there are no 
      * streams.
      */
-    public static function merge<T>(streams: Iterable<EventStream<T>>): EventStream<T> {
+    public static function merge<T>(streams: Iterable<Stream<T>>): Stream<T> {
         return if (streams.size() == 0) zero();
         else identity(streams);
     }
@@ -95,7 +95,7 @@ class Streams {
      * @param value     The constant.
      * @param sources   (Optional) Source streams.
      */
-    public static function constant<I, O>(value: O, sources: Iterable<EventStream<I>> = null): EventStream<O> {
+    public static function constant<I, O>(value: O, sources: Iterable<Stream<I>> = null): Stream<O> {
         return Streams.create(
             function(pulse: Pulse<I>): Propagation<O> {
                 return propagate(pulse.withValue(value));
@@ -113,20 +113,20 @@ class Streams {
     }
     
     /**
-     * Switches off of an EventStream of Bools, returning
-     * the specified EventStream<T> when true
+     * Switches off of an Stream of Bools, returning
+     * the specified Stream<T> when true
      * 
      *
      * @param conditions    An Iterable of Tuple2s, composed of a
-     *                      true/false EventStream and an 'if true' 
-     *                      EventStream that will be returned if 
+     *                      true/false Stream and an 'if true' 
+     *                      Stream that will be returned if 
      *                      Tuple._1 == 'true.'
      *
      * @return              If 'conditions' contains aTuple2._1 
-     *                      == 'true', EventStream<T> else a
-     *                      zero EventStream.
+     *                      == 'true', Stream<T> else a
+     *                      zero Stream.
      */
-    public static function cond<T>(conditions: Iterable<Tuple2<EventStream<Bool>, EventStream<T>>>): EventStream<T> {
+    public static function cond<T>(conditions: Iterable<Tuple2<Stream<Bool>, Stream<T>>>): Stream<T> {
         return switch (conditions.headOption()) {
             case None:    Streams.zero();
             case Some(h): StreamBool.ifTrue(h._1, h._2, cond(conditions.tail()));
@@ -139,7 +139,7 @@ class Streams {
      *
      * @param time The number of milliseconds.
      */
-    public static function timer(time: Int): EventStream<Int> {
+    public static function timer(time: Int): Stream<Int> {
         return timerB(Behaviors.constant(time));
     }
     
@@ -149,8 +149,8 @@ class Streams {
      *
      * @param time The number of milliseconds.
      */
-    public static function timerB(time: Behavior<Int>): EventStream<Int> {
-        var stream: EventStream<Int> = Streams.identity();
+    public static function timerB(time: Behavior<Int>): Stream<Int> {
+        var stream: Stream<Int> = Streams.identity();
         
         var pulser: Void -> Void = null;
         var timer = null;
@@ -177,11 +177,11 @@ class Streams {
     /**
      * Zips together the specified streams.
      */
-    public static function zipN<T>(streams: Iterable<EventStream<T>>): EventStream<Iterable<T>> {
+    public static function zipN<T>(streams: Iterable<Stream<T>>): Stream<Iterable<T>> {
         var stamps = streams.map(function(s) { return -1;   }).toArray();
         var values = streams.map(function(s) { return null; }).toArray();
         
-        var output: EventStream<T> = Streams.identity();
+        var output: Stream<T> = Streams.identity();
         
         for (index in 0...streams.size()) {
             var stream = streams.at(index);
@@ -216,7 +216,7 @@ class Streams {
      * Creates a stream of random number events, separated by the specified 
      * number of milliseconds.
      */
-    public static function randomB(time: Behavior<Int>): EventStream<Float> {
+    public static function randomB(time: Behavior<Int>): Stream<Float> {
         return timerB(time).map(function(e) { return Math.random(); });
     }
     
@@ -224,7 +224,7 @@ class Streams {
      * Creates a stream of random number events, separated by the specified 
      * number of milliseconds.
      */
-    public static function random(time: Int): EventStream<Float> {
+    public static function random(time: Int): Stream<Float> {
         return randomB(Behaviors.constant(time));
     }
 }

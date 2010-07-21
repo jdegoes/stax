@@ -712,11 +712,11 @@ haxe.reactive.Streams = function(p) { if( p === $_ ) return; {
 haxe.reactive.Streams.__name__ = ["haxe","reactive","Streams"];
 haxe.reactive.Streams.create = function(updater,sources) {
 	var sourceEvents = (sources == null?null:(haxe.data.collections.IterableExtensions.toArray(sources)));
-	return new haxe.reactive.EventStream(updater,sourceEvents);
+	return new haxe.reactive.Stream(updater,sourceEvents);
 }
 haxe.reactive.Streams.identity = function(sources) {
 	var sourceArray = (sources == null?null:(haxe.data.collections.IterableExtensions.toArray(sources)));
-	return new haxe.reactive.EventStream(function(pulse) {
+	return new haxe.reactive.Stream(function(pulse) {
 		return haxe.reactive.Propagation.propagate(pulse);
 	},sourceArray);
 }
@@ -5165,7 +5165,7 @@ haxe.reactive._Reactive.PriorityQueue.prototype.pop = function() {
 }
 haxe.reactive._Reactive.PriorityQueue.prototype.val = null;
 haxe.reactive._Reactive.PriorityQueue.prototype.__class__ = haxe.reactive._Reactive.PriorityQueue;
-haxe.reactive.EventStream = function(updater,sources) { if( updater === $_ ) return; {
+haxe.reactive.Stream = function(updater,sources) { if( updater === $_ ) return; {
 	this._updater = updater;
 	this._sendsTo = [];
 	this._weak = false;
@@ -5182,13 +5182,13 @@ haxe.reactive.EventStream = function(updater,sources) { if( updater === $_ ) ret
 		}
 	}
 }}
-haxe.reactive.EventStream.__name__ = ["haxe","reactive","EventStream"];
-haxe.reactive.EventStream.prototype._cleanups = null;
-haxe.reactive.EventStream.prototype._rank = null;
-haxe.reactive.EventStream.prototype._sendsTo = null;
-haxe.reactive.EventStream.prototype._updater = null;
-haxe.reactive.EventStream.prototype._weak = null;
-haxe.reactive.EventStream.prototype.attachListener = function(dependent) {
+haxe.reactive.Stream.__name__ = ["haxe","reactive","Stream"];
+haxe.reactive.Stream.prototype._cleanups = null;
+haxe.reactive.Stream.prototype._rank = null;
+haxe.reactive.Stream.prototype._sendsTo = null;
+haxe.reactive.Stream.prototype._updater = null;
+haxe.reactive.Stream.prototype._weak = null;
+haxe.reactive.Stream.prototype.attachListener = function(dependent) {
 	this._sendsTo.push(dependent);
 	if(this._rank > dependent._rank) {
 		var lowest = haxe.reactive.Rank.lastRank() + 1;
@@ -5200,7 +5200,7 @@ haxe.reactive.EventStream.prototype.attachListener = function(dependent) {
 		}
 	}
 }
-haxe.reactive.EventStream.prototype.bind = function(k) {
+haxe.reactive.Stream.prototype.bind = function(k) {
 	var m = this;
 	var prevE = null;
 	var outE = haxe.reactive.Streams.identity();
@@ -5214,10 +5214,10 @@ haxe.reactive.EventStream.prototype.bind = function(k) {
 	},[m]);
 	return outE;
 }
-haxe.reactive.EventStream.prototype.blind = function(time) {
+haxe.reactive.Stream.prototype.blind = function(time) {
 	return this.blindB(haxe.reactive.Behaviors.constant(time));
 }
-haxe.reactive.EventStream.prototype.blindB = function(time) {
+haxe.reactive.Stream.prototype.blindB = function(time) {
 	var lastSent = (haxe.reactive.External.now() - time.valueNow()) - 1;
 	return haxe.reactive.Streams.create(function(p) {
 		var curTime = haxe.reactive.External.now();
@@ -5230,10 +5230,10 @@ haxe.reactive.EventStream.prototype.blindB = function(time) {
 		}
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.calm = function(time) {
+haxe.reactive.Stream.prototype.calm = function(time) {
 	return this.calmB(haxe.reactive.Behaviors.constant(time));
 }
-haxe.reactive.EventStream.prototype.calmB = function(time) {
+haxe.reactive.Stream.prototype.calmB = function(time) {
 	var out = haxe.reactive.Streams.identity();
 	var towards = null;
 	haxe.reactive.Streams.create(function(pulse) {
@@ -5248,12 +5248,12 @@ haxe.reactive.EventStream.prototype.calmB = function(time) {
 	},[this]);
 	return out;
 }
-haxe.reactive.EventStream.prototype.constant = function(value) {
+haxe.reactive.Stream.prototype.constant = function(value) {
 	return this.map(function(v) {
 		return value;
 	});
 }
-haxe.reactive.EventStream.prototype.delay = function(time) {
+haxe.reactive.Stream.prototype.delay = function(time) {
 	var resE = haxe.reactive.Streams.identity();
 	haxe.reactive.Streams.create(function(pulse) {
 		resE.sendLaterIn(pulse.value,time);
@@ -5261,7 +5261,7 @@ haxe.reactive.EventStream.prototype.delay = function(time) {
 	},[this]);
 	return resE;
 }
-haxe.reactive.EventStream.prototype.delayB = function(time) {
+haxe.reactive.Stream.prototype.delayB = function(time) {
 	var self = this;
 	var receiverEE = haxe.reactive.Streams.identity();
 	var link = { from : self, towards : self.delay(time.valueNow())}
@@ -5275,7 +5275,7 @@ haxe.reactive.EventStream.prototype.delayB = function(time) {
 	switcherE.sendEvent(time.valueNow());
 	return resE;
 }
-haxe.reactive.EventStream.prototype.drop = function(n) {
+haxe.reactive.Stream.prototype.drop = function(n) {
 	var count = n;
 	return haxe.reactive.Streams.create(function(pulse) {
 		return (count > 0?(function($this) {
@@ -5286,7 +5286,7 @@ haxe.reactive.EventStream.prototype.drop = function(n) {
 		}(this)):haxe.reactive.Propagation.propagate(pulse));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.dropWhile = function(pred) {
+haxe.reactive.Stream.prototype.dropWhile = function(pred) {
 	var checking = true;
 	return haxe.reactive.Streams.create(function(pulse) {
 		return (checking?(pred(pulse.value)?haxe.reactive.Propagation.doNotPropagate:(function($this) {
@@ -5297,18 +5297,18 @@ haxe.reactive.EventStream.prototype.dropWhile = function(pred) {
 		}(this))):haxe.reactive.Propagation.propagate(pulse));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.each = function(f) {
+haxe.reactive.Stream.prototype.each = function(f) {
 	return this.forEach(f);
 }
-haxe.reactive.EventStream.prototype.filter = function(pred) {
+haxe.reactive.Stream.prototype.filter = function(pred) {
 	return haxe.reactive.Streams.create(function(pulse) {
 		return (pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.filterRepeats = function(optStart) {
+haxe.reactive.Stream.prototype.filterRepeats = function(optStart) {
 	return this.filterRepeatsBy(optStart,DynamicExtensions.EqualT().equal);
 }
-haxe.reactive.EventStream.prototype.filterRepeatsBy = function(optStart,eq) {
+haxe.reactive.Stream.prototype.filterRepeatsBy = function(optStart,eq) {
 	var hadFirst = (optStart == null?false:true);
 	var prev = optStart;
 	return this.filter(function(v) {
@@ -5321,7 +5321,7 @@ haxe.reactive.EventStream.prototype.filterRepeatsBy = function(optStart,eq) {
 		}(this)):false);
 	});
 }
-haxe.reactive.EventStream.prototype.filterWhile = function(pred) {
+haxe.reactive.Stream.prototype.filterWhile = function(pred) {
 	var checking = true;
 	var self = this;
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5334,25 +5334,25 @@ haxe.reactive.EventStream.prototype.filterWhile = function(pred) {
 		}(this))):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.flatMap = function(mapper) {
+haxe.reactive.Stream.prototype.flatMap = function(mapper) {
 	return this.bind(mapper);
 }
-haxe.reactive.EventStream.prototype.forEach = function(f) {
+haxe.reactive.Stream.prototype.forEach = function(f) {
 	haxe.reactive.Streams.create(function(pulse) {
 		f(pulse.value);
 		return haxe.reactive.Propagation.doNotPropagate;
 	},[this]);
 	return this;
 }
-haxe.reactive.EventStream.prototype.getWeaklyHeld = function() {
+haxe.reactive.Stream.prototype.getWeaklyHeld = function() {
 	return this._weak;
 }
-haxe.reactive.EventStream.prototype.group = function() {
+haxe.reactive.Stream.prototype.group = function() {
 	return this.groupBy(function(e1,e2) {
 		return e1 == e2;
 	});
 }
-haxe.reactive.EventStream.prototype.groupBy = function(eq) {
+haxe.reactive.Stream.prototype.groupBy = function(eq) {
 	var prev = null;
 	var cur = [];
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5376,17 +5376,17 @@ haxe.reactive.EventStream.prototype.groupBy = function(eq) {
 		return ret;
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.map = function(mapper) {
+haxe.reactive.Stream.prototype.map = function(mapper) {
 	return haxe.reactive.Streams.create(function(pulse) {
 		return haxe.reactive.Propagation.propagate(pulse.map(mapper));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.merge = function(that) {
+haxe.reactive.Stream.prototype.merge = function(that) {
 	return haxe.reactive.Streams.create(function(p) {
 		return haxe.reactive.Propagation.propagate(p);
 	},[this,that]);
 }
-haxe.reactive.EventStream.prototype.partition = function(pred) {
+haxe.reactive.Stream.prototype.partition = function(pred) {
 	var trueStream = haxe.reactive.Streams.create(function(pulse) {
 		return (pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
@@ -5395,17 +5395,17 @@ haxe.reactive.EventStream.prototype.partition = function(pred) {
 	},[this]);
 	return Tuple2.create(trueStream,falseStream);
 }
-haxe.reactive.EventStream.prototype.partitionWhile = function(pred) {
+haxe.reactive.Stream.prototype.partitionWhile = function(pred) {
 	var trueStream = this.takeWhile(pred);
 	var falseStream = this.dropWhile(pred);
 	return Tuple2.create(trueStream,falseStream);
 }
-haxe.reactive.EventStream.prototype.propagatePulse = function(pulse) {
+haxe.reactive.Stream.prototype.propagatePulse = function(pulse) {
 	var queue = new haxe.reactive._Reactive.PriorityQueue();
 	var self = (function($this) {
 		var $r;
 		var tmp = $this;
-		$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+		$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 			var $r;
 			throw "Class cast error";
 			return $r;
@@ -5434,7 +5434,7 @@ haxe.reactive.EventStream.prototype.propagatePulse = function(pulse) {
 						queue.insert({ k : recipient._rank, v : { stream : (function($this) {
 							var $r;
 							var tmp = recipient;
-							$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+							$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 								var $r;
 								throw "Class cast error";
 								return $r;
@@ -5455,7 +5455,7 @@ haxe.reactive.EventStream.prototype.propagatePulse = function(pulse) {
 		}
 	}
 }
-haxe.reactive.EventStream.prototype.removeListener = function(dependent,isWeakReference) {
+haxe.reactive.Stream.prototype.removeListener = function(dependent,isWeakReference) {
 	if(isWeakReference == null) isWeakReference = false;
 	var foundSending = false;
 	{
@@ -5474,7 +5474,7 @@ haxe.reactive.EventStream.prototype.removeListener = function(dependent,isWeakRe
 	}
 	return foundSending;
 }
-haxe.reactive.EventStream.prototype.scanl = function(initial,folder) {
+haxe.reactive.Stream.prototype.scanl = function(initial,folder) {
 	var acc = initial;
 	return this.map(function(n) {
 		var next = folder(acc,n);
@@ -5482,7 +5482,7 @@ haxe.reactive.EventStream.prototype.scanl = function(initial,folder) {
 		return next;
 	});
 }
-haxe.reactive.EventStream.prototype.scanlP = function(folder) {
+haxe.reactive.Stream.prototype.scanlP = function(folder) {
 	var acc = null;
 	return this.map(function(n) {
 		var next;
@@ -5496,21 +5496,21 @@ haxe.reactive.EventStream.prototype.scanlP = function(folder) {
 		return next;
 	});
 }
-haxe.reactive.EventStream.prototype.sendEvent = function(value) {
+haxe.reactive.Stream.prototype.sendEvent = function(value) {
 	this.propagatePulse(new haxe.reactive.Pulse(haxe.reactive.Stamp.nextStamp(),value));
 	return this;
 }
-haxe.reactive.EventStream.prototype.sendLater = function(value) {
+haxe.reactive.Stream.prototype.sendLater = function(value) {
 	return this.sendLaterIn(value,0);
 }
-haxe.reactive.EventStream.prototype.sendLaterIn = function(value,millis) {
+haxe.reactive.Stream.prototype.sendLaterIn = function(value,millis) {
 	var self = this;
 	haxe.reactive.External.setTimeout(function() {
 		self.sendEvent(value);
 	},millis);
 	return this;
 }
-haxe.reactive.EventStream.prototype.setWeaklyHeld = function(held) {
+haxe.reactive.Stream.prototype.setWeaklyHeld = function(held) {
 	if(this._weak != held) {
 		this._weak = held;
 		if(!held) {
@@ -5527,14 +5527,14 @@ haxe.reactive.EventStream.prototype.setWeaklyHeld = function(held) {
 	}
 	return this._weak;
 }
-haxe.reactive.EventStream.prototype.shift = function(n) {
+haxe.reactive.Stream.prototype.shift = function(n) {
 	var queue = [];
 	return haxe.reactive.Streams.create(function(pulse) {
 		queue.push(pulse.value);
 		return (queue.length <= n?haxe.reactive.Propagation.doNotPropagate:haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift())));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.shiftWhile = function(pred) {
+haxe.reactive.Stream.prototype.shiftWhile = function(pred) {
 	var queue = [];
 	var checking = true;
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5547,7 +5547,7 @@ haxe.reactive.EventStream.prototype.shiftWhile = function(pred) {
 		}(this))):haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift())));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.shiftWith = function(elements) {
+haxe.reactive.Stream.prototype.shiftWith = function(elements) {
 	var queue = IterableExtensions.toArray(elements);
 	var n = queue.length;
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5555,17 +5555,17 @@ haxe.reactive.EventStream.prototype.shiftWith = function(elements) {
 		return (queue.length <= n?haxe.reactive.Propagation.doNotPropagate:haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift())));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.snapshot = function(value) {
+haxe.reactive.Stream.prototype.snapshot = function(value) {
 	return this.map(function(t) {
 		return value.valueNow();
 	});
 }
-haxe.reactive.EventStream.prototype.startsWith = function(init) {
+haxe.reactive.Stream.prototype.startsWith = function(init) {
 	return new haxe.reactive.Behavior(this,init,function(pulse) {
 		return haxe.reactive.Propagation.propagate(pulse);
 	});
 }
-haxe.reactive.EventStream.prototype.take = function(n) {
+haxe.reactive.Stream.prototype.take = function(n) {
 	var count = n;
 	var self = this;
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5582,7 +5582,7 @@ haxe.reactive.EventStream.prototype.take = function(n) {
 		}(this)));
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.takeWhile = function(filter) {
+haxe.reactive.Stream.prototype.takeWhile = function(filter) {
 	var stillChecking = true;
 	var self = this;
 	return haxe.reactive.Streams.create(function(pulse) {
@@ -5595,17 +5595,17 @@ haxe.reactive.EventStream.prototype.takeWhile = function(filter) {
 		}(this))):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.toArray = function() {
+haxe.reactive.Stream.prototype.toArray = function() {
 	var array = [];
 	this.each(function(e) {
 		array.push(e);
 	});
 	return array;
 }
-haxe.reactive.EventStream.prototype.unique = function(eq) {
+haxe.reactive.Stream.prototype.unique = function(eq) {
 	return this.uniqueSteps().uniqueEvents(eq);
 }
-haxe.reactive.EventStream.prototype.uniqueEvents = function(eq) {
+haxe.reactive.Stream.prototype.uniqueEvents = function(eq) {
 	if(eq == null) eq = function(e1,e2) {
 		return e1 == e2;
 	}
@@ -5619,7 +5619,7 @@ haxe.reactive.EventStream.prototype.uniqueEvents = function(eq) {
 		}(this)):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.uniqueSteps = function() {
+haxe.reactive.Stream.prototype.uniqueSteps = function() {
 	var lastStamp = -1;
 	return haxe.reactive.Streams.create(function(pulse) {
 		return (pulse.stamp != lastStamp?(function($this) {
@@ -5630,8 +5630,8 @@ haxe.reactive.EventStream.prototype.uniqueSteps = function() {
 		}(this)):haxe.reactive.Propagation.doNotPropagate);
 	},[this]);
 }
-haxe.reactive.EventStream.prototype.weaklyHeld = null;
-haxe.reactive.EventStream.prototype.whenFinishedDo = function(f) {
+haxe.reactive.Stream.prototype.weaklyHeld = null;
+haxe.reactive.Stream.prototype.whenFinishedDo = function(f) {
 	if(this.getWeaklyHeld()) {
 		f();
 	}
@@ -5639,7 +5639,7 @@ haxe.reactive.EventStream.prototype.whenFinishedDo = function(f) {
 		this._cleanups.push(f);
 	}
 }
-haxe.reactive.EventStream.prototype.zip = function($as) {
+haxe.reactive.Stream.prototype.zip = function($as) {
 	var testStamp = -1;
 	var value1 = null;
 	haxe.reactive.Streams.create(function(pulse) {
@@ -5651,7 +5651,7 @@ haxe.reactive.EventStream.prototype.zip = function($as) {
 		return (testStamp == pulse.stamp?haxe.reactive.Propagation.propagate(pulse.withValue(Tuple2.create(value1,pulse.value))):haxe.reactive.Propagation.doNotPropagate);
 	},[$as]);
 }
-haxe.reactive.EventStream.prototype.zip3 = function($as,bs) {
+haxe.reactive.Stream.prototype.zip3 = function($as,bs) {
 	var streams = [];
 	streams.push(this);
 	streams.push($as);
@@ -5660,7 +5660,7 @@ haxe.reactive.EventStream.prototype.zip3 = function($as,bs) {
 		return Tuple3.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2));
 	});
 }
-haxe.reactive.EventStream.prototype.zip4 = function($as,bs,cs) {
+haxe.reactive.Stream.prototype.zip4 = function($as,bs,cs) {
 	var streams = [];
 	streams.push(this);
 	streams.push($as);
@@ -5670,7 +5670,7 @@ haxe.reactive.EventStream.prototype.zip4 = function($as,bs,cs) {
 		return Tuple4.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2),haxe.data.collections.IterableExtensions.at(i,3));
 	});
 }
-haxe.reactive.EventStream.prototype.zip5 = function($as,bs,cs,ds) {
+haxe.reactive.Stream.prototype.zip5 = function($as,bs,cs,ds) {
 	var streams = [];
 	streams.push(this);
 	streams.push($as);
@@ -5681,7 +5681,7 @@ haxe.reactive.EventStream.prototype.zip5 = function($as,bs,cs,ds) {
 		return Tuple5.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2),haxe.data.collections.IterableExtensions.at(i,3),haxe.data.collections.IterableExtensions.at(i,4));
 	});
 }
-haxe.reactive.EventStream.prototype.__class__ = haxe.reactive.EventStream;
+haxe.reactive.Stream.prototype.__class__ = haxe.reactive.Stream;
 haxe.reactive.Behavior = function(stream,init,updater) { if( stream === $_ ) return; {
 	this._last = init;
 	this._underlyingRaw = stream;
@@ -5788,7 +5788,7 @@ haxe.reactive.Behavior.prototype.zip = function(b2) {
 		return (function($this) {
 			var $r;
 			var tmp = b.changes();
-			$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+			$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 				var $r;
 				throw "Class cast error";
 				return $r;
@@ -5808,7 +5808,7 @@ haxe.reactive.Behavior.prototype.zip3 = function(b2,b3) {
 		return (function($this) {
 			var $r;
 			var tmp = b.changes();
-			$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+			$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 				var $r;
 				throw "Class cast error";
 				return $r;
@@ -5828,7 +5828,7 @@ haxe.reactive.Behavior.prototype.zip4 = function(b2,b3,b4) {
 		return (function($this) {
 			var $r;
 			var tmp = b.changes();
-			$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+			$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 				var $r;
 				throw "Class cast error";
 				return $r;
@@ -5848,7 +5848,7 @@ haxe.reactive.Behavior.prototype.zip5 = function(b2,b3,b4,b5) {
 		return (function($this) {
 			var $r;
 			var tmp = b.changes();
-			$r = (Std["is"](tmp,haxe.reactive.EventStream)?tmp:(function($this) {
+			$r = (Std["is"](tmp,haxe.reactive.Stream)?tmp:(function($this) {
 				var $r;
 				throw "Class cast error";
 				return $r;

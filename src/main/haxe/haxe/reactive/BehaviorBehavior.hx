@@ -58,9 +58,9 @@ class BehaviorBehavior {
     public static function flatten<T>(behavior: Behavior<Behavior<T>>): Behavior<T> {
         var init: Behavior<T> = behavior.valueNow();
 
-        var prevSourceE: EventStream<T> = null;
+        var prevSourceE: Stream<T> = null;
 
-        var receiverE: EventStream<T> = Streams.identity();
+        var receiverE: Stream<T> = Streams.identity();
 
         //XXX could result in out-of-order propagation! Fix!
         var makerE = Streams.create(

@@ -26,30 +26,30 @@ class StreamBool {
      * Returns a stream with the Bool of each value mapped to the
      * opposite of the original stream.
      */
-    public static function not(stream: EventStream<Bool>): EventStream<Bool> {
+    public static function not(stream: Stream<Bool>): Stream<Bool> {
         return stream.map(function(v) { return !v; });
     }
     
     /**
-     * Switches off of an EventStream of Bools, returning
-     * either a thenE EventStream<T> when true or an elseE 
-     * when falseEventStream<T>.
+     * Switches off of an Stream of Bools, returning
+     * either a thenE Stream<T> when true or an elseE 
+     * when falseStream<T>.
      * 
      *
-     * @param stream        An EventStream of Bools that will 
+     * @param stream        An Stream of Bools that will 
      *                      be used to determine which 
-     *                      EventStream to return.
+     *                      Stream to return.
      *
-     * @param thenE         The EventStream that will be returned 
+     * @param thenE         The Stream that will be returned 
      *                      if stream == true;
      *
-     * @param elseE         The EventStream that will be returned 
+     * @param elseE         The Stream that will be returned 
       *                      if stream == false;
      *
      * @return              If an event from stream == true
      *                      stream thenE, else stream elseE
      */
-    public static function ifTrue<T>(stream: EventStream<Bool>, thenE: EventStream<T>, elseE: EventStream<T>) {
+    public static function ifTrue<T>(stream: Stream<Bool>, thenE: Stream<T>, elseE: Stream<T>) {
         var testStamp = -1;
         var testValue = false;
 
@@ -82,27 +82,27 @@ class StreamBool {
     }
     
     /**
-     * Returns an EventStream, the events of which are either
+     * Returns an Stream, the events of which are either
      * true or false, depending on whether or not the supplied 
-     * Iterable<EventStream<Bool>>'s values are all true for a 
+     * Iterable<Stream<Bool>>'s values are all true for a 
      * given time step.
      *
-     * @param streams       An Iterable of the EventStreams to 
+     * @param streams       An Iterable of the Streams to 
      *                      be evaluated
      *
-     * @return              An EventStream of Bools, where each 
+     * @return              An Stream of Bools, where each 
      *                      Bool event represents whether or not 
      *                      all events in the supplied 
-     *                      Iterable<EventStream<Bool>> are true 
+     *                      Iterable<Stream<Bool>> are true 
      *                      on a given time step.
      */
-    public static function and(streams: Iterable<EventStream<Bool>>): EventStream<Bool> {
+    public static function and(streams: Iterable<Stream<Bool>>): Stream<Bool> {
         var rev   = streams.reversed();
         var count = streams.size();
         
         var iterator = rev.iterator();
         
-        var acc: EventStream<Bool> = if (iterator.hasNext()) iterator.next(); else Streams.one(true);
+        var acc: Stream<Bool> = if (iterator.hasNext()) iterator.next(); else Streams.one(true);
         
         while (iterator.hasNext()) {
             var next = iterator.next();
@@ -114,27 +114,27 @@ class StreamBool {
     }
     
     /**
-     * Returns an EventStream, the events of which are either
+     * Returns an Stream, the events of which are either
      * true or false, depending on whether or not any of the 
-     * values in the supplied Iterable<EventStream<Bool>> 
+     * values in the supplied Iterable<Stream<Bool>> 
      * are all true for a given time step.
      *
-     * @param streams       An Iterable of the EventStreams to 
+     * @param streams       An Iterable of the Streams to 
      *                      be evaluated
      *
-     * @return              An EventStream of Bools, where each 
+     * @return              An Stream of Bools, where each 
      *                      Bool event represents whether or not 
      *                      any events in the supplied 
-     *                      Iterable<EventStream<Bool>> are true 
+     *                      Iterable<Stream<Bool>> are true 
      *                      on a given time step.
      */
-    public static function or(streams: Iterable<EventStream<Bool>>): EventStream<Bool> {
+    public static function or(streams: Iterable<Stream<Bool>>): Stream<Bool> {
         var rev   = streams.reversed();
         var count = streams.size();
 
         var iterator = rev.iterator();
 
-        var acc: EventStream<Bool> = if (iterator.hasNext()) iterator.next(); else Streams.one(false);
+        var acc: Stream<Bool> = if (iterator.hasNext()) iterator.next(); else Streams.one(false);
 
         while (iterator.hasNext()) {
             var next = iterator.next();

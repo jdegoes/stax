@@ -21,43 +21,43 @@ class StreamStream {
     private function new() { }
     
     /**
-     * Converts an EventStream of EventStreams into
-     * a single EventStream, whose events represent 
-     * those of the last EventStream to have an Event.
+     * Converts an Stream of Streams into
+     * a single Stream, whose events represent 
+     * those of the last Stream to have an Event.
      *
-     * @param   streams     The EventStream of 
-     *                      EventStreams to be
+     * @param   streams     The Stream of 
+     *                      Streams to be
      *                      flattened.
      */
-    public static function switchE<T>(streams: EventStream<EventStream<T>>): EventStream<T> {
+    public static function switchE<T>(streams: Stream<Stream<T>>): Stream<T> {
         return flatten(streams);
     }
     
     /**
-     * Converts an EventStream of EventStreams into
-     * a single EventStream, whose events represent 
-     * those of the last EventStream to have an Event.
+     * Converts an Stream of Streams into
+     * a single Stream, whose events represent 
+     * those of the last Stream to have an Event.
      *
-     * @param   streams     The EventStream of 
-     *                      EventStreams to be
+     * @param   streams     The Stream of 
+     *                      Streams to be
      *                      flattened.
      */
-    public static function join<T>(stream: EventStream<EventStream<T>>): EventStream<T> {
+    public static function join<T>(stream: Stream<Stream<T>>): Stream<T> {
         return flatten(stream);
     }
     
     /**
-     * Converts an EventStream of EventStreams into
-     * a single EventStream, whose events represent 
-     * those of the last EventStream to have an Event.
+     * Converts an Stream of Streams into
+     * a single Stream, whose events represent 
+     * those of the last Stream to have an Event.
      *
-     * @param   streams     The EventStream of 
-     *                      EventStreams to be
+     * @param   streams     The Stream of 
+     *                      Streams to be
      *                      flattened.
      */
-    public static function flatten<T>(stream: EventStream<EventStream<T>>): EventStream<T> {
+    public static function flatten<T>(stream: Stream<Stream<T>>): Stream<T> {
         return stream.bind(
-            function(stream: EventStream<T>): EventStream<T> {
+            function(stream: Stream<T>): Stream<T> {
                 return stream;
             }
         );

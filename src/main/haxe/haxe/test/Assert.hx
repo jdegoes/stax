@@ -698,6 +698,15 @@ class Assert {
 	  future.deliverTo(function(value) { f(); });
 	}
 	
+	/*
+	public static function produces<T>(stream: Stream<T>, assertions: Array<T> -> Void, ?timeout: Int) {
+	  
+	}
+	public static function doesNotProduce<T>(stream: Stream<T>, ?timeout: Int, ?pos: PosInfos) {
+    
+	}
+	*/
+	
 	/**
 	* Creates an asynchronous context for test execution of an event like method.
 	* Assertions should be included in the passed function.

@@ -148,9 +148,9 @@ private class PriorityQueue<T> {
     }
 }
 
-class EventStream<T> {
+class Stream<T> {
     private var _rank: Int;
-    private var _sendsTo: Array<EventStream<Dynamic>>;
+    private var _sendsTo: Array<Stream<Dynamic>>;
     private var _updater: Pulse<Dynamic> -> Propagation<T>;
     
     private var _weak: Bool;
@@ -159,7 +159,7 @@ class EventStream<T> {
     
     private var _cleanups: Array<Void -> Void>;
     
-    public function new(updater: Pulse<Dynamic> -> Propagation<T>, sources: Array<EventStream<Dynamic>> = null) {
+    public function new(updater: Pulse<Dynamic> -> Propagation<T>, sources: Array<Stream<Dynamic>> = null) {
         this._updater  = updater;
 
         this._sendsTo  = [];
@@ -174,13 +174,13 @@ class EventStream<T> {
         }
     }
     
-    public function attachListener(dependent: EventStream<Dynamic>): Void {
+    public function attachListener(dependent: Stream<Dynamic>): Void {
         this._sendsTo.push(dependent);
 
         // Rewrite the propagation graph:
         if (this._rank > dependent._rank) {
             var lowest = Rank.lastRank() + 1;
-            var q: Array<EventStream<Dynamic>> = [dependent];
+            var q: Array<Stream<Dynamic>> = [dependent];
 
             while (q.length > 0) {
                 var cur = q.splice(0,1)[0];
@@ -192,7 +192,7 @@ class EventStream<T> {
         }
     }
     
-    public function removeListener(dependent: EventStream<Dynamic>, isWeakReference: Bool = false): Bool {
+    public function removeListener(dependent: Stream<Dynamic>, isWeakReference: Bool = false): Bool {
         var foundSending = false;
         
         for (i in 0..._sendsTo.length) {
@@ -228,7 +228,7 @@ class EventStream<T> {
     /**
      * Calls the specified function for each event.
      */
-    public function forEach(f: T -> Void): EventStream<T> {
+    public function forEach(f: T -> Void): Stream<T> {
         Streams.create(
             function(pulse: Pulse<T>): Propagation<T> {
                 f(pulse.value);
@@ -244,7 +244,7 @@ class EventStream<T> {
     /**
      * Calls the specified function for each event.
      */
-    public function each(f: T -> Void): EventStream<T> {
+    public function each(f: T -> Void): Stream<T> {
         return forEach(f);
     }
     
@@ -266,7 +266,7 @@ class EventStream<T> {
      * @param value The constant that every value will be mapped to.
      *
      */
-    public function constant<Z>(value: Z): EventStream<Z> {
+    public function constant<Z>(value: Z): Stream<Z> {
         return map(function(v) { return value; });
     }
     
@@ -276,13 +276,13 @@ class EventStream<T> {
      *
      * @param k The bind function.
      */
-    public function bind<Z>(k: T -> EventStream<Z>): EventStream<Z> {
-        var m: EventStream<T> = this;
-        var prevE: EventStream<Z> = null;
+    public function bind<Z>(k: T -> Stream<Z>): Stream<Z> {
+        var m: Stream<T> = this;
+        var prevE: Stream<Z> = null;
 
-        var outE: EventStream<Z> = Streams.identity();
+        var outE: Stream<Z> = Streams.identity();
 
-        var inE: EventStream<Dynamic> = Streams.create(
+        var inE: Stream<Dynamic> = Streams.create(
             function (pulse: Pulse<Dynamic>): Propagation<Dynamic> {
                 if (prevE != null) {
                     prevE.removeListener(outE, true); // XXX This is sloppy
@@ -306,7 +306,7 @@ class EventStream<T> {
      *
      * @param value The value to send.
      */
-    public function sendEvent(value: Dynamic): EventStream<T> {
+    public function sendEvent(value: Dynamic): Stream<T> {
         propagatePulse(new Pulse(Stamp.nextStamp(), value));
         
         return this;
@@ -322,7 +322,7 @@ class EventStream<T> {
      *                  the event will be scheduled for "as soon as possible".
      *
      */
-    public function sendLaterIn(value: Dynamic, millis: Int): EventStream<T> {
+    public function sendLaterIn(value: Dynamic, millis: Int): Stream<T> {
         var self = this;
         
         External.setTimeout(
@@ -340,7 +340,7 @@ class EventStream<T> {
      *
      * @param value The value to send.
      */
-    public function sendLater(value: Dynamic): EventStream<T> {
+    public function sendLater(value: Dynamic): Stream<T> {
         return sendLaterIn(value, 0);
     }
     
@@ -365,8 +365,8 @@ class EventStream<T> {
      *
      * @param   time    Time in milliseconds as an Int
      */
-    public function delay(time: Int): EventStream<T> {
-        var resE: EventStream<T> = Streams.identity();
+    public function delay(time: Int): Stream<T> {
+        var resE: Stream<T> = Streams.identity();
 
         Streams.create(
             function(pulse: Pulse<T>): Propagation<T> { 
@@ -385,10 +385,10 @@ class EventStream<T> {
      * 
      * @param   time    Time in milliseconds as a Behavior
      */
-    public function delayB(time: Behavior<Int>): EventStream<T> {
+    public function delayB(time: Behavior<Int>): Stream<T> {
         var self = this;
 
-        var receiverEE: EventStream<EventStream<T>> = Streams.identity();
+        var receiverEE: Stream<Stream<T>> = Streams.identity();
         
         var link = {
             from:    self, 
@@ -425,7 +425,7 @@ class EventStream<T> {
      *
      * @param time  The number of milliseconds.
      */
-    public function calm(time: Int): EventStream<T> {
+    public function calm(time: Int): Stream<T> {
         return calmB(Behaviors.constant(time));
     }
     
@@ -435,8 +435,8 @@ class EventStream<T> {
      *
      * @param time  The number of milliseconds.
      */
-    public function calmB(time: Behavior<Int>): EventStream<T> {
-        var out: EventStream<T> = Streams.identity();
+    public function calmB(time: Behavior<Int>): Stream<T> {
+        var out: Stream<T> = Streams.identity();
       
         var towards: Timeout = null;
       
@@ -469,7 +469,7 @@ class EventStream<T> {
      *
      * @param time The time to blind the stream to.
      */
-    public function blind(time: Int): EventStream<T> {
+    public function blind(time: Int): Stream<T> {
         return blindB(Behaviors.constant(time));
     }
     
@@ -479,7 +479,7 @@ class EventStream<T> {
      *
      * @param time The time to blind the stream to.
      */
-    public function blindB(time: Behavior<Int>): EventStream<T> {
+    public function blindB(time: Behavior<Int>): Stream<T> {
         var lastSent = External.now() - time.valueNow() - 1;
         
         return Streams.create(            
@@ -505,7 +505,7 @@ class EventStream<T> {
      *
      * @param value The value.
      */
-    public function snapshot<Z>(value: Behavior<Z>): EventStream<Z> {
+    public function snapshot<Z>(value: Behavior<Z>): Stream<Z> {
         return map(function(t) { return value.valueNow(); });
     }
     
@@ -514,7 +514,7 @@ class EventStream<T> {
      *
      * @param optStart  An optional start value.
      */
-    public function filterRepeats(?optStart: T): EventStream<T> {
+    public function filterRepeats(?optStart: T): Stream<T> {
         return filterRepeatsBy(optStart, cast DynamicExtensions.EqualT().equal);
     }
     
@@ -524,7 +524,7 @@ class EventStream<T> {
      * @param optStart  An optional start value.
      * @param eq        An equality function.
      */
-    public function filterRepeatsBy(?optStart: T, eq: T -> T -> Bool): EventStream<T> {
+    public function filterRepeatsBy(?optStart: T, eq: T -> T -> Bool): Stream<T> {
         var hadFirst = optStart == null ? false : true;
         var prev     = optStart;
         
@@ -546,7 +546,7 @@ class EventStream<T> {
      *
      * @param mapper    The mapping function.
      */
-    public function map<Z>(mapper: T -> Z): EventStream<Z> { 
+    public function map<Z>(mapper: T -> Z): Stream<Z> { 
         return Streams.create(
             function(pulse: Pulse<T>): Propagation<Z> {
                 return propagate(pulse.map(mapper));
@@ -560,7 +560,7 @@ class EventStream<T> {
      *
      * @param mapper The mapper.
      */
-    public function flatMap<Z>(mapper: T -> EventStream<Z>): EventStream<Z> { 
+    public function flatMap<Z>(mapper: T -> Stream<Z>): Stream<Z> { 
         return bind(mapper);
     }
     
@@ -570,7 +570,7 @@ class EventStream<T> {
      * @param initial   The initial value.
      * @param folder    The folding function.
      */
-    public function scanl<Z>(initial: Z, folder: Z -> T -> Z): EventStream<Z> {
+    public function scanl<Z>(initial: Z, folder: Z -> T -> Z): Stream<Z> {
         var acc = initial;
         
         return this.map(
@@ -587,7 +587,7 @@ class EventStream<T> {
     /**
      * Same as scanl, but without an initial value.
      */
-    public function scanlP(folder: T -> T -> T): EventStream<T> { 
+    public function scanlP(folder: T -> T -> T): Stream<T> { 
         var acc = null;
         
         return this.map(
@@ -614,7 +614,7 @@ class EventStream<T> {
      *
      * @param n The number of values.
      */
-    public function take(n: Int): EventStream<T> {
+    public function take(n: Int): Stream<T> {
         var count = n;
         
         var self = this;
@@ -640,7 +640,7 @@ class EventStream<T> {
      *
      * @param n The number of values.
      */
-    public function takeWhile(filter: T -> Bool): EventStream<T> {
+    public function takeWhile(filter: T -> Bool): Stream<T> {
         var stillChecking = true;
         
         var self = this;
@@ -670,7 +670,7 @@ class EventStream<T> {
      * 
      * @param n The number of events to shift by.
      */
-    public function shift(n: Int): EventStream<T> {
+    public function shift(n: Int): Stream<T> {
         var queue: Array<T> = [];
         
         return Streams.create(
@@ -690,7 +690,7 @@ class EventStream<T> {
      *
      * @param pred  The predicate.
      */
-    public function shiftWhile(pred: T -> Bool): EventStream<T> {
+    public function shiftWhile(pred: T -> Bool): Stream<T> {
         var queue: Array<T> = [];
         
         var checking = true;
@@ -719,7 +719,7 @@ class EventStream<T> {
      *
      * @param elements  The elements to use in time shifting.
      */
-    public function shiftWith(elements: Iterable<T>): EventStream<T> {
+    public function shiftWith(elements: Iterable<T>): Stream<T> {
         var queue: Array<T> = elements.toArray();
         
         var n = queue.length;
@@ -741,7 +741,7 @@ class EventStream<T> {
      *
      * @param n The number to drop.
      */
-    public function drop(n: Int): EventStream<T> {
+    public function drop(n: Int): Stream<T> {
         var count = n;
         
         return Streams.create(
@@ -758,7 +758,7 @@ class EventStream<T> {
      *
      * @param pred  The predicate.
      */
-    public function dropWhile(pred: T -> Bool): EventStream<T> {
+    public function dropWhile(pred: T -> Bool): Stream<T> {
         var checking = true;
         
         return Streams.create(
@@ -783,7 +783,7 @@ class EventStream<T> {
      *
      * @param pred  The predicate.
      */
-    public function partition(pred: T -> Bool): Tuple2<EventStream<T>, EventStream<T>> { 
+    public function partition(pred: T -> Bool): Tuple2<Stream<T>, Stream<T>> { 
         var trueStream = Streams.create(
             function(pulse: Pulse<T>): Propagation<T> {
                 return if (pred(pulse.value)) propagate(pulse); else doNotPropagate;
@@ -806,7 +806,7 @@ class EventStream<T> {
      *
      * @param pred  The predicate.
      */
-    public function partitionWhile(pred: T -> Bool): Tuple2<EventStream<T>, EventStream<T>> { 
+    public function partitionWhile(pred: T -> Bool): Tuple2<Stream<T>, Stream<T>> { 
         var trueStream  = takeWhile(pred);
         var falseStream = dropWhile(pred);
         
@@ -818,7 +818,7 @@ class EventStream<T> {
      *
       * @param pred The predicate.
       */
-    public function filter(pred: T -> Bool): EventStream<T> {
+    public function filter(pred: T -> Bool): Stream<T> {
         return Streams.create(
             function(pulse: Pulse<Dynamic>): Propagation<T> {
                 return if (pred(pulse.value)) propagate(pulse); else doNotPropagate;
@@ -832,7 +832,7 @@ class EventStream<T> {
      *
      * @param pred  The predicate.
      */
-    public function filterWhile(pred: T -> Bool): EventStream<T> { 
+    public function filterWhile(pred: T -> Bool): Stream<T> { 
         var checking = true;
         
         var self = this;
@@ -859,7 +859,7 @@ class EventStream<T> {
     
     /**
      * Zips elements of supplied streams together and returns an
-     * EventStream of Tuple2 containing the zipped elements.
+     * Stream of Tuple2 containing the zipped elements.
      *
      * [1, 2, 3].zip[1, 2, 3] == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
      *
@@ -868,7 +868,7 @@ class EventStream<T> {
      * @return     A Tuple slice containing an element from each 
      *             stream
      */
-    public function zip<A>(as: EventStream<A>): EventStream<Tuple2<T, A>> { 
+    public function zip<A>(as: Stream<A>): Stream<Tuple2<T, A>> { 
         var testStamp = -1;
         
         var value1: T = null;
@@ -894,7 +894,7 @@ class EventStream<T> {
     
     /**
      * Zips elements of supplied streams together and returns an
-     * EventStream of Tuple3 containing the zipped elements.
+     * Stream of Tuple3 containing the zipped elements.
      *
      * [1, 2, 3].zip([1, 2, 3], [1, 2, 3]) == [Tuple3[1, 1, 1], Tuple3[2, 2, 2], Tuple3[3, 3, 3]]
      *
@@ -904,7 +904,7 @@ class EventStream<T> {
      * @return     A Tuple slice containing an element from each 
      *             stream
      */
-    public function zip3<A, B>(as: EventStream<A>, bs: EventStream<B>): EventStream<Tuple3<T, A, B>> { 
+    public function zip3<A, B>(as: Stream<A>, bs: Stream<B>): Stream<Tuple3<T, A, B>> { 
         var streams: Array<Dynamic> = [];
         
         streams.push(this);
@@ -916,7 +916,7 @@ class EventStream<T> {
     
     /**
      * Zips elements of supplied streams together and returns an
-     * EventStream of Tuple4 containing the zipped elements.
+     * Stream of Tuple4 containing the zipped elements.
      *
      * For example see above
      *
@@ -927,7 +927,7 @@ class EventStream<T> {
      * @return     A Tuple slice containing one element from each 
      *             stream
      */
-    public function zip4<A, B, C>(as: EventStream<A>, bs: EventStream<B>, cs: EventStream<C>): EventStream<Tuple4<T, A, B, C>> { 
+    public function zip4<A, B, C>(as: Stream<A>, bs: Stream<B>, cs: Stream<C>): Stream<Tuple4<T, A, B, C>> { 
         var streams: Array<Dynamic> = [];
         
         streams.push(this);
@@ -940,7 +940,7 @@ class EventStream<T> {
     
     /**
      * Zips elements of supplied streams together and returns an
-     * EventStream of Tuple5 containing the zipped elements.
+     * Stream of Tuple5 containing the zipped elements.
      *
      * For example see above
      *
@@ -952,7 +952,7 @@ class EventStream<T> {
      * @return     A Tuple slice containing one element from each 
      *             stream
      */
-    public function zip5<A, B, C, D>(as: EventStream<A>, bs: EventStream<B>, cs: EventStream<C>, ds: EventStream<D>): EventStream<Tuple5<T, A, B, C, D>> { 
+    public function zip5<A, B, C, D>(as: Stream<A>, bs: Stream<B>, cs: Stream<C>, ds: Stream<D>): Stream<Tuple5<T, A, B, C, D>> { 
         var streams: Array<Dynamic> = [];
         
         streams.push(this);
@@ -965,18 +965,18 @@ class EventStream<T> {
     }
     
     /**
-     * Groups EventStream elements which are sent
+     * Groups Stream elements which are sent
      * sequentially and are == to each other into
      * iterables and returns these in a new stream
      *
-     * @return     An EventStream of grouped elements
+     * @return     An Stream of grouped elements
      */
-    public function group(): EventStream<Iterable<T>> {
+    public function group(): Stream<Iterable<T>> {
         return groupBy(function(e1, e2) { return e1 == e2; });
     }
     
     /**
-     * Groups EventStream elements which are sent
+     * Groups Stream elements which are sent
      * sequentially and which return true from the
      * supplied comparison function into iterables
      * and returns these in a new stream
@@ -986,9 +986,9 @@ class EventStream<T> {
      *                  equality of the stream
      *                  elements.
      *
-     * @return     An EventStream of grouped elements
+     * @return     An Stream of grouped elements
      */
-    public function groupBy(eq: T -> T -> Bool): EventStream<Iterable<T>> { 
+    public function groupBy(eq: T -> T -> Bool): Stream<Iterable<T>> { 
         var prev = null;
         
         var cur: Array<T> = [];
@@ -1028,18 +1028,18 @@ class EventStream<T> {
     /**
      * Merges this stream and the specified stream.
      *
-     * @param that  The EventStream with which to 
+     * @param that  The Stream with which to 
      *              merge 'this' stream
      */
-    public function merge(that: EventStream<T>): EventStream<T> {
+    public function merge(that: Stream<T>): Stream<T> {
         return Streams.create(function(p) { return propagate(p); }, [this, that]);
     }
     /**
-     * Creates a new EventStream in which only events on 
+     * Creates a new Stream in which only events on 
      * different time steps will appear
      *
      */
-    public function uniqueSteps(): EventStream<T> {
+    public function uniqueSteps(): Stream<T> {
         var lastStamp = -1;
         
         return Streams.create(
@@ -1056,12 +1056,12 @@ class EventStream<T> {
     }
     
     /**
-     * Creates a new EventStream in which only new events
+     * Creates a new Stream in which only new events
      * will appear (including those on the same time step)
      *
      * @param eq  The Function used to check event equality
      */
-    public function uniqueEvents(?eq: T -> T -> Bool): EventStream<T> {
+    public function uniqueEvents(?eq: T -> T -> Bool): Stream<T> {
         if (eq == null) eq = function(e1, e2) { return e1 == e2; }
         
         var lastEvent: T = null;
@@ -1079,20 +1079,20 @@ class EventStream<T> {
         );
     }
     /**
-     * Creates a new EventStream in which only unique events
+     * Creates a new Stream in which only unique events
      * taking place at unique timesteps will appear
      *
      * @param eq  The Function used to check event equality
      */
-    public function unique(?eq: T -> T -> Bool): EventStream<T> {
+    public function unique(?eq: T -> T -> Bool): Stream<T> {
         return uniqueSteps().uniqueEvents(eq);
     }
     
     private function propagatePulse(pulse: Pulse<Dynamic>) {
         // XXX Change so that we won't propagate more than one value per time step???
-        var queue = new PriorityQueue<{stream: EventStream<Dynamic>, pulse: Pulse<Dynamic>}>();
+        var queue = new PriorityQueue<{stream: Stream<Dynamic>, pulse: Pulse<Dynamic>}>();
         
-        var self = cast(this, EventStream<Dynamic>);
+        var self = cast(this, Stream<Dynamic>);
 
         queue.insert({k: _rank, v: {stream: self, pulse: pulse}});
         
@@ -1115,7 +1115,7 @@ class EventStream<T> {
                             {
                                 k: recipient._rank,
                                 v: {
-                                    stream: cast(recipient, EventStream<Dynamic>),
+                                    stream: cast(recipient, Stream<Dynamic>),
                                     pulse:  nextPulse
                                 }
                             }
@@ -1152,13 +1152,13 @@ class EventStream<T> {
 }
 
 class Behavior<T> {
-    private var _underlyingRaw: EventStream<Dynamic>;
-    private var _underlying:    EventStream<T>;
+    private var _underlyingRaw: Stream<Dynamic>;
+    private var _underlying:    Stream<T>;
     private var _updater:       Pulse<Dynamic> -> Propagation<T>;
     
     private var _last: T;
     
-    public function new(stream: EventStream<Dynamic>, init: T, updater: Pulse<Dynamic> -> Propagation<T>) {
+    public function new(stream: Stream<Dynamic>, init: T, updater: Pulse<Dynamic> -> Propagation<T>) {
         this._last          = init;        
         this._underlyingRaw = stream;
         this._updater       = updater;
@@ -1266,7 +1266,7 @@ class Behavior<T> {
             function(pulse: Pulse<Dynamic>): Propagation<Tuple2<T, B>> {
                 return propagate(pulse.withValue(createTuple()));
             },
-            [this, b2].map(function(b) { return cast(b.changes(), EventStream<Dynamic>); })
+            [this, b2].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
         ).startsWith(createTuple());
     }
     
@@ -1291,7 +1291,7 @@ class Behavior<T> {
             function(pulse: Pulse<Dynamic>): Propagation<Tuple3<T, B, C>> {
                 return propagate(pulse.withValue(createTuple()));
             },
-            [this, b2, b3].map(function(b) { return cast(b.changes(), EventStream<Dynamic>); })
+            [this, b2, b3].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
         ).startsWith(createTuple());
     }
     
@@ -1317,7 +1317,7 @@ class Behavior<T> {
             function(pulse: Pulse<Dynamic>): Propagation<Tuple4<T, B, C, D>> {
                 return propagate(pulse.withValue(createTuple()));
             },
-            [this, b2, b3, b4].map(function(b) { return cast(b.changes(), EventStream<Dynamic>); })
+            [this, b2, b3, b4].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
         ).startsWith(createTuple());
     }
     
@@ -1344,7 +1344,7 @@ class Behavior<T> {
             function(pulse: Pulse<Dynamic>): Propagation<Tuple5<T, B, C, D, E>> {
                 return propagate(pulse.withValue(createTuple()));
             },
-            [this, b2, b3, b4, b5].map(function(b) { return cast(b.changes(), EventStream<Dynamic>); })
+            [this, b2, b3, b4, b5].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
         ).startsWith(createTuple());
     }
     
@@ -1428,32 +1428,32 @@ class Behavior<T> {
     
     /**
      * Applies a function to a behavior's value that 
-     * accepts an EventStream value and returns the 
-     * result as an EventStream value.
+     * accepts an Stream value and returns the 
+     * result as an Stream value.
      *
      * @param   f   The function to apply.
      *
      * @result      A Behavior that is the result
      *              of the supplied function. 
      */
-    public function mapC(f: EventStream<T> -> EventStream<T>): Behavior<T> {
+    public function mapC(f: Stream<T> -> Stream<T>): Behavior<T> {
         return f(changes()).startsWith(valueNow());
     }
     
     /**
-     * Returns the EventStream underlying the Behavior.
+     * Returns the Stream underlying the Behavior.
      *
-     * @result      The underlying EventStream.
+     * @result      The underlying Stream.
      */
-    public function changes(): EventStream<T> {
+    public function changes(): Stream<T> {
         return _underlying;
     }
     
     /**
-     * Sends an event to the underlying EventStream that will be immediately 
+     * Sends an event to the underlying Stream that will be immediately 
      * propagated with a new timestamp.
      *
-     * @param   value   the value to send Into the EventStream.
+     * @param   value   the value to send Into the Stream.
      */
     public function sendBehavior(value: Dynamic): Void {
         changes().sendEvent(value);

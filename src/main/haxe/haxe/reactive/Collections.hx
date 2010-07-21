@@ -28,7 +28,7 @@ class Collections {
      * @param time          The time, in milliseconds.
      *
      */
-    public static function toStream<T>(collection: Iterable<T>, time: Int): EventStream<T> {
+    public static function toStream<T>(collection: Iterable<T>, time: Int): Stream<T> {
         return toStreamB(collection, Behaviors.constant(time));
     }
     
@@ -40,7 +40,7 @@ class Collections {
      * @param time          The time, as a behavior, in milliseconds.
      *
      */
-    public static function toStreamB<T>(collection: Iterable<T>, time: Behavior<Int>): EventStream<T> {
+    public static function toStreamB<T>(collection: Iterable<T>, time: Behavior<Int>): Stream<T> {
         var startTime: Float = -1.0;
         var accum = 0;
         
@@ -48,7 +48,7 @@ class Collections {
         
         if (!iterator.hasNext()) return Streams.zero();
         
-        var stream: EventStream<T> = Streams.identity();
+        var stream: Stream<T> = Streams.identity();
         
         var pulser: Void -> Void = null;
         var timer = null;
