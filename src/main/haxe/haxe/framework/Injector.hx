@@ -168,10 +168,10 @@ private class InjectorImpl {
     var internalBind = function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
       switch (bindingTypeDef(bindingType)) {
   	    case OneToOne:
-  	      addGlobalBinding(interf, f.memoize());
+  	      addGlobalBinding(interf, f);
 
   	    case OneToMany:
-  	      addGlobalBinding(interf, f);
+  	      addGlobalBinding(interf, f.memoize());
   	  }
     }
   
@@ -223,10 +223,10 @@ private class InjectorImpl {
   private static function bindForSpecificF<T>(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, interf: Class<T>, specific: String, f: Void -> T, bindingType: BindingType) {
     switch (bindingTypeDef(bindingType)) {
       case OneToOne:
-        addSpecificBinding(extractor(state.first()), interf, specific, f.memoize());
+        addSpecificBinding(extractor(state.first()), interf, specific, f);
     
       case OneToMany:
-        addSpecificBinding(extractor(state.first()), interf, specific, f);
+        addSpecificBinding(extractor(state.first()), interf, specific, f.memoize());
     }
   }
 

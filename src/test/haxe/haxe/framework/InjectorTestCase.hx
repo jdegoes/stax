@@ -73,9 +73,38 @@ class InjectorTestCase extends TestCase {
       return Unit;
     });
   }
+  
+  public function testOneToOneCreatesNewInstancesForEachInvocation() {
+    Injector.enter(function(c) {
+      c.bind(Clock, MockClock, OneToOne);
+      
+      var i1 = Clock.inject();
+      var i2 = Clock.inject();
+      
+      Assert.isTrue(i1 != i2);
+      
+      return Unit;
+    });
+  }
+  
+  public function testOneToManyReturnsSameInstanceForEachInvocation() {
+    Injector.enter(function(c) {
+      c.bind(Clock, MockClock, OneToMany);
+      
+      var i1 = Clock.inject();
+      var i2 = Clock.inject();
+      
+      Assert.isTrue(i1 == i2);
+      
+      return Unit;
+    });
+  }
 }
 
 private class MockClock implements Clock {
+  public function new() {
+  }
+  
   public function now() {
     return Date.fromTime(0);
   }
