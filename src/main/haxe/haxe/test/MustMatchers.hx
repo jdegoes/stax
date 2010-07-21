@@ -22,9 +22,8 @@ import haxe.data.collections.Collection;
 using Prelude;
 using haxe.abstract.Foldable;
 
-typedef MatchFailureMsg = String
-typedef MatchSuccessMsg = String
-typedef MustMatcher<T> = T -> Either<MatchFailureMsg, MatchSuccessMsg>
+typedef MatchResult = { assertion: String, negation: String }
+typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>
 
 // assertThat(foo, Must.equal(123).or(Must.equal(34)).or(Must.beNull());
 // Cause: (349 != 123) && (349 != 34) && (349 != null)
@@ -33,44 +32,64 @@ class Must {
 	  if (equal == null) equal = DynamicExtensions.EqualT();
 	  
 	  return function(value: T) {
+	    var result = {
+	      assertion: expected + ' == ' + value,
+	      negation:  expected + ' != ' + value
+	    }
+	    
 	    return if (!equal.equal(value, expected)) {
-	      Left(expected + ' != ' + value);
+	      Left(result);
 	    }
 	    else {
-	      Right(expected + ' == ' + value);
+	      Right(result);
 	    }
 	  }
 	}
 	
 	public static function contain<C, T>(c: Collection<C, T>, element: T): MustMatcher<T> {
 	  return function(value: T) {
+	    var result = {
+	      assertion: '[' + c.mkString(', ') + '].contains(' + value + ')',
+	      negation:  '![' + c.mkString(', ') + '].contains(' + value + ')'
+	    }
+	    
 	    return if (!c.contains(element)) {
-	      Left('![' + c.mkString(', ') + '].contains(' + value + ')');
+	      Left(result);
 	    }
 	    else {
-	      Right('[' + c.mkString(', ') + '].contains(' + value + ')');
+	      Right(result);
 	    }
 	  }
 	}
 	
 	public static function beNull<T>(): MustMatcher<T> {
 	  return function(value: T) {
+	    var result = {
+	      assertion: value + ' == null',
+	      negation:  value + ' != null'
+	    }
+	    
 	    return if (value != null) {
-	      Left(value + ' != null');
+	      Left(result);
 	    }
 	    else {
-	      Right(value + ' == null');
+	      Right(result);
 	    }
 	  }
 	}
 	
 	public static function beNonNull<T>(): MustMatcher<T> {
 	  return function(value: T) {
+	    var result = {
+	      assertion: value + ' != null',
+	      negation:  value + ' -= null'
+	    }
+	    
 	    return if (value == null) {
-        Left(value + ' == null');
-      }
+	      Left(result);
+	    }
 	    else {
-	      Right(value + ' != null');
+	      Right(result);
 	    }
 	  }
 	}

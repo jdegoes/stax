@@ -50,8 +50,8 @@ class Assert {
 	 */
 	public static function that<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
     switch (cond(obj)) {
-      case Left(msg):  Assert.isTrue(false, 'Cause: ' + msg, pos);
-      case Right(msg): Assert.isTrue(true, msg, pos);
+      case Left(result):  Assert.isTrue(false, 'Expected: ' + result.assertion + ', Found: ' + result.negation, pos);
+      case Right(_):      Assert.isTrue(true, pos);
     }
   }
 	
