@@ -17,10 +17,10 @@
 
 package haxe.io.http;
 
-import haxe.text.json.JValue;
-import haxe.text.xml.XMLNode;
-
-typedef HttpError = String
+enum HttpError {
+  Timeout(msg: String);
+  
+}
 
 interface Http<T> {
     public function get(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
@@ -30,12 +30,4 @@ interface Http<T> {
     public function put(url: String, data: String): Future<Either<HttpError, T>>;
     
     public function delete(url: String, params: Dynamic<String>): Future<Either<HttpError, T>>;
-}
-
-class HttpFactory {
-  public function static createJson(): Http<JValue>;
-  
-  public function static createXml(): Http<Xml>;
-  
-  public function static createString(): Http<String>;
 }

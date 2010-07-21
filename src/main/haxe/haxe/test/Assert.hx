@@ -45,12 +45,12 @@ class Assert {
 	/**
 	 * Asserts that the specified condition holds.
 	 * <pre>
-	 * Assert.that(2, Must.equal(1).or(Must.beNull())); // Fails with: 'Cause: ((2 != 1) && (2 != null))'
+	 * Assert.that(2, Must.equal(1).or(Must.beNull())); // Fails with: 'Expected: ((x == 1) || (x == null)), Found: x == 2'
 	 * </pre>
 	 */
 	public static function that<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
     switch (cond(obj)) {
-      case Left(result):  Assert.isTrue(false, 'Expected: ' + result.assertion + ', Found: ' + result.negation, pos);
+      case Left(result):  Assert.isTrue(false, 'Expected: ' + result.assertion + ', Found: x = ' + obj, pos);
       case Right(_):      Assert.isTrue(true, pos);
     }
   }
