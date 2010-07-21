@@ -8,7 +8,7 @@
  Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the
  distribution.
 
- THIS SOFTWARE IS PROVIDED BY FRANCO PONTICELLI "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ THIS SOFTWARE IS PROVIDED BY SOCIAL MEDIA NETWORKS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SOCIAL MEDIA NETWORKS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -25,8 +25,8 @@ using haxe.abstract.Foldable;
 typedef MatchResult = { assertion: String, negation: String }
 typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>
 
-// assertThat(9, Must.equal(123).or(Must.equal(34)).or(Must.beNull());
-// Expected: ((x == 123) || (x == 34)) || (x == null), but found: x == 9
+// Assert.that(9, Must.equal(123).or(Must.beNull());
+// Expected: (x == 123) || (x == null), but found: x == 9
 class Must {
 	public static function equal<T>(expected: T, ?equal: Equal<T>): MustMatcher<T> {
 	  if (equal == null) equal = DynamicExtensions.EqualT();

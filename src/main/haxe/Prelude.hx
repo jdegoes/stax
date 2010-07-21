@@ -291,6 +291,9 @@ class StringExtensions {
   public static function contains(v: String, s: String): Bool {
     return v.indexOf(s) != -1;
   }
+  public static function replace( s : String, sub : String, by : String ) : String {
+    return StringTools.replace(s, sub, by);
+  }
   
   public static function OrderT(c: Class<String>): Order<String> {
     return OrderTypeclass.create({

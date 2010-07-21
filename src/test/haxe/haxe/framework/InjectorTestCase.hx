@@ -14,49 +14,58 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-import PreludeTest;
+package haxe.framework;
 
-import haxe.test.Runner;
-import haxe.test.ui.Report;
+import Prelude;
+import haxe.test.TestCase;
+import haxe.test.Assert;
+import haxe.framework.Injector;
 
-import haxe.text.json.JsonTestCase;
-import haxe.io.log.LoggerTestCase;
-import haxe.data.collections.MapTestCase;
-import haxe.data.collections.SetTestCase;
-import haxe.data.collections.ListTestCase;
-import haxe.data.transcode.JValueTestCase;
-import haxe.abstract.PartialFunctionTestCase;
-import haxe.time.ScheduledExecutorTestCase;
-import haxe.net.UrlTestCase;
-import haxe.util.StringExtensionsTestCase;
-import haxe.framework.InjectorTestCase;
+import haxe.time.Clock;
 
-#if js
-import js.io.IFrameIOTestCase;
-#end
+using Prelude;
+using haxe.framework.Injector;
 
-class StaxTestSuite {
-  public static function main (): Void {
-    var runner = (new Runner()).addAll([
-      new PreludeTestCase(),
-      new JValueTestCase(),
-      new MapTestCase(),
-      new SetTestCase(),
-      new ListTestCase(),
-      new LoggerTestCase(),
-      new JsonTestCase(),
-      new PartialFunctionTestCase(),
-      new ScheduledExecutorTestCase(),
-      new UrlTestCase(),
-      new StringExtensionsTestCase(),
-      new InjectorTestCase()
-      #if js
-      , new IFrameIOTestCase()
-      #end
-    ]);
-    
-    Report.create(runner);
-    
-    runner.run();
+class InjectorTestCase extends TestCase {
+  public function new() {
+    super();
+  }
+  
+  public function testGlobalInjector() {
+    Injector.enter(function(c) {
+      c.bind(Clock, MockClock);
+      
+      Assert.is(Clock.inject(), MockClock);
+      
+      return Unit;
+    });
+  }
+  
+  public function testPackageInjectorOverridesGlobalInjector() {
+    Injector.enter(function(c) {
+      c.bind(Clock, MockClock);
+      c.inPackage("haxe.framework").bind(Clock, SystemClock);
+
+      Assert.is(Clock.inject(), SystemClock);
+      
+      return Unit;
+    });
+  }
+  
+  public function testClassInjectorOverridesPackageInjector() {
+    Injector.enter(function(c) {
+      c.inPackage("haxe.framework").bind(Clock, MockClock);
+      c.inClass(InjectorTestCase).bind(Clock, SystemClock);
+
+      Assert.is(Clock.inject(), SystemClock);
+      
+      return Unit;
+    });
+  }
+}
+
+private class MockClock implements Clock {
+  public function now() {
+    return Date.fromTime(0);
   }
 }
