@@ -52,6 +52,17 @@ class InjectorTestCase extends TestCase {
     });
   }
   
+  public function testModuleInjectorOverridesPackageInjector() {
+    Injector.enter(function(c) {
+      c.inPackage("haxe.framework").bind(Clock, MockClock);
+      c.inModule("haxe.framework.InjectorTestCase").bind(Clock, SystemClock);
+
+      Assert.is(Clock.inject(), SystemClock);
+      
+      return Unit;
+    });
+  }
+  
   public function testClassInjectorOverridesPackageInjector() {
     Injector.enter(function(c) {
       c.inPackage("haxe.framework").bind(Clock, MockClock);

@@ -299,7 +299,7 @@ private class InjectorImpl {
   private static function moduleOf(pos: PosInfos) {
     var className   = classOf(pos);
     var packageName = packageOf(pos);
-    var moduleName  = packageName + '.' + className;
+    var moduleName  = packageName + '.' + pos.fileName.substr(0, pos.fileName.lastIndexOf('.'));
   
     return moduleName;
   }
