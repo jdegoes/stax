@@ -105,7 +105,7 @@ enum HttpResponseCode {
 
 typedef HttpResponse<T> {
   code:     HttpResponseCode,
-  body:     T,
+  body:     Option<T>,
   headers:  Map<String, String>
 }
 
@@ -115,11 +115,11 @@ typedef HttpResponse<T> {
  * certain kinds of data.
  */
 interface Http<T> {
-    public function get(url: Url, params: QueryParameters, ?headers: Map<String, String>): Future<Either<HttpError, HttpResponse<T>>>;
+    public function get(url: Url, params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
     
-    public function post(url: Url, data: T, ?headers: Map<String, String>): Future<Either<HttpError, HttpResponse<T>>>;
+    public function post(url: Url, data: T, ?headers: Map<String, String>): Future<HttpResponse<T>>;
     
-    public function put(url: Url, data: T, ?headers: Map<String, String>): Future<Either<HttpError, HttpResponse<T>>>;
+    public function put(url: Url, data: T, ?headers: Map<String, String>): Future<HttpResponse<T>>;
     
-    public function delete(url: Url, params: QueryParameters, ?headers: Map<String, String>): Future<Either<HttpError, HttpResponse<T>>>;
+    public function delete(url: Url, params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
 }
