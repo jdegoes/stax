@@ -18,74 +18,74 @@ package haxe.reactive;
 import haxe.reactive.Reactive;
 using haxe.data.collections.IterableExtensions;
 
-class BehaviorBool {
+class SignalBool {
     private function new() { }
     
     /**
-     * Returns a Behavior with the Bool of each value mapped to the
-     * opposite of the original original Behavior.
+     * Returns a Signal with the Bool of each value mapped to the
+     * opposite of the original original Signal.
      */
-    public static function not(behavior: Behavior<Bool>): Behavior<Bool> {
-        return StreamBool.not(behavior.changes()).startsWith(!behavior.valueNow());
+    public static function not(signal: Signal<Bool>): Signal<Bool> {
+        return StreamBool.not(signal.changes()).startsWith(!signal.valueNow());
     }
     
     /**
-     * Switches off of a Behavior of Bools, returning
-     * either a thenE Behavior<T> when true or an elseE 
-     * when falseBehavior<T>.
+     * Switches off of a Signal of Bools, returning
+     * either a thenE Signal<T> when true or an elseE 
+     * when falseSignal<T>.
      * 
      *
-     * @param contition     A Behavior of Bools that will 
+     * @param contition     A Signal of Bools that will 
      *                      be used to determine which 
-     *                      Behavior to return.
+     *                      Signal to return.
      *
-     * @param thenE         The Behavior that will be returned 
+     * @param thenE         The Signal that will be returned 
      *                      if stream == true;
      *
-     * @param elseE         The Behavior that will be returned 
+     * @param elseE         The Signal that will be returned 
       *                      if stream == false;
      *
-     * @return              If a Behavior from condition == true
-     *                      Behavior thenE, else Behavior elseE
+     * @return              If a Signal from condition == true
+     *                      Signal thenE, else Signal elseE
      */
-    public static function ifTrue<T>(condition: Behavior<Bool>, thenB: Behavior<T>, elseB: Behavior<T>): Behavior<T> {
+    public static function ifTrue<T>(condition: Signal<Bool>, thenS: Signal<T>, elseS: Signal<T>): Signal<T> {
         return condition.map(
             function(b) {
-                return if (b) thenB.valueNow(); else elseB.valueNow();
+                return if (b) thenS.valueNow(); else elseS.valueNow();
             }
         );
     }
     
     /**
-     * Returns a Behavior, true or false depending on whether 
-     * or not all of the Behaviors supplied in the Iterable at a
+     * Returns a Signal, true or false depending on whether 
+     * or not all of the Signals supplied in the Iterable at a
      * given point of time are true.
      *
-     * @param streams       An Iterable of the Behaviors to 
+     * @param streams       An Iterable of the Signals to 
      *                      be evaluated.
      *
-     * @return              If all the Behaviors in Iterable at
+     * @return              If all the Signals in Iterable at
      *                      a given time are true, true, else
      *                      false.
      */
-    public static function and(behaviors: Iterable<Behavior<Bool>>): Behavior<Bool> {
-        return Behaviors.zipN(behaviors).map(function(i) { return i.and(); });
+    public static function and(signals: Iterable<Signal<Bool>>): Signal<Bool> {
+        return Signals.zipN(signals).map(function(i) { return i.and(); });
     }
     
     /**
-     * Returns a Behavior, true or false depending on whether 
-     * or not any of the Behaviors supplied in the Iterable at a
+     * Returns a Signal, true or false depending on whether 
+     * or not any of the Signals supplied in the Iterable at a
      * given point of time are true.
      *
-     * @param streams       An Iterable of the Behaviors to 
+     * @param streams       An Iterable of the Signals to 
      *                      be evaluated.
      *
-     * @return              If any the Behaviors in Iterable at
+     * @return              If any the Signals in Iterable at
      *                      a given time are true, true, else
      *                      false.
      */
-    public static function or(behaviors: Iterable<Behavior<Bool>>): Behavior<Bool> {
-        return Behaviors.zipN(behaviors).map(function(i) { return i.or(); });
+    public static function or(signals: Iterable<Signal<Bool>>): Signal<Bool> {
+        return Signals.zipN(signals).map(function(i) { return i.or(); });
     }
 }
 

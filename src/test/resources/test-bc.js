@@ -109,29 +109,29 @@ haxe.test.Notifier.prototype.remove = function(h) {
 }
 haxe.test.Notifier.prototype.__class__ = haxe.test.Notifier;
 if(!haxe.reactive) haxe.reactive = {}
-haxe.reactive.BehaviorBool = function(p) { if( p === $_ ) return; {
+haxe.reactive.SignalBool = function(p) { if( p === $_ ) return; {
 	null;
 }}
-haxe.reactive.BehaviorBool.__name__ = ["haxe","reactive","BehaviorBool"];
-haxe.reactive.BehaviorBool.not = function(behavior) {
-	return haxe.reactive.StreamBool.not(behavior.changes()).startsWith(!behavior.valueNow());
+haxe.reactive.SignalBool.__name__ = ["haxe","reactive","SignalBool"];
+haxe.reactive.SignalBool.not = function(signal) {
+	return haxe.reactive.StreamBool.not(signal.changes()).startsWith(!signal.valueNow());
 }
-haxe.reactive.BehaviorBool.ifTrue = function(condition,thenB,elseB) {
+haxe.reactive.SignalBool.ifTrue = function(condition,thenS,elseS) {
 	return condition.map(function(b) {
-		return (b?thenB.valueNow():elseB.valueNow());
+		return (b?thenS.valueNow():elseS.valueNow());
 	});
 }
-haxe.reactive.BehaviorBool.and = function(behaviors) {
-	return haxe.reactive.Behaviors.zipN(behaviors).map(function(i) {
+haxe.reactive.SignalBool.and = function(signals) {
+	return haxe.reactive.Signals.zipN(signals).map(function(i) {
 		return haxe.data.collections.IterableExtensions.and(i);
 	});
 }
-haxe.reactive.BehaviorBool.or = function(behaviors) {
-	return haxe.reactive.Behaviors.zipN(behaviors).map(function(i) {
+haxe.reactive.SignalBool.or = function(signals) {
+	return haxe.reactive.Signals.zipN(signals).map(function(i) {
 		return haxe.data.collections.IterableExtensions.or(i);
 	});
 }
-haxe.reactive.BehaviorBool.prototype.__class__ = haxe.reactive.BehaviorBool;
+haxe.reactive.SignalBool.prototype.__class__ = haxe.reactive.SignalBool;
 if(!haxe["abstract"]) haxe["abstract"] = {}
 haxe.abstract.Foldable = function() { }
 haxe.abstract.Foldable.__name__ = ["haxe","abstract","Foldable"];
@@ -771,9 +771,9 @@ haxe.reactive.Streams.cond = function(conditions) {
 	}(this));
 }
 haxe.reactive.Streams.timer = function(time) {
-	return haxe.reactive.Streams.timerB(haxe.reactive.Behaviors.constant(time));
+	return haxe.reactive.Streams.timerS(haxe.reactive.Signals.constant(time));
 }
-haxe.reactive.Streams.timerB = function(time) {
+haxe.reactive.Streams.timerS = function(time) {
 	var stream = haxe.reactive.Streams.identity();
 	var pulser = null;
 	var timer = null;
@@ -822,13 +822,13 @@ haxe.reactive.Streams.zipN = function(streams) {
 		}(this)):haxe.reactive.Propagation.doNotPropagate);
 	},[output]).uniqueSteps();
 }
-haxe.reactive.Streams.randomB = function(time) {
-	return haxe.reactive.Streams.timerB(time).map(function(e) {
+haxe.reactive.Streams.randomS = function(time) {
+	return haxe.reactive.Streams.timerS(time).map(function(e) {
 		return Math.random();
 	});
 }
 haxe.reactive.Streams.random = function(time) {
-	return haxe.reactive.Streams.randomB(haxe.reactive.Behaviors.constant(time));
+	return haxe.reactive.Streams.randomS(haxe.reactive.Signals.constant(time));
 }
 haxe.reactive.Streams.prototype.__class__ = haxe.reactive.Streams;
 if(!haxe.test.ui) haxe.test.ui = {}
@@ -5215,9 +5215,9 @@ haxe.reactive.Stream.prototype.bind = function(k) {
 	return outE;
 }
 haxe.reactive.Stream.prototype.blind = function(time) {
-	return this.blindB(haxe.reactive.Behaviors.constant(time));
+	return this.blindS(haxe.reactive.Signals.constant(time));
 }
-haxe.reactive.Stream.prototype.blindB = function(time) {
+haxe.reactive.Stream.prototype.blindS = function(time) {
 	var lastSent = (haxe.reactive.External.now() - time.valueNow()) - 1;
 	return haxe.reactive.Streams.create(function(p) {
 		var curTime = haxe.reactive.External.now();
@@ -5231,9 +5231,9 @@ haxe.reactive.Stream.prototype.blindB = function(time) {
 	},[this]);
 }
 haxe.reactive.Stream.prototype.calm = function(time) {
-	return this.calmB(haxe.reactive.Behaviors.constant(time));
+	return this.calmS(haxe.reactive.Signals.constant(time));
 }
-haxe.reactive.Stream.prototype.calmB = function(time) {
+haxe.reactive.Stream.prototype.calmS = function(time) {
 	var out = haxe.reactive.Streams.identity();
 	var towards = null;
 	haxe.reactive.Streams.create(function(pulse) {
@@ -5261,7 +5261,7 @@ haxe.reactive.Stream.prototype.delay = function(time) {
 	},[this]);
 	return resE;
 }
-haxe.reactive.Stream.prototype.delayB = function(time) {
+haxe.reactive.Stream.prototype.delayS = function(time) {
 	var self = this;
 	var receiverEE = haxe.reactive.Streams.identity();
 	var link = { from : self, towards : self.delay(time.valueNow())}
@@ -5561,7 +5561,7 @@ haxe.reactive.Stream.prototype.snapshot = function(value) {
 	});
 }
 haxe.reactive.Stream.prototype.startsWith = function(init) {
-	return new haxe.reactive.Behavior(this,init,function(pulse) {
+	return new haxe.reactive.Signal(this,init,function(pulse) {
 		return haxe.reactive.Propagation.propagate(pulse);
 	});
 }
@@ -5682,7 +5682,7 @@ haxe.reactive.Stream.prototype.zip5 = function($as,bs,cs,ds) {
 	});
 }
 haxe.reactive.Stream.prototype.__class__ = haxe.reactive.Stream;
-haxe.reactive.Behavior = function(stream,init,updater) { if( stream === $_ ) return; {
+haxe.reactive.Signal = function(stream,init,updater) { if( stream === $_ ) return; {
 	this._last = init;
 	this._underlyingRaw = stream;
 	this._updater = updater;
@@ -5714,70 +5714,70 @@ haxe.reactive.Behavior = function(stream,init,updater) { if( stream === $_ ) ret
 		}(this));
 	},[stream.uniqueSteps()]);
 }}
-haxe.reactive.Behavior.__name__ = ["haxe","reactive","Behavior"];
-haxe.reactive.Behavior.prototype._last = null;
-haxe.reactive.Behavior.prototype._underlying = null;
-haxe.reactive.Behavior.prototype._underlyingRaw = null;
-haxe.reactive.Behavior.prototype._updater = null;
-haxe.reactive.Behavior.prototype.blind = function(time) {
+haxe.reactive.Signal.__name__ = ["haxe","reactive","Signal"];
+haxe.reactive.Signal.prototype._last = null;
+haxe.reactive.Signal.prototype._underlying = null;
+haxe.reactive.Signal.prototype._underlyingRaw = null;
+haxe.reactive.Signal.prototype._updater = null;
+haxe.reactive.Signal.prototype.blind = function(time) {
 	return this.mapC(function(s) {
 		return s.blind(time);
 	});
 }
-haxe.reactive.Behavior.prototype.blindB = function(time) {
+haxe.reactive.Signal.prototype.blindS = function(time) {
 	return this.mapC(function(s) {
-		return s.blindB(time);
+		return s.blindS(time);
 	});
 }
-haxe.reactive.Behavior.prototype.calm = function(time) {
+haxe.reactive.Signal.prototype.calm = function(time) {
 	return this.mapC(function(s) {
 		return s.calm(time);
 	});
 }
-haxe.reactive.Behavior.prototype.calmB = function(time) {
+haxe.reactive.Signal.prototype.calmS = function(time) {
 	return this.mapC(function(s) {
-		return s.calmB(time);
+		return s.calmS(time);
 	});
 }
-haxe.reactive.Behavior.prototype.changes = function() {
+haxe.reactive.Signal.prototype.changes = function() {
 	return this._underlying;
 }
-haxe.reactive.Behavior.prototype.delay = function(time) {
+haxe.reactive.Signal.prototype.delay = function(time) {
 	return this.mapC(function(s) {
 		return s.delay(time);
 	});
 }
-haxe.reactive.Behavior.prototype.delayB = function(time) {
+haxe.reactive.Signal.prototype.delayS = function(time) {
 	return this.mapC(function(s) {
-		return s.delayB(time);
+		return s.delayS(time);
 	});
 }
-haxe.reactive.Behavior.prototype.lift = function(f) {
+haxe.reactive.Signal.prototype.lift = function(f) {
 	return this.changes().map(function(a) {
 		return f(a);
 	}).startsWith(f(this.valueNow()));
 }
-haxe.reactive.Behavior.prototype.liftB = function(f) {
+haxe.reactive.Signal.prototype.liftS = function(f) {
 	return this.changes().map(function(a) {
 		return (f.valueNow())(a);
 	}).startsWith((f.valueNow())(this.valueNow()));
 }
-haxe.reactive.Behavior.prototype.map = function(f) {
+haxe.reactive.Signal.prototype.map = function(f) {
 	return this.lift(f);
 }
-haxe.reactive.Behavior.prototype.mapB = function(f) {
-	return this.liftB(f);
+haxe.reactive.Signal.prototype.mapS = function(f) {
+	return this.liftS(f);
 }
-haxe.reactive.Behavior.prototype.mapC = function(f) {
+haxe.reactive.Signal.prototype.mapC = function(f) {
 	return f(this.changes()).startsWith(this.valueNow());
 }
-haxe.reactive.Behavior.prototype.sendBehavior = function(value) {
+haxe.reactive.Signal.prototype.sendSignal = function(value) {
 	this.changes().sendEvent(value);
 }
-haxe.reactive.Behavior.prototype.valueNow = function() {
+haxe.reactive.Signal.prototype.valueNow = function() {
 	return this._last;
 }
-haxe.reactive.Behavior.prototype.zip = function(b2) {
+haxe.reactive.Signal.prototype.zip = function(b2) {
 	var self = this;
 	var createTuple = function() {
 		return Tuple2.create(self.valueNow(),b2.valueNow());
@@ -5797,7 +5797,7 @@ haxe.reactive.Behavior.prototype.zip = function(b2) {
 		}(this));
 	})).startsWith(createTuple());
 }
-haxe.reactive.Behavior.prototype.zip3 = function(b2,b3) {
+haxe.reactive.Signal.prototype.zip3 = function(b2,b3) {
 	var self = this;
 	var createTuple = function() {
 		return Tuple3.create(self.valueNow(),b2.valueNow(),b3.valueNow());
@@ -5817,7 +5817,7 @@ haxe.reactive.Behavior.prototype.zip3 = function(b2,b3) {
 		}(this));
 	})).startsWith(createTuple());
 }
-haxe.reactive.Behavior.prototype.zip4 = function(b2,b3,b4) {
+haxe.reactive.Signal.prototype.zip4 = function(b2,b3,b4) {
 	var self = this;
 	var createTuple = function() {
 		return Tuple4.create(self.valueNow(),b2.valueNow(),b3.valueNow(),b4.valueNow());
@@ -5837,7 +5837,7 @@ haxe.reactive.Behavior.prototype.zip4 = function(b2,b3,b4) {
 		}(this));
 	})).startsWith(createTuple());
 }
-haxe.reactive.Behavior.prototype.zip5 = function(b2,b3,b4,b5) {
+haxe.reactive.Signal.prototype.zip5 = function(b2,b3,b4,b5) {
 	var self = this;
 	var createTuple = function() {
 		return Tuple5.create(self.valueNow(),b2.valueNow(),b3.valueNow(),b4.valueNow(),b5.valueNow());
@@ -5857,11 +5857,11 @@ haxe.reactive.Behavior.prototype.zip5 = function(b2,b3,b4,b5) {
 		}(this));
 	})).startsWith(createTuple());
 }
-haxe.reactive.Behavior.prototype.zipN = function(behaviors) {
-	var behaviors1 = haxe.data.collections.IterableExtensions.cons(behaviors,this);
-	return haxe.reactive.Behaviors.zipN(behaviors1);
+haxe.reactive.Signal.prototype.zipN = function(signals) {
+	var signals1 = haxe.data.collections.IterableExtensions.cons(signals,this);
+	return haxe.reactive.Signals.zipN(signals1);
 }
-haxe.reactive.Behavior.prototype.__class__ = haxe.reactive.Behavior;
+haxe.reactive.Signal.prototype.__class__ = haxe.reactive.Signal;
 haxe.test.ui.common.PackageResult = function(packageName) { if( packageName === $_ ) return; {
 	this.packageName = packageName;
 	this.classes = new Hash();
@@ -7254,26 +7254,26 @@ haxe.test.ui.common.ClassResult.prototype.setupName = null;
 haxe.test.ui.common.ClassResult.prototype.stats = null;
 haxe.test.ui.common.ClassResult.prototype.teardownName = null;
 haxe.test.ui.common.ClassResult.prototype.__class__ = haxe.test.ui.common.ClassResult;
-haxe.reactive.Behaviors = function(p) { if( p === $_ ) return; {
+haxe.reactive.Signals = function(p) { if( p === $_ ) return; {
 	null;
 }}
-haxe.reactive.Behaviors.__name__ = ["haxe","reactive","Behaviors"];
-haxe.reactive.Behaviors.constant = function(value) {
+haxe.reactive.Signals.__name__ = ["haxe","reactive","Signals"];
+haxe.reactive.Signals.constant = function(value) {
 	return haxe.reactive.Streams.identity().startsWith(value);
 }
-haxe.reactive.Behaviors.cond = function(conditions,elseB) {
+haxe.reactive.Signals.cond = function(conditions,elseS) {
 	return (function($this) {
 		var $r;
 		var $e = (haxe.data.collections.IterableExtensions.headOption(conditions));
 		switch( $e[1] ) {
 		case 0:
 		{
-			$r = elseB;
+			$r = elseS;
 		}break;
 		case 1:
 		var h = $e[2];
 		{
-			$r = haxe.reactive.BehaviorBool.ifTrue(h._1,h._2,haxe.reactive.Behaviors.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseB));
+			$r = haxe.reactive.SignalBool.ifTrue(h._1,h._2,haxe.reactive.Signals.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseS));
 		}break;
 		default:{
 			$r = null;
@@ -7282,25 +7282,25 @@ haxe.reactive.Behaviors.cond = function(conditions,elseB) {
 		return $r;
 	}(this));
 }
-haxe.reactive.Behaviors.zipN = function(behaviors) {
+haxe.reactive.Signals.zipN = function(signals) {
 	var zipValueNow = function() {
-		return haxe.data.collections.IterableExtensions.map(behaviors,function(b) {
+		return haxe.data.collections.IterableExtensions.map(signals,function(b) {
 			return b.valueNow();
 		});
 	}
 	return haxe.reactive.Streams.create(function(pulse) {
 		return haxe.reactive.Propagation.propagate(pulse.withValue(zipValueNow()));
-	},haxe.data.collections.IterableExtensions.map(behaviors,function(b) {
+	},haxe.data.collections.IterableExtensions.map(signals,function(b) {
 		return b.changes();
 	})).startsWith(zipValueNow());
 }
-haxe.reactive.Behaviors.sample = function(time) {
+haxe.reactive.Signals.sample = function(time) {
 	return haxe.reactive.Streams.timer(time).startsWith(Std["int"](haxe.reactive.External.now()));
 }
-haxe.reactive.Behaviors.sampleB = function(time) {
-	return haxe.reactive.Streams.timerB(time).startsWith(Std["int"](haxe.reactive.External.now()));
+haxe.reactive.Signals.sampleS = function(time) {
+	return haxe.reactive.Streams.timerS(time).startsWith(Std["int"](haxe.reactive.External.now()));
 }
-haxe.reactive.Behaviors.prototype.__class__ = haxe.reactive.Behaviors;
+haxe.reactive.Signals.prototype.__class__ = haxe.reactive.Signals;
 haxe.abstract.FoldableExtensions = function() { }
 haxe.abstract.FoldableExtensions.__name__ = ["haxe","abstract","FoldableExtensions"];
 haxe.abstract.FoldableExtensions.foldr = function(foldable,z,f) {
@@ -8097,161 +8097,161 @@ haxe.test.ui.common.ReportTools.hasOutput = function(report,stats) {
 	return haxe.test.ui.common.ReportTools.hasHeader(report,stats);
 }
 haxe.test.ui.common.ReportTools.prototype.__class__ = haxe.test.ui.common.ReportTools;
-haxe.reactive.BehaviorCollection = function(p) { if( p === $_ ) return; {
+haxe.reactive.SignalCollection = function(p) { if( p === $_ ) return; {
 	null;
 }}
-haxe.reactive.BehaviorCollection.__name__ = ["haxe","reactive","BehaviorCollection"];
-haxe.reactive.BehaviorCollection.concatB = function(b1,b2) {
+haxe.reactive.SignalCollection.__name__ = ["haxe","reactive","SignalCollection"];
+haxe.reactive.SignalCollection.concatS = function(b1,b2) {
 	return b1.zip(b2).map(function(c) {
 		return haxe.abstract.FoldableExtensions.concat(c._1,c._2);
 	});
 }
-haxe.reactive.BehaviorCollection.join = function(b,$char) {
+haxe.reactive.SignalCollection.join = function(b,$char) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.mkString(c,$char);
 	});
 }
-haxe.reactive.BehaviorCollection.size = function(b) {
+haxe.reactive.SignalCollection.size = function(b) {
 	return b.map(function(c) {
 		return c.getSize();
 	});
 }
-haxe.reactive.BehaviorCollection.zipB = function(b1,b2) {
+haxe.reactive.SignalCollection.zipS = function(b1,b2) {
 	return b1.zip(b2).map(function(c) {
 		return c._1.zip(c._2);
 	});
 }
-haxe.reactive.BehaviorCollection.append = function(b,element) {
+haxe.reactive.SignalCollection.append = function(b,element) {
 	return b.map(function(c) {
 		return c.add(element);
 	});
 }
-haxe.reactive.BehaviorCollection.count = function(b,predicate) {
+haxe.reactive.SignalCollection.count = function(b,predicate) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.count(c,predicate);
 	});
 }
-haxe.reactive.BehaviorCollection.all = function(b,tester) {
+haxe.reactive.SignalCollection.all = function(b,tester) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.forAll(c,tester);
 	});
 }
-haxe.reactive.BehaviorCollection.any = function(b,tester) {
+haxe.reactive.SignalCollection.any = function(b,tester) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.forAny(c,tester);
 	});
 }
-haxe.reactive.BehaviorCollection.forEach = function(b,f) {
+haxe.reactive.SignalCollection.forEach = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.foreach(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.each = function(b,f) {
+haxe.reactive.SignalCollection.each = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.foreach(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.map = function(b,f) {
+haxe.reactive.SignalCollection.map = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.map(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.mapTo = function(b,t,f) {
+haxe.reactive.SignalCollection.mapTo = function(b,t,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.mapTo(c,t,f);
 	});
 }
-haxe.reactive.BehaviorCollection.partition = function(b,filter) {
+haxe.reactive.SignalCollection.partition = function(b,filter) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.partition(c,filter);
 	});
 }
-haxe.reactive.BehaviorCollection.filter = function(b,f) {
+haxe.reactive.SignalCollection.filter = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.filter(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.flatMap = function(b,f) {
+haxe.reactive.SignalCollection.flatMap = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.flatMap(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.toArray = function(b) {
+haxe.reactive.SignalCollection.toArray = function(b) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.toArray(c);
 	});
 }
-haxe.reactive.BehaviorCollection.foldr = function(b,initial,f) {
+haxe.reactive.SignalCollection.foldr = function(b,initial,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.foldr(c,initial,f);
 	});
 }
-haxe.reactive.BehaviorCollection.foldl = function(b,initial,f) {
+haxe.reactive.SignalCollection.foldl = function(b,initial,f) {
 	return b.map(function(c) {
 		return c.foldl(initial,f);
 	});
 }
-haxe.reactive.BehaviorCollection.scanl = function(b,initial,f) {
+haxe.reactive.SignalCollection.scanl = function(b,initial,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.scanl(c,initial,f);
 	});
 }
-haxe.reactive.BehaviorCollection.scanr = function(b,initial,f) {
+haxe.reactive.SignalCollection.scanr = function(b,initial,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.scanr(c,initial,f);
 	});
 }
-haxe.reactive.BehaviorCollection.scanrP = function(b,f) {
+haxe.reactive.SignalCollection.scanrP = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.scanr1(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.scanlP = function(b,f) {
+haxe.reactive.SignalCollection.scanlP = function(b,f) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.scanl1(c,f);
 	});
 }
-haxe.reactive.BehaviorCollection.member = function(b,element) {
+haxe.reactive.SignalCollection.member = function(b,element) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.member(c,element);
 	});
 }
-haxe.reactive.BehaviorCollection.exists = function(b,cmp) {
+haxe.reactive.SignalCollection.exists = function(b,cmp) {
 	return b.map(function(v) {
 		return haxe.abstract.FoldableExtensions.exists(v,cmp);
 	});
 }
-haxe.reactive.BehaviorCollection.existsP = function(b,ref,cmp) {
+haxe.reactive.SignalCollection.existsP = function(b,ref,cmp) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.existsP(c,ref,cmp);
 	});
 }
-haxe.reactive.BehaviorCollection.find = function(b,cmp) {
+haxe.reactive.SignalCollection.find = function(b,cmp) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.find(c,cmp);
 	});
 }
-haxe.reactive.BehaviorCollection.nubBy = function(b,cmp) {
+haxe.reactive.SignalCollection.nubBy = function(b,cmp) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.nubBy(c,cmp);
 	});
 }
-haxe.reactive.BehaviorCollection.nub = function(b) {
+haxe.reactive.SignalCollection.nub = function(b) {
 	return b.map(function(c) {
 		return haxe.abstract.FoldableExtensions.nub(c);
 	});
 }
-haxe.reactive.BehaviorCollection.intersectB = function(b1,b2) {
+haxe.reactive.SignalCollection.intersectS = function(b1,b2) {
 	return b1.zip(b2).map(function(c) {
 		return haxe.abstract.FoldableExtensions.intersect(c._1,c._2);
 	});
 }
-haxe.reactive.BehaviorCollection.intersectByB = function(b1,b2,cmp) {
+haxe.reactive.SignalCollection.intersectByS = function(b1,b2,cmp) {
 	return b1.zip(b2).map(function(c) {
 		return haxe.abstract.FoldableExtensions.intersectBy(c._1,c._2,cmp);
 	});
 }
-haxe.reactive.BehaviorCollection.prototype.__class__ = haxe.reactive.BehaviorCollection;
+haxe.reactive.SignalCollection.prototype.__class__ = haxe.reactive.SignalCollection;
 haxe.test.ui.Report = function() { }
 haxe.test.ui.Report.__name__ = ["haxe","test","ui","Report"];
 haxe.test.ui.Report.create = function(runner,displaySuccessResults,headerDisplayMode) {

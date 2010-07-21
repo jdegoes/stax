@@ -29,7 +29,7 @@ class Collections {
      *
      */
     public static function toStream<T>(collection: Iterable<T>, time: Int): Stream<T> {
-        return toStreamB(collection, Behaviors.constant(time));
+        return toStreamS(collection, Signals.constant(time));
     }
     
     /**
@@ -37,10 +37,10 @@ class Collections {
      * specified amount of time.
      *
      * @param collection    The collection.
-     * @param time          The time, as a behavior, in milliseconds.
+     * @param time          The time, as a signal, in milliseconds.
      *
      */
-    public static function toStreamB<T>(collection: Iterable<T>, time: Behavior<Int>): Stream<T> {
+    public static function toStreamS<T>(collection: Iterable<T>, time: Signal<Int>): Stream<T> {
         var startTime: Float = -1.0;
         var accum = 0;
         

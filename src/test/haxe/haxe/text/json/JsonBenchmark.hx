@@ -24,7 +24,7 @@ import haxe.text.json.JValue;
 import haxe.text.json.Json;
 import haxe.text.json.JsonGenerator;
 
-using haxe.text.json.JValueBehavior;
+using haxe.text.json.JValueSignal;
 
 class JsonBenchmarkCase extends TestCase {
   public static function timed<T> (name: String, f: T -> Void): T -> Float {

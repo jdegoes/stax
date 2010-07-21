@@ -17,46 +17,46 @@ package haxe.reactive;
 
 import haxe.reactive.Reactive;
 
-class BehaviorBehavior {
+class SignalSignal {
     private function new() { }
     
     /**
-     * Converts an Behavior of Behaviors into
-     * a single Behavior, whose values represent 
-     * those of the last Behavior to have an Event.
+     * Converts an Signal of Signals into
+     * a single Signal, whose values represent 
+     * those of the last Signal to have an Event.
      *
-     * @param   streams     The Behavior of 
-     *                      Behaviors to be
+     * @param   streams     The Signal of 
+     *                      Signals to be
      *                      flattened.
      */
-    public static function switchB<T>(behavior: Behavior<Behavior<T>>): Behavior<T> {
-        return flatten(behavior);
+    public static function switchS<T>(signal: Signal<Signal<T>>): Signal<T> {
+        return flatten(signal);
     }
     
     /**
-     * Converts an Behavior of Behaviors into
-     * a single Behavior, whose values represent 
-     * those of the last Behavior to have an Event.
+     * Converts an Signal of Signals into
+     * a single Signal, whose values represent 
+     * those of the last Signal to have an Event.
      *
-     * @param   streams     The Behavior of 
-     *                      Behaviors to be
+     * @param   streams     The Signal of 
+     *                      Signals to be
      *                      flattened.
      */
-    public static function join<T>(behavior: Behavior<Behavior<T>>): Behavior<T> {
-        return flatten(behavior);
+    public static function join<T>(signal: Signal<Signal<T>>): Signal<T> {
+        return flatten(signal);
     }
     
     /**
-     * Converts an Behavior of Behaviors into
-     * a single Behavior, whose values represent 
-     * those of the last Behavior to have an Event.
+     * Converts an Signal of Signals into
+     * a single Signal, whose values represent 
+     * those of the last Signal to have an Event.
      *
-     * @param   streams     The Behavior of 
-     *                      Behaviors to be
+     * @param   streams     The Signal of 
+     *                      Signals to be
      *                      flattened.
      */
-    public static function flatten<T>(behavior: Behavior<Behavior<T>>): Behavior<T> {
-        var init: Behavior<T> = behavior.valueNow();
+    public static function flatten<T>(signal: Signal<Signal<T>>): Signal<T> {
+        var init: Signal<T> = signal.valueNow();
 
         var prevSourceE: Stream<T> = null;
 
@@ -64,7 +64,7 @@ class BehaviorBehavior {
 
         //XXX could result in out-of-order propagation! Fix!
         var makerE = Streams.create(
-            function(p: Pulse<Behavior<T>>): Propagation<Void> {
+            function(p: Pulse<Signal<T>>): Propagation<Void> {
                 if (prevSourceE != null) {
                     prevSourceE.removeListener(receiverE);
                 }
@@ -77,7 +77,7 @@ class BehaviorBehavior {
                 
                 return doNotPropagate;
             },
-            [behavior.changes()]
+            [signal.changes()]
         );
 
         makerE.sendEvent(init);

@@ -345,13 +345,13 @@ class Stream<T> {
     }
     
     /**
-     * Creates a behavior backed by this event stream, which starts with the 
+     * Creates a signal backed by this event stream, which starts with the 
      * specified value.
      *
      * @param init  The initial value.
      */
-    public function startsWith(init: T): Behavior<T> {
-        return new Behavior<T>(
+    public function startsWith(init: T): Signal<T> {
+        return new Signal<T>(
             this,
             init,
             function(pulse: Pulse<Dynamic>): Propagation<T> {
@@ -383,9 +383,9 @@ class Stream<T> {
     /**
      * Delays this stream by the specified number of milliseconds.
      * 
-     * @param   time    Time in milliseconds as a Behavior
+     * @param   time    Time in milliseconds as a Signal
      */
-    public function delayB(time: Behavior<Int>): Stream<T> {
+    public function delayS(time: Signal<Int>): Stream<T> {
         var self = this;
 
         var receiverEE: Stream<Stream<T>> = Streams.identity();
@@ -426,7 +426,7 @@ class Stream<T> {
      * @param time  The number of milliseconds.
      */
     public function calm(time: Int): Stream<T> {
-        return calmB(Behaviors.constant(time));
+        return calmS(Signals.constant(time));
     }
     
     /**
@@ -435,7 +435,7 @@ class Stream<T> {
      *
      * @param time  The number of milliseconds.
      */
-    public function calmB(time: Behavior<Int>): Stream<T> {
+    public function calmS(time: Signal<Int>): Stream<T> {
         var out: Stream<T> = Streams.identity();
       
         var towards: Timeout = null;
@@ -470,7 +470,7 @@ class Stream<T> {
      * @param time The time to blind the stream to.
      */
     public function blind(time: Int): Stream<T> {
-        return blindB(Behaviors.constant(time));
+        return blindS(Signals.constant(time));
     }
     
     /**
@@ -479,14 +479,14 @@ class Stream<T> {
      *
      * @param time The time to blind the stream to.
      */
-    public function blindB(time: Behavior<Int>): Stream<T> {
+    public function blindS(time: Signal<Int>): Stream<T> {
         var lastSent = External.now() - time.valueNow() - 1;
         
         return Streams.create(            
             function (p: Pulse<T>): Propagation<T> {
                 var curTime = External.now();
                 
-                if (curTime - lastSent > time.valueNow()) { // XXX What happens if behavior time decreases, then we "owe" a prior event???
+                if (curTime - lastSent > time.valueNow()) { // XXX What happens if signal time decreases, then we "owe" a prior event???
                     lastSent = curTime;
                     
                     return propagate(p);
@@ -501,11 +501,11 @@ class Stream<T> {
     
     /**
      * Maps this stream into a stream of values determined by "snapshotting" 
-     * the value of the behavior.
+     * the value of the signal.
      *
      * @param value The value.
      */
-    public function snapshot<Z>(value: Behavior<Z>): Stream<Z> {
+    public function snapshot<Z>(value: Signal<Z>): Stream<Z> {
         return map(function(t) { return value.valueNow(); });
     }
     
@@ -1151,7 +1151,7 @@ class Stream<T> {
     }
 }
 
-class Behavior<T> {
+class Signal<T> {
     private var _underlyingRaw: Stream<Dynamic>;
     private var _underlying:    Stream<T>;
     private var _updater:       Pulse<Dynamic> -> Propagation<T>;
@@ -1183,41 +1183,41 @@ class Behavior<T> {
     
     /**
      * Applies a function to a value and returns the 
-     * result as a Behavior.
+     * result as a Signal.
      *
      * @param   f   The function to apply.
      *
-     * @result      A Behavior that is the result
+     * @result      A Signal that is the result
      *              of the supplied function. 
      */
-    public function map<Z>(f: T -> Z): Behavior<Z> {
+    public function map<Z>(f: T -> Z): Signal<Z> {
         return lift(f);
     }
     
     /**
      * Applies a function to a value and returns the 
-     * result as a Behavior.
+     * result as a Signal.
      *
-     * @param   f   A Behavior that accepts a T and 
+     * @param   f   A Signal that accepts a T and 
      *              returns a Z.
      *
-     * @result      A Behavior that is the result
+     * @result      A Signal that is the result
      *              of the supplied function. 
      */
-    public function mapB<Z>(f: Behavior<T -> Z>): Behavior<Z> {
-        return liftB(f);
+    public function mapS<Z>(f: Signal<T -> Z>): Signal<Z> {
+        return liftS(f);
     }
     
     /**
      * Applies a function to a value and returns the 
-     * result as a Behavior.
+     * result as a Signal.
      *
      * @param   f   The function to apply.
      *
-     * @result      A Behavior that is the result
+     * @result      A Signal that is the result
      *              of the supplied function. 
      */
-    public function lift<Z>(f: T -> Z): Behavior<Z> {
+    public function lift<Z>(f: T -> Z): Signal<Z> {
         return changes().map(
             function(a) {
                 return f(a);
@@ -1227,15 +1227,15 @@ class Behavior<T> {
     
     /**
      * Applies a function to a value and returns the 
-     * result as a Behavior.
+     * result as a Signal.
      *
-     * @param   f   A Behavior that accepts a T and 
+     * @param   f   A Signal that accepts a T and 
      *              returns a Z.
      *
-     * @result      A Behavior that is the result
+     * @result      A Signal that is the result
      *              of the supplied function. 
      */
-    public function liftB<Z>(f: Behavior<T -> Z>): Behavior<Z> {
+    public function liftS<Z>(f: Signal<T -> Z>): Signal<Z> {
         // uniqueSteps()???
         return changes().map(
             function(a) {
@@ -1245,17 +1245,17 @@ class Behavior<T> {
     }
     
     /**
-     * Zips elements of supplied Behaviors together and returns a
-     * Behavior of Tuple2 containing the zipped elements.
+     * Zips elements of supplied Signals together and returns a
+     * Signal of Tuple2 containing the zipped elements.
      *
      * [1, 2, 3].zip[1, 2, 3] == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
      *
-     * @param b2  The Behavior with which to zip 'this' Behavior.
+     * @param b2  The Signal with which to zip 'this' Signal.
      *
-     * @return     A Behavior Tuple slice containing an element from each 
-     *             supplied Behavior
+     * @return     A Signal Tuple slice containing an element from each 
+     *             supplied Signal
      */
-    public function zip<B>(b2: Behavior<B>): Behavior<Tuple2<T, B>> {
+    public function zip<B>(b2: Signal<B>): Signal<Tuple2<T, B>> {
         var self = this;
         
         var createTuple = function() {
@@ -1271,16 +1271,16 @@ class Behavior<T> {
     }
     
     /**
-     * Zips elements of supplied Behaviors together and returns a
-     * Behavior of Tuple3 containing the zipped elements.
+     * Zips elements of supplied Signals together and returns a
+     * Signal of Tuple3 containing the zipped elements.
      *
-     * @param b2  A Behavior to be zipped.
-     * @param b3  A Behavior to be zipped.
+     * @param b2  A Signal to be zipped.
+     * @param b3  A Signal to be zipped.
      *
-     * @return     A Behavior Tuple slice containing an element from each 
-     *             Behavior
+     * @return     A Signal Tuple slice containing an element from each 
+     *             Signal
      */
-    public function zip3<B, C>(b2: Behavior<B>, b3: Behavior<C>): Behavior<Tuple3<T, B, C>> {
+    public function zip3<B, C>(b2: Signal<B>, b3: Signal<C>): Signal<Tuple3<T, B, C>> {
         var self = this;
         
         var createTuple = function() {
@@ -1296,17 +1296,17 @@ class Behavior<T> {
     }
     
     /**
-     * Zips elements of supplied Behaviors together and returns a
-     * Behavior of Tuple4 containing the zipped elements.
+     * Zips elements of supplied Signals together and returns a
+     * Signal of Tuple4 containing the zipped elements.
      *
-     * @param b2  A Behavior to be zipped.
-      * @param b3  A Behavior to be zipped.
-      * @param b4  A Behavior to be zipped.
+     * @param b2  A Signal to be zipped.
+      * @param b3  A Signal to be zipped.
+      * @param b4  A Signal to be zipped.
       *
-      * @return     A Behavior Tuple slice containing an element from each 
-      *             Behavior
+      * @return     A Signal Tuple slice containing an element from each 
+      *             Signal
        */
-    public function zip4<B, C, D>(b2: Behavior<B>, b3: Behavior<C>, b4: Behavior<D>): Behavior<Tuple4<T, B, C, D>> {
+    public function zip4<B, C, D>(b2: Signal<B>, b3: Signal<C>, b4: Signal<D>): Signal<Tuple4<T, B, C, D>> {
         var self = this;
         
         var createTuple = function() {
@@ -1322,18 +1322,18 @@ class Behavior<T> {
     }
     
    /**
-      * Zips elements of supplied Behaviors together and returns a
-      * Behavior of Tuple5 containing the zipped elements.
+      * Zips elements of supplied Signals together and returns a
+      * Signal of Tuple5 containing the zipped elements.
       *
-      * @param b2  A Behavior to be zipped.
-      * @param b3  A Behavior to be zipped.
-      * @param b4  A Behavior to be zipped.
-      * @param b5  A Behavior to be zipped.
+      * @param b2  A Signal to be zipped.
+      * @param b3  A Signal to be zipped.
+      * @param b4  A Signal to be zipped.
+      * @param b5  A Signal to be zipped.
       *
-      * @return     A Behavior Tuple slice containing an element from each 
-      *             Behavior
+      * @return     A Signal Tuple slice containing an element from each 
+      *             Signal
       */
-    public function zip5<B, C, D, E>(b2: Behavior<B>, b3: Behavior<C>, b4: Behavior<D>, b5: Behavior<E>): Behavior<Tuple5<T, B, C, D, E>> {
+    public function zip5<B, C, D, E>(b2: Signal<B>, b3: Signal<C>, b4: Signal<D>, b5: Signal<E>): Signal<Tuple5<T, B, C, D, E>> {
         var self = this;
         
         var createTuple = function() {
@@ -1349,15 +1349,15 @@ class Behavior<T> {
     }
     
     /**
-     * Zips together the specified Behaviors.
+     * Zips together the specified Signals.
      *
-     *@param    behaviors   An Iterable of the 
-     *                      Behaviors to be zipped.
+     *@param    signals   An Iterable of the 
+     *                      Signals to be zipped.
      */
-    public function zipN(behaviors: Iterable<Behavior<T>>): Behavior<Iterable<T>> {
-        var behaviors = behaviors.cons(this);
+    public function zipN(signals: Iterable<Signal<T>>): Signal<Iterable<T>> {
+        var signals = signals.cons(this);
         
-        return Behaviors.zipN(behaviors);
+        return Signals.zipN(signals);
     }
     
     /**
@@ -1366,7 +1366,7 @@ class Behavior<T> {
      *
      * @param time  The number of milliseconds.
      */
-    public function calm(time: Int): Behavior<T> {
+    public function calm(time: Int): Signal<T> {
         return mapC(function(s) { return s.calm(time); });
     }
     
@@ -1374,10 +1374,10 @@ class Behavior<T> {
      * Calms the stream. No event will be get through unless it occurs T 
      * milliseconds or more before the following event.
      *
-     * @param time  The number of milliseconds as a Behavior.
+     * @param time  The number of milliseconds as a Signal.
      */
-    public function calmB(time: Behavior<Int>): Behavior<T> {
-        return mapC(function(s) { return s.calmB(time); });
+    public function calmS(time: Signal<Int>): Signal<T> {
+        return mapC(function(s) { return s.calmS(time); });
     }
     
     /**
@@ -1386,7 +1386,7 @@ class Behavior<T> {
      *
      * @param time The time to blind the stream to.
      */
-    public function blind(time: Int): Behavior<T> {
+    public function blind(time: Int): Signal<T> {
         return mapC(function(s) { return s.blind(time); });
     }
     
@@ -1396,8 +1396,8 @@ class Behavior<T> {
      *
      * @param time The time to blind the stream to.
      */
-    public function blindB(time: Behavior<Int>): Behavior<T> {
-        return mapC(function(s) { return s.blindB(time); });
+    public function blindS(time: Signal<Int>): Signal<T> {
+        return mapC(function(s) { return s.blindS(time); });
     }
     
     /**
@@ -1405,21 +1405,21 @@ class Behavior<T> {
      * 
      * @param   time    Time in milliseconds as an Int
      */
-    public function delay(time: Int): Behavior<T> {
+    public function delay(time: Int): Signal<T> {
         return mapC(function(s) { return s.delay(time); });
     }
     
     /**
      * Delays this stream by the specified number of milliseconds.
      * 
-     * @param   time    Time in milliseconds as a Behavior
+     * @param   time    Time in milliseconds as a Signal
      */
-    public function delayB(time: Behavior<Int>): Behavior<T> {
-        return mapC(function(s) { return s.delayB(time); });
+    public function delayS(time: Signal<Int>): Signal<T> {
+        return mapC(function(s) { return s.delayS(time); });
     }
     
     /**
-     * Returns the present value of 'this' Behavior. 
+     * Returns the present value of 'this' Signal. 
      *
      */
     public function valueNow(): T {
@@ -1427,21 +1427,21 @@ class Behavior<T> {
     }
     
     /**
-     * Applies a function to a behavior's value that 
+     * Applies a function to a signal's value that 
      * accepts an Stream value and returns the 
      * result as an Stream value.
      *
      * @param   f   The function to apply.
      *
-     * @result      A Behavior that is the result
+     * @result      A Signal that is the result
      *              of the supplied function. 
      */
-    public function mapC(f: Stream<T> -> Stream<T>): Behavior<T> {
+    public function mapC(f: Stream<T> -> Stream<T>): Signal<T> {
         return f(changes()).startsWith(valueNow());
     }
     
     /**
-     * Returns the Stream underlying the Behavior.
+     * Returns the Stream underlying the Signal.
      *
      * @result      The underlying Stream.
      */
@@ -1455,7 +1455,7 @@ class Behavior<T> {
      *
      * @param   value   the value to send Into the Stream.
      */
-    public function sendBehavior(value: Dynamic): Void {
+    public function sendSignal(value: Dynamic): Void {
         changes().sendEvent(value);
     }
 }

@@ -21,53 +21,53 @@ import haxe.data.collections.Collection;
 
 using haxe.data.collections.IterableExtensions;
 
-class Behaviors {
+class Signals {
     private function new() { }
     
-    public static function constant<T>(value: T): Behavior<T> {
+    public static function constant<T>(value: T): Signal<T> {
         return Streams.identity().startsWith(value);
     }
     
     /**
-     * Switches off a supplied Bool Behavior, returning
-     * an 'ifTrue' Behavior if true or a 'ifFalse' 
-     * Behavior if false.
+     * Switches off a supplied Bool Signal, returning
+     * an 'ifTrue' Signal if true or a 'ifFalse' 
+     * Signal if false.
      * 
      *
      * @param conditions    An Iterable of Tuple2s, composed of a
-     *                      true/false Behaviors and an 'if true' 
-     *                      Behavior that will be returned if 
+     *                      true/false Signals and an 'if true' 
+     *                      Signal that will be returned if 
      *                      Tuple._1 == 'true.'
      *
-     * @param elseB         The Behavior to return if Tuple._1
+     * @param elseS         The Signal to return if Tuple._1
      *                      == false.
      *
-     * @return              An 'ifTrue' Behavior if Tuple._1
-     *                      == true, else an 'ifFalse' Behavior.
+     * @return              An 'ifTrue' Signal if Tuple._1
+     *                      == true, else an 'ifFalse' Signal.
      */
-    public static function cond<T>(conditions: Iterable<Tuple2<Behavior<Bool>, Behavior<T>>>, elseB: Behavior<T>): Behavior<T> {
+    public static function cond<T>(conditions: Iterable<Tuple2<Signal<Bool>, Signal<T>>>, elseS: Signal<T>): Signal<T> {
         return switch (conditions.headOption()) {
-            case None:    elseB;
-            case Some(h): BehaviorBool.ifTrue(h._1, h._2, cond(conditions.tail(), elseB));
+            case None:    elseS;
+            case Some(h): SignalBool.ifTrue(h._1, h._2, cond(conditions.tail(), elseS));
         }
     }
     
     /**
-     * Zips together the specified Behaviors.
+     * Zips together the specified Signals.
      *
-     *@param    behaviors   An Iterable of the 
-     *                      Behaviors to be zipped.
+     *@param    signals   An Iterable of the 
+     *                      Signals to be zipped.
      */
-    public static function zipN<T>(behaviors: Iterable<Behavior<T>>): Behavior<Iterable<T>> {
+    public static function zipN<T>(signals: Iterable<Signal<T>>): Signal<Iterable<T>> {
         var zipValueNow = function(): Iterable<T> {
-            return behaviors.map(function(b) { return b.valueNow(); });
+            return signals.map(function(b) { return b.valueNow(); });
         }
         
         return Streams.create(
             function(pulse: Pulse<T>): Propagation<Iterable<T>> {
                 return propagate(pulse.withValue(zipValueNow()));
             },
-            behaviors.map(function(b) { return b.changes(); })
+            signals.map(function(b) { return b.changes(); })
         ).startsWith(zipValueNow());
     }
     
@@ -76,7 +76,7 @@ class Behaviors {
      *
      * @param time      The interval at which to sample time.
      */
-    public static function sample(time: Int): Behavior<Int> {
+    public static function sample(time: Int): Signal<Int> {
         return Streams.timer(time).startsWith(Std.int(External.now()));
     }
     
@@ -85,7 +85,7 @@ class Behaviors {
      *
      * @param time      The interval at which to sample time.
      */
-    public static function sampleB(time: Behavior<Int>): Behavior<Int> {
-        return Streams.timerB(time).startsWith(Std.int(External.now()));
+    public static function sampleS(time: Signal<Int>): Signal<Int> {
+        return Streams.timerS(time).startsWith(Std.int(External.now()));
     }
 }

@@ -140,7 +140,7 @@ class Streams {
      * @param time The number of milliseconds.
      */
     public static function timer(time: Int): Stream<Int> {
-        return timerB(Behaviors.constant(time));
+        return timerS(Signals.constant(time));
     }
     
     /**
@@ -149,7 +149,7 @@ class Streams {
      *
      * @param time The number of milliseconds.
      */
-    public static function timerB(time: Behavior<Int>): Stream<Int> {
+    public static function timerS(time: Signal<Int>): Stream<Int> {
         var stream: Stream<Int> = Streams.identity();
         
         var pulser: Void -> Void = null;
@@ -216,8 +216,8 @@ class Streams {
      * Creates a stream of random number events, separated by the specified 
      * number of milliseconds.
      */
-    public static function randomB(time: Behavior<Int>): Stream<Float> {
-        return timerB(time).map(function(e) { return Math.random(); });
+    public static function randomS(time: Signal<Int>): Stream<Float> {
+        return timerS(time).map(function(e) { return Math.random(); });
     }
     
     /**
@@ -225,6 +225,6 @@ class Streams {
      * number of milliseconds.
      */
     public static function random(time: Int): Stream<Float> {
-        return randomB(Behaviors.constant(time));
+        return randomS(Signals.constant(time));
     }
 }

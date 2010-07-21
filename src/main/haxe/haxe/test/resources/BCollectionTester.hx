@@ -2,7 +2,7 @@ package haxe.test.resources;
 
 import haxe.test.TestCase;
 
-import haxe.reactive.BehaviorCollection;
+import haxe.reactive.SignalCollection;
 
 using haxe.data.collections.IterableExtensions;
 

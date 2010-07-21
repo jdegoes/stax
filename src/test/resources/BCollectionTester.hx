@@ -4,7 +4,7 @@ import haxe.test.TestCase;
 import haxe.test.Runner;
 import haxe.test.ui.Report;
 
-import haxe.reactive.BehaviorCollection;
+import haxe.reactive.SignalCollection;
 using haxe.data.collections.IterableExtensions;
 
 class CollectionTester extends TestCase {

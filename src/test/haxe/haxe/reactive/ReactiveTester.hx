@@ -7,12 +7,12 @@ import haxe.test.TestCase;
 
 import haxe.reactive.Reactive;
 
-import haxe.reactive.BehaviorCollection;
-import haxe.reactive.BehaviorBehavior;
-import haxe.reactive.BehaviorFloat;
-import haxe.reactive.BehaviorInt;
-import haxe.reactive.BehaviorBool;
-import haxe.reactive.Behaviors;
+import haxe.reactive.SignalCollection;
+import haxe.reactive.SignalSignal;
+import haxe.reactive.SignalFloat;
+import haxe.reactive.SignalInt;
+import haxe.reactive.SignalBool;
+import haxe.reactive.Signals;
 import haxe.reactive.StreamStream;
 import haxe.reactive.StreamBool;
 import haxe.reactive.Streams;
@@ -277,15 +277,15 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([1, 1, 2, 2, 3, 3, 4, 4], merged);
     }
 
-    public function testDelayB():Void {
+    public function testDelayS():Void {
         setupTimingTest();
         var stream = Collections.toStream([1, 2, 3, 4], 5);
         
-        var b = Behaviors.constant(7);
+        var b = Signals.constant(7);
         
         assertTimeoutExists(5);
         
-        var streams = [stream, stream.delayB(b)];
+        var streams = [stream, stream.delayS(b)];
         
         var merged = Streams.merge(streams).toArray();
         
@@ -320,14 +320,14 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([1, 1, 1, 1], calmed);
     }
     
-    public function testCalmB():Void {
+    public function testCalmS():Void {
         setupTimingTest();
         
         var stream = Streams.identity();
         
-        var b = Behaviors.constant(10);
+        var b = Signals.constant(10);
         
-        var calmed = stream.calmB(b).toArray();
+        var calmed = stream.calmS(b).toArray();
         
         for (i in 0...4) {
             stream.sendEvent(1);
@@ -348,14 +348,14 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([1, 1, 1, 1], calmed);
     }
     
-    public function testBlindB():Void {
+    public function testBlindS():Void {
         setupTimingTest();
         
         var stream = Streams.identity();
         
-        var b = Behaviors.constant(4);
+        var b = Signals.constant(4);
         
-        var blinded = stream.blindB(b).toArray();
+        var blinded = stream.blindS(b).toArray();
         
         for (i in 0...6) {
             stream.sendEvent(1);
@@ -833,17 +833,17 @@ class ReactiveTester extends TestCase {
     public function testSnapshot():Void {
         var stream = stream();
         
-        var myBehavior = Streams.identity().startsWith(0);
-        myBehavior.changes().sendEvent(4);
+        var mySignal = Streams.identity().startsWith(0);
+        mySignal.changes().sendEvent(4);
         
-        var snapshot = stream.snapshot(myBehavior).toArray();
+        var snapshot = stream.snapshot(mySignal).toArray();
         var arr1: Iterable<Int> = [2, 8];
         
         for (e in arr1) {
             stream.sendEvent(e);
         }
         
-        myBehavior.changes().sendEvent(6);
+        mySignal.changes().sendEvent(6);
         
         for (e in arr1) {
             stream.sendEvent(e);
@@ -892,11 +892,11 @@ class ReactiveTester extends TestCase {
         assertEquals(4, contents.pop());
     }
     
-    public function testCollectionsToStreamB():Void {
+    public function testCollectionsToStreamS():Void {
             setupTimingTest();
             
-            var timeBehavior = Behaviors.constant(2);
-            var stream = Collections.toStreamB([1, 2, 3, 4, 5], timeBehavior);
+            var timeSignal = Signals.constant(2);
+            var stream = Collections.toStreamS([1, 2, 3, 4, 5], timeSignal);
             var contents = stream.toArray();
 
             _now = 0;
@@ -1075,10 +1075,10 @@ class ReactiveTester extends TestCase {
         assertEquals(25, output.pop());
     }
     
-    public function testTimerB(): Void {
+    public function testTimerS(): Void {
         setupTimingTest();
         
-        var stream = Streams.timerB(Behaviors.constant(10));
+        var stream = Streams.timerS(Signals.constant(10));
         
         var output = stream.toArray();
         
@@ -1142,11 +1142,11 @@ class ReactiveTester extends TestCase {
         assertEquals(randomsReturned, true);
     }
     
-    public function testRandomB(): Void {
+    public function testRandomS(): Void {
         setupTimingTest();
         
-        var b = Behaviors.constant(5);
-        var stream = Streams.randomB(b);
+        var b = Signals.constant(5);
+        var stream = Streams.randomS(b);
         
         var output = stream.toArray();
         
@@ -1303,178 +1303,178 @@ class ReactiveTester extends TestCase {
     }
 
 /*
-* -----------------  BehaviorTests  -------------------
+* -----------------  SignalTests  -------------------
 * Missing: 
 * Broken:  
 */
     
-    public function testBehaviorChanges():Void {
+    public function testSignalChanges():Void {
         var stream = stream();
         
-        var myBehavior = Streams.identity().startsWith(0);
-        var array = myBehavior.changes().toArray();
+        var mySignal = Streams.identity().startsWith(0);
+        var array = mySignal.changes().toArray();
         
-        myBehavior.changes().sendEvent(4);
-        myBehavior.changes().sendEvent(3);
+        mySignal.changes().sendEvent(4);
+        mySignal.changes().sendEvent(3);
         
         assertIterableEquals([4, 3], array);
     }
     
-    public function testBehaviorValueNow():Void {
+    public function testSignalValueNow():Void {
         var stream = stream();
         
-        var myBehavior = Streams.identity().startsWith(0);
+        var mySignal = Streams.identity().startsWith(0);
         
-        myBehavior.changes().sendEvent(3);
+        mySignal.changes().sendEvent(3);
         
-        assertEquals(3, myBehavior.valueNow());
+        assertEquals(3, mySignal.valueNow());
     }
     
-    public function testBehaviorMapC():Void {
+    public function testSignalMapC():Void {
         var stream = stream();
         
         var mapper: Stream<Int> -> Stream<Int> = function(v: Stream<Int>) { return v.map(function(val) { return val + 1; }); };
-        var behaviorArray = [1, 2, 3, 4, 5];
-        var myBehavior = Streams.identity().startsWith(0);
+        var signalArray = [1, 2, 3, 4, 5];
+        var mySignal = Streams.identity().startsWith(0);
         
-        var array = myBehavior.mapC(mapper).changes().toArray();
+        var array = mySignal.mapC(mapper).changes().toArray();
         
-        for (i in behaviorArray) {
-            myBehavior.changes().sendEvent(i);
+        for (i in signalArray) {
+            mySignal.changes().sendEvent(i);
         }
         
         assertIterableEquals([2, 3, 4, 5, 6], array);
     }
     
-    public function testBehaviorMap():Void {
+    public function testSignalMap():Void {
         var stream = stream();
         
         var mapper: Int -> String = function(v) { return Std.string(v) + ": Iterating"; };
-        var behaviorArray = [1, 2, 3, 4, 5];
-        var myBehavior = Streams.identity().startsWith(0);
+        var signalArray = [1, 2, 3, 4, 5];
+        var mySignal = Streams.identity().startsWith(0);
         
-        var array = myBehavior.map(mapper).changes().toArray();
+        var array = mySignal.map(mapper).changes().toArray();
         
-        for (i in behaviorArray) {
-            myBehavior.changes().sendEvent(i);
+        for (i in signalArray) {
+            mySignal.changes().sendEvent(i);
         }
         
         assertIterableEquals(["1: Iterating", "2: Iterating", "3: Iterating", "4: Iterating", "5: Iterating"], array);
     }
     
-    public function testBehaviorMapB():Void {
+    public function testSignalMapS():Void {
         var streamM = stream();
         
         var stream:  Stream<Int -> String> =   Streams.identity();
         
         var beFunc = stream.startsWith(function(v) { return Std.string(v); });
         
-        var behaviorArray = [1, 2];
-        var myBehavior = Streams.identity().startsWith(0);
+        var signalArray = [1, 2];
+        var mySignal = Streams.identity().startsWith(0);
         
-        var array = myBehavior.mapB(beFunc).changes().toArray();
+        var array = mySignal.mapS(beFunc).changes().toArray();
         
         stream.sendEvent(function(v) { return Std.string(v) + ": String"; });
         
-        for (i in behaviorArray) {
-            myBehavior.changes().sendEvent(i);
+        for (i in signalArray) {
+            mySignal.changes().sendEvent(i);
         }
         
         assertIterableEquals(["1: String", "2: String"], array);
     }
     
-    public function testBehaviorZip():Void {
-        var myBehavior = stream().startsWith(0);
+    public function testSignalZip():Void {
+        var mySignal = stream().startsWith(0);
         
-        var mappedBehavior = myBehavior.map(function(v) { return v + 1; });
+        var mappedSignal = mySignal.map(function(v) { return v + 1; });
         
-        var zipped: Behavior<Tuple2<Int, Int>> = myBehavior.zip(mappedBehavior);
+        var zipped: Signal<Tuple2<Int, Int>> = mySignal.zip(mappedSignal);
         
         var all = zipped.changes().toArray();
         
         assertTrue(Filter.isEqual(Tuple2.from(0, 1), zipped.valueNow()));
         
-        myBehavior.sendBehavior(2);
+        mySignal.sendSignal(2);
         
         assertTrue(Filter.isEqual(Tuple2.from(2, 3), zipped.valueNow()));
         
-        myBehavior.sendBehavior(3);
+        mySignal.sendSignal(3);
         
         assertTrue(Filter.isEqual(Tuple2.from(3, 4), zipped.valueNow()));
     }
     
-    public function testBehaviorZip3():Void {
-        var myBehavior = stream().startsWith(0);
+    public function testSignalZip3():Void {
+        var mySignal = stream().startsWith(0);
         
-        var mappedBehavior1 = myBehavior.map(function(v) { return v + 1; });
-        var mappedBehavior2 = mappedBehavior1.map(function(v) { return v + 1; });
+        var mappedSignal1 = mySignal.map(function(v) { return v + 1; });
+        var mappedSignal2 = mappedSignal1.map(function(v) { return v + 1; });
         
-        var zipped = myBehavior.zip3(mappedBehavior1, mappedBehavior2);
+        var zipped = mySignal.zip3(mappedSignal1, mappedSignal2);
         
         assertTrue(Filter.isEqual(Tuple3.from(0, 1, 2), zipped.valueNow()));
         
-        myBehavior.sendBehavior(2);
+        mySignal.sendSignal(2);
         
         assertTrue(Filter.isEqual(Tuple3.from(2, 3, 4), zipped.valueNow()));
         
-        myBehavior.sendBehavior(3);
+        mySignal.sendSignal(3);
         
         assertTrue(Filter.isEqual(Tuple3.from(3, 4, 5), zipped.valueNow()));
     }
     
-    public function testBehaviorZip4():Void {
-        var myBehavior = stream().startsWith(0);
+    public function testSignalZip4():Void {
+        var mySignal = stream().startsWith(0);
         
-        var mappedBehavior1 = myBehavior.map(function(v) { return v + 1; });
-        var mappedBehavior2 = mappedBehavior1.map(function(v) { return v + 1; });
-        var mappedBehavior3 = mappedBehavior2.map(function(v) { return v * 2; });
+        var mappedSignal1 = mySignal.map(function(v) { return v + 1; });
+        var mappedSignal2 = mappedSignal1.map(function(v) { return v + 1; });
+        var mappedSignal3 = mappedSignal2.map(function(v) { return v * 2; });
         
-        var zipped = myBehavior.zip4(mappedBehavior1, mappedBehavior2, mappedBehavior3);
+        var zipped = mySignal.zip4(mappedSignal1, mappedSignal2, mappedSignal3);
         
         assertTrue(Filter.isEqual(Tuple4.from(0, 1, 2, 4), zipped.valueNow()));
         
-        myBehavior.sendBehavior(2);
+        mySignal.sendSignal(2);
         
         assertTrue(Filter.isEqual(Tuple4.from(2, 3, 4, 8), zipped.valueNow()));
         
-        myBehavior.sendBehavior(3);
+        mySignal.sendSignal(3);
         
         assertTrue(Filter.isEqual(Tuple4.from(3, 4, 5, 10), zipped.valueNow()));
     }
     
-    public function testBehaviorZip5():Void {
-        var myBehavior = stream().startsWith(0);
+    public function testSignalZip5():Void {
+        var mySignal = stream().startsWith(0);
         
-        var mappedBehavior1 = myBehavior.map(function(v) { return v + 1; });
-        var mappedBehavior2 = mappedBehavior1.map(function(v) { return v + 1; });
-        var mappedBehavior3 = mappedBehavior2.map(function(v) { return v * 2; });
-        var mappedBehavior4 = mappedBehavior3.map(function(v) { return v * 2 - 10; });
+        var mappedSignal1 = mySignal.map(function(v) { return v + 1; });
+        var mappedSignal2 = mappedSignal1.map(function(v) { return v + 1; });
+        var mappedSignal3 = mappedSignal2.map(function(v) { return v * 2; });
+        var mappedSignal4 = mappedSignal3.map(function(v) { return v * 2 - 10; });
         
-        var zipped = myBehavior.zip5(mappedBehavior1, mappedBehavior2, mappedBehavior3, mappedBehavior4);
+        var zipped = mySignal.zip5(mappedSignal1, mappedSignal2, mappedSignal3, mappedSignal4);
         
         assertTrue(Filter.isEqual(Tuple5.from(0, 1, 2, 4, -2), zipped.valueNow()));
         
-        myBehavior.sendBehavior(2);
+        mySignal.sendSignal(2);
         
         assertTrue(Filter.isEqual(Tuple5.from(2, 3, 4, 8, 6), zipped.valueNow()));
         
-        myBehavior.sendBehavior(3);
+        mySignal.sendSignal(3);
         
         assertTrue(Filter.isEqual(Tuple5.from(3, 4, 5, 10, 10), zipped.valueNow()));
     }
 
-    public function testBehaviorZipN():Void {
+    public function testSignalZipN():Void {
         var stream = stream();
         
-        var behaviorArray = [0, 1, 2, 3];
-        var myBehavior = Streams.identity().startsWith(0);
+        var signalArray = [0, 1, 2, 3];
+        var mySignal = Streams.identity().startsWith(0);
         
-        var myBehaviors: Array<Behavior<Int>> = [myBehavior, myBehavior.map(function(v) { return v + 1; })];
+        var mySignals: Array<Signal<Int>> = [mySignal, mySignal.map(function(v) { return v + 1; })];
         
-        var zipped = myBehavior.zipN(myBehaviors).changes().toArray();
+        var zipped = mySignal.zipN(mySignals).changes().toArray();
         
-        for (i in behaviorArray) {
-            myBehavior.changes().sendEvent(i);
+        for (i in signalArray) {
+            mySignal.changes().sendEvent(i);
         }
                
         var testArray = [];
@@ -1490,13 +1490,13 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([[0, 0, 1], [1, 1, 2], [2, 2, 3], [3, 3, 4]], testArray);
     }
     
-    public function testBehaviorCalm(): Void {
+    public function testSignalCalm(): Void {
         setupTimingTest();
         var stream = stream();
         
-        var myBehavior = stream.startsWith(0);
+        var mySignal = stream.startsWith(0);
         
-        var calmed = myBehavior.calm(3);
+        var calmed = mySignal.calm(3);
         var output = calmed.changes().toArray();
         
         stream.sendEvent(0);
@@ -1530,13 +1530,13 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([1, 2, 2, 3, 3, 3], output);
     }
     
-    public function testBehaviorBlind(): Void {
+    public function testSignalBlind(): Void {
         setupTimingTest();
         var stream = stream();
         
-        var myBehavior = stream.startsWith(0);
+        var mySignal = stream.startsWith(0);
         
-        var blinded = myBehavior.blind(3);
+        var blinded = mySignal.blind(3);
         var output = blinded.changes().toArray();
         
         stream.sendEvent(0);
@@ -1570,14 +1570,14 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([0, 1, 2, 3, 3, 3, 4, 4], output);
     }
     
-    public function testBehaviorBlindb(): Void {
+    public function testSignalBlindb(): Void {
         setupTimingTest();
         var stream = stream();
         
-        var b = Behaviors.constant(8);
-        var myBehavior = stream.startsWith(0);
+        var b = Signals.constant(8);
+        var mySignal = stream.startsWith(0);
         
-        var blinded = myBehavior.blindB(b);
+        var blinded = mySignal.blindS(b);
         var output = blinded.changes().toArray();
         
         for (i in 0...5) {
@@ -1603,14 +1603,14 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([5, 5, 5, 1, 1, 10, 10], output);
     }
     
-    public function testBehaviorCalmB(): Void {
+    public function testSignalCalmS(): Void {
         setupTimingTest();
         var stream = stream();
         
-        var b = Behaviors.constant(4);
-        var myBehavior = stream.startsWith(0);
+        var b = Signals.constant(4);
+        var mySignal = stream.startsWith(0);
         
-        var calmed = myBehavior.calmB(b);
+        var calmed = mySignal.calmS(b);
         var output = calmed.changes().toArray();
         
         stream.sendEvent(0);
@@ -1646,7 +1646,7 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([99, 56, 15, 15, 15, 4], output);
     }
     
-    public function testBehaviorDelay(): Void {
+    public function testSignalDelay(): Void {
         setupTimingTest();
         
         var stream2 = Collections.toStream([1, 2, 3, 4], 5).startsWith(0);
@@ -1679,14 +1679,14 @@ class ReactiveTester extends TestCase {
         assertIterableEquals(Tuple3.from(4, 4, 3), streams.valueNow());
     }
     
-    public function testBehaviorDelayB(): Void {
+    public function testSignalDelayS(): Void {
         setupTimingTest();
         
         var stream2 = Collections.toStream([1, 2, 3, 4], 5).startsWith(0);
         
-        var b = Behaviors.constant(5);
+        var b = Signals.constant(5);
         
-        var streams = stream2.zip3(stream2.delayB(b), stream2.map(function(v) { return v -1; }));
+        var streams = stream2.zip3(stream2.delayS(b), stream2.map(function(v) { return v -1; }));
         var output = streams.changes().toArray();
         
         advanceTime(5);
@@ -1710,34 +1710,34 @@ class ReactiveTester extends TestCase {
         assertIterableEquals(Tuple3.from(4, 4, 3), streams.valueNow());
     }
     
-    public function testBehaviorSend(): Void {
-        var myBehavior = Streams.identity().startsWith(0);
+    public function testSignalSend(): Void {
+        var mySignal = Streams.identity().startsWith(0);
         
-        var behaviorArray = [1, 2, 3, 4, 5];
+        var signalArray = [1, 2, 3, 4, 5];
         
-        for (i in behaviorArray) {
-            myBehavior.sendBehavior(i);
+        for (i in signalArray) {
+            mySignal.sendSignal(i);
         }
         
-        assertEquals(5, myBehavior.valueNow());
+        assertEquals(5, mySignal.valueNow());
     }
     
 /*
-* -----------------  BehaviorsTests  -------------------
+* -----------------  SignalsTests  -------------------
 * Missing:
 * Broken:  
 */
     
-    public function testBehaviorsZipN():Void {
-        var myBehavior =  Streams.identity().startsWith(0);
-        var myBehaviors = [myBehavior, myBehavior.map(function(v) { return v + 1; })];
+    public function testSignalsZipN():Void {
+        var mySignal =  Streams.identity().startsWith(0);
+        var mySignals = [mySignal, mySignal.map(function(v) { return v + 1; })];
         
-        var behaviorArray = [1, 2, 3, 4, 5];
+        var signalArray = [1, 2, 3, 4, 5];
         
-        var zipped = Behaviors.zipN(myBehaviors).changes().toArray();
+        var zipped = Signals.zipN(mySignals).changes().toArray();
         
-        for (i in behaviorArray) {
-            myBehavior.sendBehavior(i);
+        for (i in signalArray) {
+            mySignal.sendSignal(i);
             
         }
           
@@ -1754,12 +1754,12 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]], testArray);
     }
     
-    public function testBehaviorsSample():Void {
+    public function testSignalsSample():Void {
         setupTimingTest();
         
         var stream = Collections.toStream([1, 2, 3, 4], 5);
         
-        var sampled = Behaviors.sample(10);
+        var sampled = Signals.sample(10);
         
         var output = sampled.changes().toArray();
         
@@ -1768,13 +1768,13 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([10, 20, 30, 40, 50, 60], output);
     }
     
-    public function testBehaviorsSampleB():Void {
+    public function testSignalsSampleS():Void {
         setupTimingTest();
         
         var stream = Collections.toStream([1, 2, 3, 4], 5);
         
-        var b =       Behaviors.constant(15);
-        var sampled = Behaviors.sampleB(b);
+        var b =       Signals.constant(15);
+        var sampled = Signals.sampleS(b);
         
         var output = sampled.changes().toArray();
         
@@ -1783,1389 +1783,1389 @@ class ReactiveTester extends TestCase {
         assertIterableEquals([15, 30, 45, 60], output);
     }
     
-    public function testBehaviorsCond():Void {
-        var trueBehavior =  Behaviors.constant("Is True");
-        var falseBehavior = Behaviors.constant("Is False");
+    public function testSignalsCond():Void {
+        var trueSignal =  Signals.constant("Is True");
+        var falseSignal = Signals.constant("Is False");
         
-        var t = Behaviors.constant(true);
+        var t = Signals.constant(true);
         
-        var conditions: Array<Tuple2<Behavior<Bool>, Behavior<String>>> = [Tuple2.from(t, trueBehavior)];
+        var conditions: Array<Tuple2<Signal<Bool>, Signal<String>>> = [Tuple2.from(t, trueSignal)];
         
-        var conded = Behaviors.cond(conditions, falseBehavior);
+        var conded = Signals.cond(conditions, falseSignal);
         
         assertEquals("Is True", conded.valueNow());
         
-        t.sendBehavior(false);
+        t.sendSignal(false);
         
         assertFalse(t.valueNow());
         
         assertEquals("Is False", conded.valueNow());
     }
     
-    public function testBehaviorsConstant():Void {
-        var myBehavior = Behaviors.constant(9);
+    public function testSignalsConstant():Void {
+        var mySignal = Signals.constant(9);
         
-        assertEquals(9, myBehavior.valueNow());
+        assertEquals(9, mySignal.valueNow());
                 
-        myBehavior.changes().sendEvent(4);
-        myBehavior.changes().sendEvent(6);
+        mySignal.changes().sendEvent(4);
+        mySignal.changes().sendEvent(6);
         
-        myBehavior = Behaviors.constant(2);
+        mySignal = Signals.constant(2);
         
-        assertEquals(2, myBehavior.valueNow());
+        assertEquals(2, mySignal.valueNow());
     }
     
 /*
-* -----------------  BehaviorBool Tests  -------------------
+* -----------------  SignalBool Tests  -------------------
 * Missing: 
 * Broken:  
 */
-    public function testBehaviorBoolNot():Void {
-        var myBehavior = stream().startsWith(true);
+    public function testSignalBoolNot():Void {
+        var mySignal = stream().startsWith(true);
         
         var boolArray = [true, true, false, true];
         
-        var not = BehaviorBool.not(myBehavior).changes().toArray();
+        var not = SignalBool.not(mySignal).changes().toArray();
         
-        voidPump(myBehavior.changes(), boolArray);
+        voidPump(mySignal.changes(), boolArray);
         
         assertIterableEquals([false, false, true, false], not);
     }
     
-    public function testBehaviorBoolIfTrue():Void {
-        var myBehavior = Behaviors.constant(true);
+    public function testSignalBoolIfTrue():Void {
+        var mySignal = Signals.constant(true);
         
-        var isTrue =  Behaviors.constant("Is True");
-        var isFalse = Behaviors.constant("Is False");
+        var isTrue =  Signals.constant("Is True");
+        var isFalse = Signals.constant("Is False");
         
-        var evaluator = BehaviorBool.ifTrue(myBehavior, isTrue, isFalse);
+        var evaluator = SignalBool.ifTrue(mySignal, isTrue, isFalse);
         
         assertEquals("Is True", evaluator.valueNow());
         
-        myBehavior.sendBehavior(false);
+        mySignal.sendSignal(false);
         
         assertEquals("Is False", evaluator.valueNow());
     }
     
-    public function testBehaviorBoolAnd():Void {
-        var myBehavior1 =  Behaviors.constant(true);
-        var myBehavior2 =  Streams.identity().startsWith(false);
+    public function testSignalBoolAnd():Void {
+        var mySignal1 =  Signals.constant(true);
+        var mySignal2 =  Streams.identity().startsWith(false);
         
-        var behaviors: Iterable<Behavior<Bool>> = [myBehavior1, myBehavior2];
+        var signals: Iterable<Signal<Bool>> = [mySignal1, mySignal2];
                 
-        var and = BehaviorBool.and(behaviors);
+        var and = SignalBool.and(signals);
         
         assertFalse(and.valueNow());
         
-        myBehavior2.sendBehavior(true);
+        mySignal2.sendSignal(true);
         
         assertTrue(and.valueNow());
         
-        myBehavior1.sendBehavior(false);
+        mySignal1.sendSignal(false);
         
         assertFalse(and.valueNow());
     }
     
-    public function testBehaviorBoolOr():Void {
-        var myBehavior =  Behaviors.constant(true);
-        var myBehavior2 = Behaviors.constant(false);
+    public function testSignalBoolOr():Void {
+        var mySignal =  Signals.constant(true);
+        var mySignal2 = Signals.constant(false);
         
-        var behaviors: Iterable<Behavior<Bool>> =   [myBehavior, myBehavior2];
+        var signals: Iterable<Signal<Bool>> =   [mySignal, mySignal2];
                 
-        var evaluator = BehaviorBool.or(behaviors);
+        var evaluator = SignalBool.or(signals);
         
         assertTrue(evaluator.valueNow());
         
-        myBehavior.sendBehavior(false);
+        mySignal.sendSignal(false);
         
         assertFalse(evaluator.valueNow());
         
-        myBehavior2.sendBehavior(true);
+        mySignal2.sendSignal(true);
         
         assertTrue(evaluator.valueNow());
         
-        myBehavior.sendBehavior(true);
+        mySignal.sendSignal(true);
         
         assertTrue(evaluator.valueNow());
     }
     
 /*
-* -----------------  BehaviorInt Tests  -------------------
+* -----------------  SignalInt Tests  -------------------
 */
 
-    public function testBehaviorIntPlus():Void {
-        var myBehavior = Behaviors.constant(9);
+    public function testSignalIntPlus():Void {
+        var mySignal = Signals.constant(9);
         
-        var plus = BehaviorInt.plus(myBehavior, 9);
+        var plus = SignalInt.plus(mySignal, 9);
         
         assertEquals(18, plus.valueNow());
         
-        plus = BehaviorInt.plus(plus, -19);
+        plus = SignalInt.plus(plus, -19);
         assertEquals(-1, plus.valueNow());
     }
     
-    public function testBehaviorIntPlusB():Void {
-        var myBehavior =    Behaviors.constant(9);
-        var addBehavior =   Behaviors.constant(-3);
+    public function testSignalIntPlusS():Void {
+        var mySignal =    Signals.constant(9);
+        var addSignal =   Signals.constant(-3);
         
-        var plusB = BehaviorInt.plusB(myBehavior, addBehavior);
+        var plusS = SignalInt.plusS(mySignal, addSignal);
         
-        assertEquals(6, plusB.valueNow());
+        assertEquals(6, plusS.valueNow());
     }
     
-    public function testBehaviorIntMinus():Void {
-        var myBehavior = Behaviors.constant(9);
+    public function testSignalIntMinus():Void {
+        var mySignal = Signals.constant(9);
         
-        var minus = BehaviorInt.minus(myBehavior, 9);
+        var minus = SignalInt.minus(mySignal, 9);
         
         assertEquals(0, minus.valueNow());
         
-        minus = BehaviorInt.minus(minus, -19);
+        minus = SignalInt.minus(minus, -19);
         
         assertEquals(19, minus.valueNow());
     }
     
-    public function testBehaviorIntMinusB():Void {
-        var myBehavior =    Behaviors.constant(9);
-        var minusBehavior = Behaviors.constant(-3);
+    public function testSignalIntMinusS():Void {
+        var mySignal =    Signals.constant(9);
+        var minusSignal = Signals.constant(-3);
         
-        var minusB = BehaviorInt.minusB(myBehavior, minusBehavior);
+        var minusS = SignalInt.minusS(mySignal, minusSignal);
         
-        assertEquals(12, minusB.valueNow());
+        assertEquals(12, minusS.valueNow());
     }
     
     
-    public function testBehaviorIntTimes():Void {
-        var myBehavior = Behaviors.constant(4);
+    public function testSignalIntTimes():Void {
+        var mySignal = Signals.constant(4);
         
-        var times = BehaviorInt.times(myBehavior, 3);
+        var times = SignalInt.times(mySignal, 3);
         
         assertEquals(12, times.valueNow());
     }
     
-    public function testBehaviorIntTimesB():Void {
-        var myBehavior =    Behaviors.constant(2);
-        var timesBehavior = Behaviors.constant(-5);
+    public function testSignalIntTimesS():Void {
+        var mySignal =    Signals.constant(2);
+        var timesSignal = Signals.constant(-5);
         
-        var timesB = BehaviorInt.timesB(myBehavior, timesBehavior);
+        var timesS = SignalInt.timesS(mySignal, timesSignal);
         
-        assertEquals(-10, timesB.valueNow());
+        assertEquals(-10, timesS.valueNow());
     }
     
-    public function testBehaviorIntMod():Void {
-        var myBehavior = Behaviors.constant(12);
+    public function testSignalIntMod():Void {
+        var mySignal = Signals.constant(12);
         
-        var mod = BehaviorInt.mod(myBehavior, 3);
+        var mod = SignalInt.mod(mySignal, 3);
         
         assertEquals(0, mod.valueNow());
         
-        mod = BehaviorInt.mod(myBehavior, 5);
+        mod = SignalInt.mod(mySignal, 5);
         
         assertEquals(2, mod.valueNow());
     }
     
-    public function testBehaviorIntModB():Void {
-        var myBehavior =    Behaviors.constant(12);
-        var modBehavior =   Behaviors.constant(2);
+    public function testSignalIntModS():Void {
+        var mySignal =    Signals.constant(12);
+        var modSignal =   Signals.constant(2);
         
-        var mod = BehaviorInt.modB(myBehavior, modBehavior);
+        var mod = SignalInt.modS(mySignal, modSignal);
         
         assertEquals(0, mod.valueNow());
         
-        myBehavior.sendBehavior(13);
+        mySignal.sendSignal(13);
         
         assertEquals(1, mod.valueNow());
     }
     
-    public function testBehaviorIntDividedBy():Void {
-        var myBehavior = Behaviors.constant(24);
+    public function testSignalIntDividedBy():Void {
+        var mySignal = Signals.constant(24);
         
-        var divided = BehaviorInt.dividedBy(myBehavior, 6);
+        var divided = SignalInt.dividedBy(mySignal, 6);
         
         assertEquals(4, divided.valueNow());
         
-        myBehavior.sendBehavior(-12);
+        mySignal.sendSignal(-12);
         
         assertEquals(-2, divided.valueNow());
     }
     
-    public function testBehaviorIntDividedByB():Void {
-        var myBehavior =    Behaviors.constant(24);
-        var divBehavior =   Behaviors.constant(2);
+    public function testSignalIntDividedByS():Void {
+        var mySignal =    Signals.constant(24);
+        var divSignal =   Signals.constant(2);
         
-        var divided = BehaviorInt.dividedByB(myBehavior, divBehavior);
+        var divided = SignalInt.dividedByS(mySignal, divSignal);
         
         assertEquals(12, divided.valueNow());
         
-        myBehavior.sendBehavior(12);
+        mySignal.sendSignal(12);
         
         assertEquals(6, divided.valueNow());
     }
     
-    public function testBehaviorIntAbs():Void {
-        var myBehavior = Behaviors.constant(-24);
+    public function testSignalIntAbs():Void {
+        var mySignal = Signals.constant(-24);
         
-        var abs = BehaviorInt.abs(myBehavior);
+        var abs = SignalInt.abs(mySignal);
         
         assertEquals(24, abs.valueNow());
     }
     
-    public function testBehaviorIntNegate():Void {
-        var myBehavior = Behaviors.constant(0);
+    public function testSignalIntNegate():Void {
+        var mySignal = Signals.constant(0);
         
-        var negate = BehaviorInt.negate(myBehavior);
+        var negate = SignalInt.negate(mySignal);
         
         assertEquals(0, negate.valueNow());
         
-        myBehavior.sendBehavior(6);
+        mySignal.sendSignal(6);
         
         assertEquals(-6, negate.valueNow());
     }
     
-    public function testBehaviorIntToFloat():Void {
-        var myBehavior = Behaviors.constant(2);
+    public function testSignalIntToFloat():Void {
+        var mySignal = Signals.constant(2);
         
-        var toFloat = BehaviorInt.toFloat(myBehavior);
+        var toFloat = SignalInt.toFloat(mySignal);
         
         assertEquals(2.0, toFloat.valueNow());
     }
 
 /*
-* -----------------  BehaviorFloat Tests  -------------------
+* -----------------  SignalFloat Tests  -------------------
 * Missing: 
 * Broken:  
 */
 
-    public function testBehaviorFloatPlus():Void {
-        var myBehavior = Behaviors.constant(9.5);
+    public function testSignalFloatPlus():Void {
+        var mySignal = Signals.constant(9.5);
         
-        var plus = BehaviorFloat.plus(myBehavior, 8.5);
+        var plus = SignalFloat.plus(mySignal, 8.5);
         
         assertEquals(18.0, plus.valueNow());
         
-        myBehavior.sendBehavior(-10);
+        mySignal.sendSignal(-10);
         assertEquals(-1.5, plus.valueNow());
     }
     
-    public function testBehaviorFloatPlusB():Void {
-        var myBehavior =    Behaviors.constant(9.5);
-        var addBehavior =   Behaviors.constant(-3.0);
+    public function testSignalFloatPlusS():Void {
+        var mySignal =    Signals.constant(9.5);
+        var addSignal =   Signals.constant(-3.0);
         
-        var plusB = BehaviorFloat.plusB(myBehavior, addBehavior);
+        var plusS = SignalFloat.plusS(mySignal, addSignal);
         
-        assertEquals(6.5, plusB.valueNow());
+        assertEquals(6.5, plusS.valueNow());
     }
     
-    public function testBehaviorFloatMinus():Void {
-        var myBehavior = Behaviors.constant(8.5);
+    public function testSignalFloatMinus():Void {
+        var mySignal = Signals.constant(8.5);
         
-        var minus = BehaviorFloat.minus(myBehavior, 9.0);
+        var minus = SignalFloat.minus(mySignal, 9.0);
         
         assertEquals(-0.5, minus.valueNow());
         
-        myBehavior.sendBehavior(-9.5);
+        mySignal.sendSignal(-9.5);
         
         assertEquals(-18.5, minus.valueNow());
     }
     
-    public function testBehaviorFloatMinusB():Void {
-        var myBehavior =    Behaviors.constant(-4.5);
-        var minusBehavior = Behaviors.constant(-5.0);
+    public function testSignalFloatMinusS():Void {
+        var mySignal =    Signals.constant(-4.5);
+        var minusSignal = Signals.constant(-5.0);
         
-        var minusB = BehaviorFloat.minusB(myBehavior, minusBehavior);
+        var minusS = SignalFloat.minusS(mySignal, minusSignal);
         
-        assertEquals(0.5, minusB.valueNow());
+        assertEquals(0.5, minusS.valueNow());
     }
     
-    public function testBehaviorFloatTimes():Void {
-        var myBehavior = Streams.identity().startsWith(2.0);
+    public function testSignalFloatTimes():Void {
+        var mySignal = Streams.identity().startsWith(2.0);
         
-        var times = BehaviorFloat.times(myBehavior, 3.7);
+        var times = SignalFloat.times(mySignal, 3.7);
 
         assertEquals(7.4, times.valueNow());
     }
     
-    public function testBehaviorFloatTimesB():Void {
-        var myBehavior =    Behaviors.constant(4.0);
-        var timesBehavior = Behaviors.constant(-5.5);
+    public function testSignalFloatTimesS():Void {
+        var mySignal =    Signals.constant(4.0);
+        var timesSignal = Signals.constant(-5.5);
         
-        var timesB = BehaviorFloat.timesB(myBehavior, timesBehavior);
+        var timesS = SignalFloat.timesS(mySignal, timesSignal);
         
-        assertEquals(-22.0, timesB.valueNow());
+        assertEquals(-22.0, timesS.valueNow());
     }
     
-    public function testBehaviorFloatDividedBy():Void {
-        var myBehavior = Behaviors.constant(22.2);
+    public function testSignalFloatDividedBy():Void {
+        var mySignal = Signals.constant(22.2);
         
-        var divided = BehaviorFloat.dividedBy(myBehavior, 11.1);
+        var divided = SignalFloat.dividedBy(mySignal, 11.1);
         
         assertEquals(2.0, divided.valueNow());
         
-        myBehavior.sendBehavior(33.3);
+        mySignal.sendSignal(33.3);
         
         assertEquals(3.0, divided.valueNow());
     }
     
-    public function testBehaviorFloatDividedByB():Void {
-        var myBehavior =    Behaviors.constant(24.0);
-        var divBehavior =   Behaviors.constant(2.0);
+    public function testSignalFloatDividedByS():Void {
+        var mySignal =    Signals.constant(24.0);
+        var divSignal =   Signals.constant(2.0);
         
-        var divided = BehaviorFloat.dividedByB(myBehavior, divBehavior);
+        var divided = SignalFloat.dividedByS(mySignal, divSignal);
         
         assertEquals(12.0, divided.valueNow());
         
-        myBehavior.sendBehavior(11.2);
+        mySignal.sendSignal(11.2);
         
         assertEquals(5.6, divided.valueNow());
     }
     
-    public function testBehaviorFloatAbs():Void {
-        var myBehavior = Behaviors.constant(-24.3);
+    public function testSignalFloatAbs():Void {
+        var mySignal = Signals.constant(-24.3);
         
-        var abs = BehaviorFloat.abs(myBehavior);
+        var abs = SignalFloat.abs(mySignal);
         
         assertEquals(24.3, abs.valueNow());
     }
     
-    public function testBehaviorFloatNegate():Void {
-        var myBehavior = Behaviors.constant(0.0);
+    public function testSignalFloatNegate():Void {
+        var mySignal = Signals.constant(0.0);
         
-        var negate = BehaviorFloat.negate(myBehavior);
+        var negate = SignalFloat.negate(mySignal);
         
         assertEquals(0.0, negate.valueNow());
         
-        myBehavior.sendBehavior(6.1);
+        mySignal.sendSignal(6.1);
         
         assertEquals(-6.1, negate.valueNow());
     }
     
-    public function testBehaviorFloatFloor():Void {
-        var myBehavior = Behaviors.constant(9.12345);
+    public function testSignalFloatFloor():Void {
+        var mySignal = Signals.constant(9.12345);
         
-        var floor = BehaviorFloat.floor(myBehavior);
+        var floor = SignalFloat.floor(mySignal);
         
         assertEquals(9.0, floor.valueNow());
     }
     
-    public function testBehaviorFloatCeil():Void {
-        var myBehavior = Behaviors.constant(9.12345);
+    public function testSignalFloatCeil():Void {
+        var mySignal = Signals.constant(9.12345);
         
-        var ceil = BehaviorFloat.ceil(myBehavior);
+        var ceil = SignalFloat.ceil(mySignal);
         
         assertEquals(10.0, ceil.valueNow());
     }
     
-    public function testBehaviorFloatRound():Void {
-        var myBehavior = Behaviors.constant(4.5);
+    public function testSignalFloatRound():Void {
+        var mySignal = Signals.constant(4.5);
         
-        var round =  BehaviorFloat.round(myBehavior);
+        var round =  SignalFloat.round(mySignal);
         
         assertEquals(5.0, round.valueNow());
         
-        myBehavior.sendBehavior(4.4);
+        mySignal.sendSignal(4.4);
         
         assertEquals(4.0, round.valueNow());
     }
     
-    public function testBehaviorFloatAcos():Void {
-        var myBehavior = Behaviors.constant(0.5);
+    public function testSignalFloatAcos():Void {
+        var mySignal = Signals.constant(0.5);
         
-        var acos =  BehaviorFloat.acos(myBehavior);
+        var acos =  SignalFloat.acos(mySignal);
         
         assertEquals(1.047, Math.round(acos.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatAsin():Void {
-        var myBehavior = Behaviors.constant(0.64);
+    public function testSignalFloatAsin():Void {
+        var mySignal = Signals.constant(0.64);
         
-        var asin =  BehaviorFloat.asin(myBehavior);
+        var asin =  SignalFloat.asin(mySignal);
         
         assertEquals(0.694, Math.round(asin.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatAtan():Void {
-        var myBehavior = Behaviors.constant(2.0);
+    public function testSignalFloatAtan():Void {
+        var mySignal = Signals.constant(2.0);
         
-        var atan =  BehaviorFloat.atan(myBehavior);
+        var atan =  SignalFloat.atan(mySignal);
         
         assertEquals(1.107, Math.round(atan.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatAtan2():Void {
-        var myBehavior = Behaviors.constant(8.0);
+    public function testSignalFloatAtan2():Void {
+        var mySignal = Signals.constant(8.0);
         
-        var atan2 =  BehaviorFloat.atan2(myBehavior, 4);
+        var atan2 =  SignalFloat.atan2(mySignal, 4);
         
         assertEquals(1.107, Math.round(atan2.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatAtan2B():Void {
-        var myBehavior =    Behaviors.constant(8.0);
-        var myBehavior2 =   Behaviors.constant(4.0);
+    public function testSignalFloatAtan2B():Void {
+        var mySignal =    Signals.constant(8.0);
+        var mySignal2 =   Signals.constant(4.0);
         
-        var atan2B =  BehaviorFloat.atan2B(myBehavior, myBehavior2);
+        var atan2B =  SignalFloat.atan2B(mySignal, mySignal2);
         
         assertEquals(1.107, Math.round(atan2B.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatCos():Void {
-        var myBehavior = Behaviors.constant(3.0);
+    public function testSignalFloatCos():Void {
+        var mySignal = Signals.constant(3.0);
         
-        var cos =  BehaviorFloat.cos(myBehavior);
+        var cos =  SignalFloat.cos(mySignal);
         
         assertEquals(-0.99, Math.round(cos.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatExp():Void {
-        var myBehavior = Behaviors.constant(5.0);
+    public function testSignalFloatExp():Void {
+        var mySignal = Signals.constant(5.0);
         
-        var exp =  BehaviorFloat.exp(myBehavior);
+        var exp =  SignalFloat.exp(mySignal);
         
         assertEquals(148.413, Math.round(exp.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatLog():Void {
-        var myBehavior = Behaviors.constant(2.0);
+    public function testSignalFloatLog():Void {
+        var mySignal = Signals.constant(2.0);
         
-        var log =  BehaviorFloat.log(myBehavior);
+        var log =  SignalFloat.log(mySignal);
         
         assertEquals(0.693, Math.round(log.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatMaxB():Void {
-        var myBehavior =    Behaviors.constant(2.0);
-        var myBehavior2 =   Behaviors.constant(4.0);
+    public function testSignalFloatMaxS():Void {
+        var mySignal =    Signals.constant(2.0);
+        var mySignal2 =   Signals.constant(4.0);
         
-        var maxB =  BehaviorFloat.maxB(myBehavior, myBehavior2);
+        var maxS =  SignalFloat.maxS(mySignal, mySignal2);
         
-        assertEquals(4.0, maxB.valueNow());
+        assertEquals(4.0, maxS.valueNow());
     }
     
-    public function testBehaviorFloatMax():Void {
-        var myBehavior = Behaviors.constant(2.0);
+    public function testSignalFloatMax():Void {
+        var mySignal = Signals.constant(2.0);
         
-        var max =  BehaviorFloat.max(myBehavior, 0.123);
+        var max =  SignalFloat.max(mySignal, 0.123);
         
         assertEquals(2.0, max.valueNow());
     }
     
-    public function testBehaviorFloatMinB():Void {
-        var myBehavior =    Behaviors.constant(2.0);
-        var myBehavior2 =   Behaviors.constant(4.0);
+    public function testSignalFloatMinS():Void {
+        var mySignal =    Signals.constant(2.0);
+        var mySignal2 =   Signals.constant(4.0);
         
-        var minB =  BehaviorFloat.minB(myBehavior, myBehavior2);
+        var minS =  SignalFloat.minS(mySignal, mySignal2);
         
-        assertEquals(2.0, minB.valueNow());
+        assertEquals(2.0, minS.valueNow());
     }
     
-    public function testBehaviorFloatMin():Void {
-        var myBehavior = Behaviors.constant(2.0);
+    public function testSignalFloatMin():Void {
+        var mySignal = Signals.constant(2.0);
         
-        var min =  BehaviorFloat.min(myBehavior, 0.123);
+        var min =  SignalFloat.min(mySignal, 0.123);
         
         assertEquals(0.123, min.valueNow());
     }
     
-    public function testBehaviorFloatPowB():Void {
-        var myBehavior =    Behaviors.constant(2.0);
-        var myBehavior2 =   Behaviors.constant(4.0);
+    public function testSignalFloatPowS():Void {
+        var mySignal =    Signals.constant(2.0);
+        var mySignal2 =   Signals.constant(4.0);
         
-        var powB =  BehaviorFloat.powB(myBehavior, myBehavior2);
+        var powS =  SignalFloat.powS(mySignal, mySignal2);
         
-        assertEquals(16.0, powB.valueNow());
+        assertEquals(16.0, powS.valueNow());
     }
     
-    public function testBehaviorFloatPow():Void {
-        var myBehavior = Behaviors.constant(2.8);
+    public function testSignalFloatPow():Void {
+        var mySignal = Signals.constant(2.8);
         
-        var pow =  BehaviorFloat.pow(myBehavior, 5.0);
+        var pow =  SignalFloat.pow(mySignal, 5.0);
         
         assertEquals(172.104, Math.round(pow.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatSin():Void {
-        var myBehavior = Behaviors.constant(3.0);
+    public function testSignalFloatSin():Void {
+        var mySignal = Signals.constant(3.0);
         
-        var sin =  BehaviorFloat.sin(myBehavior);
+        var sin =  SignalFloat.sin(mySignal);
         
         assertEquals(0.141, Math.round(sin.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatSqrt():Void {
-        var myBehavior = Behaviors.constant(16.0);
+    public function testSignalFloatSqrt():Void {
+        var mySignal = Signals.constant(16.0);
         
-        var sqrt =  BehaviorFloat.sqrt(myBehavior);
+        var sqrt =  SignalFloat.sqrt(mySignal);
         
         assertEquals(4.0, Math.round(sqrt.valueNow() * 1000) / 1000);
     }
     
-    public function testBehaviorFloatTan():Void {
-        var myBehavior = Behaviors.constant(60.0);
+    public function testSignalFloatTan():Void {
+        var mySignal = Signals.constant(60.0);
         
-        var tan =  BehaviorFloat.tan(myBehavior);
+        var tan =  SignalFloat.tan(mySignal);
         
         assertEquals(0.32, Math.round(tan.valueNow() * 1000) / 1000);
     }
 
 /*
-* -----------------  BehaviorBehavior Tests  -------------------
+* -----------------  SignalSignal Tests  -------------------
 * Missing: 
 * Broken:  
 */
 
-    public function testBehaviorBehaviorFlatten():Void {
+    public function testSignalSignalFlatten():Void {
         var b1 = stream().startsWith(2);
-        var behaviors: Behavior<Behavior<Int>> = Streams.identity().startsWith(b1);
+        var signals: Signal<Signal<Int>> = Streams.identity().startsWith(b1);
         
-        var switchBed = BehaviorBehavior.switchB(behaviors);
+        var switchBed = SignalSignal.switchS(signals);
         
         assertEquals(2, switchBed.valueNow());
         
-        b1.sendBehavior(4);
+        b1.sendSignal(4);
         
         assertEquals(4, switchBed.valueNow());
         
-        b1.sendBehavior(5); b1.sendBehavior(6);
+        b1.sendSignal(5); b1.sendSignal(6);
         
         assertEquals(6, switchBed.valueNow());
     }
     
-    public function testBehaviorBehaviorSwitchB():Void {
+    public function testSignalSignalSwitchS():Void {
         var b1 = stream().startsWith(2);
-        var behaviors: Behavior<Behavior<Int>> = Streams.identity().startsWith(b1);
+        var signals: Signal<Signal<Int>> = Streams.identity().startsWith(b1);
         
-        var switchBed = BehaviorBehavior.switchB(behaviors);
+        var switchBed = SignalSignal.switchS(signals);
         
         assertEquals(2, switchBed.valueNow());
         
-        b1.sendBehavior(4);
+        b1.sendSignal(4);
         
         assertEquals(4, switchBed.valueNow());
         
-        b1.sendBehavior(5); b1.sendBehavior(6);
+        b1.sendSignal(5); b1.sendSignal(6);
         
         assertEquals(6, switchBed.valueNow());
     }
     
-    public function testBehaviorBehaviorJoin():Void {
+    public function testSignalSignalJoin():Void {
         var b1 = stream().startsWith(2);
-        var behaviors: Behavior<Behavior<Int>> = Streams.identity().startsWith(b1);
+        var signals: Signal<Signal<Int>> = Streams.identity().startsWith(b1);
         
-        var joined = BehaviorBehavior.join(behaviors);
+        var joined = SignalSignal.join(signals);
         
         assertEquals(2, joined.valueNow());
         
-        b1.sendBehavior(4);
+        b1.sendSignal(4);
         
         assertEquals(4, joined.valueNow());
         
-        b1.sendBehavior(5); b1.sendBehavior(6);
+        b1.sendSignal(5); b1.sendSignal(6);
         
         assertEquals(6, joined.valueNow());
     }
     
-    public function testBehaviorCollectionTake(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
+    public function testSignalCollectionTake(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
         
-        var taken = BehaviorCollection.take(behavior, 3).valueNow();
+        var taken = SignalCollection.take(signal, 3).valueNow();
         
         assertIterableEquals([1, 2, 3], taken);
     }
     
-    public function testBehaviorCollectionDrop(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
+    public function testSignalCollectionDrop(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
         
-        var dropped = BehaviorCollection.drop(behavior, 3).valueNow();
+        var dropped = SignalCollection.drop(signal, 3).valueNow();
         
         assertIterableEquals([4, 5], dropped);
     }
     
-    public function testBehaviorCollectionConcat(): Void {
-        var behavior: Behavior<Collection<Int>> =  Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 7, 8]));
+    public function testSignalCollectionConcat(): Void {
+        var signal: Signal<Collection<Int>> =  Signals.constant(toCollection([1, 2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
         
-        var concated = BehaviorCollection.concatB(behavior, behavior2).valueNow();
+        var concated = SignalCollection.concatS(signal, signal2).valueNow();
         
         assertIterableEquals([1, 2, 3, 4, 5, 6, 7, 8], concated);
     }
     
-    public function testBehaviorCollectionJoin(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
+    public function testSignalCollectionJoin(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
         
-        var joined = BehaviorCollection.join(behavior, " ; ").valueNow();
+        var joined = SignalCollection.join(signal, " ; ").valueNow();
         
         assertEquals("1 ; 2 ; 3 ; 4 ; 5", joined);
     }
 
-    public function testBehaviorCollectionSize(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
+    public function testSignalCollectionSize(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
         
-        var size = BehaviorCollection.size(behavior).valueNow();
+        var size = SignalCollection.size(signal).valueNow();
         
         assertEquals(5, size);
     }
     
-    public function testBehaviorCollectionZip(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 7, 8]));
+    public function testSignalCollectionZip(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
         
-        var zipped = BehaviorCollection.zipB(behavior1, behavior2).valueNow();
+        var zipped = SignalCollection.zipS(signal1, signal2).valueNow();
         
         assertIterableEquals([tuple2(1, 6), tuple2(2, 7), tuple2(3, 8)], zipped);
     }
     
-    public function testBehaviorCollectionZip3(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,  7, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99, 8, 13]));
+    public function testSignalCollectionZip3(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
         
-        var zipped = BehaviorCollection.zip3B(behavior1, behavior2, behavior3).valueNow();
+        var zipped = SignalCollection.zip3B(signal1, signal2, signal3).valueNow();
         
         assertIterableEquals([tuple3(1, 6, 99), tuple3(2, 7, 8), tuple3(3, 8, 13)], zipped);
     }
     
-    public function testBehaviorCollectionZip4(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,  7, 1, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99, 8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 13, 14, 15]));
+    public function testSignalCollectionZip4(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 1, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
         
-        var zipped = BehaviorCollection.zip4B(behavior1, behavior2, behavior3, behavior4).valueNow();
+        var zipped = SignalCollection.zip4B(signal1, signal2, signal3, signal4).valueNow();
         
         assertIterableEquals([tuple4(1, 6, 99, 12), tuple4(2, 7, 8, 13), tuple4(3, 1, 13, 14)], zipped);
     }
     
-    public function testBehaviorCollectionZip5(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,   2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,   7, 1, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99,  8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 13, 14, 15]));
-        var behavior5: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,   7, 1, 8]));
+    public function testSignalCollectionZip5(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,   2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99,  8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
+        var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
         
-        var zipped = BehaviorCollection.zip5B(behavior1, behavior2, behavior3, behavior4, behavior5).valueNow();
+        var zipped = SignalCollection.zip5B(signal1, signal2, signal3, signal4, signal5).valueNow();
         
         assertIterableEquals([tuple5(1, 6, 99, 12, 6), tuple5(2, 7, 8, 13, 7), tuple5(3, 1, 13, 14, 1)], zipped);
     }
     
-    public function testBehaviorCollectionAppend(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([3, 4, 5]));
+    public function testSignalCollectionAppend(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5]));
         
-        var append = BehaviorCollection.append(behavior, 4).valueNow();
+        var append = SignalCollection.append(signal, 4).valueNow();
         
         assertIterableEquals([3, 4, 5, 4], append);
     }
     
-    public function testBehaviorCollectionCons(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([3, 4, 5]));
+    public function testSignalCollectionCons(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5]));
         
-        var cons = BehaviorCollection.cons(behavior, 4).valueNow();
+        var cons = SignalCollection.cons(signal, 4).valueNow();
         
         assertIterableEquals([4, 3, 4, 5], cons);
     }
     
-    public function testBehaviorCollectionHeadOpt(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([]));
+    public function testSignalCollectionHeadOpt(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
         
-        var headOpt = BehaviorCollection.headOpt(behavior);
+        var headOpt = SignalCollection.headOpt(signal);
         
         assertOptionEquals(None, headOpt.valueNow());
         
-        behavior.sendBehavior(toCollection([1, 2, 3]));
+        signal.sendSignal(toCollection([1, 2, 3]));
         
         assertOptionEquals(Some(1), headOpt.valueNow());
     }
     
-    public function testBehaviorCollectionSlice(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([]));
+    public function testSignalCollectionSlice(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
         
-        var slice = BehaviorCollection.slice(behavior, 2, 5);
+        var slice = SignalCollection.slice(signal, 2, 5);
         
         assertIterableEquals([], slice.valueNow());
         
-        behavior.sendBehavior(toCollection([1, 1, 7, 9, 8, 7]));
+        signal.sendSignal(toCollection([1, 1, 7, 9, 8, 7]));
         
         assertIterableEquals([7, 9, 8], slice.valueNow());
     }
     
-    public function testBehaviorCollectionLastOpt(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([]));
+    public function testSignalCollectionLastOpt(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
         
-        var lastOpt = BehaviorCollection.lastOpt(behavior);
+        var lastOpt = SignalCollection.lastOpt(signal);
         
         assertOptionEquals(None, lastOpt.valueNow());
         
-        behavior.sendBehavior(toCollection([1, 2, 3]));
+        signal.sendSignal(toCollection([1, 2, 3]));
         
         assertOptionEquals(Some(3), lastOpt.valueNow());
     }
 
-    public function testBehaviorCollectionCountWhile(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 7, 8, 3, 99]));
+    public function testSignalCollectionCountWhile(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 7, 8, 3, 99]));
         
-        var countWhile = BehaviorCollection.countWhile(behavior, function(v) { return v < 8; });
+        var countWhile = SignalCollection.countWhile(signal, function(v) { return v < 8; });
         
         assertEquals(3, countWhile.valueNow());
     }
     
-    public function testBehaviorCollectionDropWhile(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([100, 75, 50, 25]));
+    public function testSignalCollectionDropWhile(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([100, 75, 50, 25]));
         
-        var dropWhile = BehaviorCollection.dropWhile(behavior, function(v) { return v > 50; });
+        var dropWhile = SignalCollection.dropWhile(signal, function(v) { return v > 50; });
         
         assertIterableEquals([50, 25], dropWhile.valueNow());
     }
     
-    public function testBehaviorCollectionTakeWhile(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([100, 75, 50, 25]));
+    public function testSignalCollectionTakeWhile(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([100, 75, 50, 25]));
         
-        var takeWhile = BehaviorCollection.takeWhile(behavior, function(v) { return v >= 50; });
+        var takeWhile = SignalCollection.takeWhile(signal, function(v) { return v >= 50; });
         
         assertIterableEquals([100, 75, 50], takeWhile.valueNow());
     }
     
-    public function testBehaviorCollectionCount(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    public function testSignalCollectionCount(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
         
-        var count = BehaviorCollection.count(behavior, function(v) { return v > 40; });
+        var count = SignalCollection.count(signal, function(v) { return v > 40; });
         
         assertEquals(2, count.valueNow());
     }
     
-    public function testBehaviorCollectionAll(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    public function testSignalCollectionAll(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
         
-        var all = BehaviorCollection.all(behavior, function(v) { return v > 40; });
-        var all2 = BehaviorCollection.all(behavior, function(v) { return v > 9; });
+        var all = SignalCollection.all(signal, function(v) { return v > 40; });
+        var all2 = SignalCollection.all(signal, function(v) { return v > 9; });
         
         assertEquals(false, all.valueNow());
         assertEquals(true, all2.valueNow());
     }
     
-    public function testBehaviorCollectionAny(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    public function testSignalCollectionAny(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
         
-        var any = BehaviorCollection.any(behavior, function(v) { return v > 40; });
-        var any2 = BehaviorCollection.any(behavior, function(v) { return v > 50; });
+        var any = SignalCollection.any(signal, function(v) { return v > 40; });
+        var any2 = SignalCollection.any(signal, function(v) { return v > 50; });
         
         assertEquals(true, any.valueNow());
         assertEquals(false, any2.valueNow());
     }
     
-    public function testBehaviorCollectionForEach(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    public function testSignalCollectionForEach(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
         var self = this;
         
-        var forEach = BehaviorCollection.forEach(behavior, function(v) { self.incrementCounter(); });
+        var forEach = SignalCollection.forEach(signal, function(v) { self.incrementCounter(); });
         
         assertEquals(7, getCounter());
         resetCounter();
     }
     
-    public function testBehaviorCollectionMap(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50]));
+    public function testSignalCollectionMap(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50]));
         
-        var map = BehaviorCollection.map(behavior, function(v) { return ++v; });
+        var map = SignalCollection.map(signal, function(v) { return ++v; });
         
         assertIterableEquals([11, 16, 46, 51], map.valueNow());
     }
     
-    public function testBehaviorCollectionMap2(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 75]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 13]));
+    public function testSignalCollectionMap2(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
         
-        var map = BehaviorCollection.map2B(behavior1, behavior2, function(v1, v2) { return v1 - v2; });
+        var map = SignalCollection.map2B(signal1, signal2, function(v1, v2) { return v1 - v2; });
         
         assertIterableEquals([0, 0, 0, 0, 62], map.valueNow());
     }
     
-    public function testBehaviorCollectionMap3(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 75]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 13]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([14, 24, 20, 18]));
+    public function testSignalCollectionMap3(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
         
-        var map = BehaviorCollection.map3B(behavior1, behavior2, behavior3, function(v1, v2, v3) { return v1 - v2 + v3; });
+        var map = SignalCollection.map3B(signal1, signal2, signal3, function(v1, v2, v3) { return v1 - v2 + v3; });
         
         assertIterableEquals([14, 24, 20, 18], map.valueNow());
     }
     
-    public function testBehaviorCollectionMap4(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 75]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 13]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([14, 24, 20, 18]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2,   4,  4,  2]));
+    public function testSignalCollectionMap4(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2,   4,  4,  2]));
         
-        var map = BehaviorCollection.map4B(behavior1, behavior2, behavior3, behavior4, function(v1, v2, v3, v4) { return (v1 - v2 + v3) / v4; });
+        var map = SignalCollection.map4B(signal1, signal2, signal3, signal4, function(v1, v2, v3, v4) { return (v1 - v2 + v3) / v4; });
         
         assertIterableEquals([7, 6, 5, 9.0], map.valueNow());
     }
     
-    public function testBehaviorCollectionMap5(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 75]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 15, 45, 50, 13]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([14, 24, 20, 18]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2,   4,  4,  2]));
-        var behavior5: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 8, 3]));
+    public function testSignalCollectionMap5(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2,   4,  4,  2]));
+        var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([10, 8, 3]));
         
-        var map = BehaviorCollection.map5B(behavior1, behavior2, behavior3, behavior4, behavior5, function(v1, v2, v3, v4, v5) { return ((v1 - v2 + v3) / v4) - v5; });
+        var map = SignalCollection.map5B(signal1, signal2, signal3, signal4, signal5, function(v1, v2, v3, v4, v5) { return ((v1 - v2 + v3) / v4) - v5; });
         
         assertIterableEquals([-3, -2, 2.0], map.valueNow());
     }
     
-    public function testBehaviorCollectionPartition(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    public function testSignalCollectionPartition(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
         var filter = function(v) { return v < 4; };
         
-        var partition = BehaviorCollection.partition(behavior, filter);
+        var partition = SignalCollection.partition(signal, filter);
         
         assertIterableEquals([1, 2, 3, 3], partition.valueNow()._1);
         assertIterableEquals([4, 5, 6, 7, 4], partition.valueNow()._2);
     }
     
-    public function testBehaviorCollectionPartitionWhile(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    public function testSignalCollectionPartitionWhile(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
         var filter = function(v) { return v <= 5; };
         
-        var partitionWhile = BehaviorCollection.partitionWhile(behavior, filter);
+        var partitionWhile = SignalCollection.partitionWhile(signal, filter);
         
         assertIterableEquals([1, 2, 3, 4, 5], partitionWhile.valueNow()._1);
         assertIterableEquals([6, 7, 3, 4], partitionWhile.valueNow()._2);
     }
     
-    public function testBehaviorCollectionTranspose(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 7, 8]));
+    public function testSignalCollectionTranspose(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
         
-        var transposeped = BehaviorCollection.transposeB(behavior1, behavior2).valueNow();
+        var transposeped = SignalCollection.transposeS(signal1, signal2).valueNow();
         
         assertIterableEquals([tuple2(1, 6), tuple2(2, 7), tuple2(3, 8)], transposeped);
     }
     
-    public function testBehaviorCollectionTranspose3(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,  7, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99, 8, 13]));
+    public function testSignalCollectionTranspose3(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
         
-        var transposeped = BehaviorCollection.transpose3B(behavior1, behavior2, behavior3).valueNow();
+        var transposeped = SignalCollection.transpose3B(signal1, signal2, signal3).valueNow();
         
         assertIterableEquals([tuple3(1, 6, 99), tuple3(2, 7, 8), tuple3(3, 8, 13)], transposeped);
     }
     
-    public function testBehaviorCollectionTranspose4(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,  7, 1, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99, 8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 13, 14, 15]));
+    public function testSignalCollectionTranspose4(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 1, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
         
-        var transposeped = BehaviorCollection.transpose4B(behavior1, behavior2, behavior3, behavior4).valueNow();
+        var transposeped = SignalCollection.transpose4B(signal1, signal2, signal3, signal4).valueNow();
         
         assertIterableEquals([tuple4(1, 6, 99, 12), tuple4(2, 7, 8, 13), tuple4(3, 1, 13, 14)], transposeped);
     }
     
-    public function testBehaviorCollectionTranspose5(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,   2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,   7, 1, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99,  8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 13, 14, 15]));
-        var behavior5: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,   7, 1, 8]));
+    public function testSignalCollectionTranspose5(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,   2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99,  8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
+        var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
         
-        var transposeped = BehaviorCollection.transpose5B(behavior1, behavior2, behavior3, behavior4, behavior5).valueNow();
+        var transposeped = SignalCollection.transpose5B(signal1, signal2, signal3, signal4, signal5).valueNow();
         
         assertIterableEquals([tuple5(1, 6, 99, 12, 6), tuple5(2, 7, 8, 13, 7), tuple5(3, 1, 13, 14, 1)], transposeped);
     }
     
-    public function testBehaviorCollectionFilter(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    public function testSignalCollectionFilter(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
         var f = function(v) { return v < 4; };
         
-        var filter = BehaviorCollection.filter(behavior, f);
+        var filter = SignalCollection.filter(signal, f);
         
         assertIterableEquals([1, 2, 3, 3], filter.valueNow());
     }
     
-    public function testBehaviorCollectionFilterWhile(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    public function testSignalCollectionFilterWhile(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
         var f = function(v) { return v <= 5; };
         
-        var filterWhile = BehaviorCollection.filterWhile(behavior, f);
+        var filterWhile = SignalCollection.filterWhile(signal, f);
         
         assertIterableEquals([1, 2, 3, 4, 5], filterWhile.valueNow());
     }
     
-    public function testBehaviorCollectionFlatMap(): Void {
+    public function testSignalCollectionFlatMap(): Void {
         var self = this;
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 3, 4]));
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 3, 4]));
         var f = function(v) { return self.singleton(v).cons(v * 10); };
         
-        var flatMap = BehaviorCollection.flatMap(behavior, f);
+        var flatMap = SignalCollection.flatMap(signal, f);
         
         assertIterableEquals([10, 1, 20, 2, 30, 3, 30, 3, 40, 4], flatMap.valueNow());
     }
     
-    public function testBehaviorCollectionFlatMap2(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 7, 8]));
+    public function testSignalCollectionFlatMap2(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
         
         var self = this;
         var mapper = function(v1, v2) { return self.singleton(v1).cons(v2 *2); };
-        var flatMapped = BehaviorCollection.flatMap2B(behavior1, behavior2, mapper).valueNow();
+        var flatMapped = SignalCollection.flatMap2B(signal1, signal2, mapper).valueNow();
         
         assertIterableEquals([12, 1, 14, 2, 16, 3], flatMapped);
     }
     
-    public function testBehaviorCollectionFlatMap3(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6,  7, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([99, 8, 13]));
+    public function testSignalCollectionFlatMap3(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
         
         var self = this;
         var mapper = function(v1, v2, v3) { return self.singleton(v2).cons(v1 + v3); };
-        var flatMapped = BehaviorCollection.flatMap3B(behavior1, behavior2, behavior3, mapper).valueNow();
+        var flatMapped = SignalCollection.flatMap3B(signal1, signal2, signal3, mapper).valueNow();
         
         assertIterableEquals([100, 6, 10, 7, 16, 8], flatMapped);
     }
     
-    public function testBehaviorCollectionFlatMap4(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([9,  14, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 2]));
+    public function testSignalCollectionFlatMap4(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([9,  14, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([12, 8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2, 2]));
         
         var self = this;
         var mapper = function(v1, v2, v3, v4) { return self.singleton(v2).cons(v1 + v3).append(v4); };
-        var flatMapped = BehaviorCollection.flatMap4B(behavior1, behavior2, behavior3, behavior4, mapper).valueNow();
+        var flatMapped = SignalCollection.flatMap4B(signal1, signal2, signal3, signal4, mapper).valueNow();
         
         assertIterableEquals([13, 9, 2, 10, 14, 2], flatMapped);
     }
     
-    public function testBehaviorCollectionFlatMap5(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1,  2, 3, 5, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([9,  15, 8]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 8, 13]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 2]));
-        var behavior5: Behavior<Collection<Int>> = Behaviors.constant(toCollection([12, 24]));
+    public function testSignalCollectionFlatMap5(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 5, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([9,  15, 8]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([12, 8, 13]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2, 2]));
+        var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([12, 24]));
         
         var self = this;
         var mapper = function(v1, v2, v3, v4, v5) { return self.singleton(v2).cons(v1 + v3).append(v4 * v5); };
-        var flatMapped = BehaviorCollection.flatMap5B(behavior1, behavior2, behavior3, behavior4, behavior5, mapper).valueNow();
+        var flatMapped = SignalCollection.flatMap5B(signal1, signal2, signal3, signal4, signal5, mapper).valueNow();
         
         assertIterableEquals([13, 9, 24, 10, 15, 48], flatMapped);
     }
     
-    public function testBehaviorCollectionFoldr(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
+    public function testSignalCollectionFoldr(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
         var f = function(v1, v2) { return v1 + " : " + Std.string(v2); };
         
-        var foldr = BehaviorCollection.foldr(behavior, "foo", f);
+        var foldr = SignalCollection.foldr(signal, "foo", f);
         
         assertEquals("foo : 4 : 3 : 1", foldr.valueNow());
     }
     
-    public function testBehaviorCollectionFoldl(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
+    public function testSignalCollectionFoldl(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
         var f = function(v1, v2) { return v1 + " : " + Std.string(v2); };
         
-        var foldl = BehaviorCollection.foldl(behavior, "foo", f);
+        var foldl = SignalCollection.foldl(signal, "foo", f);
         
         assertEquals("foo : 1 : 3 : 4", foldl.valueNow());
     }
     
-    public function testBehaviorCollectionFoldl2(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 5, 6, 7]));
+    public function testSignalCollectionFoldl2(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
         
         var f = function(v1, v2, v3) { return v1 + " : " + Std.string(v2 + v3); };
         
-        var foldl2B = BehaviorCollection.foldl2B(behavior1, behavior2, "foo", f);
+        var foldl2B = SignalCollection.foldl2B(signal1, signal2, "foo", f);
         
         assertEquals("foo : 5 : 8 : 10", foldl2B.valueNow());
     }
     
-    public function testBehaviorCollectionFoldl3(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 5, 6, 7]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3]));
+    public function testSignalCollectionFoldl3(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
         
         var f = function(v1, v2, v3, v4) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string(v4); };
         
-        var foldl3B = BehaviorCollection.foldl3B(behavior1, behavior2, behavior3, "foo", f);
+        var foldl3B = SignalCollection.foldl3B(signal1, signal2, signal3, "foo", f);
         
         assertEquals("foo : 5 : 1 : 8 : 2 : 10 : 3", foldl3B.valueNow());
     }
     
-    public function testBehaviorCollectionFoldl4(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 5, 6, 7]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 10]));
+    public function testSignalCollectionFoldl4(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([10, 10]));
         
         var f = function(v1, v2, v3, v4, v5) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string(v4 * v5); };
         
-        var foldl4B = BehaviorCollection.foldl4B(behavior1, behavior2, behavior3, behavior4, "foo", f);
+        var foldl4B = SignalCollection.foldl4B(signal1, signal2, signal3, signal4, "foo", f);
         
         assertEquals("foo : 5 : 10 : 8 : 20", foldl4B.valueNow());
     }
     
-    public function testBehaviorCollectionFoldl5(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 4]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 5, 6, 7]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3]));
-        var behavior4: Behavior<Collection<Int>> = Behaviors.constant(toCollection([10, 10]));
-        var behavior5: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 4]));
+    public function testSignalCollectionFoldl5(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
+        var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([10, 10]));
+        var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([2, 4]));
         
         var f = function(v1, v2, v3, v4, v5, v6) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string((v4 * v5) - v6); };
         
-        var foldl5B = BehaviorCollection.foldl5B(behavior1, behavior2, behavior3, behavior4, behavior5, "foo", f);
+        var foldl5B = SignalCollection.foldl5B(signal1, signal2, signal3, signal4, signal5, "foo", f);
         
         assertEquals("foo : 5 : 8 : 8 : 16", foldl5B.valueNow());
     }
     
-    public function testBehaviorCollectionToArray(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([40, 45, 50]));
+    public function testSignalCollectionToArray(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([40, 45, 50]));
         
-        var toArray = BehaviorCollection.toArray(behavior);
+        var toArray = SignalCollection.toArray(signal);
         
         assertIterableEquals([40, 45, 50], toArray.valueNow());
         assertTrue(Std.is(toArray.valueNow(), Array));
     }
     
-    public function testBehaviorCollectionScanl(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 5]));
+    public function testSignalCollectionScanl(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 5]));
         
         var f = function(v1, v2) { return v1 + v2; };
         
-        var scanl = BehaviorCollection.scanl(behavior, 1, f);
+        var scanl = SignalCollection.scanl(signal, 1, f);
         
         assertIterableEquals([1, 2, 5, 10], scanl.valueNow());
     }
     
-    public function testBehaviorCollectionScanr(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 3, 5]));
+    public function testSignalCollectionScanr(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 5]));
         
         var f = function(v1, v2) { return v1 + v2; };
         
-        var scanr = BehaviorCollection.scanr(behavior, 1, f);
+        var scanr = SignalCollection.scanr(signal, 1, f);
         
         assertIterableEquals([1, 6, 9, 10], scanr.valueNow());
     }
     
-    public function testBehaviorCollectionScanrP(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 5]));
+    public function testSignalCollectionScanrP(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 5]));
         
         var f = function(v1, v2) { return v1 + v2; };
         
-        var scanrP = BehaviorCollection.scanrP(behavior, f);
+        var scanrP = SignalCollection.scanrP(signal, f);
         
         assertIterableEquals([8, 10], scanrP.valueNow());
     }
     
-    public function testBehaviorCollectionScanlP(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 5]));
+    public function testSignalCollectionScanlP(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 5]));
         
         var f = function(v1, v2) { return v1 + v2; };
         
-        var scanlP = BehaviorCollection.scanlP(behavior, f);
+        var scanlP = SignalCollection.scanlP(signal, f);
         
         assertIterableEquals([5, 10], scanlP.valueNow());
     }
     
-    public function testBehaviorCollectionGroupBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 3, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
+    public function testSignalCollectionGroupBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
         
         var f = function(v1, v2) { return v1 == v2 * 2; };
         
-        var groupBy = BehaviorCollection.groupBy(behavior, f);
+        var groupBy = SignalCollection.groupBy(signal, f);
 
         assertIterableEquals([[4, 2], [3], [5], [10, 5], [16, 8, 4, 2], [2], [3]], colPump(groupBy.valueNow()));
     }
     
-    public function testBehaviorCollectionGroup(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
+    public function testSignalCollectionGroup(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
         
-        var group = BehaviorCollection.group(behavior);
+        var group = SignalCollection.group(signal);
 
         assertIterableEquals([[4], [2], [3], [5, 5, 5], [10], [5], [16], [8], [4], [2, 2], [3]], colPump(group.valueNow()));
     }
     
-    public function testBehaviorCollectionMember(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 7, 3]));
+    public function testSignalCollectionMember(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
         
-        var member =  BehaviorCollection.member(behavior, 7);
-        var member2 = BehaviorCollection.member(behavior, 1);
+        var member =  SignalCollection.member(signal, 7);
+        var member2 = SignalCollection.member(signal, 1);
 
         assertTrue(member.valueNow());
         assertFalse(member2.valueNow());
     }
     
-    public function testBehaviorCollectionExists(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 7, 3]));
+    public function testSignalCollectionExists(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
         
-        var exists =  BehaviorCollection.exists(behavior, function(v) { return v < 10; });
-        var exists2 = BehaviorCollection.exists(behavior, function(v) { return v > 7; });
+        var exists =  SignalCollection.exists(signal, function(v) { return v < 10; });
+        var exists2 = SignalCollection.exists(signal, function(v) { return v > 7; });
 
         assertTrue(exists.valueNow());
         assertFalse(exists2.valueNow());
     }
     
-    public function testBehaviorCollectionFind(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 7, 3]));
+    public function testSignalCollectionFind(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
         
-        var find =  BehaviorCollection.find(behavior, function(v) { return v < 10; });
-        var find2 = BehaviorCollection.find(behavior, function(v) { return v > 7; });
+        var find =  SignalCollection.find(signal, function(v) { return v < 10; });
+        var find2 = SignalCollection.find(signal, function(v) { return v > 7; });
 
         assertOptionEquals(Some(4), find.valueNow());
         assertOptionEquals(None, find2.valueNow());
     }
     
-    public function testBehaviorCollectionExistsP(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 7, 3]));
+    public function testSignalCollectionExistsP(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
         
-        var existsP =  BehaviorCollection.existsP(behavior, 5, function(v1, ref) { return v1 < ref; });
-        var existsP2 = BehaviorCollection.existsP(behavior, 1, function(v1, ref) { return v1 < ref; });
+        var existsP =  SignalCollection.existsP(signal, 5, function(v1, ref) { return v1 < ref; });
+        var existsP2 = SignalCollection.existsP(signal, 1, function(v1, ref) { return v1 < ref; });
 
         assertTrue(existsP.valueNow());
         assertFalse(existsP2.valueNow());
     }
     
-    public function testBehaviorCollectionNubBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
+    public function testSignalCollectionNubBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
         
-        var nubBy =  BehaviorCollection.nubBy(behavior, function(v1, v2) { return  if (v1 == v2 || v1 == v2 * 2) true else false; });
+        var nubBy =  SignalCollection.nubBy(signal, function(v1, v2) { return  if (v1 == v2 || v1 == v2 * 2) true else false; });
         
         assertIterableEquals([4, 3, 5, 10, 16], nubBy.valueNow());
     }
     
-    public function testBehaviorCollectionNub(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
+    public function testSignalCollectionNub(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
         
-        var nub =  BehaviorCollection.nub(behavior);
+        var nub =  SignalCollection.nub(signal);
         
         assertIterableEquals([4, 2, 3, 5, 10, 16, 8], nub.valueNow());
     }
     
-    public function testBehaviorCollectionIntersect(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([4, 2, 2, 5, 2, 3, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4]));
+    public function testSignalCollectionIntersect(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 2, 5, 2, 3, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
         
-        var intersectB =  BehaviorCollection.intersectB(behavior1, behavior2);
+        var intersectS =  SignalCollection.intersectS(signal1, signal2);
         
-        assertIterableEquals([4, 2, 2, 2, 3], intersectB.valueNow());
+        assertIterableEquals([4, 2, 2, 2, 3], intersectS.valueNow());
     }
     
-    public function testBehaviorCollectionIntersectBy(): Void {
-        var behavior1: Behavior<Collection<Float>> = Behaviors.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-        var behavior2: Behavior<Collection<Float>> = Behaviors.constant(toCollection([1.0, 2, 8, 8, 2, 2, 3, 4]));
+    public function testSignalCollectionIntersectBy(): Void {
+        var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+        var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 8, 8, 2, 2, 3, 4]));
         
-        var intersectByB =  BehaviorCollection.intersectByB(behavior1, behavior2, function(v1, v2) { return v2 / 2 == v1; });
+        var intersectByS =  SignalCollection.intersectByS(signal1, signal2, function(v1, v2) { return v2 / 2 == v1; });
         
-        assertIterableEquals([4.0, 2, 2, 8, 2], intersectByB.valueNow());
+        assertIterableEquals([4.0, 2, 2, 8, 2], intersectByS.valueNow());
     }
     
-    public function testBehaviorCollectionUnionBy(): Void {
-        var behavior1: Behavior<Collection<Float>> = Behaviors.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-        var behavior2: Behavior<Collection<Float>> = Behaviors.constant(toCollection([1.0, 2, 3, 4]));
+    public function testSignalCollectionUnionBy(): Void {
+        var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+        var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 3, 4]));
         
-        var unionByB =  BehaviorCollection.unionByB(behavior1, behavior2, function(v1, v2) { return v1 / 2 == v2; });
+        var unionByS =  SignalCollection.unionByS(signal1, signal2, function(v1, v2) { return v1 / 2 == v2; });
         
-        assertIterableEquals([4.0, 2, 2, 8, 2, 3, 5, 3], unionByB.valueNow());
+        assertIterableEquals([4.0, 2, 2, 8, 2, 3, 5, 3], unionByS.valueNow());
     }
     
-    public function testBehaviorCollectionUnion(): Void {
-        var behavior1: Behavior<Collection<Float>> = Behaviors.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-        var behavior2: Behavior<Collection<Float>> = Behaviors.constant(toCollection([1.0, 2, 3, 4]));
+    public function testSignalCollectionUnion(): Void {
+        var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+        var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 3, 4]));
         
-        var unionB =  BehaviorCollection.unionB(behavior1, behavior2);
+        var unionS =  SignalCollection.unionS(signal1, signal2);
         
-        assertIterableEquals([4.0, 2, 2, 8, 2, 3, 5, 1], unionB.valueNow());
+        assertIterableEquals([4.0, 2, 2, 8, 2, 3, 5, 1], unionS.valueNow());
     }
     
-    public function testBehaviorCollectionIsPrefixOf(): Void {
-        var behavior0: Behavior<Collection<Int>> = Behaviors.constant(toCollection([]));
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4]));
+    public function testSignalCollectionIsPrefixOf(): Void {
+        var signal0: Signal<Collection<Int>> = Signals.constant(toCollection([]));
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
         
-        var isPrefixOf =  BehaviorCollection.isPrefixOfB(behavior1, behavior2);
-        var isPrefixOf2 = BehaviorCollection.isPrefixOfB(behavior2, behavior3);
-        var isPrefixOf3 = BehaviorCollection.isPrefixOfB(behavior0, behavior3);
+        var isPrefixOf =  SignalCollection.isPrefixOfS(signal1, signal2);
+        var isPrefixOf2 = SignalCollection.isPrefixOfS(signal2, signal3);
+        var isPrefixOf3 = SignalCollection.isPrefixOfS(signal0, signal3);
         
         assertTrue(isPrefixOf.valueNow());
         assertFalse(isPrefixOf2.valueNow());
         assertTrue(isPrefixOf3.valueNow());
     }
     
-    public function testBehaviorCollectionIsSuffixOf(): Void {
-        var behavior0: Behavior<Collection<Int>> = Behaviors.constant(toCollection([]));
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 4, 5]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5]));
-        var behavior3: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4]));
+    public function testSignalCollectionIsSuffixOf(): Void {
+        var signal0: Signal<Collection<Int>> = Signals.constant(toCollection([]));
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5]));
+        var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
         
-        var isSuffixOf =  BehaviorCollection.isSuffixOfB(behavior1, behavior3);
-        var isSuffixOf2 = BehaviorCollection.isSuffixOfB(behavior1, behavior2);
-        var isSuffixOf3 = BehaviorCollection.isSuffixOfB(behavior0, behavior3);
+        var isSuffixOf =  SignalCollection.isSuffixOfS(signal1, signal3);
+        var isSuffixOf2 = SignalCollection.isSuffixOfS(signal1, signal2);
+        var isSuffixOf3 = SignalCollection.isSuffixOfS(signal0, signal3);
         
         assertFalse(isSuffixOf.valueNow());
         assertTrue(isSuffixOf2.valueNow());
         assertTrue(isSuffixOf3.valueNow());
     }
     
-    public function testBehaviorCollectionDelete(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 4, 5, 3, 4, 5]));
+    public function testSignalCollectionDelete(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 3, 4, 5]));
         
-        var delete = BehaviorCollection.delete(behavior, 5);
+        var delete = SignalCollection.delete(signal, 5);
 
         assertIterableEquals([2, 3, 4, 3, 4, 5], delete.valueNow());
     }
     
-    public function testBehaviorCollectionDeleteBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
+    public function testSignalCollectionDeleteBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
         var cmp = function(v1, v2) { return v2 / 2 == v1; }
         
-        var deleteBy = BehaviorCollection.deleteBy(behavior, 4, cmp);
+        var deleteBy = SignalCollection.deleteBy(signal, 4, cmp);
         
         assertIterableEquals([3, 4, 5, 3, 2, 4, 5], deleteBy.valueNow());
     }
     
-    public function testBehaviorCollectionFindIndicesOf(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
+    public function testSignalCollectionFindIndicesOf(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
         var cmp = function(v) { return v < 4; };
         
-        var findIndicesOf = BehaviorCollection.findIndicesOf(behavior, cmp);
+        var findIndicesOf = SignalCollection.findIndicesOf(signal, cmp);
         
         assertIterableEquals([0, 3, 4, 5], findIndicesOf.valueNow());
     }
     
-    public function testBehaviorCollectionFindIndexOf(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 2, 4, 5]));
+    public function testSignalCollectionFindIndexOf(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
         var cmp = function(v) { return v == 5; };
         var cmp2 = function(v) { return v == 7; };
         
-        var findIndexOf = BehaviorCollection.findIndexOf(behavior, cmp);
-        var findIndexOf2 = BehaviorCollection.findIndexOf(behavior, cmp2);
+        var findIndexOf = SignalCollection.findIndexOf(signal, cmp);
+        var findIndexOf2 = SignalCollection.findIndexOf(signal, cmp2);
         
         assertOptionEquals(Some(4), findIndexOf.valueNow());
         assertOptionEquals(None, findIndexOf2.valueNow());
     }
     
-    public function testBehaviorCollectionIndexOf(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 2, 4, 5]));
+    public function testSignalCollectionIndexOf(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
         
-        var indexOf = BehaviorCollection.indexOf(behavior, 4);
-        var indexOf2 = BehaviorCollection.indexOf(behavior, 10);
+        var indexOf = SignalCollection.indexOf(signal, 4);
+        var indexOf2 = SignalCollection.indexOf(signal, 10);
         
         assertOptionEquals(Some(3), indexOf.valueNow());
         assertOptionEquals(None, indexOf2.valueNow());
     }
     
-    public function testBehaviorCollectionIndicesOf(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 2, 4, 5]));
+    public function testSignalCollectionIndicesOf(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
         
-        var indicesOf = BehaviorCollection.indicesOf(behavior, 2);
-        var indicesOf2 = BehaviorCollection.indicesOf(behavior, 10);
+        var indicesOf = SignalCollection.indicesOf(signal, 2);
+        var indicesOf2 = SignalCollection.indicesOf(signal, 10);
         
         assertIterableEquals([0, 2], indicesOf.valueNow());
         assertIterableEquals([], indicesOf2.valueNow());
     }
     
-    public function testBehaviorCollectionReplaceBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 2, 4, 5]));
+    public function testSignalCollectionReplaceBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
         
         var f = function(v) { return v == 2; };
         
-        var replaceBy = BehaviorCollection.replaceBy(behavior, 99, f);
+        var replaceBy = SignalCollection.replaceBy(signal, 99, f);
         
         assertIterableEquals([99, 3, 99, 4, 5], replaceBy.valueNow());
     }
     
-    public function testBehaviorCollectionSnapshot(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([2, 3, 2, 4, 5]));
+    public function testSignalCollectionSnapshot(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
         
-        var snapshot = BehaviorCollection.snapshot(behavior);
+        var snapshot = SignalCollection.snapshot(signal);
         
         assertIterableEquals([2, 3, 2, 4, 5], snapshot.valueNow());
         
-        behavior.sendBehavior(toCollection([]));
+        signal.sendSignal(toCollection([]));
         
         assertIterableEquals([], snapshot.valueNow());
     }
     
-    public function testBehaviorCollectionInsertBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 5, 6]));
+    public function testSignalCollectionInsertBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 5, 6]));
         
         var f = function(v1, v2) { return  v1 < v2; };
         
-        var insertBy = BehaviorCollection.insertBy(behavior, 4, f);
+        var insertBy = SignalCollection.insertBy(signal, 4, f);
         
         assertIterableEquals([1, 2, 3, 4, 5, 6], insertBy.valueNow());
     }
     
-    public function testBehaviorCollectionSort(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 6, 4, 8, 8, 7, 3, 2, 2, 0, 9, 7, 2]));
+    public function testSignalCollectionSort(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 6, 4, 8, 8, 7, 3, 2, 2, 0, 9, 7, 2]));
         
         var f = function(v1, v2) { return  v1 < v2; };
         
-        var sort = BehaviorCollection.sort(behavior, f);
+        var sort = SignalCollection.sort(signal, f);
         
         assertIterableEquals([0, 1, 2, 2, 2, 3, 4, 6, 7, 7, 8, 8, 9], sort.valueNow());
     }
     
-    public function testBehaviorCollectionDeleteFirstBy(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 6, 4, 8, 8]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([8, 1, 9, 3, 2]));
+    public function testSignalCollectionDeleteFirstBy(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 6, 4, 8, 8]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([8, 1, 9, 3, 2]));
         
         var f = function(v1, v2) { return  Filter.isEqual(v1, v2); };
         
-        var deleteFirstBy = BehaviorCollection.deleteFirstByB(behavior1, behavior2, f);
+        var deleteFirstBy = SignalCollection.deleteFirstByS(signal1, signal2, f);
         
         assertIterableEquals([6, 4, 8], deleteFirstBy.valueNow());
     }
     
-    public function testBehaviorCollectionTails(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 0, 9, 7, 2]));
+    public function testSignalCollectionTails(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
         
-        var tails = BehaviorCollection.tails(behavior);
+        var tails = SignalCollection.tails(signal);
         
         assertIterableEquals([[1, 0, 9, 7, 2], [0, 9, 7, 2], [9, 7, 2], [7, 2], [2], []], colPump(tails.valueNow()));
     }
     
-    public function testBehaviorCollectionWrap(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 0, 9, 7, 2]));
+    public function testSignalCollectionWrap(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
         
-        var wrap = BehaviorCollection.wrap(behavior);
+        var wrap = SignalCollection.wrap(signal);
         
         assertIterableEquals([[1, 0, 9, 7, 2]], colPump(wrap.valueNow()));
     }
     
-    public function testBehaviorCollectionToString(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 0, 9, 7, 2]));
+    public function testSignalCollectionToString(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
         
-        var toString = BehaviorCollection.toString(behavior);
+        var toString = SignalCollection.toString(signal);
         
         assertEquals("Collection(1, 0, 9, 7, 2)", toString.valueNow());
     }
     
-    public function testBehaviorCollectionInstances(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([7, 1, 0, 9, 7, 2]));
+    public function testSignalCollectionInstances(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([7, 1, 0, 9, 7, 2]));
         
-        var instances = BehaviorCollection.instances(behavior, 7);
+        var instances = SignalCollection.instances(signal, 7);
         
         assertEquals(2, instances.valueNow());
     }
     
-    public function testBehaviorCollectionInstancesBy(): Void {
-        var behavior: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 1, 0, 9, 6, 2, 6]));
+    public function testSignalCollectionInstancesBy(): Void {
+        var signal: Signal<Collection<Int>> = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6]));
         
         var f = function(v1, v2) { return v2 * 2 == v1; };
         
-        var instancesBy = BehaviorCollection.instancesBy(behavior, 3, f);
+        var instancesBy = SignalCollection.instancesBy(signal, 3, f);
         
         assertEquals(3, instancesBy.valueNow());
     }
     
-    public function testBehaviorCollectionMinus(): Void {
-        var behavior1: Behavior<Collection<Int>> = Behaviors.constant(toCollection([6, 1, 0, 9, 6, 2, 6, 2]));
-        var behavior2: Behavior<Collection<Int>> = Behaviors.constant(toCollection([1, 2, 3, 4, 5]));
+    public function testSignalCollectionMinus(): Void {
+        var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6, 2]));
+        var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
         
-        var minus = BehaviorCollection.minusB(behavior1, behavior2);
+        var minus = SignalCollection.minusS(signal1, signal2);
         
         assertIterableEquals([6, 0, 9, 6, 6], minus.valueNow());
     }

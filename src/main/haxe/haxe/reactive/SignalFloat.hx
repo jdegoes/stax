@@ -17,126 +17,126 @@ package haxe.reactive;
 
 import haxe.reactive.Reactive;
 
-class BehaviorFloat {
+class SignalFloat {
     private function new() { }
     
-    public static function plus(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return plusB(b, Behaviors.constant(value));
+    public static function plus(b: Signal<Float>, value: Float): Signal<Float> {
+        return plusS(b, Signals.constant(value));
     }
     
-    public static function plusB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function plusS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return t._1 + t._2; });
     }
     
-    public static function minusB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function minusS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return t._1 - t._2; });
     }
     
-    public static function minus(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return minusB(b, Behaviors.constant(value));
+    public static function minus(b: Signal<Float>, value: Float): Signal<Float> {
+        return minusS(b, Signals.constant(value));
     }
     
-    public static function timesB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function timesS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return t._1 * t._2; });
     }
     
-    public static function times(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return timesB(b, Behaviors.constant(value));
+    public static function times(b: Signal<Float>, value: Float): Signal<Float> {
+        return timesS(b, Signals.constant(value));
     }
     
-    public static function dividedByB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function dividedByS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return t._1 / t._2; });
     }
     
-    public static function dividedBy(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return dividedByB(b, Behaviors.constant(value));
+    public static function dividedBy(b: Signal<Float>, value: Float): Signal<Float> {
+        return dividedByS(b, Signals.constant(value));
     }
     
-    public static function abs(b: Behavior<Float>): Behavior<Float> {
+    public static function abs(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.abs(e); });
     }
     
-    public static function negate(b: Behavior<Float>): Behavior<Float> {
+    public static function negate(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return -e; });
     }
     
-    public static function floor(b: Behavior<Float>): Behavior<Float> {
+    public static function floor(b: Signal<Float>): Signal<Float> {
         return b.map(function(e): Float { return Math.floor(e); });
     }
     
-    public static function ceil(b: Behavior<Float>): Behavior<Float> {
+    public static function ceil(b: Signal<Float>): Signal<Float> {
         return b.map(function(e): Float { return Math.ceil(e); });
     }
     
-    public static function round(b: Behavior<Float>): Behavior<Float> {
+    public static function round(b: Signal<Float>): Signal<Float> {
         return b.map(function(e): Float { return Math.round(e); });
     }
     
-    public static function acos(b: Behavior<Float>): Behavior<Float> {
+    public static function acos(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.acos(e); });
     }
     
-    public static function asin(b: Behavior<Float>): Behavior<Float> {
+    public static function asin(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.asin(e); });
     }
     
-    public static function atan(b: Behavior<Float>): Behavior<Float> {
+    public static function atan(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.atan(e); });
     }
     
-    public static function atan2B(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function atan2B(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return Math.atan2(t._1, t._2); });
     }
     
-    public static function atan2(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return atan2B(b, Behaviors.constant(value));
+    public static function atan2(b: Signal<Float>, value: Float): Signal<Float> {
+        return atan2B(b, Signals.constant(value));
     }
     
-    public static function cos(b: Behavior<Float>): Behavior<Float> {
+    public static function cos(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.cos(e); });
     }
     
-    public static function exp(b: Behavior<Float>): Behavior<Float> {
+    public static function exp(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.exp(e); });
     }
     
-    public static function log(b: Behavior<Float>): Behavior<Float> {
+    public static function log(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.log(e); });
     }
     
-    public static function maxB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function maxS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return Math.max(t._1, t._2); });
     }
     
-    public static function max(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return maxB(b, Behaviors.constant(value));
+    public static function max(b: Signal<Float>, value: Float): Signal<Float> {
+        return maxS(b, Signals.constant(value));
     }
     
-    public static function minB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function minS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return Math.min(t._1, t._2); });
     }
     
-    public static function min(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return minB(b, Behaviors.constant(value));
+    public static function min(b: Signal<Float>, value: Float): Signal<Float> {
+        return minS(b, Signals.constant(value));
     }
     
-    public static function powB(b1: Behavior<Float>, b2: Behavior<Float>): Behavior<Float> {
+    public static function powS(b1: Signal<Float>, b2: Signal<Float>): Signal<Float> {
         return b1.zip(b2).map(function(t) { return Math.pow(t._1, t._2); });
     }
     
-    public static function pow(b: Behavior<Float>, value: Float): Behavior<Float> {
-        return powB(b, Behaviors.constant(value));
+    public static function pow(b: Signal<Float>, value: Float): Signal<Float> {
+        return powS(b, Signals.constant(value));
     }
     
-    public static function sin(b: Behavior<Float>): Behavior<Float> {
+    public static function sin(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.sin(e); });
     }
     
-    public static function sqrt(b: Behavior<Float>): Behavior<Float> {
+    public static function sqrt(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.sqrt(e); });
     }
     
-    public static function tan(b: Behavior<Float>): Behavior<Float> {
+    public static function tan(b: Signal<Float>): Signal<Float> {
         return b.map(function(e) { return Math.tan(e); });
     }
 }

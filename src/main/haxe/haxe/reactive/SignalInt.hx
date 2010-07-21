@@ -17,58 +17,58 @@ package haxe.reactive;
 
 import haxe.reactive.Reactive;
 
-class BehaviorInt {
+class SignalInt {
     private function new() { }
     
-    public static function plus(b: Behavior<Int>, value: Int): Behavior<Int> {
-        return plusB(b, Behaviors.constant(value));
+    public static function plus(b: Signal<Int>, value: Int): Signal<Int> {
+        return plusS(b, Signals.constant(value));
     }
     
-    public static function plusB(b1: Behavior<Int>, b2: Behavior<Int>): Behavior<Int> {
+    public static function plusS(b1: Signal<Int>, b2: Signal<Int>): Signal<Int> {
         return b1.zip(b2).map(function(t) { return t._1 + t._2; });
     }
     
-    public static function minusB(b1: Behavior<Int>, b2: Behavior<Int>): Behavior<Int> {
+    public static function minusS(b1: Signal<Int>, b2: Signal<Int>): Signal<Int> {
         return b1.zip(b2).map(function(t) { return t._1 - t._2; });
     }
     
-    public static function minus(b: Behavior<Int>, value: Int): Behavior<Int> {
-        return minusB(b, Behaviors.constant(value));
+    public static function minus(b: Signal<Int>, value: Int): Signal<Int> {
+        return minusS(b, Signals.constant(value));
     }
     
-    public static function timesB(b1: Behavior<Int>, b2: Behavior<Int>): Behavior<Int> {
+    public static function timesS(b1: Signal<Int>, b2: Signal<Int>): Signal<Int> {
         return b1.zip(b2).map(function(t) { return t._1 * t._2; });
     }
     
-    public static function times(b: Behavior<Int>, value: Int): Behavior<Int> {
-        return timesB(b, Behaviors.constant(value));
+    public static function times(b: Signal<Int>, value: Int): Signal<Int> {
+        return timesS(b, Signals.constant(value));
     }
     
-    public static function modB(b1: Behavior<Int>, b2: Behavior<Int>): Behavior<Int> {
+    public static function modS(b1: Signal<Int>, b2: Signal<Int>): Signal<Int> {
         return b1.zip(b2).map(function(t) { return t._1 % t._2; });
     }
     
-    public static function mod(b: Behavior<Int>, value: Int): Behavior<Int> {
-        return modB(b, Behaviors.constant(value));
+    public static function mod(b: Signal<Int>, value: Int): Signal<Int> {
+        return modS(b, Signals.constant(value));
     }
     
-    public static function dividedByB(b1: Behavior<Int>, b2: Behavior<Int>): Behavior<Int> {
+    public static function dividedByS(b1: Signal<Int>, b2: Signal<Int>): Signal<Int> {
         return b1.zip(b2).map(function(t) { return Std.int(t._1 / t._2); });
     }
     
-    public static function dividedBy(b: Behavior<Int>, value: Int): Behavior<Int> {
-        return dividedByB(b, Behaviors.constant(value));
+    public static function dividedBy(b: Signal<Int>, value: Int): Signal<Int> {
+        return dividedByS(b, Signals.constant(value));
     }
     
-    public static function abs(b: Behavior<Int>): Behavior<Int> {
+    public static function abs(b: Signal<Int>): Signal<Int> {
         return b.map(function(e) { return Std.int(Math.abs(e)); });
     }
     
-    public static function negate(b: Behavior<Int>): Behavior<Int> {
+    public static function negate(b: Signal<Int>): Signal<Int> {
         return b.map(function(e) { return -e; });
     }
     
-    public static function toFloat(b: Behavior<Int>): Behavior<Float> {
+    public static function toFloat(b: Signal<Int>): Signal<Float> {
         return b.map(function(e): Float { return e; });
     }
 }
