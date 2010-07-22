@@ -62,4 +62,16 @@ class UrlExtensionsTestCase extends TestCase {
 	  test('?foo=bar');
     test('?foo=');
 	}
+	
+	public function testAddQueryParametersWhenNoneExist() {
+	  assertEquals('http://foo.com?foo=bar', 'http://foo.com'.addQueryParameters({foo: 'bar'}));
+	}
+	
+	public function testAddQueryParametersWhenJustQuestionMarkExists() {
+	  assertEquals('http://foo.com?foo=bar', 'http://foo.com?'.addQueryParameters({foo: 'bar'}));
+	}
+	
+	public function testAddQueryParametersWhenQueryParametersAlreadyExists() {
+	  assertEquals('http://foo.com?doo=dar&foo=bar', 'http://foo.com?doo=dar'.addQueryParameters({foo: 'bar'}));
+	}
 }

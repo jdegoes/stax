@@ -25,7 +25,7 @@ class UrlExtensions {
   //
   // http:           //  domain.com      :  80          /  path               ?foo=bar         #body
   // (1 - protocol)      (2 - hostname)     (3 - port)     (4 - pathname)     (5 - search)     (6 - hash)
-  static var UrlPattern = new EReg('^([a-zA-Z]+:)(?:[/][/])([^:?/#\\s]*)(?:[:](\\d+))?(/[^\\s?#]+)?([?][^\\s#]+)?(#.*)?$', 'i');
+  static var UrlPattern = new EReg('^([a-zA-Z]+:)(?:[/][/])([^:?/#\\s]*)(?:[:](\\d+))?(/[^\\s?#]+)?([?][^\\s#]*)?(#.*)?$', 'i');
   
   static var Protocol = 1;
   static var Hostname = 2;

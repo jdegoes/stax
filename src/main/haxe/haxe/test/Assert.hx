@@ -676,10 +676,17 @@ class Assert {
    */
 	public static function delivered<T>(future: Future<T>, assertions: T -> Void, ?timeout: Int) {
 	  var f = createAsync(function() {
-	    assertions(future.value().get());
+	    if (future.isCanceled()) {
+	      fail('expected delivery of future ' + q(future) + ', but it was canceled');
+	    }
+	    else {
+	      assertions(future.value().get());
+	    }
 	  }, timeout);
 	  
 	  future.deliverTo(function(value) { f(); });
+	  
+	  future.ifCanceled(f);
 	}
 	
   /** Asserts the future is canceled within the specified time frame. All 

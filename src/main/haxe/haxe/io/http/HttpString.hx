@@ -39,6 +39,8 @@ interface HttpString implements Http<String> {
 #if js
 
 class AsynchronousHttpString implements HttpString {
+  public function new() { }
+  
   public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
     return doRequest('GET', url, params, headers);
   }
@@ -58,6 +60,8 @@ class AsynchronousHttpString implements HttpString {
   private function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
     
+    //untyped alert(url);
+    
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -65,12 +69,12 @@ class AsynchronousHttpString implements HttpString {
     future.ifCanceled(request.abort.swallow());
     
     request.onreadystatechange = function() {
-      var toBody = function(text: String): Option<String> { return if (text == null || text.trim().length == 0) None; else Some(text); }
+      var toBody = function(text: String): Option<String> { return if (text == null || text.length == 0) None; else Some(text); }
       
       if (request.readyState == XmlHttpRequestState.DONE) {
         future.deliver({
           body:     toBody(request.responseText),
-          headers:  request.getAllResponseHeaders().toHttpHeaders(), // TODO
+          headers:  request.getAllResponseHeaders().toHttpHeaders(),
           code:     request.status.toHttpResponseCode()
         });
       }
