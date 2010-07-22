@@ -50,7 +50,7 @@ class Assert {
 	 */
 	public static function that<T>(obj: T, cond: MustMatcher<T>, ?msg: String, ?pos: PosInfos) {
     switch (cond(obj)) {
-      case Left(result):  Assert.isTrue(false, 'Expected: ' + result.assertion + ', Found: x = ' + obj, pos);
+      case Left(result):  Assert.isTrue(false, 'Expected: ' + result.assertion + ', Found: x = ' + q(obj), pos);
       case Right(_):      Assert.isTrue(true, pos);
     }
   }
@@ -147,9 +147,11 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function equals(expected : Dynamic, value : Dynamic, ?msg : String , ?pos : PosInfos) {
+	public static function equals<T>(expected: T, value: T, ?equal: Equal<T>, ?msg : String , ?pos : PosInfos) {
+	  if (equal == null) equal = DynamicExtensions.EqualT();
+	  
 		if(msg == null) msg = "expected " + q(expected) + " but was " + q(value);
-		isTrue(expected == value, msg, pos);
+		isTrue(equal.equal(expected, value), msg, pos);
 	}
 	
 	/**

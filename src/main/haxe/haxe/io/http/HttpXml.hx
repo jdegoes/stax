@@ -15,13 +15,5 @@
 */
 package haxe.io.http;
 
-interface HttpJValue implements Http<JValue> {
+interface HttpXml implements Http<Xml> {
 }
-
-#if js
-
-class JsonpHttpJValue implements HttpJValue {
-  
-}
-
-#end

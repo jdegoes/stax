@@ -28,6 +28,7 @@ import haxe.data.transcode.JValueTestCase;
 import haxe.abstract.PartialFunctionTestCase;
 import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
+import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 import haxe.io.http.HttpStringTestCase;
@@ -51,7 +52,8 @@ class StaxTestSuite {
       new UrlExtensionsTestCase(),
       new StringExtensionsTestCase(),
       new InjectorTestCase(),
-      new HttpStringTestCase()
+      new HttpStringTestCase(),
+      new HttpHeaderExtensionsTestCase()
       #if js
       , new IFrameIOTestCase()
       #end

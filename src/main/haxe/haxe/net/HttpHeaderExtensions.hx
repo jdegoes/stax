@@ -13,15 +13,27 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.io.http;
+package haxe.net;
 
-interface HttpJValue implements Http<JValue> {
-}
+import Prelude;
 
-#if js
+import haxe.data.collections.Map;
+import haxe.data.collections.Maps;
+import haxe.net.HttpHeader;
 
-class JsonpHttpJValue implements HttpJValue {
+using Prelude;
+
+class HttpHeaderExtensions {
+  static var HeaderPattern = ~/^([^:]+): *(.+)$/;
+  static var HeaderLinesPattern = ~/[\r\n]+/;
   
+	public static function toHttpHeader(str: String): Option<HttpHeader> {
+	  return if (HeaderPattern.match(str)) Some(HeaderPattern.matched(1).trim().entuple(HeaderPattern.matched(2).trim())); else None;
+	}
+	
+	public static function toHttpHeaders(str: String): HttpHeaders {
+	  return Maps.StringString.addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
+	    return toHttpHeader(line.trim()).toArray();
+	  }));
+	}
 }
-
-#end

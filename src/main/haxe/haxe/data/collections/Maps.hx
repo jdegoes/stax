@@ -13,15 +13,14 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.io.http;
+package haxe.data.collections;
 
-interface HttpJValue implements Http<JValue> {
+import Prelude;
+import haxe.data.collections.Map;
+
+using Prelude;
+
+class Maps {
+	public static var StringString = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT());
+	
 }
-
-#if js
-
-class JsonpHttpJValue implements HttpJValue {
-  
-}
-
-#end

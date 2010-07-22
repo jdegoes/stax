@@ -31,6 +31,7 @@ using Prelude;
 using haxe.abstract.Foldable;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
+using haxe.net.HttpHeaderExtensions;
 
 interface HttpString implements Http<String> {
 }
@@ -69,7 +70,7 @@ class AsynchronousHttpString implements HttpString {
       if (request.readyState == XmlHttpRequestState.DONE) {
         future.deliver({
           body:     toBody(request.responseText),
-          headers:  null, // TODO
+          headers:  request.getAllResponseHeaders().toHttpHeaders(), // TODO
           code:     request.status.toHttpResponseCode()
         });
       }
