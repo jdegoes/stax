@@ -15,9 +15,9 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package haxe.io.http;
+package haxe.net;
 
-import haxe.io.http.HttpResponseCode;
+import haxe.net.HttpResponseCode;
 
 class HttpResponseCodeExtensions {
   public static function toHttpResponseCode(code: Int): HttpResponseCode {

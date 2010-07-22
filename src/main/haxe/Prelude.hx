@@ -521,7 +521,26 @@ class ArrayExtensions {
     return a;
   }
 }
-class FunctionExtensions {
+class Function0Extensions {
+  public static function swallow(f: Void -> Void): Void -> Void {
+    return function() {
+      try {
+        f();
+      }
+      catch (e: Dynamic) { }
+    }
+  }
+}
+class Function1Extensions {
+  public static function swallow<A>(f: Function<A, Void>): Function<A, Void> {
+    return function(a) {
+      try {
+        f(a);
+      }
+      catch (e: Dynamic) { }
+    }
+  }
+  
   public static function toFunction1<A, B>(f: Void -> B): Function<A, B> {
     return function(v) {
       return f();
@@ -546,6 +565,14 @@ class FunctionExtensions {
   }
 }
 class Function2Extensions {  
+  public static function swallow<A, B>(f: Function2<A, B, Void>): Function2<A, B, Void> {
+    return function(a, b) {
+      try {
+        f(a, b);
+      }
+      catch (e: Dynamic) { }
+    }
+  }
   public static function flip<P1, P2, R>(f: Function2<P1, P2, R>): Function2<P2, P1, R> {
     return function(p2, p1) {
       return f(p1, p2);
@@ -572,6 +599,14 @@ class Function2Extensions {
   }
 }
 class Function3Extensions {  
+  public static function swallow<A, B, C>(f: Function3<A, B, C, Void>): Function3<A, B, C, Void> {
+    return function(a, b, c) {
+      try {
+        f(a, b, c);
+      }
+      catch (e: Dynamic) { }
+    }
+  }
   public static function curry<P1, P2, P3, R>(f: Function3<P1, P2, P3, R>): Function<P1, Function<P2, Function<P3, R>>> {
     return function(p1: P1) {
       return function(p2: P2) {
@@ -595,6 +630,14 @@ class Function3Extensions {
   }
 }
 class Function4Extensions {  
+  public static function swallow<A, B, C, D>(f: Function4<A, B, C, D, Void>): Function4<A, B, C, D, Void> {
+    return function(a, b, c, d) {
+      try {
+        f(a, b, c, d);
+      }
+      catch (e: Dynamic) { }
+    }
+  }
   public static function curry<P1, P2, P3, P4, R>(f: Function4<P1, P2, P3, P4, R>): Function<P1, Function<P2, Function<P3, Function<P4, R>>>> {
     return function(p1: P1) {
       return function(p2: P2) {
@@ -620,6 +663,14 @@ class Function4Extensions {
   }
 }
 class Function5Extensions {  
+  public static function swallow<A, B, C, D, E>(f: Function5<A, B, C, D, E, Void>): Function5<A, B, C, D, E, Void> {
+    return function(a, b, c, d, e) {
+      try {
+        f(a, b, c, d, e);
+      }
+      catch (e: Dynamic) { }
+    }
+  }
   public static function curry<P1, P2, P3, P4, P5, R>(f: Function5<P1, P2, P3, P4, P5, R>): Function<P1, Function<P2, Function<P3, Function<P4, Function<P5, R>>>>> {
     return function(p1: P1) {
       return function(p2: P2) {

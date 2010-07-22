@@ -18,7 +18,7 @@ package haxe.io.http;
 import Prelude;
 import haxe.data.collections.Map;
 import haxe.net.Url;
-import haxe.io.http.HttpResponseCode;
+import haxe.net.HttpResponseCode;
 
 typedef HttpResponse<T> = {
   code:     HttpResponseCode,

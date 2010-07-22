@@ -18,7 +18,7 @@ package haxe.io.http;
 import Prelude;
 import haxe.io.http.Http;
 import haxe.net.Url;
-import haxe.io.http.HttpResponseCode;
+import haxe.net.HttpResponseCode;
 import haxe.data.collections.Map;
 
 #if js
@@ -29,7 +29,7 @@ import js.dom.Quirks;
 
 using Prelude;
 using haxe.abstract.Foldable;
-using haxe.io.http.HttpResponseCodeExtensions;
+using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 
 interface HttpString implements Http<String> {
@@ -61,9 +61,7 @@ class AsynchronousHttpString implements HttpString {
     
     var request = Quirks.createXMLHttpRequest();
     
-    future.ifCanceled(function() {
-      request.abort();
-    });
+    future.ifCanceled(request.abort.swallow());
     
     request.onreadystatechange = function() {
       var toBody = function(text: String): Option<String> { return if (text == null || text.trim().length == 0) None; else Some(text); }
@@ -87,7 +85,12 @@ class AsynchronousHttpString implements HttpString {
     
     setHeaders(request);
     
-    request.open(method, url, true);
+    try {
+      request.open(method, url, true);
+    }
+    catch (e: Dynamic) {
+      future.cancel();
+    }
     
     return future;
   }
