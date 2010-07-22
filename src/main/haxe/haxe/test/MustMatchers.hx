@@ -164,7 +164,7 @@ class Must {
 	      negation:  '!x.isInstanceOf(' + Type.getClassName(c) + ')',
 	    }
 	    
-	    return if (!value.isInstanceOf(c)) Left(result); else Right(result);
+	    return if (!Std.is(value, c)) Left(result); else Right(result);
 	  }
 	}
 	

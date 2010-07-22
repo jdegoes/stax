@@ -30,6 +30,7 @@ import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
+import haxe.io.http.HttpStringTestCase;
 
 #if js
 import js.io.IFrameIOTestCase;
@@ -49,7 +50,8 @@ class StaxTestSuite {
       new ScheduledExecutorTestCase(),
       new UrlTestCase(),
       new StringExtensionsTestCase(),
-      new InjectorTestCase()
+      new InjectorTestCase(),
+      new HttpStringTestCase()
       #if js
       , new IFrameIOTestCase()
       #end

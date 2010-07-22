@@ -15,6 +15,7 @@
 */
 package haxe.io.http;
 
+import Prelude;
 import haxe.data.collections.Map;
 import haxe.net.Url;
 
@@ -103,14 +104,14 @@ enum HttpResponseCode {
   Error(v: HttpError);
 }
 
-typedef HttpResponse<T> {
+typedef HttpResponse<T> = {
   code:     HttpResponseCode,
   body:     Option<T>,
   headers:  Map<String, String>
 }
 
 /** An interface for performing HTTP requests - GET, POST, PUT, and DELETE. The
- * interface is typed in the type of the request/response data, because some
+ * interface is generic in the type of the request/response data, because some
  * implementations (e.g. JSONP on the JavaScript target) can only deal with 
  * certain kinds of data.
  */
