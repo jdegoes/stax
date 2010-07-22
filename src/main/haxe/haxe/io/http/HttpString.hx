@@ -15,5 +15,82 @@
 */
 package haxe.io.http;
 
+import Prelude;
+import haxe.io.http.Http;
+import haxe.net.Url;
+import haxe.io.http.HttpResponseCode;
+import haxe.data.collections.Map;
+
+#if js
+import Dom;
+import js.Env;
+import js.dom.Quirks;
+#end
+
+using Prelude;
+using haxe.abstract.Foldable;
+using haxe.io.http.HttpResponseCodeExtensions;
+using haxe.net.UrlExtensions;
+
 interface HttpString implements Http<String> {
 }
+
+#if js
+
+class AsynchronousHttpString implements HttpString {
+  public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
+    return doRequest('GET', url, params, headers);
+  }
+  
+  public function post(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
+    return doRequest('POST', url, params, headers);
+  }
+  
+  public function put(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
+    return doRequest('PUT', url, params, headers);
+  }
+  
+  public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
+    return doRequest('DELETE', url, params, headers);
+  }
+  
+  private function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
+    var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
+    
+    var future: Future<HttpResponse<String>> = new Future();
+    
+    var request = Quirks.createXMLHttpRequest();
+    
+    future.ifCanceled(function() {
+      request.abort();
+    });
+    
+    request.onreadystatechange = function() {
+      var toBody = function(text: String): Option<String> { return if (text == null || text.trim().length == 0) None; else Some(text); }
+      
+      if (request.readyState == XmlHttpRequestState.DONE) {
+        future.deliver({
+          body:     toBody(request.responseText),
+          headers:  null, // TODO
+          code:     request.status.toHttpResponseCode()
+        });
+      }
+    }
+    
+    var setHeaders = _headers.toOption().map(function(headers) {
+      return function(request: XMLHttpRequest): Void {
+        headers.foreach(function(header) {
+          request.setRequestHeader(header._1, header._2);
+        });
+      }
+    }).getOrElseC(function(request: XMLHttpRequest): Void { });
+    
+    setHeaders(request);
+    
+    request.open(method, url, true);
+    
+    return future;
+  }
+}
+
+#end

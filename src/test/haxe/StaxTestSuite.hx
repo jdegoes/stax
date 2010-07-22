@@ -27,7 +27,7 @@ import haxe.data.collections.ListTestCase;
 import haxe.data.transcode.JValueTestCase;
 import haxe.abstract.PartialFunctionTestCase;
 import haxe.time.ScheduledExecutorTestCase;
-import haxe.net.UrlTestCase;
+import haxe.net.UrlExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 import haxe.io.http.HttpStringTestCase;
@@ -48,7 +48,7 @@ class StaxTestSuite {
       new JsonTestCase(),
       new PartialFunctionTestCase(),
       new ScheduledExecutorTestCase(),
-      new UrlTestCase(),
+      new UrlExtensionsTestCase(),
       new StringExtensionsTestCase(),
       new InjectorTestCase(),
       new HttpStringTestCase()

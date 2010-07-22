@@ -57,49 +57,9 @@ class Env {
     public static function isNaN(number: Float): Bool {
         return untyped __js__('isNaN(number)');
     }
-    
-    public static function createXMLHttpRequest(): XMLHttpRequest {
-        return untyped if (window.XMLHttpRequest) {
-            __new__("XMLHttpRequest");
-        }
-        else if (window.ActiveXObject) {
-            try {
-                __new__("ActiveXObject","Msxml2.XMLHTTP");
-            }
-            catch (e: Dynamic){
-                try {
-                    __new__("ActiveXObject","Microsoft.XMLHTTP");
-                }
-                catch (e: Dynamic){
-                    throw "Unable to create XMLHttpRequest object.";
-
-                    null;
-                }
-            }
-        }
-        else {
-            throw "Unable to create XMLHttpRequest object.";
-
-            null;
-        }
-    }
-    
-    public static function contentDocumentOf(iframe: HTMLIFrameElement): Document {
-      return if (iframe.contentDocument != null) {
-        iframe.contentDocument;
-      }
-      else if (iframe.contentWindow != null) {
-        iframe.contentWindow.document;
-      }
-      else if (untyped iframe.document != null) {
-        untyped iframe.document;
-      }
-      else { throw "Cannot find iframe content document for " + iframe; null; }
-      
-    }
 }
 
-class States {
+class XmlHttpRequestState {
     public static var UNSENT                         :Int = 0;
     public static var OPENED                         :Int = 1;
     public static var HEADERS_RECEIVED               :Int = 2;
@@ -108,8 +68,6 @@ class States {
 }
 
 class ExceptionCode {
-    private function new() { }
-    
     public static var INDEX_SIZE_ERR                 :Int = 1;
     public static var DOMSTRING_SIZE_ERR             :Int = 2;
     public static var HIERARCHY_REQUEST_ERR          :Int = 3;

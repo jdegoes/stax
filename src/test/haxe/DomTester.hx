@@ -19,7 +19,7 @@ package haxe;
 
 import Dom;
 import js.Env;
-
+import js.dom.Quirks;
 
 import haxe.test.TestCase;
 
@@ -1834,7 +1834,7 @@ class DomTest extends TestCase {
 */  
 
     public function testThatXMLHTTPRequestHasPropertiesAndMethods(): Void {
-        var xhr = Env.createXMLHttpRequest();
+        var xhr = Quirks.createXMLHttpRequest();
         
         assertTrue(untyped __js__('xhr instanceof XMLHttpRequest'));
 
@@ -1923,7 +1923,7 @@ class DomTest extends TestCase {
     }
     
     public function testThatCreateXMLHttpRequestWorks(): Void {
-        var req = Env.createXMLHttpRequest();
+        var req = Quirks.createXMLHttpRequest();
         
         assertTrue(untyped __js__('req instanceof XMLHttpRequest'));
         

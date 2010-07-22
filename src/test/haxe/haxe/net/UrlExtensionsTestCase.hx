@@ -21,11 +21,13 @@ import haxe.test.TestCase;
 
 import haxe.net.Url;
 
+using haxe.net.UrlExtensions;
+
 using Prelude;
 
-class UrlTestCase extends TestCase {
+class UrlExtensionsTestCase extends TestCase {
 	public function testParseUrl1() {
-	  var p = UrlTools.parseUrl('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top').get();
+	  var p = 'ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
 
 	  assertEquals('#top', p.hash);
 	  assertEquals('eau.ww.eesd.gov.calgary', p.host);
@@ -38,7 +40,7 @@ class UrlTestCase extends TestCase {
 	}
 	
 	public function testParseUrl2() {
-	  var p = UrlTools.parseUrl('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top').get();
+	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
 
 	  assertEquals('#top', p.hash);
 	  assertEquals('eau.ww.eesd.gov.calgary:923', p.host);
@@ -54,7 +56,7 @@ class UrlTestCase extends TestCase {
 	public function testQueryStringBijection() {
 	  var self = this;
 	  
-	  var identity = UrlTools.toQueryString.compose(UrlTools.fromQueryString);
+	  var identity = UrlExtensions.toQueryString.compose(UrlExtensions.toQueryParameters);
 	  var test = function(s) self.assertEquals(s, identity(s));
 	  
 	  test('?foo=bar');

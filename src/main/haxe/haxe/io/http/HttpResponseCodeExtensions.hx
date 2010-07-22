@@ -17,7 +17,7 @@
 
 package haxe.io.http;
 
-import haxe.io.http.Http;
+import haxe.io.http.HttpResponseCode;
 
 class HttpResponseCodeExtensions {
   public static function toHttpResponseCode(code: Int): HttpResponseCode {

@@ -13,30 +13,48 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.io.http;
+package js.dom;
 
-import Prelude;
-import haxe.data.collections.Map;
-import haxe.net.Url;
-import haxe.io.http.HttpResponseCode;
+import Dom;
 
-typedef HttpResponse<T> = {
-  code:     HttpResponseCode,
-  body:     Option<T>,
-  headers:  Map<String, String>
-}
-
-/** An interface for performing HTTP requests - GET, POST, PUT, and DELETE. The
- * interface is generic in the type of the request/response data, because some
- * implementations (e.g. JSONP on the JavaScript target) can only deal with 
- * certain kinds of data.
+/** 
+ * Common operations that need to be performed differently across browsers.
  */
-interface Http<T> {
-    public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-    public function post(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-    public function put(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-    public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
+class Quirks {
+	public static function createXMLHttpRequest(): XMLHttpRequest {
+      return untyped if (window.XMLHttpRequest) {
+          __new__("XMLHttpRequest");
+      }
+      else if (window.ActiveXObject) {
+          try {
+              __new__("ActiveXObject","Msxml2.XMLHTTP");
+          }
+          catch (e: Dynamic){
+              try {
+                  __new__("ActiveXObject","Microsoft.XMLHTTP");
+              }
+              catch (e: Dynamic){
+                  throw "Unable to create XMLHttpRequest object."; null;
+              }
+          }
+      }
+      else {
+          throw "Unable to create XMLHttpRequest object."; null;
+      }
+  }
+  
+  public static function contentDocumentOf(iframe: HTMLIFrameElement): Document {
+    return if (iframe.contentDocument != null) {
+      iframe.contentDocument;
+    }
+    else if (iframe.contentWindow != null) {
+      iframe.contentWindow.document;
+    }
+    else if (untyped iframe.document != null) {
+      untyped iframe.document;
+    }
+    else { throw "Cannot find iframe content document for " + iframe; null; }
+  }
+  
+  
 }
