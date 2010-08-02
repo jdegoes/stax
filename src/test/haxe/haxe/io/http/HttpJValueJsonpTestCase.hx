@@ -42,7 +42,7 @@ class HttpJValueJsonpTestCase extends TestCase {
 	    function(data) {
 	      var results = data.body.get().get('results');
 	      
-	      Assert.notNull(data);
+	      Assert.notNull(results);
 	    },
 	    1000
 	  );
