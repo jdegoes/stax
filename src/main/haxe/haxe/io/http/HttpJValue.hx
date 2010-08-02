@@ -53,9 +53,12 @@ class HttpJValueJsonp implements HttpJValue {
   }
   
   public function get(_url: Url, ?_params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    // Ignore headers or throw exception???
+    
     var future: Future<HttpResponse<JValue>> = new Future();
     
-    // Ignore headers or throw exception???
+    // Request id must be globally unique even if this source is included twice
+    // (hence the need for randomness):
     var requestId = Math.round(RequestMod * (++RequestCount));
     
     var callbackName     = 'stax_jsonp_callback_' + requestId;
@@ -68,8 +71,10 @@ class HttpJValueJsonp implements HttpJValue {
     var url = _url.addQueryParameters(params);
     
     var doCleanup = function() {
-      // Cleanup DOM & delete function:    
-      Env.document.getElementsByTagName('HEAD')[0].removeChild(Env.document.getElementById(callbackName));
+      // Cleanup DOM & delete callback function:
+      var script = Env.document.getElementById(callbackName);
+      
+      if (script != null) Env.document.getElementsByTagName('HEAD')[0].removeChild(script);
     
       Reflect.deleteField(Responders, callbackName);
     }
@@ -93,7 +98,6 @@ class HttpJValueJsonp implements HttpJValue {
         code     = Normal(Success(NoContent));
       }
       
-      // Deliver future:
       future.deliver({
         body:     response,
         headers:  Maps.StringString,

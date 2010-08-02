@@ -44,7 +44,7 @@ class HttpJValueJsonpTestCase extends TestCase {
 	      
 	      Assert.notNull(results);
 	    },
-	    1000
+	    2000
 	  );
 	}
 }

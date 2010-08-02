@@ -40,7 +40,7 @@ class HttpStringTestCase extends TestCase {
 	    function(page) {
 	      Assert.notNull(page);
 	    },
-	    1000
+	    2000
 	  );
 	}
 }
