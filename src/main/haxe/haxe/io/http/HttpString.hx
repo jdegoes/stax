@@ -60,8 +60,6 @@ class AsynchronousHttpString implements HttpString {
   private function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
     
-    //untyped alert(url);
-    
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -96,6 +94,8 @@ class AsynchronousHttpString implements HttpString {
     catch (e: Dynamic) {
       future.cancel();
     }
+    
+    request.send();
     
     return future;
   }
