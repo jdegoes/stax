@@ -19,7 +19,7 @@ package haxe.text.json;
 import Prelude;
 import haxe.text.json.JValue;
 
-using haxe.text.json.JValue;
+using haxe.text.json.JValueExtensions;
 using Prelude;
 
 class Json {

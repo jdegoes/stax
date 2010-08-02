@@ -32,7 +32,7 @@ import haxe.text.json.JValue;
 using Prelude;
 using haxe.data.transcode.JValue;
 using haxe.abstract.Foldable;
-using haxe.text.json.JValue;
+using haxe.text.json.JValueExtensions;
 
 typedef JDecomposer<T> = Decomposer<T, JValue>
 typedef JExtractor<T>  = Extractor<JValue, T>

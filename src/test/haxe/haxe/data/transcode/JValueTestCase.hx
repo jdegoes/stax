@@ -27,7 +27,7 @@ import haxe.data.transcode.JValue;
 
 using Prelude;
 using haxe.data.transcode.JValue;
-using haxe.text.json.JValue;
+using haxe.text.json.JValueExtensions;
 
 class JValueTestCase extends TestCase {
     public function testBool() {

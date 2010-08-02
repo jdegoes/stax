@@ -31,10 +31,12 @@ import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
-import haxe.io.http.HttpStringTestCase;
 
 #if js
+import haxe.io.http.HttpStringTestCase;
+
 import js.io.IFrameIOTestCase;
+import haxe.io.http.HttpJValueJsonpTestCase;
 #end
 
 class StaxTestSuite {
@@ -52,10 +54,11 @@ class StaxTestSuite {
       new UrlExtensionsTestCase(),
       new StringExtensionsTestCase(),
       new InjectorTestCase(),
-      new HttpStringTestCase(),
       new HttpHeaderExtensionsTestCase()
       #if js
-      , new IFrameIOTestCase()
+      , new HttpStringTestCase() // This one should be cross-platform, eventually
+      , new IFrameIOTestCase()      
+      , new HttpJValueJsonpTestCase()
       #end
     ]);
     

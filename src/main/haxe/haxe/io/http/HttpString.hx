@@ -57,7 +57,7 @@ class AsynchronousHttpString implements HttpString {
     return doRequest('DELETE', url, params, headers);
   }
   
-  private function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
+  public function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
     
     var future: Future<HttpResponse<String>> = new Future();

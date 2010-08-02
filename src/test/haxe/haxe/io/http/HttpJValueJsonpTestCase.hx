@@ -1,5 +1,5 @@
 /*
- HaXe JSON library written by Spencer Tipping <spencer@socialmedia.com>
+ HaXe library written by John A. De Goes <john@socialmedia.com>
  Contributed by Social Media Networks
 
  Redistribution and use in source and binary forms, with or without
@@ -14,19 +14,37 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-package haxe.text.json;
+package haxe.io.http;
 
 import Prelude;
+import haxe.test.TestCase;
+import haxe.test.Assert;
+import haxe.io.http.Http;
+import haxe.io.http.HttpJValue;
+import haxe.text.json.Json;
 
 using Prelude;
+using haxe.text.json.JValueExtensions;
 
-enum JValue {
-  JNull;
-  JBool(v: Bool);
-  JNumber(v: Float);
-  JString(v: String);
-  JArray(v: Array<JValue>);
-  JObject(v: Array<JValue>);
-  JField(k: String, v: JValue);
+class HttpJValueJsonpTestCase extends TestCase {
+  var h: HttpJValue;
+  
+	public function new() {
+	  super();
+	}
+	
+	override public function before() {
+	  h = new HttpJValueJsonp();
+	}
+	
+	public function testGet() {
+	  Assert.delivered(h.get('http://search.twitter.com/search.json', { q: 'santa' }),
+	    function(data) {
+	      var results = data.body.get().get('results');
+	      
+	      Assert.notNull(data);
+	    },
+	    1000
+	  );
+	}
 }

@@ -18,7 +18,7 @@
 package haxe.text.json;
 
 import haxe.text.json.JValue;
-using haxe.text.json.JValue;
+using haxe.text.json.JValueExtensions;
 
 class JsonGenerator {
   public static function generate (): JValue {
