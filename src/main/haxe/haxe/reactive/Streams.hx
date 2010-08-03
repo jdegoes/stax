@@ -21,7 +21,7 @@ import haxe.data.collections.Collection;
 
 using haxe.data.collections.IterableExtensions;
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 class Streams {
     private function new() { }

@@ -27,7 +27,7 @@ import haxe.text.json.Json;
 import haxe.net.Url;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 using haxe.util.StringExtensions;
 using haxe.data.collections.IterableExtensions;
 using haxe.net.UrlExtensions;

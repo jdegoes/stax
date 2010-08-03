@@ -23,10 +23,10 @@ import haxe.text.json.JValue;
 import haxe.data.collections.Set;
 import haxe.data.collections.Map;
 import haxe.data.collections.List;
-import haxe.data.transcode.JValue;
+import haxe.data.transcode.TranscodeJValue;
 
 using Prelude;
-using haxe.data.transcode.JValue;
+using haxe.data.transcode.TranscodeJValueExtensions;
 using haxe.text.json.JValueExtensions;
 
 class JValueTestCase extends TestCase {

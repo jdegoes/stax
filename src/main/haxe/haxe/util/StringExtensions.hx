@@ -19,7 +19,7 @@ import Prelude;
 import haxe.data.collections.List;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 class StringExtensions {
 	public static function chunk(str: String, len: Int): List<String> {

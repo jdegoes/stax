@@ -14,44 +14,39 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.abstract;
+
+/**
+ * The extractors and decomposers in this file have been created to comply with 
+ * the serialization requirements of XSchema.
+ */
+package haxe.data.transcode;
 
 import Prelude;
-import haxe.test.TestCase;
-import haxe.abstract.PartialFunction;
+
+import haxe.data.collections.List;
+import haxe.data.collections.Set;
+import haxe.data.collections.Map;
+import haxe.data.transcode.Transcode;
+import haxe.text.json.JValue;
 
 using Prelude;
-using haxe.abstract.PartialFunctionExtensions;
+using haxe.data.transcode.TranscodeJValue;
+using haxe.abstract.FoldableExtensions;
+using haxe.text.json.JValueExtensions;
 
-class PartialFunctionTestCase extends TestCase {
-    public function testIsDefinedAtForPartialFunction1() {
-      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-      
-      assertTrue(f.isDefinedAt(2));
-      assertFalse(f.isDefinedAt(-2));
-    }
+typedef JDecomposer<T> = Decomposer<T, JValue>
+typedef JExtractor<T>  = Extractor<JValue, T>
+typedef JTranscoder<T> = Transcoder<T, JValue>
+
+class ExtractorHelpers {
+  public static function extractFieldValue<T>(j: JValue, n: String, e: JExtractor<T>, def: JValue) {
+    var fieldValue = j.getOrElse(n, def.toThunk());
     
-    public function testCallForPartialFunction1() {
-      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-      
-      assertEquals(4, f.call(2));
+    try {
+      return e.extract(fieldValue);
     }
-    
-    public function testOrElseForPartialFunction1() {
-      var f1 = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-      var f2 = [Tuple2.create(function(i: Int) return i < 0, function(i: Int) return i * i)].toPartialFunction();
-      
-      var f = f1.orElse(f2);
-      
-      assertTrue(f.isDefinedAt(-2));
-      
-      assertEquals(4, f.call(-2));
-      assertEquals(4, f.call(2));
+    catch (err: Dynamic) {
+      return e.extract(def);
     }
-    
-    public function testOrAlwaysCForPartialFunction1() {
-      var f = [Tuple2.create(function(i: Int) return i > 0, function(i: Int) return i * i)].toPartialFunction();
-      
-      assertTrue(f.orAlwaysC(9.toThunk()).isDefinedAt(-2));
-    }
+  }
 }

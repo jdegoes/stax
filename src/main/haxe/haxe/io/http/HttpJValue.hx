@@ -31,7 +31,7 @@ import js.dom.Quirks;
 #end
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 using haxe.net.HttpHeaderExtensions;
@@ -52,7 +52,7 @@ class HttpJValueJsonp implements HttpJValue {
     this.callbackParameterName = callbackParameterName;
   }
   
-  public function get(_url: Url, ?_params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+  public function get(url_: Url, ?params_: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
     // Ignore headers or throw exception???
     
     var future: Future<HttpResponse<JValue>> = new Future();
@@ -64,11 +64,11 @@ class HttpJValueJsonp implements HttpJValue {
     var callbackName     = 'stax_jsonp_callback_' + requestId;
     var callbackFullName = 'haxe.io.http.HttpJValueJsonp.Responders.' + callbackName;
     
-    var params = OptionExtensions.toOption(_params).getOrElseC({});
+    var params = OptionExtensions.toOption(params_).getOrElseC({});
     
     Reflect.setField(params, callbackParameterName, callbackFullName);
     
-    var url = _url.addQueryParameters(params);
+    var url = url_.addQueryParameters(params);
     
     var doCleanup = function() {
       // Cleanup DOM & delete callback function:
@@ -91,9 +91,7 @@ class HttpJValueJsonp implements HttpJValue {
         response = Some(Json.fromObject(data));
         code     = Normal(Success(OK));
       }
-      catch (e: Dynamic) {
-        untyped alert(e);
-        
+      catch (e: Dynamic) {    
         response = None;
         code     = Normal(Success(NoContent));
       }

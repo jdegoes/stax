@@ -23,7 +23,7 @@ import haxe.test.TestCase;
 import haxe.data.collections.List;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 class ListTestCase extends TestCase {
     public function testSizeGrowsWhenAddingUniqueElements(): Void {

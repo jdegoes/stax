@@ -23,7 +23,7 @@ import haxe.test.TestCase;
 import haxe.data.collections.Map;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 class MapTestCase extends TestCase {
     public function testSizeGrowsWhenAddingUniqueKeys(): Void {

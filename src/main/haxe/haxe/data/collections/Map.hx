@@ -21,10 +21,11 @@ import Prelude;
 import haxe.abstract.Foldable;
 import haxe.abstract.PartialFunction;
 import haxe.data.collections.Collection;
+import haxe.abstract.FoldableExtensions;
 
 using Prelude;
-using haxe.abstract.Foldable;
-using haxe.abstract.PartialFunction;
+using haxe.abstract.FoldableExtensions;
+using haxe.abstract.PartialFunctionExtensions;
 
 /** A cross-platform, immutable map with support for arbitrary keys.
  * TODO: Use an array of lists to avoid unnecessary copying when adding/removing elements.

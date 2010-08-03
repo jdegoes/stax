@@ -20,9 +20,10 @@ import Prelude;
 
 import haxe.abstract.Foldable;
 import haxe.data.collections.Collection;
+import haxe.abstract.FoldableExtensions;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {

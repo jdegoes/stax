@@ -18,7 +18,7 @@ package haxe.data.collections;
 
 import Prelude;
 
-//using haxe.abstract.Foldable;
+//using haxe.abstract.FoldableExtensions;
 using Prelude;
 
 class IterableExtensions {

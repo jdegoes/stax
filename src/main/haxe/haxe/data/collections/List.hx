@@ -20,9 +20,10 @@ import Prelude;
 
 import haxe.abstract.Foldable;
 import haxe.data.collections.Collection;
+import haxe.abstract.FoldableExtensions;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {

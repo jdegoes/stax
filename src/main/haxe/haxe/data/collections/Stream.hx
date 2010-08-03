@@ -22,7 +22,7 @@ import haxe.abstract.Foldable;
 import haxe.data.collections.Collection;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 /*
 class Stream<T> implements Collection<Stream<T>, T> {

@@ -19,7 +19,7 @@ import haxe.reactive.Streams;
 import haxe.reactive.Collections;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 class TimeoutBundle {
     public var func    (default, null): Void -> Void;

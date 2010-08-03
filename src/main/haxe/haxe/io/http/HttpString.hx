@@ -28,7 +28,7 @@ import js.dom.Quirks;
 #end
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 using haxe.net.HttpHeaderExtensions;

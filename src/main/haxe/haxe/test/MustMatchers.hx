@@ -20,7 +20,7 @@ import Prelude;
 import haxe.data.collections.Collection;
 
 using Prelude;
-using haxe.abstract.Foldable;
+using haxe.abstract.FoldableExtensions;
 
 typedef MatchResult = { assertion: String, negation: String }
 typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>

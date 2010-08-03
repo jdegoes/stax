@@ -55,7 +55,7 @@ Collections implement the <code>Foldable</code> interface, so it's possible to g
 
 <pre>
 <code>
-  using haxe.abstract.Foldable;
+  using haxe.abstract.FoldableExtensions;
 </code>
 </pre>
 
