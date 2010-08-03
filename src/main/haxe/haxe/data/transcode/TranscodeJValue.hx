@@ -29,7 +29,7 @@ import haxe.data.collections.Map;
 import haxe.data.transcode.Transcode;
 import haxe.text.json.JValue;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.data.transcode.TranscodeJValue;
 using haxe.abstract.FoldableExtensions;
 using haxe.text.json.JValueExtensions;

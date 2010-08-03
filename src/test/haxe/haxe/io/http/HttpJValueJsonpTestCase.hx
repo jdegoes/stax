@@ -23,7 +23,7 @@ import haxe.io.http.Http;
 import haxe.io.http.HttpJValue;
 import haxe.text.json.Json;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.text.json.JValueExtensions;
 
 class HttpJValueJsonpTestCase extends TestCase {

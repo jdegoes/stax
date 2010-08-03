@@ -21,7 +21,7 @@ import haxe.test.TestCase;
 
 using haxe.util.StringExtensions;
 
-using Prelude;
+using PreludeExtensions;
 
 class StringExtensionsTestCase extends TestCase {
   public function testChunk() {

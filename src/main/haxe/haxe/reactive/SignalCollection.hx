@@ -20,7 +20,7 @@ import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 import haxe.data.collections.List;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 class SignalCollection {

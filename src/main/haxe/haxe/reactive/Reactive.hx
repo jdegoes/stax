@@ -18,7 +18,7 @@ package haxe.reactive;
 import Prelude;
 import haxe.reactive.Streams;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.data.collections.IterableExtensions;
 
 typedef Timeout = {}

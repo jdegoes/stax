@@ -19,7 +19,7 @@ import Prelude;
 
 import haxe.test.MustMatchers;
 
-using Prelude;
+using PreludeExtensions;
 
 class MustMatcherExtensions {
 	public static function negate<T>(c: MustMatcher<T>): MustMatcher<T> {

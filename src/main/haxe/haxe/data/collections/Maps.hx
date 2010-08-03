@@ -18,7 +18,7 @@ package haxe.data.collections;
 import Prelude;
 import haxe.data.collections.Map;
 
-using Prelude;
+using PreludeExtensions;
 
 class Maps {
 	public static var StringString = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT());

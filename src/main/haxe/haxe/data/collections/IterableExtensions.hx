@@ -19,7 +19,7 @@ package haxe.data.collections;
 import Prelude;
 
 //using haxe.abstract.FoldableExtensions;
-using Prelude;
+using PreludeExtensions;
 
 class IterableExtensions {
 	public static function size<T>(iterable: Iterable<T>): Int {

@@ -19,7 +19,7 @@ import haxe.test.Dispatcher;
 
 import Prelude;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.PredicateExtensions;
 
 /**

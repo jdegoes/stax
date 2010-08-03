@@ -17,12 +17,13 @@
 package haxe.data.collections;
 
 import Prelude;
+import PreludeExtensions;
 
 import haxe.abstract.Foldable;
 import haxe.data.collections.Collection;
 import haxe.abstract.FoldableExtensions;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */

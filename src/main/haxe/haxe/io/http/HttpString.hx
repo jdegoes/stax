@@ -16,6 +16,7 @@
 package haxe.io.http;
 
 import Prelude;
+import PreludeExtensions;
 import haxe.io.http.Http;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
@@ -27,7 +28,7 @@ import js.Env;
 import js.dom.Quirks;
 #end
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;

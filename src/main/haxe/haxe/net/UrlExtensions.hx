@@ -18,7 +18,7 @@ package haxe.net;
 import Prelude;
 import haxe.net.Url;
 
-using Prelude;
+using PreludeExtensions;
 
 class UrlExtensions {
   // http://domain.com:80/path?foo=bar#body

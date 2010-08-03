@@ -18,7 +18,7 @@
 package haxe.text;
 
 import Prelude;
-using Prelude;
+using PreludeExtensions;
 
 typedef Parser<A, B> = Function<A, Either<B, A>>
 

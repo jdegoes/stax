@@ -20,7 +20,7 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.io.log.Logger;
 
-using Prelude;
+using PreludeExtensions;
 
 class LoggerTestCase extends TestCase {
   public function testLogDebug() {

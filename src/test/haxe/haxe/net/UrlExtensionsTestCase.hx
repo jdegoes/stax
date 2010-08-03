@@ -23,7 +23,7 @@ import haxe.net.Url;
 
 using haxe.net.UrlExtensions;
 
-using Prelude;
+using PreludeExtensions;
 
 class UrlExtensionsTestCase extends TestCase {
 	public function testParseUrl1() {

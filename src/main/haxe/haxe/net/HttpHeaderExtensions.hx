@@ -21,7 +21,7 @@ import haxe.data.collections.Map;
 import haxe.data.collections.Maps;
 import haxe.net.HttpHeader;
 
-using Prelude;
+using PreludeExtensions;
 
 class HttpHeaderExtensions {
   static var HeaderPattern = ~/^([^:]+): *(.+)$/;

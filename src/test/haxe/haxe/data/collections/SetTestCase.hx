@@ -22,7 +22,7 @@ import haxe.abstract.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.Set;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 class SetTestCase extends TestCase {

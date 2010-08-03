@@ -20,7 +20,7 @@ import Prelude;
 
 import haxe.PosInfos;
 
-using Prelude;
+using PreludeExtensions;
 
 enum BindingType {
   OneToOne;   // Every call to the injector will create a new instance

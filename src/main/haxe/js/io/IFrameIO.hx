@@ -26,7 +26,7 @@ import haxe.time.ScheduledExecutor;
 import haxe.text.json.Json;
 import haxe.net.Url;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.util.StringExtensions;
 using haxe.data.collections.IterableExtensions;

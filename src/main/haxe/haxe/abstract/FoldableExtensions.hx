@@ -17,9 +17,10 @@
 package haxe.abstract;
 
 import Prelude;
+import PreludeExtensions;
 import haxe.abstract.Foldable;
 
-using Prelude;
+using PreludeExtensions;
 
 class FoldableExtensions {
   public static function foldr<A, B, Z>(foldable: Foldable<A, B>, z: Z, f: B -> Z -> Z): Z {

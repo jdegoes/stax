@@ -18,7 +18,7 @@ package haxe.util;
 import Prelude;
 import haxe.data.collections.List;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 class StringExtensions {

@@ -24,12 +24,12 @@ import haxe.data.transcode.Transcode;
 import haxe.data.transcode.TranscodeJValue;
 import haxe.text.json.JValue;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.data.transcode.TranscodeJValueExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.text.json.JValueExtensions;
 
-using Prelude;
+using PreludeExtensions;
 
 class BoolExtensions {
     public static function DecomposerT(c: Enum<Bool>): JDecomposer<Bool> {

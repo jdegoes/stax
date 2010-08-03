@@ -20,7 +20,7 @@ package haxe.text.json;
 import Prelude;
 import haxe.text.json.JValue;
 
-using Prelude;
+using PreludeExtensions;
 
 class JValueExtensions {
   public static function OrderT(c: Enum<JValue>): Order<JValue> {

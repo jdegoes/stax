@@ -18,7 +18,7 @@ import Prelude;
 
 import haxe.test.TestCase;
 
-using Prelude;
+using PreludeExtensions;
 
 class PreludeTestCase extends TestCase {
     public function new() {

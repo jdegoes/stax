@@ -13,7 +13,7 @@ Stax includes a useful bundle of functionality in the Prelude. To get started us
 <pre>
 <code>
   import Prelude;
-  using Prelude;
+  using PreludeExtensions;
 </code>
 </pre>
 

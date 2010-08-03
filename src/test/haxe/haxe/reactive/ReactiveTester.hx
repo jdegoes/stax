@@ -18,7 +18,7 @@ import haxe.reactive.StreamBool;
 import haxe.reactive.Streams;
 import haxe.reactive.Collections;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 class TimeoutBundle {

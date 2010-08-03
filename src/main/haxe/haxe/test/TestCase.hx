@@ -21,7 +21,7 @@ import haxe.test.MustMatchers;
 import haxe.test.MustMatcherExtensions;
 import haxe.PosInfos;
 
-using Prelude;
+using PreludeExtensions;
 
 class TestCase {
   public function new() {

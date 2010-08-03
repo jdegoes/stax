@@ -21,7 +21,7 @@ import haxe.test.TestCase;
 import haxe.test.Assert;
 import haxe.net.HttpHeader;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.net.HttpHeaderExtensions;
 
 class HttpHeaderExtensionsTestCase extends TestCase {

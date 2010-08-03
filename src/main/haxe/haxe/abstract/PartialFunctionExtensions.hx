@@ -19,7 +19,7 @@ package haxe.abstract;
 import Prelude;
 import haxe.abstract.PartialFunction;
 
-using Prelude;
+using PreludeExtensions;
 
 private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
   var _def: Array<Tuple2<A -> Bool, A -> Z>>;

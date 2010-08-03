@@ -17,8 +17,9 @@
 package haxe.abstract;
 
 import Prelude;
+import PreludeExtensions;
 
-using Prelude;
+using PreludeExtensions;
 
 typedef Predicate<A> = Predicate1<A>
 

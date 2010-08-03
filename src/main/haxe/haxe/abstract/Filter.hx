@@ -2,7 +2,7 @@ package haxe.abstract;
 
 import Prelude;
 
-using Prelude;
+using PreludeExtensions;
 
 typedef Filter<T> = T -> Bool;
 

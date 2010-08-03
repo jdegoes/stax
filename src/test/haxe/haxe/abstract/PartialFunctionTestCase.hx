@@ -20,7 +20,7 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.abstract.PartialFunction;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.PartialFunctionExtensions;
 
 class PartialFunctionTestCase extends TestCase {

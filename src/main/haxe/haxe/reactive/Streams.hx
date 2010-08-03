@@ -20,7 +20,7 @@ import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
 using haxe.data.collections.IterableExtensions;
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 
 class Streams {

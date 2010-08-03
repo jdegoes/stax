@@ -17,13 +17,14 @@
 package haxe.data.collections;
 
 import Prelude;
+import PreludeExtensions;
 
 import haxe.abstract.Foldable;
 import haxe.abstract.PartialFunction;
 import haxe.data.collections.Collection;
 import haxe.abstract.FoldableExtensions;
 
-using Prelude;
+using PreludeExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.abstract.PartialFunctionExtensions;
 
