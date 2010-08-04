@@ -53,6 +53,16 @@ class UrlExtensionsTestCase extends TestCase {
 	}
 	
 	
+	public function testWithout() {
+	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
+	  
+	  assertEquals('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top', p.withoutPort().toUrl());
+	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1#top', p.withoutSearch().toUrl());
+	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar', p.withoutHash().toUrl());
+	  assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
+	  assertEquals('//eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
+	}
+	
 	public function testQueryStringBijection() {
 	  var self = this;
 	  

@@ -65,7 +65,8 @@ class IFrameIO {
 	 *
 	 * @param f             The function that will be passed each message.
  	 *
- 	 * @param originUrl     The URL where the messages will come from.
+ 	 * @param originUrl     The URL where the messages will come from, including 
+ 	 *                      the query string but without the hash tag.
  	 *
  	 * @param originWindow  The window that the messages will come from. If this
  	 *                      parameter is not specified, reliable reception from
@@ -80,7 +81,8 @@ class IFrameIO {
 	 *
 	 * @param f             The function that will be passed each message.
 	 *
-	 * @param originUrl     The URL where the messages will come from.
+	 * @param originUrl     The URL where the messages will come from, including 
+	 *                      the query string but without the hash tag.
 	 *
 	 * @param originWindow  The window that the messages will come from. If this
 	 *                      parameter is not specified, reliable reception from
@@ -102,12 +104,6 @@ class IFrameIO {
 	  // We need to keep track of which window is associated with this url, so in
 	  // case we lose some fragments from this url, we know how to request them:
 	  originUrlToWindow.set(originUrl, originWindow);
-	  
-	  /*executor.once(function() {
-	    trace('Missing fragments: ' + self.findMissingFragments());
-	    
-	    return 0;
-	  }, 2000);*/
 	  
 	  return this;
 	}

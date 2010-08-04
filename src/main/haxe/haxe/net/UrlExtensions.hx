@@ -40,18 +40,14 @@ class UrlExtensions {
     var nonNull = function(s: String) return if (s == null) ''; else s;
     
     return if (UrlPattern.match(s)) {
-      var port = nonNull(UrlPattern.matched(Port));
-      
-      Some({
-        hash:     nonNull(UrlPattern.matched(UrlExtensions.Hash)),
-        host:     nonNull(UrlPattern.matched(Hostname)) + (if (port == '') '' else ':' + port),
-        hostname: nonNull(UrlPattern.matched(Hostname)),
-        href:     s,
-        pathname: nonNull(UrlPattern.matched(Pathname)),
-        port:     port,
-        protocol: nonNull(UrlPattern.matched(Protocol)),
-        search:   nonNull(UrlPattern.matched(Search))
-      });
+      Some(formUrl(
+        nonNull(UrlPattern.matched(Protocol)),
+        nonNull(UrlPattern.matched(Hostname)),
+        nonNull(UrlPattern.matched(Port)),
+        nonNull(UrlPattern.matched(Pathname)),
+        nonNull(UrlPattern.matched(Search)),
+        nonNull(UrlPattern.matched(UrlExtensions.Hash))
+      ));
     }
     else None;
   }
@@ -60,6 +56,54 @@ class UrlExtensions {
    */
   public static function toUrl(parsed: ParsedUrl): Url {
     return parsed.href;
+  }
+  
+  public static function withProtocol(parsed: ParsedUrl, protocol: String): ParsedUrl {
+    return formUrl(protocol, parsed.hostname, parsed.port, parsed.pathname, parsed.search, parsed.hash);
+  }
+  
+  public static function withHostname(parsed: ParsedUrl, hostname: String): ParsedUrl {
+    return formUrl(parsed.protocol, hostname, parsed.port, parsed.pathname, parsed.search, parsed.hash);
+  }
+  
+  public static function withPort(parsed: ParsedUrl, port: String): ParsedUrl {
+    return formUrl(parsed.protocol, parsed.hostname, port, parsed.pathname, parsed.search, parsed.hash);
+  }
+  
+  public static function withPathname(parsed: ParsedUrl, pathname: String): ParsedUrl {
+    return formUrl(parsed.protocol, parsed.hostname, parsed.port, pathname, parsed.search, parsed.hash);
+  }
+  
+  public static function withSearch(parsed: ParsedUrl, search: String): ParsedUrl {
+    return formUrl(parsed.protocol, parsed.hostname, parsed.port, parsed.pathname, search, parsed.hash);
+  }
+  
+  public static function withHash(parsed: ParsedUrl, hash: String): ParsedUrl {
+    return formUrl(parsed.protocol, parsed.hostname, parsed.port, parsed.pathname, parsed.search, hash);
+  }
+  
+  public static function withoutProtocol(parsed: ParsedUrl): ParsedUrl {
+    return withProtocol(parsed, '');
+  }
+  
+  public static function withoutHostname(parsed: ParsedUrl): ParsedUrl {
+    return withHostname(parsed, '');
+  }
+  
+  public static function withoutPort(parsed: ParsedUrl): ParsedUrl {
+    return withPort(parsed, '');
+  }
+  
+  public static function withoutPathname(parsed: ParsedUrl): ParsedUrl {
+    return withPathname(parsed, '');
+  }
+  
+  public static function withoutSearch(parsed: ParsedUrl): ParsedUrl {
+    return withSearch(parsed, '');
+  }
+  
+  public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
+    return withHash(parsed, '');
   }
   
   public static function addQueryParameters(url: Url, params: QueryParameters): Url {
@@ -105,4 +149,19 @@ class UrlExtensions {
 	    return url + (if (url == '?') rest else '&' + rest);
 	  });
 	}
+	
+	private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {
+    var host = hostname + (if (port == '') '' else ':' + port);
+    
+    return {
+      hash:     hash,
+      host:     host,
+      hostname: hostname,
+      href:     protocol + '//' + host + pathname + search + hash,
+      pathname: pathname,
+      port:     port,
+      protocol: protocol,
+      search:   search
+    }
+  }
 }
