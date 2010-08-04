@@ -16,8 +16,6 @@
 */
 package haxe.abstract;
 
-import Prelude;
-
 /** A structure that can be folded over. The type system cannot enforce it, but
  * a structure that implements this interface should specify its own type as the
  * first type parameter; e.g.: Set<T> implements Foldable<Set<T>, T>

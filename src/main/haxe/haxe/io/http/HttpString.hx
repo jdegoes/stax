@@ -79,15 +79,11 @@ class AsynchronousHttpString implements HttpString {
       }
     }
     
-    var setHeaders = _headers.toOption().map(function(headers) {
-      return function(request: XMLHttpRequest): Void {
-        headers.foreach(function(header) {
-          request.setRequestHeader(header._1, header._2);
-        });
-      }
-    }).getOrElseC(function(request: XMLHttpRequest): Void { });
-    
-    setHeaders(request);
+    _headers.toOption().map(function(headers) {
+      headers.foreach(function(header) {
+        request.setRequestHeader(header._1, header._2);
+      });
+    });
     
     try {
       request.open(method, url, true);

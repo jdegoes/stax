@@ -17,13 +17,11 @@ package js.io;
 
 import Dom;
 import Prelude;
-
 import haxe.test.Assert;
 import haxe.test.TestCase;
-
-
 import js.Env;
 import js.dom.Quirks;
+import js.dom.Elements;
 import js.io.IFrameIO;
 
 using PreludeExtensions;
@@ -40,8 +38,8 @@ class IFrameIOTestCase extends TestCase {
 	  
 	  var body = d.getElementsByTagName('body')[0];
 	  
-	  var iframe1: HTMLIFrameElement = cast d.createElement('iframe');
-	  var iframe2: HTMLIFrameElement = cast d.createElement('iframe');
+	  var iframe1: HTMLIFrameElement = Elements.newIframeInvisible();
+	  var iframe2: HTMLIFrameElement = Elements.newIframeInvisible();
 	  
 	  iframe1.setAttribute('src', 'about:blank');
 	  iframe2.setAttribute('src', 'about:blank');

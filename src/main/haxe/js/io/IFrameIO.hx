@@ -48,7 +48,7 @@ class IFrameIO {
   var receiverFuture:     Future<Void>;
   
 	public function new(?w: Window) {
-	  this.bindTarget         = w.toOption().getOrElse(Env.window.toThunk());
+	  this.bindTarget         = w.toOption().getOrElseC(Env.window);
 		this.executor           = ScheduledExecutorFactory.create();
 		this.fragmentsToSend    = newFragmentsList();
 		this.fragmentsReceived  = Map.create(MessageKey.HasherT(), MessageKey.EqualT());

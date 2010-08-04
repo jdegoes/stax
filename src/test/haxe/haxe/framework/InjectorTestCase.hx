@@ -100,12 +100,3 @@ class InjectorTestCase extends TestCase {
     });
   }
 }
-
-private class MockClock implements Clock {
-  public function new() {
-  }
-  
-  public function now() {
-    return Date.fromTime(0);
-  }
-}

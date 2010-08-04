@@ -43,12 +43,12 @@ class Quirks {
       }
   }
   
-  public static function contentDocumentOf(iframe: HTMLIFrameElement): Document {
+  public static function contentDocumentOf(iframe: HTMLIFrameElement): HTMLDocument {
     return if (iframe.contentDocument != null) {
-      iframe.contentDocument;
+      untyped iframe.contentDocument;
     }
     else if (iframe.contentWindow != null) {
-      iframe.contentWindow.document;
+      untyped iframe.contentWindow.document;
     }
     else if (untyped iframe.document != null) {
       untyped iframe.document;

@@ -28,3 +28,15 @@ class SystemClock implements Clock {
     return Date.now();
   }
 }
+
+class MockClock implements Clock {
+  public var time: Float;
+  
+  public function new() {
+    time = 0.0;
+  }
+  
+  public function now(): Date {
+    return Date.fromTime(time);
+  }
+}

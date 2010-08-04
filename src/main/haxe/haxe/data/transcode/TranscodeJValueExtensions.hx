@@ -29,8 +29,6 @@ using haxe.data.transcode.TranscodeJValueExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.text.json.JValueExtensions;
 
-using PreludeExtensions;
-
 class BoolExtensions {
     public static function DecomposerT(c: Enum<Bool>): JDecomposer<Bool> {
       return DecomposerTypeclass.create({
