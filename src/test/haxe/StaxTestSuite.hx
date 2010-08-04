@@ -16,6 +16,8 @@
 */
 import PreludeTest;
 
+import Prelude;
+
 import haxe.test.Runner;
 import haxe.test.ui.Report;
 
@@ -32,6 +34,9 @@ import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 
+import haxe.time.ScheduledExecutor;
+import haxe.framework.Injector;
+
 #if js
 import haxe.io.http.HttpStringTestCase;
 
@@ -41,29 +46,37 @@ import haxe.io.http.HttpJValueJsonpTestCase;
 
 class StaxTestSuite {
   public static function main (): Void {
-    var runner = (new Runner()).addAll([
-      new PreludeTestCase(),
-      new JValueTestCase(),
-      new MapTestCase(),
-      new SetTestCase(),
-      new ListTestCase(),
-      new LoggerTestCase(),
-      new JsonTestCase(),
-      new PartialFunctionTestCase(),
-      new ScheduledExecutorTestCase(),
-      new UrlExtensionsTestCase(),
-      new StringExtensionsTestCase(),
-      new InjectorTestCase(),
-      new HttpHeaderExtensionsTestCase()
-      #if js
-      , new HttpStringTestCase() // This one should be cross-platform, eventually
-      , new IFrameIOTestCase()      
-      , new HttpJValueJsonpTestCase()
-      #end
-    ]);
-    
-    Report.create(runner);
-    
-    runner.run();
+    Injector.forever(
+      function(c) {
+        c.bind(ScheduledExecutor, ScheduledExecutorSystem);
+      
+        var runner = (new Runner()).addAll([
+          new PreludeTestCase(),
+          new JValueTestCase(),
+          new MapTestCase(),
+          new SetTestCase(),
+          new ListTestCase(),
+          new LoggerTestCase(),
+          new JsonTestCase(),
+          new PartialFunctionTestCase(),
+          new ScheduledExecutorTestCase(),
+          new UrlExtensionsTestCase(),
+          new StringExtensionsTestCase(),
+          new InjectorTestCase(),
+          new HttpHeaderExtensionsTestCase()
+          #if js
+          , new HttpStringTestCase() // This one should be cross-platform, eventually
+          , new IFrameIOTestCase()      
+          , new HttpJValueJsonpTestCase()
+          #end
+        ]);
+
+        Report.create(runner);
+
+        runner.run();
+        
+        return Unit;
+      }
+    );
   }
 }

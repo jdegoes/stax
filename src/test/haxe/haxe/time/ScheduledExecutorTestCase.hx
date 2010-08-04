@@ -22,12 +22,13 @@ import haxe.test.TestCase;
 import haxe.time.ScheduledExecutor;
 
 using PreludeExtensions;
+using haxe.framework.Injector;
 
 class ScheduledExecutorTestCase extends TestCase {
   var _executor: ScheduledExecutor;
   
   override public function beforeAll() {
-    _executor = ScheduledExecutorFactory.create();
+    _executor = ScheduledExecutor.inject();
   }
   
   public function testOnce(): Void {

@@ -54,13 +54,7 @@ interface ScheduledExecutor {
 
 #if !neko
 
-class ScheduledExecutorFactory {
-  public static function create(): ScheduledExecutor {
-    return new ScheduledExecutorImpl();
-  }
-}
-
-class ScheduledExecutorImpl implements ScheduledExecutor {
+class ScheduledExecutorSystem implements ScheduledExecutor {
   public function new() {
   }
   

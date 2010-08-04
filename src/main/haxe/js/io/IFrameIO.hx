@@ -31,6 +31,7 @@ using haxe.abstract.FoldableExtensions;
 using haxe.util.StringExtensions;
 using haxe.data.collections.IterableExtensions;
 using haxe.net.UrlExtensions;
+using haxe.framework.Injector;
 
 /** A bidirectional communication layer capable of crossing frames hosted on 
  * different domains.
@@ -49,7 +50,7 @@ class IFrameIO {
   
 	public function new(?w: Window) {
 	  this.bindTarget         = w.toOption().getOrElseC(Env.window);
-		this.executor           = ScheduledExecutorFactory.create();
+		this.executor           = ScheduledExecutor.inject();
 		this.fragmentsToSend    = newFragmentsList();
 		this.fragmentsReceived  = Map.create(MessageKey.HasherT(), MessageKey.EqualT());
 		this.receivers          = new Hash();
@@ -65,7 +66,7 @@ class IFrameIO {
 	 * @param iframe        (Optional) The window that the messages will come from.
 	 */
 	public function receiveMessage(f: Dynamic -> Void, targetOrigin: String, ?iframe: Window): IFrameIO {
-	  return receiveMessageWhile(function(d) return true.withEffect(f), targetOrigin, iframe);
+	  return receiveMessageWhile(function(d) { f(d); return true; }, targetOrigin, iframe);
 	}
 	
   /** Adds a receiver that will handle messages from the given domain for as 
@@ -73,9 +74,9 @@ class IFrameIO {
 	 *
 	 * @param f             The function that will be passed each message.
 	 * @param targetOrigin  The URL where the messages will come from.
-	 * @param iframe        (Optional) The window that the messages will come from.
+	 * @param iframe        The window that the messages will come from.
 	 */
-	public function receiveMessageWhile(f: Dynamic -> Bool, targetOrigin: String, ?iframe: Window): IFrameIO {
+	public function receiveMessageWhile(f: Dynamic -> Bool, targetOrigin: String, iframe: Window): IFrameIO {
 	  var self = this;
 	  
 	  var domain = extractDomain(targetOrigin);

@@ -103,6 +103,10 @@ class Injector {
   public static function enter<T>(f: InjectorConfig -> T): T {
     return InjectorImpl.enter(f);
   }
+  
+  public static function forever<T>(f: InjectorConfig -> T): T {
+    return InjectorImpl.forever(f);
+  }
 }
 
 private typedef Bindings = {
@@ -126,6 +130,17 @@ private class InjectorImpl {
     var factory = binding.getOrElse(Stax.errorT('No binding defined for ' + Type.getClassName(interf)));
   
     return factory();
+  }
+  
+  public static function forever<T>(f: InjectorConfig -> T): T {
+    state.unshift({
+      globalBindings:  new Hash(),
+      packageBindings: new Hash(),
+      moduleBindings:  new Hash(),
+      classBindings:   new Hash()
+    });
+    
+    return f(new InjectorConfigImpl());
   }
   
   public static function enter<T>(f: InjectorConfig -> T): T {

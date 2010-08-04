@@ -18,6 +18,8 @@ package js.dom;
 import Dom;
 import js.Env;
 
+using PreludeExtensions;
+
 /** 
  * Common elements.
  */
@@ -26,11 +28,11 @@ class Elements {
     return cast Env.document.createElement('IFRAME');
   }
   
-	public static function newIframeInvisible(): HTMLIFrameElement {
-	  var e = newIframe();
+  public static function newIframeWindow(width: Int, height: Int): HTMLIFrameElement {
+    var e = newIframe();
 	  
-	  e.setAttribute('width',         '0');
-	  e.setAttribute('height',        '0');
+	  e.setAttribute('width',         width.toString());
+	  e.setAttribute('height',        height.toString());
 	  e.setAttribute('frameborder',   '0');
 	  e.setAttribute('marginwidth',   '0');
 	  e.setAttribute('marginheight',  '0');
@@ -41,5 +43,9 @@ class Elements {
 	  e.setAttribute('allowtransparency', 'true');
 	  
 	  return e;
+  }
+  
+	public static function newIframeInvisible(): HTMLIFrameElement {
+	  return newIframeWindow(0, 0);
 	}
 }
