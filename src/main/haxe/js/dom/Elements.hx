@@ -42,6 +42,9 @@ class Elements {
 	  e.setAttribute('noresize',      'noresize');
 	  e.setAttribute('allowtransparency', 'true');
 	  
+	  e.style.margin  = '0';
+	  e.style.padding = '0';
+	  
 	  return e;
   }
   

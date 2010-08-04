@@ -44,6 +44,7 @@ class IFrameIO {
   var fragmentsToSend:    List<Tuple2<Window, AddressableFragment>>;
   var fragmentsReceived:  Map<MessageKey, Array<FragmentDelivery>>;
   var receivers:          Hash<Array<Dynamic -> Void>>;
+  var originUrlToWindow:  Hash<Window>;
   var bindTarget:         Window;
   var senderFuture:       Future<Void>;
   var receiverFuture:     Future<Void>;
@@ -54,6 +55,7 @@ class IFrameIO {
 		this.fragmentsToSend    = newFragmentsList();
 		this.fragmentsReceived  = Map.create(MessageKey.HasherT(), MessageKey.EqualT());
 		this.receivers          = new Hash();
+		this.originUrlToWindow  = new Hash();
 		
 		senderFuture   = executor.forever(sender,   20);
 		receiverFuture = executor.forever(receiver, 10);
@@ -62,24 +64,32 @@ class IFrameIO {
 	/** Adds a receiver that will handle messages from the given domain.
 	 *
 	 * @param f             The function that will be passed each message.
-	 * @param targetOrigin  The URL where the messages will come from.
-	 * @param iframe        (Optional) The window that the messages will come from.
+ 	 *
+ 	 * @param originUrl     The URL where the messages will come from.
+ 	 *
+ 	 * @param originWindow  The window that the messages will come from. If this
+ 	 *                      parameter is not specified, reliable reception from
+ 	 *                      the origin window is not possible.
 	 */
-	public function receiveMessage(f: Dynamic -> Void, targetOrigin: String, ?iframe: Window): IFrameIO {
-	  return receiveMessageWhile(function(d) { f(d); return true; }, targetOrigin, iframe);
+	public function receiveMessage(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+	  return receiveMessageWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
 	}
 	
   /** Adds a receiver that will handle messages from the given domain for as 
    * long as it returns true.
 	 *
 	 * @param f             The function that will be passed each message.
-	 * @param targetOrigin  The URL where the messages will come from.
-	 * @param iframe        The window that the messages will come from.
+	 *
+	 * @param originUrl     The URL where the messages will come from.
+	 *
+	 * @param originWindow  The window that the messages will come from. If this
+	 *                      parameter is not specified, reliable reception from
+	 *                      the origin window is not possible.
 	 */
-	public function receiveMessageWhile(f: Dynamic -> Bool, targetOrigin: String, iframe: Window): IFrameIO {
+	public function receiveMessageWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
 	  var self = this;
 	  
-	  var domain = extractDomain(targetOrigin);
+	  var domain = extractDomain(originUrl);
 	  
 	  var r = if (receivers.exists(domain)) receivers.get(domain) else [].withEffect(function(r){ self.receivers.set(domain, r); });
 	  
@@ -88,6 +98,10 @@ class IFrameIO {
 	  wrapper = function(d: Dynamic): Void { if (!f(d)) r.remove(wrapper); }
 	  
 	  r.push(wrapper);
+	  
+	  // We need to keep track of which window is associated with this url, so in
+	  // case we lose some fragments from this url, we know how to request them:
+	  originUrlToWindow.set(originUrl, originWindow);
 	  
 	  /*executor.once(function() {
 	    trace('Missing fragments: ' + self.findMissingFragments());
