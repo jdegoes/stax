@@ -113,7 +113,11 @@ class IFrameIO {
 	 * hash).
 	 */
 	public function postMessage(data: Dynamic, to: String, iframe: Window): IFrameIO {
-	  var from = bindTarget.location.href;
+	  var from = bindTarget.location.href.toParsedUrl().map(
+	    function(parsedFrom) {
+	      return parsedFrom.withoutHash().toUrl();
+	    }
+	  ).getOrElseC(bindTarget.location.href);
 	  
 	  var fragmentId = 1;
 	  var fragments  = Json.encodeObject(data).chunk(500);

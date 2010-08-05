@@ -443,7 +443,7 @@ class ArrayExtensions {
   }
   
   public static function append<T>(a: Array<T>, t: T): Array<T> {
-    var copy = [].concat(a);
+    var copy = snapshot(a);
     
     copy.push(t);
     
@@ -463,7 +463,7 @@ class ArrayExtensions {
   }
   
   public static function contains<T>(a: Array<T>, t: T): Bool {
-    for (e in a) if (e == t) return true;
+    for (e in a) if (t == e) return true;
     
     return false;
   }

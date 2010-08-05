@@ -309,7 +309,7 @@ class FoldableExtensions {
 	  return result;
 	}
   
-  public static function member<A, B>(foldable: Foldable<A, B>, member: B): Bool {
+  public static function contains<A, B>(foldable: Foldable<A, B>, member: B): Bool {
     return exists(foldable, function(e) { return e == member; });
   }
   

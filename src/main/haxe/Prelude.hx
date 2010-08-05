@@ -680,11 +680,5 @@ class HasherTypeclass {
 }
 
 class Stax {
-  public static function error<T>(msg: String): T { return errorT(msg)(); }
-  
-  public static function errorT<T>(msg: String): Thunk<T> { 
-    return function() {
-      throw msg; return null;
-    }
-  }
+  public static function error<T>(msg: String): T { throw msg; return null; }
 }
