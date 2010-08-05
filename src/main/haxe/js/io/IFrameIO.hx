@@ -125,7 +125,7 @@ class IFrameIOPostMessage implements IFrameIO {
     var self = this;
     
     listener = function(event) {
-      if (event.origin == originUrl) {// || event.origin == 'null') {
+      if (event.origin == originUrl || event.origin == 'null') {
         var data = Json.decodeObject(event.data);
         
         if (!f(data)) {
@@ -140,7 +140,11 @@ class IFrameIOPostMessage implements IFrameIO {
   }
 
   public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
-    targetWindow.postMessage(Json.encodeObject(data), getUrlFor(targetWindow, targetUrl_));
+    var targetUrl = getUrlFor(targetWindow, targetUrl_);
+    
+    if (targetUrl.startsWith('file:')) targetUrl = '*';
+    
+    targetWindow.postMessage(Json.encodeObject(data), targetUrl);
     
     return this;
   }
@@ -169,8 +173,6 @@ class IFrameIOPostMessage implements IFrameIO {
       var url = tryExtractUrl(cur);
       
       if (!url.startsWith('about:')) {
-        if (url.startsWith('file:')) return '*';
-        
         return url;
       }
       
