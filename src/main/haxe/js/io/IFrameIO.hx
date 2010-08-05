@@ -199,6 +199,7 @@ class IFrameIO {
 	      
 	    }
 	    
+	    // Don't want to receive this chunk again:
 	    bindTarget.location.hash = '#';
 	  }
 	  
@@ -214,23 +215,31 @@ class IFrameIO {
 	}
 	
 	private function analyzeReceivedFragments(messageKey: MessageKey, fragments: Array<FragmentDelivery>): Void {
-    if (fragments.length == messageKey.fragmentCount) {
-      // All fragments received -- we can send data to listeners:
-      fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
+    if (fragments.length >= messageKey.fragmentCount) {
+      var neededFragments: Array<Int> = 1.to(messageKey.fragmentCount).toArray();
       
-      var fullData = fragments.foldl('', function(a, b) return a + b.data);
+      fragments.foreach(function(f) { neededFragments.remove(f.fragmentId.toInt()); });
       
-      var message = Json.decodeObject(fullData);
+      var allFragmentsReceived = (neededFragments.length == 0);
       
-      //trace('message = ' + message);
+      if (allFragmentsReceived) {
+        // All fragments received -- we can send data to listeners:
+        fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
       
-      var domain = extractDomain(fragments[0].from);
+        var fullData = fragments.foldl('', function(a, b) return a + b.data);
       
-      if (receivers.exists(domain)) {
-        receivers.get(domain).foreach(function(r) r(message));
+        var message = Json.decodeObject(fullData);
+      
+        //trace('message = ' + message);
+      
+        var domain = extractDomain(fragments[0].from);
+      
+        if (receivers.exists(domain)) {
+          receivers.get(domain).foreach(function(r) r(message));
+        }
+      
+        fragmentsReceived.removeByKey(messageKey);
       }
-      
-      fragmentsReceived.removeByKey(messageKey);
     }
 	}
 	
