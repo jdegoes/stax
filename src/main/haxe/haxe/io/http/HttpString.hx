@@ -69,11 +69,12 @@ class AsynchronousHttpString implements HttpString {
     
     request.onreadystatechange = function() {
       var toBody = function(text: String): Option<String> { return if (text == null || text.length == 0) None; else Some(text); }
-      
       if (request.readyState == XmlHttpRequestState.DONE) {
+        var responseHeaders = if (request.getAllResponseHeaders() == null) ''; else request.getAllResponseHeaders();
+        
         future.deliver({
           body:     toBody(request.responseText),
-          headers:  request.getAllResponseHeaders().toHttpHeaders(),
+          headers:  responseHeaders.toHttpHeaders(),
           code:     request.status.toHttpResponseCode()
         });
       }

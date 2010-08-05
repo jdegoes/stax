@@ -46,8 +46,8 @@ class IFrameIO {
   var receivers:          Hash<Array<Dynamic -> Void>>;
   var originUrlToWindow:  Hash<Window>;
   var bindTarget:         Window;
-  var senderFuture:       Future<Void>;
-  var receiverFuture:     Future<Void>;
+  var senderFuture:       Option<Future<Void>>;
+  var receiverFuture:     Option<Future<Void>>;
   
 	public function new(?w: Window) {
 	  this.bindTarget         = w.toOption().getOrElseC(Env.window);
@@ -57,8 +57,8 @@ class IFrameIO {
 		this.receivers          = new Hash();
 		this.originUrlToWindow  = new Hash();
 		
-		senderFuture   = executor.forever(sender,   20);
-		receiverFuture = executor.forever(receiver, 10);
+		senderFuture   = None;
+		receiverFuture = None;
 	}
 	
 	/** Adds a receiver that will handle messages from the given domain.
@@ -105,6 +105,8 @@ class IFrameIO {
 	  // case we lose some fragments from this url, we know how to request them:
 	  originUrlToWindow.set(originUrl, originWindow);
 	  
+	  startReceiver();
+	  
 	  return this;
 	}
 	
@@ -119,8 +121,9 @@ class IFrameIO {
 	    }
 	  ).getOrElseC(bindTarget.location.href);
 	  
-	  var fragmentId = 1;
-	  var fragments  = Json.encodeObject(data).chunk(500);
+	  var maxFragSize = 1500 - to.length;
+	  var fragmentId  = 1;
+	  var fragments   = Json.encodeObject(data).chunk(maxFragSize);
 	  
 	  var encoded = fragments.mapTo(newFragmentsList(), function(chunk): Tuple2<Window, AddressableFragment> return iframe.entuple(cast {
 	    type:           'delivery',
@@ -136,14 +139,16 @@ class IFrameIO {
 	  
 	  ++lastMessageId;
 	  
+	  startSender();
+	  
 	  return this;
 	}
 	
 	/** Stops the IO.
 	 */
 	public function stop(): IFrameIO {
-	  senderFuture.cancel();
-	  receiverFuture.cancel();
+	  stopSender();
+	  stopReceiver();
 	  
 	  return this;
 	}
@@ -151,6 +156,7 @@ class IFrameIO {
 	private function sender(): Void {
 	  switch (fragmentsToSend.headOption) {
 	    case None:
+	      stopSender();
 	    
 	    case Some(tuple): 
 	      fragmentsToSend = fragmentsToSend.drop(1);
@@ -178,11 +184,7 @@ class IFrameIO {
 	      
 	      var fragments = fragmentsReceivedFor(messageKey);
 	      
-	      //trace('received fragment ' + packet.fragmentId);
-	      
-	      var alreadyReceived = fragments.foldl(false, function(b, f) {
-	        return b || f.fragmentId == packet.fragmentId;
-	      });
+	      var alreadyReceived = fragments.foldl(false, function(b, f) return b || f.fragmentId == packet.fragmentId);
 	      
 	      if (!alreadyReceived) {
 	        fragments.push(packet);
@@ -208,8 +210,27 @@ class IFrameIO {
 	    // Don't want to receive this chunk again:
 	    bindTarget.location.hash = '#';
 	  }
-	  
-	  //checkForMissingFragments();
+	  else {
+	    var self = this;
+	    
+	    // We did not receive a chunk, so let's look for missing fragments:
+	    var fragmentRequests = findMissingFragments();
+	    
+	    if (fragmentRequests.size > 0) {
+	      var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
+  	      var window = self.originUrlToWindow.get(request.to);
+	      
+  	      return if (window != null) {
+  	        List.nil().cons(window.entuple(request));
+  	      }
+  	      else {
+  	        List.nil();
+  	      }
+  	    });
+	    
+  	    fragmentsToSend = fragmentsToSend.concat(encoded);
+  	  }
+	  }
 	}
 	
 	private function extractDomain(url: Url): String {
@@ -229,8 +250,6 @@ class IFrameIO {
     
       var message = Json.decodeObject(fullData);
     
-      //trace('message = ' + message);
-    
       var domain = extractDomain(fragments[0].from);
     
       if (receivers.exists(domain)) {
@@ -241,7 +260,7 @@ class IFrameIO {
     }
 	}
 	
-	private function findMissingFragments(): List<FragmentRequest> {
+	private function findMissingFragments(): List<AddressableFragment> {
 	  return fragmentsReceived.values().foldl(List.nil(), function(allMissing, fragments) {
 	    var firstFrag = fragments[0];
 	    
@@ -256,14 +275,18 @@ class IFrameIO {
 	        
 	        //trace('lastId = ' + lastId + ', curId = ' + curId);
 	        
-	        return (lastId + 1).until(curId).map(function(missingId): FragmentRequest return {
-  	        type:           'request',
-            from:           firstFrag.from,
-            to:             firstFrag.to,
-            messageId:      firstFrag.messageId,
-            fragmentCount:  firstFrag.fragmentCount,
-            fragmentId:     missingId.toString()
-  	      }).toList();
+	        return (lastId + 1).until(curId).map(function(missingId): AddressableFragment {
+	          var request: FragmentRequest = {
+    	        type:           'request',
+              from:           firstFrag.to,
+              to:             firstFrag.from,
+              messageId:      firstFrag.messageId,
+              fragmentCount:  firstFrag.fragmentCount,
+              fragmentId:     missingId.toString()
+    	      }
+    	      
+	          return request;
+    	    }).toList();
 	      }
 	    );
 	  });
@@ -279,6 +302,30 @@ class IFrameIO {
 	
 	private static function messageKeyFrom(o: {messageId: String, from: String, to: String, fragmentCount: String}): MessageKey {
 	  return new MessageKey(o.messageId.toInt(), o.from, o.to, o.fragmentCount.toInt());
+	}
+	
+	private function startSender(): Void {
+	  if (senderFuture.isEmpty()) {	  
+	    senderFuture = Some(executor.forever(sender, 20));
+	  }
+	}
+	
+	private function stopSender(): Void {
+	  senderFuture.map(function(s) { s.cancel(); return Unit; });
+	  
+	  senderFuture = None;
+	}
+	
+	private function startReceiver(): Void {
+	  if (receiverFuture.isEmpty()) {	  
+	    receiverFuture = Some(executor.forever(receiver, 10));
+	  }
+	}
+	
+	private function stopReceiver(): Void {
+	  receiverFuture.map(function(r) { r.cancel(); return Unit; });
+	  
+	  receiverFuture = None;
 	}
 }
 
