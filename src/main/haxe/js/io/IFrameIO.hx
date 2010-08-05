@@ -180,9 +180,15 @@ class IFrameIO {
 	      
 	      //trace('received fragment ' + packet.fragmentId);
 	      
-	      fragments.push(packet);
+	      var alreadyReceived = fragments.foldl(false, function(b, f) {
+	        return b || f.fragmentId == packet.fragmentId;
+	      });
 	      
-	      analyzeReceivedFragments(messageKey, fragments);
+	      if (!alreadyReceived) {
+	        fragments.push(packet);
+	      
+  	      analyzeReceivedFragments(messageKey, fragments);
+  	    }
 	    }
 	    else if (unknown.type == 'request') {
 	      var packet: FragmentRequest = cast unknown;
@@ -216,30 +222,22 @@ class IFrameIO {
 	
 	private function analyzeReceivedFragments(messageKey: MessageKey, fragments: Array<FragmentDelivery>): Void {
     if (fragments.length >= messageKey.fragmentCount) {
-      var neededFragments: Array<Int> = 1.to(messageKey.fragmentCount).toArray();
+      // All fragments received -- we can send data to listeners:
+      fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
       
-      fragments.foreach(function(f) { neededFragments.remove(f.fragmentId.toInt()); });
-      
-      var allFragmentsReceived = (neededFragments.length == 0);
-      
-      if (allFragmentsReceived) {
-        // All fragments received -- we can send data to listeners:
-        fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
-      
-        var fullData = fragments.foldl('', function(a, b) return a + b.data);
-      
-        var message = Json.decodeObject(fullData);
-      
-        //trace('message = ' + message);
-      
-        var domain = extractDomain(fragments[0].from);
-      
-        if (receivers.exists(domain)) {
-          receivers.get(domain).foreach(function(r) r(message));
-        }
-      
-        fragmentsReceived.removeByKey(messageKey);
+      var fullData = fragments.foldl('', function(a, b) return a + b.data);
+    
+      var message = Json.decodeObject(fullData);
+    
+      //trace('message = ' + message);
+    
+      var domain = extractDomain(fragments[0].from);
+    
+      if (receivers.exists(domain)) {
+        receivers.get(domain).foreach(function(r) r(message));
       }
+    
+      fragmentsReceived.removeByKey(messageKey);
     }
 	}
 	
