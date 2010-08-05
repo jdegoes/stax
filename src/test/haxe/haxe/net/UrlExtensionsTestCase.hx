@@ -61,6 +61,15 @@ class UrlExtensionsTestCase extends TestCase {
 	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar', p.withoutHash().toUrl());
 	  assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
 	  assertEquals('//eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
+	  
+	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
+	}
+	
+	public function testCanParseFileProtocol() {
+	  var p = 'file:///Users/John/Documents/github/stax/test.html'.toParsedUrl().get();
+	  
+	  assertEquals('file:', p.protocol);
+	  assertEquals('/Users/John/Documents/github/stax/test.html', p.pathname);
 	}
 	
 	public function testQueryStringBijection() {

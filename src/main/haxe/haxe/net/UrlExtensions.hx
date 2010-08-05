@@ -106,6 +106,8 @@ class UrlExtensions {
     return withHash(parsed, '');
   }
   
+  /** Adds query parameters to an existing URL.
+   */
   public static function addQueryParameters(url: Url, params: QueryParameters): Url {
     var tqs = toQueryString(params);
     

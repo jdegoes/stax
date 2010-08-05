@@ -53,8 +53,8 @@ class IFrameIOTestCase extends TestCase {
 	  window1 = doc1.defaultView;
 	  window2 = doc2.defaultView;
 	  
-	  iframeIO1 = new IFrameIO(window1);
-	  iframeIO2 = new IFrameIO(window2);
+	  iframeIO1 = new IFrameIOAutoDetect(window1);
+	  iframeIO2 = new IFrameIOAutoDetect(window2);
 	}
 	
 	override public function afterAll(): Void {
@@ -65,7 +65,7 @@ class IFrameIOTestCase extends TestCase {
 	  
 	  var count = 0;
 	  
-	  iframeIO1.receiveMessageWhile(
+	  iframeIO1.receiveWhile(
 	    function(data) {
 	      self.assertEquals('foo', data);
 	      
@@ -79,7 +79,7 @@ class IFrameIOTestCase extends TestCase {
 	    window2
 	  );
 	  
-	  iframeIO2.postMessage('foo', 'about:blank', window1);
+	  iframeIO2.send('foo', 'about:blank', window1);
 	  
 	  assertTrue(true);
 	}
@@ -91,7 +91,7 @@ class IFrameIOTestCase extends TestCase {
 	  
 	  var self = this;
 	  
-	  iframeIO1.receiveMessageWhile(
+	  iframeIO1.receiveWhile(
 	    function(data) {
 	      self.assertEquals(string, data);
 	      
@@ -103,7 +103,7 @@ class IFrameIOTestCase extends TestCase {
 	    window2
 	  );
 	  
-	  iframeIO2.postMessage(string, 'about:blank', window1);
+	  iframeIO2.send(string, 'about:blank', window1);
 	  
 	  assertTrue(true);
 	}

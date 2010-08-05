@@ -2569,7 +2569,7 @@ extern interface Window implements ArrayAccess<WindowProxy>, implements EventTar
     
     public function getComputedStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
     
-    public function postMessage(message: DOMString, targetOrigin: DOMString): Void;
+    public var postMessage (default, null): DOMString -> DOMString -> Void;
     
     public function getSelection(): Selection;
     

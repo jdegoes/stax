@@ -36,7 +36,154 @@ using haxe.framework.Injector;
 /** A bidirectional communication layer capable of crossing frames hosted on 
  * different domains.
  */
-class IFrameIO {
+interface IFrameIO {
+  /** Adds a receiver that will handle messages from the given domain.
+   *
+   * @param f             The function that will be passed each message.
+   *
+   * @param originUrl     The URL where the messages will come from, including 
+   *                      the query string but without the hash tag.
+   *
+   * @param originWindow  The window that the messages will come from. If this
+   *                      parameter is not specified, reliable reception from
+   *                      the origin window is not possible.
+   */
+  public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO;
+
+  /** Adds a receiver that will handle messages from the given domain for as 
+   * long as it returns true.
+   *
+   * @param f             The function that will be passed each message.
+   *
+   * @param originUrl     The URL where the messages will come from, including 
+   *                      the query string but without the hash tag.
+   *
+   * @param originWindow  The window that the messages will come from. If this
+   *                      parameter is not specified, reliable reception from
+   *                      the origin window is not possible.
+   */
+  public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO;
+
+  /** Posts a message to the specified iframe, which should be located at the 
+   * exact URL specified.
+   *
+   * @param data          The anonymous object that will be sent.
+   *
+   * @param targetUrl     The exact URL the message is being sent to, including 
+   *                      host, port, path, and query, but excluding hash tag.
+   *
+   * @param targetWindow  The window that will receive the message.
+   */
+  public function send(data: Dynamic, targetUrl: String, targetWindow: Window): IFrameIO;
+}
+
+class IFrameIOAutoDetect implements IFrameIO {
+  var bindTarget: Window;
+  var underlying: IFrameIO;
+  
+  public function new(?w: Window) {
+    this.bindTarget = w.toOption().getOrElseC(Env.window);    
+    this.underlying = if (bindTarget.postMessage != null) cast(new IFrameIOPostMessage(bindTarget), IFrameIO); 
+                      else cast(new IFrameIOPollingHashtag(bindTarget), IFrameIO);
+  }
+  
+  public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+    underlying.receive(f, originUrl, originWindow);
+    
+    return this;
+  }
+
+  public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
+    underlying.receiveWhile(f, originUrl, originWindow);
+    
+    return this;
+  }
+
+  public function send(data: Dynamic, targetUrl: String, targetWindow: Window): IFrameIO {
+    underlying.send(data, targetUrl, targetWindow);
+    
+    return this;
+  }  
+}
+
+class IFrameIOPostMessage implements IFrameIO {
+  var bindTarget: Window;
+  
+  public function new(w: Window) {
+    this.bindTarget = w;
+  }
+  
+  public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+    return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
+  }
+
+  public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
+    var originUrl = getUrlFor(originWindow, originUrl_);
+
+    var listener: EventListener<Dynamic> = null;
+    
+    var self = this;
+    
+    listener = function(event) {
+      if (event.origin == originUrl) {// || event.origin == 'null') {
+        var data = Json.decodeObject(event.data);
+        
+        if (!f(data)) {
+          self.bindTarget.removeEventListener('message', listener, false);
+        }
+      }
+    }
+    
+    bindTarget.addEventListener('message', listener, false);
+    
+    return this;
+  }
+
+  public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
+    targetWindow.postMessage(Json.encodeObject(data), getUrlFor(targetWindow, targetUrl_));
+    
+    return this;
+  }
+  
+  private static function getUrlFor(w: Window, url_: Url): Url {
+    var sanitize = function(url: Url): Option<Url> {
+      return url.toParsedUrl().map(function(p) return p.withoutHash().withoutSearch().withoutPathname().toUrl());
+    }
+    
+    var tryExtractUrl = function(w: Window): Url {
+      return sanitize(url_).getOrElse(
+        function() {
+          try {
+            return sanitize(w.location.href).get();
+          }
+          catch (d: Dynamic) {
+            return url_;
+          }
+        }
+      );
+    }
+    
+    var cur = w;
+    
+    while (cur != null) {
+      var url = tryExtractUrl(cur);
+      
+      if (!url.startsWith('about:')) {
+        if (url.startsWith('file:')) return '*';
+        
+        return url;
+      }
+      
+      if (cur == cur.top) cur = null;
+      else cur = cur.parent;
+    }
+    
+    return url_;
+  }
+}
+
+
+class IFrameIOPollingHashtag implements IFrameIO {
   static var lastMessageId = 1;
   static var newFragmentsList = List.factory();
   
@@ -49,8 +196,8 @@ class IFrameIO {
   var senderFuture:       Option<Future<Void>>;
   var receiverFuture:     Option<Future<Void>>;
   
-	public function new(?w: Window) {
-	  this.bindTarget         = w.toOption().getOrElseC(Env.window);
+	public function new(w: Window) {
+	  this.bindTarget         = w;
 		this.executor           = ScheduledExecutor.inject();
 		this.fragmentsToSend    = newFragmentsList();
 		this.fragmentsReceived  = Map.create(MessageKey.HasherT(), MessageKey.EqualT());
@@ -61,34 +208,11 @@ class IFrameIO {
 		receiverFuture = None;
 	}
 	
-	/** Adds a receiver that will handle messages from the given domain.
-	 *
-	 * @param f             The function that will be passed each message.
- 	 *
- 	 * @param originUrl     The URL where the messages will come from, including 
- 	 *                      the query string but without the hash tag.
- 	 *
- 	 * @param originWindow  The window that the messages will come from. If this
- 	 *                      parameter is not specified, reliable reception from
- 	 *                      the origin window is not possible.
-	 */
-	public function receiveMessage(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
-	  return receiveMessageWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
+	public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+	  return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
 	}
 	
-  /** Adds a receiver that will handle messages from the given domain for as 
-   * long as it returns true.
-	 *
-	 * @param f             The function that will be passed each message.
-	 *
-	 * @param originUrl     The URL where the messages will come from, including 
-	 *                      the query string but without the hash tag.
-	 *
-	 * @param originWindow  The window that the messages will come from. If this
-	 *                      parameter is not specified, reliable reception from
-	 *                      the origin window is not possible.
-	 */
-	public function receiveMessageWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
+	public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
 	  var self = this;
 	  
 	  var domain = extractDomain(originUrl);
@@ -110,11 +234,7 @@ class IFrameIO {
 	  return this;
 	}
 	
-	/** Posts a message to the specified iframe, which should be located at the 
-	 * exact URL specified (including host, port, path, and query, but excluding
-	 * hash).
-	 */
-	public function postMessage(data: Dynamic, to: String, iframe: Window): IFrameIO {
+	public function send(data: Dynamic, to: String, iframe: Window): IFrameIO {
 	  var from = bindTarget.location.href.toParsedUrl().map(
 	    function(parsedFrom) {
 	      return parsedFrom.withoutHash().toUrl();
