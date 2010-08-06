@@ -41,17 +41,14 @@ class IFrameIOTestCase extends TestCase {
 	  var iframe1: HTMLIFrameElement = Elements.newIframeInvisible();
 	  var iframe2: HTMLIFrameElement = Elements.newIframeInvisible();
 	  
-	  iframe1.setAttribute('src', 'about:blank');
-	  iframe2.setAttribute('src', 'about:blank');
-	  
 	  body.appendChild(iframe1);
 	  body.appendChild(iframe2);
 	  
 	  var doc1: HTMLDocument = cast Quirks.getIframeDocument(iframe1);
 	  var doc2: HTMLDocument = cast Quirks.getIframeDocument(iframe2);
 	  
-	  window1 = doc1.defaultView;
-	  window2 = doc2.defaultView;
+	  window1 = Quirks.getIframeWindow(iframe1);
+	  window2 = Quirks.getIframeWindow(iframe2);
 	  
 	  iframeIO1 = new IFrameIOAutoDetect(window1);
 	  iframeIO2 = new IFrameIOAutoDetect(window2);
@@ -75,11 +72,11 @@ class IFrameIOTestCase extends TestCase {
 	      
 	      return false;
 	    },
-	    'about:blank',
+	    window2.location.href,
 	    window2
 	  );
 	  
-	  iframeIO2.send('foo', 'about:blank', window1);
+	  iframeIO2.send('foo', window1.location.href, window1);
 	  
 	  assertTrue(true);
 	}
@@ -99,11 +96,11 @@ class IFrameIOTestCase extends TestCase {
 	      
 	      return false;
 	    },
-	    'about:blank',
+	    window2.location.href,
 	    window2
 	  );
 	  
-	  iframeIO2.send(string, 'about:blank', window1);
+	  iframeIO2.send(string, window1.location.href, window1);
 	  
 	  assertTrue(true);
 	}
