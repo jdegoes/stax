@@ -20,6 +20,7 @@ import Dom;
 import Prelude;
 
 import js.Env;
+import js.dom.Quirks;
 import haxe.data.collections.List;
 import haxe.data.collections.Map;
 import haxe.time.ScheduledExecutor;
@@ -134,7 +135,7 @@ class IFrameIOPostMessage implements IFrameIO {
       }
     }
     
-    bindTarget.addEventListener('message', listener, false);
+    Quirks.addEventListener(bindTarget, 'message', listener, false);
     
     return this;
   }

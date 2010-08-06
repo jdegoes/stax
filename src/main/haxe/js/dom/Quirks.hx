@@ -56,5 +56,12 @@ class Quirks {
     else { throw "Cannot find iframe content document for " + iframe; null; }
   }
   
-  
+  public static function addEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
+    if (target.addEventListener != null) {
+      target.addEventListener(type, listener, useCapture);
+    }
+    else if (target.attachEvent != null) {
+      target.attachEvent('on' + type, listener);
+    }
+  }
 }
