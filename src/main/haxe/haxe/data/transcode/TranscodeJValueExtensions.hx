@@ -29,6 +29,19 @@ using haxe.data.transcode.TranscodeJValueExtensions;
 using haxe.abstract.FoldableExtensions;
 using haxe.text.json.JValueExtensions;
 
+class ExtractorHelpers {
+  public static function extractFieldValue<T>(j: JValue, n: String, e: JExtractor<T>, def: JValue) {
+    var fieldValue = j.getOrElse(n, def.toThunk());
+    
+    try {
+      return e.extract(fieldValue);
+    }
+    catch (err: Dynamic) {
+      return e.extract(def);
+    }
+  }
+}
+
 class BoolExtensions {
     public static function DecomposerT(c: Enum<Bool>): JDecomposer<Bool> {
       return DecomposerTypeclass.create({

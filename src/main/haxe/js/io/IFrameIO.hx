@@ -150,6 +150,7 @@ class IFrameIOPostMessage implements IFrameIO {
   }
   
   private static function getUrlFor(w: Window, url_: Url): Url {
+    // TODO: Cleanup!!!
     var sanitize = function(url: Url): Option<Url> {
       return url.toParsedUrl().map(function(p) return p.withoutHash().withoutSearch().withoutPathname().toUrl());
     }

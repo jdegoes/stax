@@ -23,30 +23,10 @@ package haxe.data.transcode;
 
 import Prelude;
 
-import haxe.data.collections.List;
-import haxe.data.collections.Set;
-import haxe.data.collections.Map;
 import haxe.data.transcode.Transcode;
 import haxe.text.json.JValue;
-
-using PreludeExtensions;
-using haxe.data.transcode.TranscodeJValue;
-using haxe.abstract.FoldableExtensions;
-using haxe.text.json.JValueExtensions;
 
 typedef JDecomposer<T> = Decomposer<T, JValue>
 typedef JExtractor<T>  = Extractor<JValue, T>
 typedef JTranscoder<T> = Transcoder<T, JValue>
 
-class ExtractorHelpers {
-  public static function extractFieldValue<T>(j: JValue, n: String, e: JExtractor<T>, def: JValue) {
-    var fieldValue = j.getOrElse(n, def.toThunk());
-    
-    try {
-      return e.extract(fieldValue);
-    }
-    catch (err: Dynamic) {
-      return e.extract(def);
-    }
-  }
-}

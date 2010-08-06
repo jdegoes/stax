@@ -24,28 +24,33 @@ using PreludeExtensions;
  * Common elements.
  */
 class Elements {
-  public static function newIframe(): HTMLIFrameElement {
-    return cast Env.document.createElement('IFRAME');
+  public static function newIframe(?width: Int, ?height: Int): HTMLIFrameElement {
+    var iframe: HTMLIFrameElement = cast Env.document.createElement('IFRAME');
+    
+    width.toOption().zip(height.toOption()).map(function(t) {
+      iframe.setAttribute('width',   width.toString());
+  	  iframe.setAttribute('height',  height.toString());
+    });
+    
+    return iframe;
   }
   
   public static function newIframeWindow(width: Int, height: Int): HTMLIFrameElement {
-    var e = newIframe();
+    var iframe = newIframe(width, height);
 	  
-	  e.setAttribute('width',         width.toString());
-	  e.setAttribute('height',        height.toString());
-	  e.setAttribute('frameborder',   '0');
-	  e.setAttribute('marginwidth',   '0');
-	  e.setAttribute('marginheight',  '0');
-	  e.setAttribute('vspace',        '0');
-	  e.setAttribute('hspace',        '0');
-	  e.setAttribute('scrolling',     'no');
-	  e.setAttribute('noresize',      'noresize');
-	  e.setAttribute('allowtransparency', 'true');
+	  iframe.setAttribute('frameborder',   '0');
+	  iframe.setAttribute('marginwidth',   '0');
+	  iframe.setAttribute('marginheight',  '0');
+	  iframe.setAttribute('vspace',        '0');
+	  iframe.setAttribute('hspace',        '0');
+	  iframe.setAttribute('scrolling',     'no');
+	  iframe.setAttribute('noresize',      'noresize');
+	  iframe.setAttribute('allowtransparency', 'true');
 	  
-	  e.style.margin  = '0';
-	  e.style.padding = '0';
+	  iframe.style.margin  = '0';
+	  iframe.style.padding = '0';
 	  
-	  return e;
+	  return iframe;
   }
   
 	public static function newIframeInvisible(): HTMLIFrameElement {
