@@ -21,7 +21,7 @@ import PreludeExtensions;
 import haxe.data.collections.Collection;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 typedef MatchResult = { assertion: String, negation: String }
 typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>

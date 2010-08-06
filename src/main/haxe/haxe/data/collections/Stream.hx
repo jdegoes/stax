@@ -18,11 +18,11 @@ package haxe.data.collections;
 
 import Prelude;
 
-import haxe.abstract.Foldable;
+import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 /*
 class Stream<T> implements Collection<Stream<T>, T> {

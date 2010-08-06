@@ -19,12 +19,12 @@ package haxe.data.collections;
 import Prelude;
 import PreludeExtensions;
 
-import haxe.abstract.Foldable;
+import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
-import haxe.abstract.FoldableExtensions;
+import haxe.functional.FoldableExtensions;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {

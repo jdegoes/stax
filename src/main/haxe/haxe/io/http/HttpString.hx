@@ -29,7 +29,7 @@ import js.dom.Quirks;
 #end
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 using haxe.net.HttpHeaderExtensions;

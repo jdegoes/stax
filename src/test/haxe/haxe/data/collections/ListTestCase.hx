@@ -18,12 +18,12 @@ package haxe.data.collections;
 
 import Prelude;
 
-import haxe.abstract.Foldable;
+import haxe.functional.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.List;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 class ListTestCase extends TestCase {
     public function testSizeGrowsWhenAddingUniqueElements(): Void {

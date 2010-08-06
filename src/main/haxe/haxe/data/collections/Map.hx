@@ -19,14 +19,14 @@ package haxe.data.collections;
 import Prelude;
 import PreludeExtensions;
 
-import haxe.abstract.Foldable;
-import haxe.abstract.PartialFunction;
+import haxe.functional.Foldable;
+import haxe.functional.PartialFunction;
 import haxe.data.collections.Collection;
-import haxe.abstract.FoldableExtensions;
+import haxe.functional.FoldableExtensions;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
-using haxe.abstract.PartialFunctionExtensions;
+using haxe.functional.FoldableExtensions;
+using haxe.functional.PartialFunctionExtensions;
 
 /** A cross-platform, immutable map with support for arbitrary keys.
  * TODO: Use an array of lists to avoid unnecessary copying when adding/removing elements.

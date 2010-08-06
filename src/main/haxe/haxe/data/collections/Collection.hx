@@ -16,7 +16,7 @@
 */
 package haxe.data.collections;
 
-import haxe.abstract.Foldable;
+import haxe.functional.Foldable;
 
 /** A collection is a foldable data structure with additional methods to add 
  * and remove elements, determine the size of the collection, and evaluate 

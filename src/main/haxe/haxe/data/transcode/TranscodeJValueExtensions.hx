@@ -26,7 +26,7 @@ import haxe.text.json.JValue;
 
 using PreludeExtensions;
 using haxe.data.transcode.TranscodeJValueExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 using haxe.text.json.JValueExtensions;
 
 class ExtractorHelpers {

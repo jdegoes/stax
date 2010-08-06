@@ -18,12 +18,12 @@ package haxe.data.collections;
 
 import Prelude;
 
-import haxe.abstract.Foldable;
+import haxe.functional.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.Map;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 class MapTestCase extends TestCase {
     public function testSizeGrowsWhenAddingUniqueKeys(): Void {

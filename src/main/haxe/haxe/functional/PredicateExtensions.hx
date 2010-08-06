@@ -14,69 +14,58 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.abstract;
+package haxe.functional;
 
 import Prelude;
-import PreludeExtensions;
+
+import haxe.functional.Predicate;
 
 using PreludeExtensions;
 
-typedef Predicate<A> = Predicate1<A>
-
-typedef Predicate1<A>             = Function<A, Bool>
-typedef Predicate2<A, B>          = Function2<A, B, Bool>
-typedef Predicate3<A, B, C>       = Function3<A, B, C, Bool>
-typedef Predicate4<A, B, C, D>    = Function4<A, B, C, D, Bool>
-typedef Predicate5<A, B, C, D, E> = Function5<A, B, C, D, E, Bool>
-
-class P {
-  public static function isGreaterThan(ref: Float): Predicate<Float> {
+class Predicate1Extensions {
+  public static function and<T>(p1: Predicate<T>, p2: Predicate<T>): Predicate<T> {
     return function(value) {
-      return value > ref;
+      return p1(value) && p2(value);
     }
   }
   
-  public static function isLessThan(ref: Float): Predicate<Float> {
+  public static function andAll<T>(p1: Predicate<T>, ps: Iterable<Predicate<T>>): Predicate<T> {
     return function(value) {
-      return value < ref;
+      var result = p1(value);
+      
+      for (p in ps) {
+        if (!result) break;
+        
+        result = result && p(value);
+      }
+      
+      return result;
     }
   }
   
-  public static function isGreaterThanInt(ref: Int): Predicate<Int> {
+  public static function or<T>(p1: Predicate<T>, p2: Predicate<T>): Predicate<T> {
     return function(value) {
-      return value > ref;
+      return p1(value) || p2(value);
     }
   }
   
-  public static function isLessThanInt(ref: Int): Predicate<Int> {
+  public static function orAny<T>(p1: Predicate<T>, ps: Iterable<Predicate<T>>): Predicate<T> {
     return function(value) {
-      return value < ref;
+      var result = p1(value);
+      
+      for (p in ps) {
+        if (result) break;
+        
+        result = result || p(value);
+      }
+      
+      return result;
     }
   }
   
-  public static function isEqualTo<T>(ref: T, ?equal: Equal<T>): Predicate<T> {
-    if (equal == null) equal = DynamicExtensions.EqualT();
-    
+  public static function negate<T>(p: Predicate<T>): Predicate<T> {
     return function(value) {
-      return equal.equal(ref, value);
-    }
-  }
-  
-  public static function startsWith(s: String): Predicate<String> {
-    return function(value: String) {
-      return value.startsWith(s);
-    }
-  }
-  
-  public static function endsWith(s: String): Predicate<String> {
-    return function(value: String) {
-      return value.endsWith(s);
-    }
-  }
-  
-  public static function contains(s: String): Predicate<String> {
-    return function(value: String) {
-      return value.contains(s);
+      return !p(value);
     }
   }
 }

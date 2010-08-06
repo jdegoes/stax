@@ -27,7 +27,7 @@ import haxe.data.collections.MapTestCase;
 import haxe.data.collections.SetTestCase;
 import haxe.data.collections.ListTestCase;
 import haxe.data.transcode.JValueTestCase;
-import haxe.abstract.PartialFunctionTestCase;
+import haxe.functional.PartialFunctionTestCase;
 import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;

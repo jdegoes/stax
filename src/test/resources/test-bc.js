@@ -133,12 +133,12 @@ haxe.reactive.SignalBool.or = function(signals) {
 }
 haxe.reactive.SignalBool.prototype.__class__ = haxe.reactive.SignalBool;
 if(!haxe["abstract"]) haxe["abstract"] = {}
-haxe.abstract.Foldable = function() { }
-haxe.abstract.Foldable.__name__ = ["haxe","abstract","Foldable"];
-haxe.abstract.Foldable.prototype.append = null;
-haxe.abstract.Foldable.prototype.empty = null;
-haxe.abstract.Foldable.prototype.foldl = null;
-haxe.abstract.Foldable.prototype.__class__ = haxe.abstract.Foldable;
+haxe.functional.Foldable = function() { }
+haxe.functional.Foldable.__name__ = ["haxe","abstract","Foldable"];
+haxe.functional.Foldable.prototype.append = null;
+haxe.functional.Foldable.prototype.empty = null;
+haxe.functional.Foldable.prototype.foldl = null;
+haxe.functional.Foldable.prototype.__class__ = haxe.functional.Foldable;
 if(!haxe.data) haxe.data = {}
 if(!haxe.data.collections) haxe.data.collections = {}
 haxe.data.collections.Collection = function() { }
@@ -150,7 +150,7 @@ haxe.data.collections.Collection.prototype.remove = null;
 haxe.data.collections.Collection.prototype.removeAll = null;
 haxe.data.collections.Collection.prototype.size = null;
 haxe.data.collections.Collection.prototype.__class__ = haxe.data.collections.Collection;
-haxe.data.collections.Collection.__interfaces__ = [haxe.abstract.Foldable];
+haxe.data.collections.Collection.__interfaces__ = [haxe.functional.Foldable];
 haxe.data.collections.List = function(equal) { if( equal === $_ ) return; {
 	this.equal = (equal == null?DynamicExtensions.EqualT():equal);
 }}
@@ -171,7 +171,7 @@ haxe.data.collections.List.EqualT = function(equal) {
 }
 haxe.data.collections.List.ShowT = function(show) {
 	return ShowTypeclass.create({ show : function(v) {
-		return "List" + IterableExtensions.toString(haxe.abstract.FoldableExtensions.elements(v),show.show);
+		return "List" + IterableExtensions.toString(haxe.functional.FoldableExtensions.elements(v),show.show);
 	}});
 }
 haxe.data.collections.List.HasherT = function(hasher) {
@@ -294,7 +294,7 @@ haxe.data.collections.List.prototype.foldr = function(z,f) {
 	return acc;
 }
 haxe.data.collections.List.prototype.gaps = function(f,equal) {
-	return haxe.abstract.FoldableExtensions.flatMapTo(this.zip(this.drop(1)),haxe.data.collections.List.nil(equal),function(tuple) {
+	return haxe.functional.FoldableExtensions.flatMapTo(this.zip(this.drop(1)),haxe.data.collections.List.nil(equal),function(tuple) {
 		return f(tuple._1,tuple._2);
 	});
 }
@@ -319,7 +319,7 @@ haxe.data.collections.List.prototype.getTail = function() {
 haxe.data.collections.List.prototype.head = null;
 haxe.data.collections.List.prototype.headOption = null;
 haxe.data.collections.List.prototype.iterator = function() {
-	return haxe.abstract.FoldableExtensions.iterator(this);
+	return haxe.functional.FoldableExtensions.iterator(this);
 }
 haxe.data.collections.List.prototype.last = null;
 haxe.data.collections.List.prototype.lastOption = null;
@@ -1726,61 +1726,61 @@ Reflect.makeVarArgs = function(f) {
 	}
 }
 Reflect.prototype.__class__ = Reflect;
-haxe.abstract.PartialFunction1 = function() { }
-haxe.abstract.PartialFunction1.__name__ = ["haxe","abstract","PartialFunction1"];
-haxe.abstract.PartialFunction1.prototype.call = null;
-haxe.abstract.PartialFunction1.prototype.isDefinedAt = null;
-haxe.abstract.PartialFunction1.prototype.orAlways = null;
-haxe.abstract.PartialFunction1.prototype.orAlwaysC = null;
-haxe.abstract.PartialFunction1.prototype.orElse = null;
-haxe.abstract.PartialFunction1.prototype.toFunction = null;
-haxe.abstract.PartialFunction1.prototype.__class__ = haxe.abstract.PartialFunction1;
-haxe.abstract.PartialFunction2 = function() { }
-haxe.abstract.PartialFunction2.__name__ = ["haxe","abstract","PartialFunction2"];
-haxe.abstract.PartialFunction2.prototype.call = null;
-haxe.abstract.PartialFunction2.prototype.isDefinedAt = null;
-haxe.abstract.PartialFunction2.prototype.orAlways = null;
-haxe.abstract.PartialFunction2.prototype.orAlwaysC = null;
-haxe.abstract.PartialFunction2.prototype.orElse = null;
-haxe.abstract.PartialFunction2.prototype.toFunction = null;
-haxe.abstract.PartialFunction2.prototype.__class__ = haxe.abstract.PartialFunction2;
-haxe.abstract.PartialFunction3 = function() { }
-haxe.abstract.PartialFunction3.__name__ = ["haxe","abstract","PartialFunction3"];
-haxe.abstract.PartialFunction3.prototype.call = null;
-haxe.abstract.PartialFunction3.prototype.isDefinedAt = null;
-haxe.abstract.PartialFunction3.prototype.orAlways = null;
-haxe.abstract.PartialFunction3.prototype.orAlwaysC = null;
-haxe.abstract.PartialFunction3.prototype.orElse = null;
-haxe.abstract.PartialFunction3.prototype.toFunction = null;
-haxe.abstract.PartialFunction3.prototype.__class__ = haxe.abstract.PartialFunction3;
-haxe.abstract.PartialFunction4 = function() { }
-haxe.abstract.PartialFunction4.__name__ = ["haxe","abstract","PartialFunction4"];
-haxe.abstract.PartialFunction4.prototype.call = null;
-haxe.abstract.PartialFunction4.prototype.isDefinedAt = null;
-haxe.abstract.PartialFunction4.prototype.orAlways = null;
-haxe.abstract.PartialFunction4.prototype.orAlwaysC = null;
-haxe.abstract.PartialFunction4.prototype.orElse = null;
-haxe.abstract.PartialFunction4.prototype.toFunction = null;
-haxe.abstract.PartialFunction4.prototype.__class__ = haxe.abstract.PartialFunction4;
-haxe.abstract.PartialFunction5 = function() { }
-haxe.abstract.PartialFunction5.__name__ = ["haxe","abstract","PartialFunction5"];
-haxe.abstract.PartialFunction5.prototype.call = null;
-haxe.abstract.PartialFunction5.prototype.isDefinedAt = null;
-haxe.abstract.PartialFunction5.prototype.orAlways = null;
-haxe.abstract.PartialFunction5.prototype.orAlwaysC = null;
-haxe.abstract.PartialFunction5.prototype.orElse = null;
-haxe.abstract.PartialFunction5.prototype.toFunction = null;
-haxe.abstract.PartialFunction5.prototype.__class__ = haxe.abstract.PartialFunction5;
-if(!haxe.abstract._PartialFunction) haxe.abstract._PartialFunction = {}
-haxe.abstract._PartialFunction.PartialFunction1Impl = function(def) { if( def === $_ ) return; {
+haxe.functional.PartialFunction1 = function() { }
+haxe.functional.PartialFunction1.__name__ = ["haxe","abstract","PartialFunction1"];
+haxe.functional.PartialFunction1.prototype.call = null;
+haxe.functional.PartialFunction1.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction1.prototype.orAlways = null;
+haxe.functional.PartialFunction1.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction1.prototype.orElse = null;
+haxe.functional.PartialFunction1.prototype.toFunction = null;
+haxe.functional.PartialFunction1.prototype.__class__ = haxe.functional.PartialFunction1;
+haxe.functional.PartialFunction2 = function() { }
+haxe.functional.PartialFunction2.__name__ = ["haxe","abstract","PartialFunction2"];
+haxe.functional.PartialFunction2.prototype.call = null;
+haxe.functional.PartialFunction2.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction2.prototype.orAlways = null;
+haxe.functional.PartialFunction2.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction2.prototype.orElse = null;
+haxe.functional.PartialFunction2.prototype.toFunction = null;
+haxe.functional.PartialFunction2.prototype.__class__ = haxe.functional.PartialFunction2;
+haxe.functional.PartialFunction3 = function() { }
+haxe.functional.PartialFunction3.__name__ = ["haxe","abstract","PartialFunction3"];
+haxe.functional.PartialFunction3.prototype.call = null;
+haxe.functional.PartialFunction3.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction3.prototype.orAlways = null;
+haxe.functional.PartialFunction3.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction3.prototype.orElse = null;
+haxe.functional.PartialFunction3.prototype.toFunction = null;
+haxe.functional.PartialFunction3.prototype.__class__ = haxe.functional.PartialFunction3;
+haxe.functional.PartialFunction4 = function() { }
+haxe.functional.PartialFunction4.__name__ = ["haxe","abstract","PartialFunction4"];
+haxe.functional.PartialFunction4.prototype.call = null;
+haxe.functional.PartialFunction4.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction4.prototype.orAlways = null;
+haxe.functional.PartialFunction4.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction4.prototype.orElse = null;
+haxe.functional.PartialFunction4.prototype.toFunction = null;
+haxe.functional.PartialFunction4.prototype.__class__ = haxe.functional.PartialFunction4;
+haxe.functional.PartialFunction5 = function() { }
+haxe.functional.PartialFunction5.__name__ = ["haxe","abstract","PartialFunction5"];
+haxe.functional.PartialFunction5.prototype.call = null;
+haxe.functional.PartialFunction5.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction5.prototype.orAlways = null;
+haxe.functional.PartialFunction5.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction5.prototype.orElse = null;
+haxe.functional.PartialFunction5.prototype.toFunction = null;
+haxe.functional.PartialFunction5.prototype.__class__ = haxe.functional.PartialFunction5;
+if(!haxe.functional._PartialFunction) haxe.functional._PartialFunction = {}
+haxe.functional._PartialFunction.PartialFunction1Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract._PartialFunction.PartialFunction1Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction1Impl"];
-haxe.abstract._PartialFunction.PartialFunction1Impl.create = function(def) {
-	return new haxe.abstract._PartialFunction.PartialFunction1Impl(def);
+haxe.functional._PartialFunction.PartialFunction1Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction1Impl"];
+haxe.functional._PartialFunction.PartialFunction1Impl.create = function(def) {
+	return new haxe.functional._PartialFunction.PartialFunction1Impl(def);
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype._def = null;
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.call = function(a) {
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype._def = null;
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.call = function(a) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1791,7 +1791,7 @@ haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.call = function(a)
 	}
 	return Stax.error("Function undefined at " + a);
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.isDefinedAt = function(a) {
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.isDefinedAt = function(a) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1802,44 +1802,44 @@ haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.isDefinedAt = func
 	}
 	return false;
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orAlways = function(f) {
-	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
 		return true;
 	}),f)]));
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orAlwaysC = function(z) {
-	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
 		return true;
 	}),function(a) {
 		return z();
 	})]));
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.orElse = function(that) {
-	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.toFunction = function() {
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a) {
 		return (self.isDefinedAt(a)?Option.Some(self.call(a)):Option.None);
 	}
 }
-haxe.abstract._PartialFunction.PartialFunction1Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction1Impl;
-haxe.abstract._PartialFunction.PartialFunction1Impl.__interfaces__ = [haxe.abstract.PartialFunction1];
-haxe.abstract.PartialFunction1ImplExtensions = function() { }
-haxe.abstract.PartialFunction1ImplExtensions.__name__ = ["haxe","abstract","PartialFunction1ImplExtensions"];
-haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
-	return haxe.abstract._PartialFunction.PartialFunction1Impl.create(def);
+haxe.functional._PartialFunction.PartialFunction1Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction1Impl;
+haxe.functional._PartialFunction.PartialFunction1Impl.__interfaces__ = [haxe.functional.PartialFunction1];
+haxe.functional.PartialFunction1ImplExtensions = function() { }
+haxe.functional.PartialFunction1ImplExtensions.__name__ = ["haxe","abstract","PartialFunction1ImplExtensions"];
+haxe.functional.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunction.PartialFunction1Impl.create(def);
 }
-haxe.abstract.PartialFunction1ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction1ImplExtensions;
-haxe.abstract._PartialFunction.PartialFunction2Impl = function(def) { if( def === $_ ) return; {
+haxe.functional.PartialFunction1ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction1ImplExtensions;
+haxe.functional._PartialFunction.PartialFunction2Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract._PartialFunction.PartialFunction2Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction2Impl"];
-haxe.abstract._PartialFunction.PartialFunction2Impl.create = function(def) {
-	return new haxe.abstract._PartialFunction.PartialFunction2Impl(def);
+haxe.functional._PartialFunction.PartialFunction2Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction2Impl"];
+haxe.functional._PartialFunction.PartialFunction2Impl.create = function(def) {
+	return new haxe.functional._PartialFunction.PartialFunction2Impl(def);
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype._def = null;
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.call = function(a,b) {
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype._def = null;
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.call = function(a,b) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1850,7 +1850,7 @@ haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.call = function(a,
 	}
 	return Stax.error(((("Function undefined at (" + a) + ", ") + b) + ")");
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.isDefinedAt = function(a,b) {
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.isDefinedAt = function(a,b) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1861,44 +1861,44 @@ haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.isDefinedAt = func
 	}
 	return false;
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orAlways = function(f) {
-	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
 		return true;
 	}),f)]));
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orAlwaysC = function(z) {
-	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
 		return true;
 	}),function(a,b) {
 		return z();
 	})]));
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.orElse = function(that) {
-	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.toFunction = function() {
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b) {
 		return (self.isDefinedAt(a,b)?Option.Some(self.call(a,b)):Option.None);
 	}
 }
-haxe.abstract._PartialFunction.PartialFunction2Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction2Impl;
-haxe.abstract._PartialFunction.PartialFunction2Impl.__interfaces__ = [haxe.abstract.PartialFunction2];
-haxe.abstract.PartialFunction2ImplExtensions = function() { }
-haxe.abstract.PartialFunction2ImplExtensions.__name__ = ["haxe","abstract","PartialFunction2ImplExtensions"];
-haxe.abstract.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
-	return haxe.abstract._PartialFunction.PartialFunction2Impl.create(def);
+haxe.functional._PartialFunction.PartialFunction2Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction2Impl;
+haxe.functional._PartialFunction.PartialFunction2Impl.__interfaces__ = [haxe.functional.PartialFunction2];
+haxe.functional.PartialFunction2ImplExtensions = function() { }
+haxe.functional.PartialFunction2ImplExtensions.__name__ = ["haxe","abstract","PartialFunction2ImplExtensions"];
+haxe.functional.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunction.PartialFunction2Impl.create(def);
 }
-haxe.abstract.PartialFunction2ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction2ImplExtensions;
-haxe.abstract._PartialFunction.PartialFunction3Impl = function(def) { if( def === $_ ) return; {
+haxe.functional.PartialFunction2ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction2ImplExtensions;
+haxe.functional._PartialFunction.PartialFunction3Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract._PartialFunction.PartialFunction3Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction3Impl"];
-haxe.abstract._PartialFunction.PartialFunction3Impl.create = function(def) {
-	return new haxe.abstract._PartialFunction.PartialFunction3Impl(def);
+haxe.functional._PartialFunction.PartialFunction3Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction3Impl"];
+haxe.functional._PartialFunction.PartialFunction3Impl.create = function(def) {
+	return new haxe.functional._PartialFunction.PartialFunction3Impl(def);
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype._def = null;
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.call = function(a,b,c) {
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype._def = null;
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.call = function(a,b,c) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1909,7 +1909,7 @@ haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.call = function(a,
 	}
 	return Stax.error(((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ")");
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.isDefinedAt = function(a,b,c) {
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.isDefinedAt = function(a,b,c) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1920,44 +1920,44 @@ haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.isDefinedAt = func
 	}
 	return false;
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orAlways = function(f) {
-	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
 		return true;
 	}),f)]));
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orAlwaysC = function(z) {
-	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
 		return true;
 	}),function(a,b,c) {
 		return z();
 	})]));
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.orElse = function(that) {
-	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.toFunction = function() {
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c) {
 		return (self.isDefinedAt(a,b,c)?Option.Some(self.call(a,b,c)):Option.None);
 	}
 }
-haxe.abstract._PartialFunction.PartialFunction3Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction3Impl;
-haxe.abstract._PartialFunction.PartialFunction3Impl.__interfaces__ = [haxe.abstract.PartialFunction3];
-haxe.abstract.PartialFunction3ImplExtensions = function() { }
-haxe.abstract.PartialFunction3ImplExtensions.__name__ = ["haxe","abstract","PartialFunction3ImplExtensions"];
-haxe.abstract.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
-	return haxe.abstract._PartialFunction.PartialFunction3Impl.create(def);
+haxe.functional._PartialFunction.PartialFunction3Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction3Impl;
+haxe.functional._PartialFunction.PartialFunction3Impl.__interfaces__ = [haxe.functional.PartialFunction3];
+haxe.functional.PartialFunction3ImplExtensions = function() { }
+haxe.functional.PartialFunction3ImplExtensions.__name__ = ["haxe","abstract","PartialFunction3ImplExtensions"];
+haxe.functional.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunction.PartialFunction3Impl.create(def);
 }
-haxe.abstract.PartialFunction3ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction3ImplExtensions;
-haxe.abstract._PartialFunction.PartialFunction4Impl = function(def) { if( def === $_ ) return; {
+haxe.functional.PartialFunction3ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction3ImplExtensions;
+haxe.functional._PartialFunction.PartialFunction4Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract._PartialFunction.PartialFunction4Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction4Impl"];
-haxe.abstract._PartialFunction.PartialFunction4Impl.create = function(def) {
-	return new haxe.abstract._PartialFunction.PartialFunction4Impl(def);
+haxe.functional._PartialFunction.PartialFunction4Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction4Impl"];
+haxe.functional._PartialFunction.PartialFunction4Impl.create = function(def) {
+	return new haxe.functional._PartialFunction.PartialFunction4Impl(def);
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype._def = null;
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.call = function(a,b,c,d) {
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype._def = null;
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.call = function(a,b,c,d) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1968,7 +1968,7 @@ haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.call = function(a,
 	}
 	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.isDefinedAt = function(a,b,c,d) {
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.isDefinedAt = function(a,b,c,d) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -1979,44 +1979,44 @@ haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.isDefinedAt = func
 	}
 	return false;
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orAlways = function(f) {
-	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
 		return true;
 	}),f)]));
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orAlwaysC = function(z) {
-	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
 		return true;
 	}),function(a,b,c,d) {
 		return z();
 	})]));
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.orElse = function(that) {
-	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.toFunction = function() {
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c,d) {
 		return (self.isDefinedAt(a,b,c,d)?Option.Some(self.call(a,b,c,d)):Option.None);
 	}
 }
-haxe.abstract._PartialFunction.PartialFunction4Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction4Impl;
-haxe.abstract._PartialFunction.PartialFunction4Impl.__interfaces__ = [haxe.abstract.PartialFunction4];
-haxe.abstract.PartialFunction4ImplExtensions = function() { }
-haxe.abstract.PartialFunction4ImplExtensions.__name__ = ["haxe","abstract","PartialFunction4ImplExtensions"];
-haxe.abstract.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
-	return haxe.abstract._PartialFunction.PartialFunction4Impl.create(def);
+haxe.functional._PartialFunction.PartialFunction4Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction4Impl;
+haxe.functional._PartialFunction.PartialFunction4Impl.__interfaces__ = [haxe.functional.PartialFunction4];
+haxe.functional.PartialFunction4ImplExtensions = function() { }
+haxe.functional.PartialFunction4ImplExtensions.__name__ = ["haxe","abstract","PartialFunction4ImplExtensions"];
+haxe.functional.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunction.PartialFunction4Impl.create(def);
 }
-haxe.abstract.PartialFunction4ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction4ImplExtensions;
-haxe.abstract._PartialFunction.PartialFunction5Impl = function(def) { if( def === $_ ) return; {
+haxe.functional.PartialFunction4ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction4ImplExtensions;
+haxe.functional._PartialFunction.PartialFunction5Impl = function(def) { if( def === $_ ) return; {
 	this._def = def;
 }}
-haxe.abstract._PartialFunction.PartialFunction5Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction5Impl"];
-haxe.abstract._PartialFunction.PartialFunction5Impl.create = function(def) {
-	return new haxe.abstract._PartialFunction.PartialFunction5Impl(def);
+haxe.functional._PartialFunction.PartialFunction5Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction5Impl"];
+haxe.functional._PartialFunction.PartialFunction5Impl.create = function(def) {
+	return new haxe.functional._PartialFunction.PartialFunction5Impl(def);
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype._def = null;
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.call = function(a,b,c,d,e) {
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype._def = null;
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.call = function(a,b,c,d,e) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2027,7 +2027,7 @@ haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.call = function(a,
 	}
 	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.isDefinedAt = function(a,b,c,d,e) {
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.isDefinedAt = function(a,b,c,d,e) {
 	{
 		var _g = 0, _g1 = this._def;
 		while(_g < _g1.length) {
@@ -2038,35 +2038,35 @@ haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.isDefinedAt = func
 	}
 	return false;
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orAlways = function(f) {
-	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
 		return true;
 	}),f)]));
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orAlwaysC = function(z) {
-	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
 		return true;
 	}),function(a,b,c,d,e) {
 		return z();
 	})]));
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.orElse = function(that) {
-	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.toFunction = function() {
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.toFunction = function() {
 	var self = this;
 	return function(a,b,c,d,e) {
 		return (self.isDefinedAt(a,b,c,d,e)?Option.Some(self.call(a,b,c,d,e)):Option.None);
 	}
 }
-haxe.abstract._PartialFunction.PartialFunction5Impl.prototype.__class__ = haxe.abstract._PartialFunction.PartialFunction5Impl;
-haxe.abstract._PartialFunction.PartialFunction5Impl.__interfaces__ = [haxe.abstract.PartialFunction5];
-haxe.abstract.PartialFunction5ImplExtensions = function() { }
-haxe.abstract.PartialFunction5ImplExtensions.__name__ = ["haxe","abstract","PartialFunction5ImplExtensions"];
-haxe.abstract.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
-	return haxe.abstract._PartialFunction.PartialFunction5Impl.create(def);
+haxe.functional._PartialFunction.PartialFunction5Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction5Impl;
+haxe.functional._PartialFunction.PartialFunction5Impl.__interfaces__ = [haxe.functional.PartialFunction5];
+haxe.functional.PartialFunction5ImplExtensions = function() { }
+haxe.functional.PartialFunction5ImplExtensions.__name__ = ["haxe","abstract","PartialFunction5ImplExtensions"];
+haxe.functional.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunction.PartialFunction5Impl.create(def);
 }
-haxe.abstract.PartialFunction5ImplExtensions.prototype.__class__ = haxe.abstract.PartialFunction5ImplExtensions;
+haxe.functional.PartialFunction5ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction5ImplExtensions;
 haxe.test.ui.common.ResultStats = function(p) { if( p === $_ ) return; {
 	this.assertations = 0;
 	this.successes = 0;
@@ -4871,7 +4871,7 @@ haxe.test.Must.equal = function(expected,equal) {
 }
 haxe.test.Must.contain = function(c,element) {
 	return function(value) {
-		return (!c.contains(element)?Either.Left(((("![" + haxe.abstract.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"):Either.Right(((("[" + haxe.abstract.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"));
+		return (!c.contains(element)?Either.Left(((("![" + haxe.functional.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"):Either.Right(((("[" + haxe.functional.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"));
 	}
 }
 haxe.test.Must.beNull = function() {
@@ -5010,50 +5010,50 @@ haxe.test.TestFixture.prototype.setup = null;
 haxe.test.TestFixture.prototype.target = null;
 haxe.test.TestFixture.prototype.teardown = null;
 haxe.test.TestFixture.prototype.__class__ = haxe.test.TestFixture;
-haxe.abstract.P = function() { }
-haxe.abstract.P.__name__ = ["haxe","abstract","P"];
-haxe.abstract.P.isGreaterThan = function(ref) {
+haxe.functional.P = function() { }
+haxe.functional.P.__name__ = ["haxe","abstract","P"];
+haxe.functional.P.isGreaterThan = function(ref) {
 	return function(value) {
 		return value > ref;
 	}
 }
-haxe.abstract.P.isLessThan = function(ref) {
+haxe.functional.P.isLessThan = function(ref) {
 	return function(value) {
 		return value < ref;
 	}
 }
-haxe.abstract.P.isGreaterThanInt = function(ref) {
+haxe.functional.P.isGreaterThanInt = function(ref) {
 	return function(value) {
 		return value > ref;
 	}
 }
-haxe.abstract.P.isLessThanInt = function(ref) {
+haxe.functional.P.isLessThanInt = function(ref) {
 	return function(value) {
 		return value < ref;
 	}
 }
-haxe.abstract.P.isEqualTo = function(ref,equal) {
+haxe.functional.P.isEqualTo = function(ref,equal) {
 	if(equal == null) equal = DynamicExtensions.EqualT();
 	return function(value) {
 		return equal.equal(ref,value);
 	}
 }
-haxe.abstract.P.startsWith = function(s) {
+haxe.functional.P.startsWith = function(s) {
 	return function(value) {
 		return StringExtensions.startsWith(value,s);
 	}
 }
-haxe.abstract.P.endsWith = function(s) {
+haxe.functional.P.endsWith = function(s) {
 	return function(value) {
 		return StringExtensions.endsWith(value,s);
 	}
 }
-haxe.abstract.P.contains = function(s) {
+haxe.functional.P.contains = function(s) {
 	return function(value) {
 		return StringExtensions.contains(value,s);
 	}
 }
-haxe.abstract.P.prototype.__class__ = haxe.abstract.P;
+haxe.functional.P.prototype.__class__ = haxe.functional.P;
 haxe.reactive.External = function() { }
 haxe.reactive.External.__name__ = ["haxe","reactive","External"];
 haxe.reactive.External.setTimeout = function(f,time) {
@@ -7136,14 +7136,14 @@ EReg.prototype.split = function(s) {
 	return s.replace(this.r,d).split(d);
 }
 EReg.prototype.__class__ = EReg;
-haxe.abstract.Predicate1Extensions = function() { }
-haxe.abstract.Predicate1Extensions.__name__ = ["haxe","abstract","Predicate1Extensions"];
-haxe.abstract.Predicate1Extensions.and = function(p1,p2) {
+haxe.functional.Predicate1Extensions = function() { }
+haxe.functional.Predicate1Extensions.__name__ = ["haxe","abstract","Predicate1Extensions"];
+haxe.functional.Predicate1Extensions.and = function(p1,p2) {
 	return function(value) {
 		return p1(value) && p2(value);
 	}
 }
-haxe.abstract.Predicate1Extensions.andAll = function(p1,ps) {
+haxe.functional.Predicate1Extensions.andAll = function(p1,ps) {
 	return function(value) {
 		var result = p1(value);
 		{ var $it59 = ps.iterator();
@@ -7156,12 +7156,12 @@ haxe.abstract.Predicate1Extensions.andAll = function(p1,ps) {
 		return result;
 	}
 }
-haxe.abstract.Predicate1Extensions.or = function(p1,p2) {
+haxe.functional.Predicate1Extensions.or = function(p1,p2) {
 	return function(value) {
 		return p1(value) || p2(value);
 	}
 }
-haxe.abstract.Predicate1Extensions.orAny = function(p1,ps) {
+haxe.functional.Predicate1Extensions.orAny = function(p1,ps) {
 	return function(value) {
 		var result = p1(value);
 		{ var $it60 = ps.iterator();
@@ -7174,12 +7174,12 @@ haxe.abstract.Predicate1Extensions.orAny = function(p1,ps) {
 		return result;
 	}
 }
-haxe.abstract.Predicate1Extensions.negate = function(p) {
+haxe.functional.Predicate1Extensions.negate = function(p) {
 	return function(value) {
 		return !p(value);
 	}
 }
-haxe.abstract.Predicate1Extensions.prototype.__class__ = haxe.abstract.Predicate1Extensions;
+haxe.functional.Predicate1Extensions.prototype.__class__ = haxe.functional.Predicate1Extensions;
 haxe.test.ui.common.ClassResult = function(className,setupName,teardownName) { if( className === $_ ) return; {
 	this.fixtures = new Hash();
 	this.className = className;
@@ -7301,10 +7301,10 @@ haxe.reactive.Signals.sampleS = function(time) {
 	return haxe.reactive.Streams.timerS(time).startsWith(Std["int"](haxe.reactive.External.now()));
 }
 haxe.reactive.Signals.prototype.__class__ = haxe.reactive.Signals;
-haxe.abstract.FoldableExtensions = function() { }
-haxe.abstract.FoldableExtensions.__name__ = ["haxe","abstract","FoldableExtensions"];
-haxe.abstract.FoldableExtensions.foldr = function(foldable,z,f) {
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions = function() { }
+haxe.functional.FoldableExtensions.__name__ = ["haxe","abstract","FoldableExtensions"];
+haxe.functional.FoldableExtensions.foldr = function(foldable,z,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
 	var acc = z;
 	{
@@ -7317,17 +7317,17 @@ haxe.abstract.FoldableExtensions.foldr = function(foldable,z,f) {
 	}
 	return acc;
 }
-haxe.abstract.FoldableExtensions.filter = function(foldable,f) {
+haxe.functional.FoldableExtensions.filter = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return (f(b)?foldable.append(a,b):a);
 	});
 }
-haxe.abstract.FoldableExtensions.partition = function(foldable,f) {
+haxe.functional.FoldableExtensions.partition = function(foldable,f) {
 	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
 		return (f(b)?Tuple2.create(foldable.append(a._1,b),a._2):Tuple2.create(a._1,foldable.append(a._2,b)));
 	});
 }
-haxe.abstract.FoldableExtensions.partitionWhile = function(foldable,f) {
+haxe.functional.FoldableExtensions.partitionWhile = function(foldable,f) {
 	var partitioning = true;
 	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
 		return (partitioning?(f(b)?Tuple2.create(foldable.append(a._1,b),a._2):(function($this) {
@@ -7338,17 +7338,17 @@ haxe.abstract.FoldableExtensions.partitionWhile = function(foldable,f) {
 		}(this))):Tuple2.create(a._1,foldable.append(a._2,b)));
 	});
 }
-haxe.abstract.FoldableExtensions.map = function(foldable,f) {
+haxe.functional.FoldableExtensions.map = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return foldable.append(a,f(b));
 	});
 }
-haxe.abstract.FoldableExtensions.mapTo = function(src,dest,f) {
+haxe.functional.FoldableExtensions.mapTo = function(src,dest,f) {
 	return src.foldl(dest,function(a,b) {
 		return dest.append(a,f(b));
 	});
 }
-haxe.abstract.FoldableExtensions.flatMap = function(foldable,f) {
+haxe.functional.FoldableExtensions.flatMap = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		var fb = f(b);
 		return fb.foldl(a,function(a1,b1) {
@@ -7356,19 +7356,19 @@ haxe.abstract.FoldableExtensions.flatMap = function(foldable,f) {
 		});
 	});
 }
-haxe.abstract.FoldableExtensions.flatMapTo = function(src,dest,f) {
+haxe.functional.FoldableExtensions.flatMapTo = function(src,dest,f) {
 	return src.foldl(dest,function(a,b) {
 		return f(b).foldl(a,function(a1,b1) {
 			return dest.append(a1,b1);
 		});
 	});
 }
-haxe.abstract.FoldableExtensions.take = function(foldable,n) {
+haxe.functional.FoldableExtensions.take = function(foldable,n) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return (n-- > 0?foldable.append(a,b):a);
 	});
 }
-haxe.abstract.FoldableExtensions.takeWhile = function(foldable,f) {
+haxe.functional.FoldableExtensions.takeWhile = function(foldable,f) {
 	var taking = true;
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return (taking?(f(b)?foldable.append(a,b):(function($this) {
@@ -7379,12 +7379,12 @@ haxe.abstract.FoldableExtensions.takeWhile = function(foldable,f) {
 		}(this))):a);
 	});
 }
-haxe.abstract.FoldableExtensions.drop = function(foldable,n) {
+haxe.functional.FoldableExtensions.drop = function(foldable,n) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return (n-- > 0?a:foldable.append(a,b));
 	});
 }
-haxe.abstract.FoldableExtensions.dropWhile = function(foldable,f) {
+haxe.functional.FoldableExtensions.dropWhile = function(foldable,f) {
 	var dropping = true;
 	return foldable.foldl(foldable.empty(),function(a,b) {
 		return (dropping?(f(b)?a:(function($this) {
@@ -7395,12 +7395,12 @@ haxe.abstract.FoldableExtensions.dropWhile = function(foldable,f) {
 		}(this))):foldable.append(a,b));
 	});
 }
-haxe.abstract.FoldableExtensions.count = function(foldable,f) {
+haxe.functional.FoldableExtensions.count = function(foldable,f) {
 	return foldable.foldl(0,function(a,b) {
 		return a + ((f(b)?1:0));
 	});
 }
-haxe.abstract.FoldableExtensions.countWhile = function(foldable,f) {
+haxe.functional.FoldableExtensions.countWhile = function(foldable,f) {
 	var counting = true;
 	return foldable.foldl(0,function(a,b) {
 		return (!counting?a:(f(b)?a + 1:(function($this) {
@@ -7411,8 +7411,8 @@ haxe.abstract.FoldableExtensions.countWhile = function(foldable,f) {
 		}(this))));
 	});
 }
-haxe.abstract.FoldableExtensions.scanl = function(foldable,init,f) {
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	var accum = init;
 	var result = [init];
 	{
@@ -7425,8 +7425,8 @@ haxe.abstract.FoldableExtensions.scanl = function(foldable,init,f) {
 	}
 	return result;
 }
-haxe.abstract.FoldableExtensions.scanr = function(foldable,init,f) {
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions.scanr = function(foldable,init,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
 	var accum = init;
 	var result = [init];
@@ -7440,8 +7440,8 @@ haxe.abstract.FoldableExtensions.scanr = function(foldable,init,f) {
 	}
 	return result;
 }
-haxe.abstract.FoldableExtensions.scanl1 = function(foldable,f) {
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions.scanl1 = function(foldable,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	var iterator = a.iterator();
 	var accum = null;
 	var result = [];
@@ -7455,8 +7455,8 @@ haxe.abstract.FoldableExtensions.scanl1 = function(foldable,f) {
 	}
 	return result;
 }
-haxe.abstract.FoldableExtensions.scanr1 = function(foldable,f) {
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
 	var iterator = a.iterator();
 	var accum = null;
@@ -7471,10 +7471,10 @@ haxe.abstract.FoldableExtensions.scanr1 = function(foldable,f) {
 	}
 	return result;
 }
-haxe.abstract.FoldableExtensions.elements = function(foldable) {
-	return haxe.abstract.FoldableExtensions.toArray(foldable);
+haxe.functional.FoldableExtensions.elements = function(foldable) {
+	return haxe.functional.FoldableExtensions.toArray(foldable);
 }
-haxe.abstract.FoldableExtensions.toArray = function(foldable) {
+haxe.functional.FoldableExtensions.toArray = function(foldable) {
 	var es = [];
 	foldable.foldl(foldable.empty(),function(a,b) {
 		es.push(b);
@@ -7482,15 +7482,15 @@ haxe.abstract.FoldableExtensions.toArray = function(foldable) {
 	});
 	return es;
 }
-haxe.abstract.FoldableExtensions.concat = function(foldable,rest) {
+haxe.functional.FoldableExtensions.concat = function(foldable,rest) {
 	return rest.foldl(foldable,function(a,b) {
 		return foldable.append(a,b);
 	});
 }
-haxe.abstract.FoldableExtensions.append = function(foldable,e) {
+haxe.functional.FoldableExtensions.append = function(foldable,e) {
 	return foldable.append(foldable,e);
 }
-haxe.abstract.FoldableExtensions.appendAll = function(foldable,i) {
+haxe.functional.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
 	{ var $it62 = i.iterator();
 	while( $it62.hasNext() ) { var e = $it62.next();
@@ -7500,20 +7500,20 @@ haxe.abstract.FoldableExtensions.appendAll = function(foldable,i) {
 	}}
 	return acc;
 }
-haxe.abstract.FoldableExtensions.iterator = function(foldable) {
-	return haxe.abstract.FoldableExtensions.elements(foldable).iterator();
+haxe.functional.FoldableExtensions.iterator = function(foldable) {
+	return haxe.functional.FoldableExtensions.elements(foldable).iterator();
 }
-haxe.abstract.FoldableExtensions.isEmpty = function(foldable) {
-	return !haxe.abstract.FoldableExtensions.iterator(foldable).hasNext();
+haxe.functional.FoldableExtensions.isEmpty = function(foldable) {
+	return !haxe.functional.FoldableExtensions.iterator(foldable).hasNext();
 }
-haxe.abstract.FoldableExtensions.foreach = function(foldable,f) {
+haxe.functional.FoldableExtensions.foreach = function(foldable,f) {
 	foldable.foldl(1,function(a,b) {
 		f(b);
 		return a;
 	});
 	return foldable;
 }
-haxe.abstract.FoldableExtensions.find = function(foldable,f) {
+haxe.functional.FoldableExtensions.find = function(foldable,f) {
 	return foldable.foldl(Option.None,function(a,b) {
 		return (function($this) {
 			var $r;
@@ -7531,7 +7531,7 @@ haxe.abstract.FoldableExtensions.find = function(foldable,f) {
 		}(this));
 	});
 }
-haxe.abstract.FoldableExtensions.forAll = function(foldable,f) {
+haxe.functional.FoldableExtensions.forAll = function(foldable,f) {
 	return foldable.foldl(true,function(a,b) {
 		return (function($this) {
 			var $r;
@@ -7550,7 +7550,7 @@ haxe.abstract.FoldableExtensions.forAll = function(foldable,f) {
 		}(this));
 	});
 }
-haxe.abstract.FoldableExtensions.forAny = function(foldable,f) {
+haxe.functional.FoldableExtensions.forAny = function(foldable,f) {
 	return foldable.foldl(true,function(a,b) {
 		return (function($this) {
 			var $r;
@@ -7569,10 +7569,10 @@ haxe.abstract.FoldableExtensions.forAny = function(foldable,f) {
 		}(this));
 	});
 }
-haxe.abstract.FoldableExtensions.exists = function(foldable,f) {
+haxe.functional.FoldableExtensions.exists = function(foldable,f) {
 	return (function($this) {
 		var $r;
-		var $e = (haxe.abstract.FoldableExtensions.find(foldable,f));
+		var $e = (haxe.functional.FoldableExtensions.find(foldable,f));
 		switch( $e[1] ) {
 		case 1:
 		var v = $e[2];
@@ -7590,9 +7590,9 @@ haxe.abstract.FoldableExtensions.exists = function(foldable,f) {
 		return $r;
 	}(this));
 }
-haxe.abstract.FoldableExtensions.existsP = function(foldable,ref,f) {
+haxe.functional.FoldableExtensions.existsP = function(foldable,ref,f) {
 	var result = false;
-	var a = haxe.abstract.FoldableExtensions.toArray(foldable);
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	{
 		var _g = 0;
 		while(_g < a.length) {
@@ -7603,34 +7603,34 @@ haxe.abstract.FoldableExtensions.existsP = function(foldable,ref,f) {
 	}
 	return result;
 }
-haxe.abstract.FoldableExtensions.member = function(foldable,member) {
-	return haxe.abstract.FoldableExtensions.exists(foldable,function(e) {
+haxe.functional.FoldableExtensions.member = function(foldable,member) {
+	return haxe.functional.FoldableExtensions.exists(foldable,function(e) {
 		return e == member;
 	});
 }
-haxe.abstract.FoldableExtensions.nubBy = function(foldable,f) {
+haxe.functional.FoldableExtensions.nubBy = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (haxe.abstract.FoldableExtensions.existsP(a,b,f)?a:foldable.append(a,b));
+		return (haxe.functional.FoldableExtensions.existsP(a,b,f)?a:foldable.append(a,b));
 	});
 }
-haxe.abstract.FoldableExtensions.nub = function(foldable) {
-	return haxe.abstract.FoldableExtensions.nubBy(foldable,function(a,b) {
+haxe.functional.FoldableExtensions.nub = function(foldable) {
+	return haxe.functional.FoldableExtensions.nubBy(foldable,function(a,b) {
 		return a == b;
 	});
 }
-haxe.abstract.FoldableExtensions.intersectBy = function(foldable1,foldable2,f) {
+haxe.functional.FoldableExtensions.intersectBy = function(foldable1,foldable2,f) {
 	return foldable1.foldl(foldable1.empty(),function(a,b) {
-		return (haxe.abstract.FoldableExtensions.existsP(foldable2,b,f)?haxe.abstract.FoldableExtensions.append(a,b):a);
+		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,f)?haxe.functional.FoldableExtensions.append(a,b):a);
 	});
 }
-haxe.abstract.FoldableExtensions.intersect = function(foldable1,foldable2) {
+haxe.functional.FoldableExtensions.intersect = function(foldable1,foldable2) {
 	return foldable1.foldl(foldable1.empty(),function(a,b) {
-		return (haxe.abstract.FoldableExtensions.existsP(foldable2,b,function(a1,b1) {
+		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,function(a1,b1) {
 			return a1 == b1;
-		})?haxe.abstract.FoldableExtensions.append(a,b):a);
+		})?haxe.functional.FoldableExtensions.append(a,b):a);
 	});
 }
-haxe.abstract.FoldableExtensions.mkString = function(foldable,sep,show) {
+haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
 	if(sep == null) sep = ", ";
 	show = (show == null?DynamicExtensions.ShowT().show:show);
 	var isFirst = true;
@@ -7644,7 +7644,7 @@ haxe.abstract.FoldableExtensions.mkString = function(foldable,sep,show) {
 		return (a + prefix) + show(b);
 	});
 }
-haxe.abstract.FoldableExtensions.prototype.__class__ = haxe.abstract.FoldableExtensions;
+haxe.functional.FoldableExtensions.prototype.__class__ = haxe.functional.FoldableExtensions;
 haxe.data.collections.Set = function(hasher,equal,map) { if( hasher === $_ ) return; {
 	this.hasher = hasher;
 	this.equal = equal;
@@ -7662,13 +7662,13 @@ haxe.data.collections.Set.OrderT = function(order) {
 }
 haxe.data.collections.Set.EqualT = function(equal) {
 	return EqualTypeclass.create({ equal : function(v1,v2) {
-		var all = haxe.abstract.FoldableExtensions.concat(v1,v2);
+		var all = haxe.functional.FoldableExtensions.concat(v1,v2);
 		return all.getSize() == v1.getSize() && all.getSize() == v2.getSize();
 	}});
 }
 haxe.data.collections.Set.ShowT = function(show) {
 	return ShowTypeclass.create({ show : function(v) {
-		return "Set" + IterableExtensions.toString(haxe.abstract.FoldableExtensions.elements(v),show.show);
+		return "Set" + IterableExtensions.toString(haxe.functional.FoldableExtensions.elements(v),show.show);
 	}});
 }
 haxe.data.collections.Set.HasherT = function(hasher) {
@@ -7728,7 +7728,7 @@ haxe.data.collections.Set.prototype.getSize = function() {
 }
 haxe.data.collections.Set.prototype.hasher = null;
 haxe.data.collections.Set.prototype.iterator = function() {
-	return haxe.abstract.FoldableExtensions.iterator(this);
+	return haxe.functional.FoldableExtensions.iterator(this);
 }
 haxe.data.collections.Set.prototype.remove = function(t) {
 	return this.copyWithMod(this._map.removeByKey(t));
@@ -7790,7 +7790,7 @@ haxe.test.Runner.prototype.add = function(test,prefix,pattern) {
 		return OptionExtensions.getOrElseC(OptionExtensions.orElseC(patternMatches(field),prefixMatches(field)),false);
 	}
 	var fieldIsMethod = (Function2Extensions.curry($closure(this,"isMethod")))(test);
-	var testMethods = ArrayExtensions.filter(Type.getInstanceFields(Type.getClass(test)),haxe.abstract.Predicate1Extensions.and(fieldIsTest,fieldIsMethod));
+	var testMethods = ArrayExtensions.filter(Type.getInstanceFields(Type.getClass(test)),haxe.functional.Predicate1Extensions.and(fieldIsTest,fieldIsMethod));
 	var getMethodByName = this.addBeforeAll(test,this.addAfterAll(test,[testMethods.length],(Function2Extensions.curry($closure(haxe.test.Runner,"findMethodByName")))(test)));
 	var methodFixtures = ArrayExtensions.map(testMethods,function(field) {
 		return new haxe.test.TestFixture(test,field,getMethodByName(field),"before","after");
@@ -8103,12 +8103,12 @@ haxe.reactive.SignalCollection = function(p) { if( p === $_ ) return; {
 haxe.reactive.SignalCollection.__name__ = ["haxe","reactive","SignalCollection"];
 haxe.reactive.SignalCollection.concatS = function(b1,b2) {
 	return b1.zip(b2).map(function(c) {
-		return haxe.abstract.FoldableExtensions.concat(c._1,c._2);
+		return haxe.functional.FoldableExtensions.concat(c._1,c._2);
 	});
 }
 haxe.reactive.SignalCollection.join = function(b,$char) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.mkString(c,$char);
+		return haxe.functional.FoldableExtensions.mkString(c,$char);
 	});
 }
 haxe.reactive.SignalCollection.size = function(b) {
@@ -8128,62 +8128,62 @@ haxe.reactive.SignalCollection.append = function(b,element) {
 }
 haxe.reactive.SignalCollection.count = function(b,predicate) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.count(c,predicate);
+		return haxe.functional.FoldableExtensions.count(c,predicate);
 	});
 }
 haxe.reactive.SignalCollection.all = function(b,tester) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.forAll(c,tester);
+		return haxe.functional.FoldableExtensions.forAll(c,tester);
 	});
 }
 haxe.reactive.SignalCollection.any = function(b,tester) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.forAny(c,tester);
+		return haxe.functional.FoldableExtensions.forAny(c,tester);
 	});
 }
 haxe.reactive.SignalCollection.forEach = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.foreach(c,f);
+		return haxe.functional.FoldableExtensions.foreach(c,f);
 	});
 }
 haxe.reactive.SignalCollection.each = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.foreach(c,f);
+		return haxe.functional.FoldableExtensions.foreach(c,f);
 	});
 }
 haxe.reactive.SignalCollection.map = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.map(c,f);
+		return haxe.functional.FoldableExtensions.map(c,f);
 	});
 }
 haxe.reactive.SignalCollection.mapTo = function(b,t,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.mapTo(c,t,f);
+		return haxe.functional.FoldableExtensions.mapTo(c,t,f);
 	});
 }
 haxe.reactive.SignalCollection.partition = function(b,filter) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.partition(c,filter);
+		return haxe.functional.FoldableExtensions.partition(c,filter);
 	});
 }
 haxe.reactive.SignalCollection.filter = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.filter(c,f);
+		return haxe.functional.FoldableExtensions.filter(c,f);
 	});
 }
 haxe.reactive.SignalCollection.flatMap = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.flatMap(c,f);
+		return haxe.functional.FoldableExtensions.flatMap(c,f);
 	});
 }
 haxe.reactive.SignalCollection.toArray = function(b) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.toArray(c);
+		return haxe.functional.FoldableExtensions.toArray(c);
 	});
 }
 haxe.reactive.SignalCollection.foldr = function(b,initial,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.foldr(c,initial,f);
+		return haxe.functional.FoldableExtensions.foldr(c,initial,f);
 	});
 }
 haxe.reactive.SignalCollection.foldl = function(b,initial,f) {
@@ -8193,62 +8193,62 @@ haxe.reactive.SignalCollection.foldl = function(b,initial,f) {
 }
 haxe.reactive.SignalCollection.scanl = function(b,initial,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.scanl(c,initial,f);
+		return haxe.functional.FoldableExtensions.scanl(c,initial,f);
 	});
 }
 haxe.reactive.SignalCollection.scanr = function(b,initial,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.scanr(c,initial,f);
+		return haxe.functional.FoldableExtensions.scanr(c,initial,f);
 	});
 }
 haxe.reactive.SignalCollection.scanrP = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.scanr1(c,f);
+		return haxe.functional.FoldableExtensions.scanr1(c,f);
 	});
 }
 haxe.reactive.SignalCollection.scanlP = function(b,f) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.scanl1(c,f);
+		return haxe.functional.FoldableExtensions.scanl1(c,f);
 	});
 }
 haxe.reactive.SignalCollection.member = function(b,element) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.member(c,element);
+		return haxe.functional.FoldableExtensions.member(c,element);
 	});
 }
 haxe.reactive.SignalCollection.exists = function(b,cmp) {
 	return b.map(function(v) {
-		return haxe.abstract.FoldableExtensions.exists(v,cmp);
+		return haxe.functional.FoldableExtensions.exists(v,cmp);
 	});
 }
 haxe.reactive.SignalCollection.existsP = function(b,ref,cmp) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.existsP(c,ref,cmp);
+		return haxe.functional.FoldableExtensions.existsP(c,ref,cmp);
 	});
 }
 haxe.reactive.SignalCollection.find = function(b,cmp) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.find(c,cmp);
+		return haxe.functional.FoldableExtensions.find(c,cmp);
 	});
 }
 haxe.reactive.SignalCollection.nubBy = function(b,cmp) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.nubBy(c,cmp);
+		return haxe.functional.FoldableExtensions.nubBy(c,cmp);
 	});
 }
 haxe.reactive.SignalCollection.nub = function(b) {
 	return b.map(function(c) {
-		return haxe.abstract.FoldableExtensions.nub(c);
+		return haxe.functional.FoldableExtensions.nub(c);
 	});
 }
 haxe.reactive.SignalCollection.intersectS = function(b1,b2) {
 	return b1.zip(b2).map(function(c) {
-		return haxe.abstract.FoldableExtensions.intersect(c._1,c._2);
+		return haxe.functional.FoldableExtensions.intersect(c._1,c._2);
 	});
 }
 haxe.reactive.SignalCollection.intersectByS = function(b1,b2,cmp) {
 	return b1.zip(b2).map(function(c) {
-		return haxe.abstract.FoldableExtensions.intersectBy(c._1,c._2,cmp);
+		return haxe.functional.FoldableExtensions.intersectBy(c._1,c._2,cmp);
 	});
 }
 haxe.reactive.SignalCollection.prototype.__class__ = haxe.reactive.SignalCollection;
@@ -8334,7 +8334,7 @@ haxe.data.collections.Map = function(khasher,kequal,vhasher,vequal,buckets,size)
 	this.valueEqual = vequal;
 	this._size = size;
 	this._buckets = buckets;
-	this._pf = haxe.abstract.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create($closure(this,"containsKey"),function(k) {
+	this._pf = haxe.functional.PartialFunction1ImplExtensions.toPartialFunction([Tuple2.create($closure(this,"containsKey"),function(k) {
 		return (function($this) {
 			var $r;
 			var $e = (self.get(k));
@@ -8387,7 +8387,7 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 }
 haxe.data.collections.Map.ShowT = function(kshow,vshow) {
 	return ShowTypeclass.create({ show : function(v) {
-		return "Map" + IterableExtensions.toString(haxe.abstract.FoldableExtensions.elements(v),function(t) {
+		return "Map" + IterableExtensions.toString(haxe.functional.FoldableExtensions.elements(v),function(t) {
 			return (kshow.show(t._1) + " -> ") + vshow.show(t._2);
 		});
 	}});
@@ -8613,7 +8613,7 @@ haxe.data.collections.Map.prototype.isDefinedAt = function(k) {
 	return this._pf.isDefinedAt(k);
 }
 haxe.data.collections.Map.prototype.iterator = function() {
-	return haxe.abstract.FoldableExtensions.iterator(this);
+	return haxe.functional.FoldableExtensions.iterator(this);
 }
 haxe.data.collections.Map.prototype.keyEqual = null;
 haxe.data.collections.Map.prototype.keyHasher = null;
@@ -8735,7 +8735,7 @@ haxe.data.collections.Map.prototype.values = function() {
 	}}
 }
 haxe.data.collections.Map.prototype.__class__ = haxe.data.collections.Map;
-haxe.data.collections.Map.__interfaces__ = [haxe.abstract.PartialFunction1,haxe.data.collections.Collection];
+haxe.data.collections.Map.__interfaces__ = [haxe.functional.PartialFunction1,haxe.data.collections.Collection];
 if(typeof resources=='undefined') resources = {}
 resources.CollectionTester = function(p) { if( p === $_ ) return; {
 	haxe.test.TestCase.apply(this,[]);

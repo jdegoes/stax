@@ -20,7 +20,7 @@ import haxe.test.Dispatcher;
 import Prelude;
 
 using PreludeExtensions;
-using haxe.abstract.PredicateExtensions;
+using haxe.functional.PredicateExtensions;
 
 /**
 * The Runner class performs a set of tests. The tests can be added using add or addFixtures.

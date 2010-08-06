@@ -21,7 +21,7 @@ import haxe.data.collections.Collection;
 import haxe.data.collections.List;
 
 using PreludeExtensions;
-using haxe.abstract.FoldableExtensions;
+using haxe.functional.FoldableExtensions;
 
 class SignalCollection {
     private function new() { }

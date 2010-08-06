@@ -4,6 +4,7 @@ import Dom;
 import js.Env;
 import js.io.IFrameIO;
 import js.dom.Elements;
+import js.dom.Quirks;
 
 using PreludeExtensions;
 
@@ -58,26 +59,30 @@ class Demo {
 	  var div1 = doc1.getElementById('div');
 	  var div2 = doc2.getElementById('div');
 	  
-	  var textarea1 = doc1.getElementById('textarea');
-	  var textarea2 = doc2.getElementById('textarea');
+	  var textarea1: HTMLTextAreaElement = cast doc1.getElementById('textarea');
+	  var textarea2: HTMLTextAreaElement = cast doc2.getElementById('textarea');
 	  
 	  var button1 = doc1.getElementById('button');
 	  var button2 = doc2.getElementById('button');
 	  
-	  window1.receive(function(data) {
+	  iframeIO1.receive(function(data) {
 	    div1.innerHTML += data;
 	  }, 'about:self', window2);
 	  
-	  window2.receive(function(data) {
+	  iframeIO2.receive(function(data) {
 	    div2.innerHTML += data;
 	  }, 'about:self', window1);
 	  
 	  button1.onclick = function(e) {
-	    iframeIO1.send(textarea1.innerHTML, 'about:self', window2);
+	    iframeIO1.send(textarea1.value, 'about:self', window2);
+	    
+	    textarea1.value = '';
 	  };
 	  
 	  button2.onclick = function(e) {
-	    iframeIO12.send(textarea2.innerHTML, 'about:self', window1);
+	    iframeIO2.send(textarea2.value, 'about:self', window1);
+	    
+	    textarea2.value = '';
 	  };
   }
   
