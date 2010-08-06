@@ -35,14 +35,11 @@ class Demo {
 	  var iframe1: HTMLIFrameElement = Elements.newIframe(300, 250);
 	  var iframe2: HTMLIFrameElement = Elements.newIframe(300, 250);
 
-	  iframe1.setAttribute('src', 'about:blank');
-	  iframe2.setAttribute('src', 'about:blank');
+    body.appendChild(iframe1);
+    body.appendChild(iframe2);
 
-	  body.appendChild(iframe1);
-	  body.appendChild(iframe2);
-
-	  var doc1: HTMLDocument = cast Quirks.getIframeDocument(iframe1);
-	  var doc2: HTMLDocument = cast Quirks.getIframeDocument(iframe2);
+	  var doc1: HTMLDocument = Quirks.getIframeDocument(iframe1);
+	  var doc2: HTMLDocument = Quirks.getIframeDocument(iframe2);
 	  
 	  doc1.open();
 	  doc1.write(IframeTemplate);
@@ -69,20 +66,20 @@ class Demo {
 	  
 	  iframeIO1.receive(function(data) {
 	    div1.innerHTML += data;
-	  }, 'about:self', window2);
+	  }, window2.location.href, window2);
 	  
 	  iframeIO2.receive(function(data) {
 	    div2.innerHTML += data;
-	  }, 'about:self', window1);
+	  }, window1.location.href, window1);
 	  
 	  button1.onclick = function(e) {
-	    iframeIO1.send(textarea1.value, 'about:self', window2);
+	    iframeIO1.send(textarea1.value, window2.location.href, window2);
 	    
 	    textarea1.value = '';
 	  };
 	  
 	  button2.onclick = function(e) {
-	    iframeIO2.send(textarea2.value, 'about:self', window1);
+	    iframeIO2.send(textarea2.value, window1.location.href, window1);
 	    
 	    textarea2.value = '';
 	  };
