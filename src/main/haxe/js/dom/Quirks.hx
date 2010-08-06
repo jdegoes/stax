@@ -43,17 +43,30 @@ class Quirks {
       }
   }
   
-  public static function contentDocumentOf(iframe: HTMLIFrameElement): HTMLDocument {
-    return if (iframe.contentDocument != null) {
-      untyped iframe.contentDocument;
+  public static function getIframeDocument(iframe: HTMLIFrameElement): HTMLDocument {
+    if (iframe.contentDocument != null) {
+      return untyped iframe.contentDocument;
     }
     else if (iframe.contentWindow != null) {
-      untyped iframe.contentWindow.document;
+      return untyped iframe.contentWindow.document;
     }
     else if (untyped iframe.document != null) {
-      untyped iframe.document;
+      return untyped iframe.document;
     }
-    else { throw "Cannot find iframe content document for " + iframe; null; }
+    else { throw "Cannot find iframe content document for " + iframe; return null; }
+  }
+  
+  public static function getIframeWindow(iframe: HTMLIFrameElement): HTMLDocument {
+    if (iframe.contentWindow != null) {
+      return untyped iframe.contentWindow;
+    }
+    else if (untyped iframe.contentDocument != null && untyped iframe.contentDocument.defaultView != null) {
+      return untyped iframe.contentDocument.defaultView;
+    }
+    else if (untyped iframe.document != null && untyped iframe.document.window != null) {
+      return untyped iframe.document.window;
+    }
+    else { throw "Cannot find iframe content document for " + iframe; return null; }
   }
   
   public static function addEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {

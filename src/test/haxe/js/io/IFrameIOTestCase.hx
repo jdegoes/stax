@@ -47,8 +47,8 @@ class IFrameIOTestCase extends TestCase {
 	  body.appendChild(iframe1);
 	  body.appendChild(iframe2);
 	  
-	  var doc1: HTMLDocument = cast Quirks.contentDocumentOf(iframe1);
-	  var doc2: HTMLDocument = cast Quirks.contentDocumentOf(iframe2);
+	  var doc1: HTMLDocument = cast Quirks.getIframeDocument(iframe1);
+	  var doc2: HTMLDocument = cast Quirks.getIframeDocument(iframe2);
 	  
 	  window1 = doc1.defaultView;
 	  window2 = doc2.defaultView;
