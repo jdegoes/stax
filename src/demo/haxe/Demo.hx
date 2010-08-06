@@ -5,6 +5,8 @@ import js.Env;
 import js.io.IFrameIO;
 import js.dom.Elements;
 import js.dom.Quirks;
+import haxe.framework.Injector;
+import haxe.time.ScheduledExecutor;
 
 using PreludeExtensions;
 
@@ -87,6 +89,10 @@ class Demo {
   }
   
 	public static function main() {
-	  iframeDemo();
+	  Injector.enter(function(c) {
+	    c.bind(ScheduledExecutor, ScheduledExecutorSystem);
+	    
+	    iframeDemo();
+	  });
 	}
 }
