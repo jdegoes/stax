@@ -130,7 +130,7 @@ class IFrameIOPostMessage implements IFrameIO {
         var data = Json.decodeObject(event.data);
         
         if (!f(data)) {
-          self.bindTarget.removeEventListener('message', listener, false);
+          Quirks.removeEventListener(self.bindTarget, 'message', listener, false);
         }
       }
     }

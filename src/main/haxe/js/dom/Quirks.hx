@@ -64,4 +64,13 @@ class Quirks {
       target.attachEvent('on' + type, listener);
     }
   }
+  
+  public static function removeEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
+    if (target.removeEventListener != null) {
+      target.removeEventListener(type, listener, useCapture);
+    }
+    else if (target.detachEvent != null) {
+      target.detachEvent('on' + type, listener);
+    }
+  }
 }
