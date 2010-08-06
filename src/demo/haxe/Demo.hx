@@ -50,9 +50,9 @@ class Demo {
 	  doc2.write(IframeTemplate);
 	  doc2.close();
 
-	  window1 = doc1.defaultView;
-	  window2 = doc2.defaultView;
-
+	  window1 = Quirks.getIframeWindow(iframe1);
+	  window2 = Quirks.getIframeWindow(iframe2);
+	  
 	  iframeIO1 = new IFrameIOAutoDetect(window1);
 	  iframeIO2 = new IFrameIOAutoDetect(window2);
 	  

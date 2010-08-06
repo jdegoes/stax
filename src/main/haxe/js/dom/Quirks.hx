@@ -56,7 +56,7 @@ class Quirks {
     else { throw "Cannot find iframe content document for " + iframe; return null; }
   }
   
-  public static function getIframeWindow(iframe: HTMLIFrameElement): HTMLDocument {
+  public static function getIframeWindow(iframe: HTMLIFrameElement): Window {
     if (iframe.contentWindow != null) {
       return untyped iframe.contentWindow;
     }
