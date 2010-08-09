@@ -32,8 +32,8 @@ class Demo {
 
 	  var body = d.getElementsByTagName('body')[0];
 
-	  var iframe1: HTMLIFrameElement = Elements.newIframe(300, 250);
-	  var iframe2: HTMLIFrameElement = Elements.newIframe(300, 250);
+	  var iframe1: HTMLIFrameElement = Elements.iframe(300, 250);
+	  var iframe2: HTMLIFrameElement = Elements.iframe(300, 250);
 
     body.appendChild(iframe1);
     body.appendChild(iframe2);

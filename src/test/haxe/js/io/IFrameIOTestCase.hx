@@ -38,8 +38,8 @@ class IFrameIOTestCase extends TestCase {
 	  
 	  var body = d.getElementsByTagName('body')[0];
 	  
-	  var iframe1: HTMLIFrameElement = Elements.newIframeInvisible();
-	  var iframe2: HTMLIFrameElement = Elements.newIframeInvisible();
+	  var iframe1: HTMLIFrameElement = Elements.iframeInvisible();
+	  var iframe2: HTMLIFrameElement = Elements.iframeInvisible();
 	  
 	  body.appendChild(iframe1);
 	  body.appendChild(iframe2);

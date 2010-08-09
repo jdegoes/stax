@@ -24,7 +24,7 @@ using PreludeExtensions;
  * Common elements.
  */
 class Elements {
-  public static function newIframe(?width: Int, ?height: Int): HTMLIFrameElement {
+  public static function iframe(?width: Int, ?height: Int): HTMLIFrameElement {
     var iframe: HTMLIFrameElement = cast Env.document.createElement('IFRAME');
     
     width.toOption().zip(height.toOption()).map(function(t) {
@@ -35,8 +35,8 @@ class Elements {
     return iframe;
   }
   
-  public static function newIframeWindow(width: Int, height: Int): HTMLIFrameElement {
-    var iframe = newIframe(width, height);
+  public static function iframeWindow(width: Int, height: Int): HTMLIFrameElement {
+    var iframe = iframe(width, height);
 	  
 	  iframe.setAttribute('frameborder',   '0');
 	  iframe.setAttribute('marginwidth',   '0');
@@ -53,7 +53,7 @@ class Elements {
 	  return iframe;
   }
   
-	public static function newIframeInvisible(): HTMLIFrameElement {
-	  return newIframeWindow(0, 0);
+	public static function iframeInvisible(): HTMLIFrameElement {
+	  return iframeWindow(0, 0);
 	}
 }
