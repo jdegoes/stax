@@ -19,6 +19,7 @@ import Prelude;
 import PreludeExtensions;
 import haxe.io.http.Http;
 import haxe.io.http.HttpString;
+import haxe.io.http.HttpTransformer;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.text.json.JValue;
