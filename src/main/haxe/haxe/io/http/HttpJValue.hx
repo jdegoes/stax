@@ -43,35 +43,9 @@ interface HttpJValue implements Http<JValue> {
 
 #if js
 
-class HttpJValueAsync implements HttpJValue {
-  var http: HttpString;
-  
+class HttpJValueAsync extends HttpJValueTransformer<String, JValue>, implements HttpJValue {
   public function new() {
-    http = new HttpStringAsync();
-  }
-  
-  public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
-    return http.get(url, params, headers).map(decode);
-  }
-  
-  public function post(url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
-    return http.post(url, Json.encode(data), params, headers).map(decode);
-  }
-  
-  public function put(url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
-    return http.put(url, Json.encode(data), params, headers).map(decode);
-  }
-  
-  public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
-    return http.delete(url, params, headers).map(decode);
-  }
-  
-  public static function decode(r: HttpResponse<String>): HttpResponse<JValue> {
-    return {
-      body:     r.body.map(Json.decode),
-      headers:  r.headers,
-      code:     r.code
-    }
+    super(new HttpStringAsync(), Json.encode, Json.decode);
   }
 }
 

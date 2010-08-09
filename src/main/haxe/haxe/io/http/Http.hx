@@ -20,6 +20,8 @@ import haxe.data.collections.Map;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 
+using PreludeExtensions;
+
 typedef HttpResponse<T> = {
   code:     HttpResponseCode,
   body:     Option<T>,
@@ -39,4 +41,40 @@ interface Http<T> {
   public function put(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
     
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
+}
+
+class HttpJValueTransformer<S, T> implements Http<T> {
+  var http: Http<S>;
+  var encoder: T -> S;
+  var decoder: S -> T;
+  
+  public function new(http: Http<S>, encoder: T -> S, decoder: S -> T) {
+    this.http    = http;
+    this.encoder = encoder;
+    this.decoder = decoder;
+  }
+  
+  public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.get(url, params, headers).map(transformResponse);
+  }
+  
+  public function post(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.post(url, encoder(data), params, headers).map(transformResponse);
+  }
+  
+  public function put(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.put(url, encoder(data), params, headers).map(transformResponse);
+  }
+  
+  public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.delete(url, params, headers).map(transformResponse);
+  }
+  
+  public function transformResponse(r: HttpResponse<S>): HttpResponse<T> {
+    return {
+      body:     r.body.map(decoder),
+      headers:  r.headers,
+      code:     r.code
+    }
+  }
 }
