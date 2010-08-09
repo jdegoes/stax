@@ -18,6 +18,7 @@ package haxe.io.http;
 import Prelude;
 import PreludeExtensions;
 import haxe.io.http.Http;
+import haxe.io.http.HttpString;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.text.json.JValue;
@@ -39,6 +40,58 @@ using haxe.net.HttpHeaderExtensions;
 
 interface HttpJValue implements Http<JValue> {
 }
+
+#if js
+
+class HttpJValueAsync implements HttpJValue {
+  var http: HttpString;
+  
+  public function new() {
+    http = new HttpStringAsync();
+  }
+  
+  public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    return http.get(url, params, headers).map(function(r): HttpResponse<JValue> {
+      return {
+        body:     r.body.map(Json.decode),
+        headers:  r.headers,
+        code:     r.code
+      }
+    });
+  }
+  
+  public function post(url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    return http.post(url, Json.encode(data), params, headers).map(function(r): HttpResponse<JValue> {
+      return {
+        body:     r.body.map(Json.decode),
+        headers:  r.headers,
+        code:     r.code
+      }
+    });
+  }
+  
+  public function put(url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    return http.put(url, Json.encode(data), params, headers).map(function(r): HttpResponse<JValue> {
+      return {
+        body:     r.body.map(Json.decode),
+        headers:  r.headers,
+        code:     r.code
+      }
+    });
+  }
+  
+  public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    return http.delete(url, params, headers).map(function(r): HttpResponse<JValue> {
+      return {
+        body:     r.body.map(Json.decode),
+        headers:  r.headers,
+        code:     r.code
+      }
+    });
+  }
+}
+
+#end
 
 #if js
 

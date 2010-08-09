@@ -86,13 +86,13 @@ class Quirks {
       target.detachEvent('on' + type, listener);
     }
   }
-  
+  /*
   public static function getComputedStyle(e: Element, pseudo: DOMString): CSSStyleDeclaration {
     if (Env.window.getComputedStyle != null) {
       return Env.window.getComputedStyle(e, pseudo);
     }
     else {
-      /*
+      
       public var length       (default,null): Int;
       public var parentRule   (default, null): CSSRule;
 
@@ -113,7 +113,7 @@ class Quirks {
       public function isPropertyImplicit(propertyName: DOMString): Bool;  //Not supported by Firefox
 
       public function item(index: Int): DOMString;
-      */
+      
       return cast {
         length:   
               this.el = el;
@@ -131,4 +131,6 @@ class Quirks {
       }
     }
   }
+  
+  */
 }
