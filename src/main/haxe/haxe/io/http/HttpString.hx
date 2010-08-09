@@ -39,7 +39,7 @@ interface HttpString implements Http<String> {
 
 #if js
 
-class AsynchronousHttpString implements HttpString {
+class HttpStringAsync implements HttpString {
   public function new() { }
   
   public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {

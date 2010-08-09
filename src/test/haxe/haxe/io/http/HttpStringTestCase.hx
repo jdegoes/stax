@@ -32,7 +32,7 @@ class HttpStringTestCase extends TestCase {
 	}
 	
 	override public function before() {
-	  h = new AsynchronousHttpString();
+	  h = new HttpStringAsync();
 	}
 	
 	public function testGet() {

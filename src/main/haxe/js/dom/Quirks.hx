@@ -86,4 +86,49 @@ class Quirks {
       target.detachEvent('on' + type, listener);
     }
   }
+  
+  public static function getComputedStyle(e: Element, pseudo: DOMString): CSSStyleDeclaration {
+    if (Env.window.getComputedStyle != null) {
+      return Env.window.getComputedStyle(e, pseudo);
+    }
+    else {
+      /*
+      public var length       (default,null): Int;
+      public var parentRule   (default, null): CSSRule;
+
+      public var cssText:     DOMString;
+
+      public function removeProperty(propertyName: DOMString): Void;
+
+      public function getPropertyValue(propertyName: DOMString): DOMString;
+
+      public function getPropertyCSSValue(propertyName: DOMString): CSSValue;
+
+      public function getPropertyPriority(propertyName: DOMString): DOMString;
+
+      public function getPropertyShorthand(propertyName: DOMString): DOMString; //Not supported by Firefox
+
+      public function setProperty(propertyName: DOMString, value: DOMString, priority: DOMString): Void;
+
+      public function isPropertyImplicit(propertyName: DOMString): Bool;  //Not supported by Firefox
+
+      public function item(index: Int): DOMString;
+      */
+      return cast {
+        length:   
+              this.el = el;
+              this.getPropertyValue = function(prop) {
+                  var re = /(\-([a-z]){1})/g;
+                  if (prop == 'float') prop = 'styleFloat';
+                  if (re.test(prop)) {
+                      prop = prop.replace(re, function () {
+                          return arguments[2].toUpperCase();
+                      });
+                  }
+                  return el.currentStyle[prop] ? el.currentStyle[prop] : null;
+              }
+              return this;
+      }
+    }
+  }
 }

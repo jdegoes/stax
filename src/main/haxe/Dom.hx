@@ -2567,7 +2567,7 @@ extern interface Window implements ArrayAccess<WindowProxy>, implements EventTar
     
     public function btoa(unencodedString: DOMString): DOMString;
     
-    public function getComputedStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
+    public var getComputedStyle (default, null): Element -> DOMString -> CSSStyleDeclaration;
     
     public var postMessage (default, null): DOMString -> DOMString -> Void;
     
