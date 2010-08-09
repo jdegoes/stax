@@ -150,21 +150,21 @@ class IFrameIOPostMessage implements IFrameIO {
     return this;
   }
   
-  private static function removeHashOpt(url: Url): Option<Url> {
-    return url.toParsedUrl().map(function(p) return p.withoutHash().toUrl());
+  private static function normalizeOpt(url: Url): Option<Url> {
+    return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().toUrl());
   }
   
-  private static function removeHash(url: Url): Url {
-    return removeHashOpt(url).getOrElseC(url);
+  private static function normalize(url: Url): Url {
+    return normalizeOpt(url).getOrElseC(url);
   }
   
   private static function getUrlFor(w: Window, url_: Url): Url {
     // TODO: Cleanup!!!
     var tryExtractUrl = function(w: Window): Url {
-      return removeHashOpt(url_).getOrElse(
+      return normalizeOpt(url_).getOrElse(
         function() {
           try {
-            return removeHash(w.location.href);
+            return normalize(w.location.href);
           }
           catch (d: Dynamic) {
             return url_;
@@ -179,7 +179,7 @@ class IFrameIOPostMessage implements IFrameIO {
       var url = tryExtractUrl(cur);
       
       if (!url.startsWith('about:')) {
-        return url;
+        return normalize(url);
       }
       
       if (cur == cur.top) cur = null;
@@ -242,17 +242,17 @@ class IFrameIOPollingHashtag implements IFrameIO {
 	  return this;
 	}
 	
-	private static function removeHashOpt(url: Url): Option<Url> {
+	private static function normalizeOpt(url: Url): Option<Url> {
     return url.toParsedUrl().map(function(p) return p.withoutHash().toUrl());
   }
   
-  private static function removeHash(url: Url): Url {
-    return removeHashOpt(url).getOrElseC(url);
+  private static function normalize(url: Url): Url {
+    return normalizeOpt(url).getOrElseC(url);
   }
 	
 	public function send(data: Dynamic, to_: String, iframe: Window): IFrameIO {
-	  var from = removeHash(bindTarget.location.href);
-	  var to   = removeHash(to_);
+	  var from = normalize(bindTarget.location.href);
+	  var to   = normalize(to_);
 	  
 	  var maxFragSize = 1500 - to.length;
 	  var fragmentId  = 1;
@@ -307,8 +307,6 @@ class IFrameIOPollingHashtag implements IFrameIO {
 	  
 	  if (hash.length > 1) {
 	    var query = '?' + hash.substr(1);
-	    
-	    //untyped alert('received ' + hash.substr(1) + '(hash = ' + hash + ')');
 	    
 	    var unknown = query.toQueryParameters();
 	    
@@ -441,8 +439,6 @@ class IFrameIOPollingHashtag implements IFrameIO {
 	
 	private function startSender(): Void {
 	  if (senderFuture.isEmpty()) {	  
-	    untyped alert('start sender');
-	    
 	    senderFuture = Some(executor.forever(sender, 20));
 	  }
 	}
