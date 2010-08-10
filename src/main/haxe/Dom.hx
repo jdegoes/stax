@@ -2681,9 +2681,10 @@ extern interface XMLHttpRequest implements XMLHttpRequestEventTarget {
     public var statusText       (default, null): DOMString;
     public var responseText     (default, null): DOMString;
     public var responseXML      (default, null): Document;
-    public var overrideMimeType (default, default): String;
     
     public var onreadystatechange: Void -> Void;
+    
+    public function overrideMimeType(mimeType: DOMString): Void;
     
     public function open(method: DOMString, url: DOMString, ?async: Bool, ?user: DOMString, ?password: DOMString): Void;
     
