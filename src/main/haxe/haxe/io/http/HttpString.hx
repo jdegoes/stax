@@ -43,22 +43,26 @@ class HttpStringAsync implements HttpString {
   public function new() { }
   
   public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('GET', url, params, headers);
+    return doRequest('GET', url, null, params, headers);
   }
   
   public function post(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('POST', url, params, headers);
+    return doRequest('POST', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function put(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('PUT', url, params, headers);
+    return doRequest('PUT', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('DELETE', url, params, headers);
+    return doRequest('DELETE', url, null, params, headers);
+  }
+
+  private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
+    return OptionExtensions.toOption(_headers).getOrElseC(Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT())).set("Content-Type", contentType);
   }
   
-  public function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
+  public function doRequest(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
     
     var future: Future<HttpResponse<String>> = new Future();
@@ -93,7 +97,7 @@ class HttpStringAsync implements HttpString {
       future.cancel();
     }
     
-    request.send();
+    request.send(data);
     
     return future;
   }
