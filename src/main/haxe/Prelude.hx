@@ -83,6 +83,8 @@ enum Either<A, B> {
   Right(v: B);
 }
 
+typedef FailureOrSuccess<A, B> = Either<A, B>
+
 /** 
  * An asynchronous operation that may complete in the future unless 
  * successfully canceled.

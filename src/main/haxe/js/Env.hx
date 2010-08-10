@@ -57,6 +57,14 @@ class Env {
     public static function isNaN(number: Float): Bool {
         return untyped __js__('isNaN(number)');
     }
+    
+    public static function isDefined(d: Dynamic): Bool {
+      return typeOf(d) != 'undefined';
+    }
+    
+    public static function typeOf(d: Dynamic): String {
+      return untyped __js__('typeof d');
+    }
 }
 
 class XmlHttpRequestState {

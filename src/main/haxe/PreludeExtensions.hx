@@ -458,8 +458,16 @@ class ArrayExtensions {
     return a[0];
   }
   
+  public static function firstOption<T>(a: Array<T>): Option<T> {
+    return if (a.length == 0) None; else Some(a[0]);
+  }
+  
   public static function last<T>(a: Array<T>): T {
     return a[a.length - 1];
+  }
+  
+  public static function lastOption<T>(a: Array<T>): Option<T> {
+    return if (a.length == 0) None; else Some(a[a.length - 1]);
   }
   
   public static function contains<T>(a: Array<T>, t: T): Bool {
@@ -900,6 +908,13 @@ class EitherExtensions {
       case Right(v): Some(v);
       
       default: None;
+    }
+  }
+  
+  public static function get<A>(e: Either<A, A>): A {
+    return switch (e) {
+      case Left(v): v;
+      case Right(v): v;
     }
   }
   
