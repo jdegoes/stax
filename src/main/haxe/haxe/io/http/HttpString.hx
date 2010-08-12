@@ -64,7 +64,6 @@ class HttpStringAsync implements HttpString {
   
   public function doRequest(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
-    
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -83,20 +82,19 @@ class HttpStringAsync implements HttpString {
         });
       }
     }
-    
-    _headers.toOption().map(function(headers) {
-      headers.foreach(function(header) {
-        request.setRequestHeader(header._1, header._2);
-      });
-    });
-    
+
     try {
       request.open(method, url, true);
     }
     catch (e: Dynamic) {
       future.cancel();
     }
-    
+
+    _headers.toOption().map(function(headers) {
+      headers.foreach(function(header) {
+        request.setRequestHeader(header._1, header._2);
+      });
+    });
     request.send(data);
     
     return future;
