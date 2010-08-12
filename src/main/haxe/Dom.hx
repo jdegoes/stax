@@ -1446,6 +1446,18 @@ extern interface Media {
 *  *** Unable to Automate testing for all Events ***
 */
 
+extern interface MessageEvent implements Event {
+  public var data           (default, null): Dynamic;
+  public var origin         (default, null): DOMString;
+  public var lastEventId    (default, null): DOMString;
+  public var source         (default, null): WindowProxy;
+  public var ports          (default, null): MessagePortArray;
+  
+  public function initMessageEvent(typeArg: DOMString, canBubbleArg: Bool, cancelableArg: Bool, dataArg: Dynamic, originArg: DOMString, lastEventIdArg: DOMString, sourceArg: WindowProxy, portsArg: MessagePortArray): Void;
+  
+  public function initMessageEventNS(namespaceURI: DOMString, typeArg: DOMString, canBubbleArg: Bool, cancelableArg: Bool, dataArg: Dynamic, originArg: DOMString, lastEventIdArg: DOMString, sourceArg: WindowProxy, portsArg: MessagePortArray): Void;
+}
+
 extern interface StorageEvent implements Event {
     public var key          (default, null): DOMString;
     public var oldValue     (default, null): Dynamic;
