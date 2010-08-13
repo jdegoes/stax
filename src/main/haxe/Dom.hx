@@ -2101,7 +2101,7 @@ extern interface CSSCharsetRule implements CSSRule {
 extern interface CSSUnknownRule implements CSSRule {
 }
 //UnableToTest
-extern interface CSS2Properties {
+extern interface CSS2Properties ArrayAccess<DOMString> {
     public var azimuth:              DOMString;
     public var background:           DOMString;
     public var backgroundAttachment: DOMString;
@@ -2226,7 +2226,7 @@ extern interface CSS2Properties {
     public var zIndex:               DOMString;
 }
 //Tested
-extern interface CSSStyleDeclaration {
+extern interface CSSStyleDeclaration implements CSS2Properties {
     public var length       (default,null): Int;
     public var parentRule   (default, null): CSSRule;
     
@@ -2249,21 +2249,7 @@ extern interface CSSStyleDeclaration {
     public function item(index: Int): DOMString;
 }
 //Unable to Test
-extern interface CSSInlineStyleDeclaration implements CSS2Properties {
-    public var length       (default, null): Int;
-    public var parentRule   (default, null): CSSRule;
-    
-    public var cssText:     DOMString;
-    
-    public function getPropertyValue(propertyName: DOMString): DOMString;
-    
-    public function getPropertyCSSValue(propertyName: DOMString): CSSValue;
-    
-    public function getPropertyPriority(propertyName: DOMString): DOMString;
-
-    public function setProperty(propertyName: DOMString, value: DOMString, priority: DOMString): Void;
-    
-    public function item(index: Int): DOMString;
+extern interface CSSInlineStyleDeclaration implements CSSStyleDeclaration {
 }
 
 //Unable to Test

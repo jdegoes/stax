@@ -491,6 +491,18 @@ class Function0Extensions {
       catch (e: Dynamic) { }
     }
   }
+  
+  public static function promote<A, Z>(f: Void -> Z): A -> Z {
+    return function(a: A): Z {
+      return f();
+    }
+  }
+  
+  public static function promoteEffect<A>(f: Void -> Void): A -> Void {
+    return function(a: A): Void {
+      f();
+    }
+  }
 }
 class Function1Extensions {
   public static function swallow<A>(f: Function<A, Void>): Function<A, Void> {

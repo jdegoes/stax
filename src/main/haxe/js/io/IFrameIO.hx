@@ -64,6 +64,16 @@ interface IFrameIO {
    *                      the origin window is not possible.
    */
   public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO;
+  
+  /** Receives and responds to requests with the specified function.
+   *
+   * @param f       The function that will receive and responde to requests.
+   *
+   * @param url     The URL of the target/source window, including the query string but without the hash tag. 
+   *
+   * @param window  The window of the target/source window.
+   */
+  public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO;
 
   /** Posts a message to the specified iframe, which should be located at the 
    * exact URL specified.
@@ -76,6 +86,76 @@ interface IFrameIO {
    * @param targetWindow  The window that will receive the message.
    */
   public function send(data: Dynamic, targetUrl: String, targetWindow: Window): IFrameIO;
+  
+  /** Sends a request for information to the specified iframe, which should be
+   * located at the exact URL specified.
+    *
+    * @param request       The anonymous object that will be sent.
+    *
+    * @param targetUrl     The exact URL the message is being sent to, including 
+    *                      host, port, path, and query, but excluding hash tag.
+    *
+    * @param targetWindow  The window that will receive the message.
+    *
+    */
+  public function request(request: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic>;
+}
+
+private class AbstractIFrameIO implements IFrameIO {
+  var requestCounter: Int;
+  
+  public function new() {
+    requestCounter = 0;
+  }
+  
+  public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+    return Stax.error('Not implemented');
+  }
+
+  public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
+    return Stax.error('Not implemented');
+  }
+  
+  public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO {
+    var self = this;
+    
+    return receive(function(request) {
+      if (request.__requestId != null) {
+        var response = f(request);
+        
+        response.deliverTo(function(response) {
+          response.__responseId = request.__requestId;
+
+          self.send(response, url, window);
+        });
+      }
+    }, url, window);
+  }
+
+  public function send(data: Dynamic, targetUrl: String, targetWindow: Window): IFrameIO {
+    return Stax.error('Not implemented');
+  }
+  
+  public function request(request: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
+    var requestId = ++requestCounter;
+    
+    var future: Future<Dynamic> = new Future();
+    
+    request.__requestId = requestId;
+    
+    send(request, targetUrl, targetWindow);
+    
+    receiveWhile(function(data) {
+      return if (data.__responseId != null && data.__responseId == requestId) {
+        future.deliver(data);
+        
+        false;
+      }
+      else true;
+    }, targetUrl, targetWindow);
+    
+    return future;
+  }
 }
 
 class IFrameIOAutoDetect implements IFrameIO {
@@ -99,26 +179,36 @@ class IFrameIOAutoDetect implements IFrameIO {
     
     return this;
   }
+  
+  public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO {
+    underlying.receiveRequests(f, url, window);
+    
+    return this;
+  }
 
   public function send(data: Dynamic, targetUrl: String, targetWindow: Window): IFrameIO {
     underlying.send(data, targetUrl, targetWindow);
     
     return this;
   }  
+  
+  public function request(data: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
+    return underlying.request(data, targetUrl, targetWindow);
+  }
 }
 
-class IFrameIOPostMessage implements IFrameIO {
+class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   var bindTarget: Window;
   
   public function new(w: Window) {
     this.bindTarget = w;
   }
   
-  public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+  override public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
     return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
   }
 
-  public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
+  override public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
     var originUrl = getUrlFor(originWindow, originUrl_);
 
     var listener: EventListener<Dynamic> = null;
@@ -140,7 +230,7 @@ class IFrameIOPostMessage implements IFrameIO {
     return this;
   }
 
-  public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
+  override public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
     var targetUrl = getUrlFor(targetWindow, targetUrl_);
     
     if (targetUrl.startsWith('file:')) targetUrl = '*';
@@ -191,7 +281,7 @@ class IFrameIOPostMessage implements IFrameIO {
 }
 
 
-class IFrameIOPollingHashtag implements IFrameIO {
+class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   static var lastMessageId = 1;
   static var newFragmentsList = List.factory();
   
@@ -216,11 +306,11 @@ class IFrameIOPollingHashtag implements IFrameIO {
 		receiverFuture = None;
 	}
 	
-	public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+	override public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
 	  return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
 	}
 	
-	public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
+	override public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
 	  var self = this;
 	  
 	  var domain = extractDomain(originUrl);
@@ -242,15 +332,7 @@ class IFrameIOPollingHashtag implements IFrameIO {
 	  return this;
 	}
 	
-	private static function normalizeOpt(url: Url): Option<Url> {
-    return url.toParsedUrl().map(function(p) return p.withoutHash().toUrl());
-  }
-  
-  private static function normalize(url: Url): Url {
-    return normalizeOpt(url).getOrElseC(url);
-  }
-	
-	public function send(data: Dynamic, to_: String, iframe: Window): IFrameIO {
+	override public function send(data: Dynamic, to_: String, iframe: Window): IFrameIO {
 	  var from = normalize(bindTarget.location.href);
 	  var to   = normalize(to_);
 	  
@@ -285,6 +367,14 @@ class IFrameIOPollingHashtag implements IFrameIO {
 	  
 	  return this;
 	}
+	
+	private static function normalizeOpt(url: Url): Option<Url> {
+    return url.toParsedUrl().map(function(p) return p.withoutHash().toUrl());
+  }
+  
+  private static function normalize(url: Url): Url {
+    return normalizeOpt(url).getOrElseC(url);
+  }
 	
 	private function sender(): Void {
 	  switch (fragmentsToSend.headOption) {

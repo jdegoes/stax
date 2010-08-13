@@ -17,6 +17,10 @@ class Env {
     public static var JNaN      : Dynamic  = untyped __js__('NaN');
     public static var JUndefined: Dynamic  = untyped __js__('undefined');
     
+    public static function eq(a: Dynamic, b: Dynamic): Bool {
+      return untyped __js__('(function(a, b) { return a === b; })')(a, b);
+    }
+    
     /** Top level functions */
     public static function alert(a: Dynamic): Void {
         untyped __js__('alert')(Std.string(a));
