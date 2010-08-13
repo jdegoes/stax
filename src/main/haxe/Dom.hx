@@ -1643,6 +1643,21 @@ typedef DragEventListener = MouseEvent -> Void;
 
 typedef UIEventListener = UIEvent -> Void;
 
+interface MessagePortArray {
+  
+}
+
+interface MessagePort {
+  public function postMessage(message: Dynamic, ?ports: MessagePortArray): Void;
+  
+  public function start(): Void;
+  
+  public function close(): Void;
+
+  public var onMessage: Dynamic -> Dynamic;
+}
+
+
 extern interface Event {
     public var type             (default, null): DOMString;
     public var target           (default, null): EventTarget;
