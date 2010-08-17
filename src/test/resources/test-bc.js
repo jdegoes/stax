@@ -1950,8 +1950,29 @@ haxe.data.collections.IterableExtensions.intersect = function(iter1,iter2) {
 	});
 }
 haxe.data.collections.IterableExtensions.unionBy = function(iter1,iter2,f) {
-	return haxe.data.collections.IterableExtensions.foldl(iter2,iter1,function(a,b) {
-		return (haxe.data.collections.IterableExtensions.existsP(a,b,f)?a:haxe.data.collections.IterableExtensions.append(a,b));
+	var result = iter1;
+	{ var $it16 = iter2.iterator();
+	while( $it16.hasNext() ) { var e = $it16.next();
+	{
+		var exists = false;
+		{ var $it17 = iter1.iterator();
+		while( $it17.hasNext() ) { var i = $it17.next();
+		{
+			if(f(i,e)) {
+				exists = true;
+			}
+		}
+		}}
+		if(!exists) {
+			result = haxe.data.collections.IterableExtensions.append(result,e);
+		}
+	}
+	}}
+	return result;
+}
+haxe.data.collections.IterableExtensions.union = function(iter1,iter2) {
+	return haxe.data.collections.IterableExtensions.unionBy(iter1,iter2,function(a,b) {
+		return a == b;
 	});
 }
 haxe.data.collections.IterableExtensions.prototype.__class__ = haxe.data.collections.IterableExtensions;
@@ -1960,8 +1981,8 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it16 = arr.iterator();
-	while( $it16.hasNext() ) { var t = $it16.next();
+	{ var $it18 = arr.iterator();
+	while( $it18.hasNext() ) { var t = $it18.next();
 	if(t == field) return true;
 	}}
 	return false;
@@ -1971,9 +1992,9 @@ Reflect.field = function(o,field) {
 	try {
 		v = o[field];
 	}
-	catch( $e17 ) {
+	catch( $e19 ) {
 		{
-			var e = $e17;
+			var e = $e19;
 			null;
 		}
 	}
@@ -2000,9 +2021,9 @@ Reflect.fields = function(o) {
 		try {
 			t = o.__proto__;
 		}
-		catch( $e18 ) {
+		catch( $e20 ) {
 			{
-				var e = $e18;
+				var e = $e20;
 				{
 					t = null;
 				}
@@ -2226,9 +2247,9 @@ haxe.Stack.makeStack = function(s) {
 		try {
 			$r = eval(s);
 		}
-		catch( $e19 ) {
+		catch( $e21 ) {
 			{
-				var e = $e19;
+				var e = $e21;
 				$r = [];
 			}
 		}
@@ -2407,9 +2428,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e20 ) {
+	catch( $e22 ) {
 		{
-			var e = $e20;
+			var e = $e22;
 			{
 				cl = null;
 			}
@@ -2423,9 +2444,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e21 ) {
+	catch( $e23 ) {
 		{
-			var err = $e21;
+			var err = $e23;
 			{
 				e = null;
 			}
@@ -2519,9 +2540,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e22 ) {
+	catch( $e24 ) {
 		{
-			var e = $e22;
+			var e = $e24;
 			{
 				return false;
 			}
@@ -2623,9 +2644,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e23 ) {
+		catch( $e25 ) {
 			{
-				var e = $e23;
+				var e = $e25;
 				{
 					return "???";
 				}
@@ -2682,9 +2703,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e24 ) {
+	catch( $e26 ) {
 		{
-			var e = $e24;
+			var e = $e26;
 			{
 				if(cl == null) return false;
 			}
@@ -3147,8 +3168,8 @@ ArrayExtensions.flatMap = function(a,f) {
 		while(_g < a.length) {
 			var e1 = a[_g];
 			++_g;
-			{ var $it25 = f(e1).iterator();
-			while( $it25.hasNext() ) { var e2 = $it25.next();
+			{ var $it27 = f(e1).iterator();
+			while( $it27.hasNext() ) { var e2 = $it27.next();
 			n.push(e2);
 			}}
 		}
@@ -3241,9 +3262,9 @@ Function0Extensions.swallow = function(f) {
 		try {
 			f();
 		}
-		catch( $e26 ) {
+		catch( $e28 ) {
 			{
-				var e = $e26;
+				var e = $e28;
 				null;
 			}
 		}
@@ -3257,9 +3278,9 @@ Function1Extensions.swallow = function(f) {
 		try {
 			f(a);
 		}
-		catch( $e27 ) {
+		catch( $e29 ) {
 			{
-				var e = $e27;
+				var e = $e29;
 				null;
 			}
 		}
@@ -3299,9 +3320,9 @@ Function2Extensions.swallow = function(f) {
 		try {
 			f(a,b);
 		}
-		catch( $e28 ) {
+		catch( $e30 ) {
 			{
-				var e = $e28;
+				var e = $e30;
 				null;
 			}
 		}
@@ -3343,9 +3364,9 @@ Function3Extensions.swallow = function(f) {
 		try {
 			f(a,b,c);
 		}
-		catch( $e29 ) {
+		catch( $e31 ) {
 			{
-				var e = $e29;
+				var e = $e31;
 				null;
 			}
 		}
@@ -3384,9 +3405,9 @@ Function4Extensions.swallow = function(f) {
 		try {
 			f(a,b,c,d);
 		}
-		catch( $e30 ) {
+		catch( $e32 ) {
 			{
-				var e = $e30;
+				var e = $e32;
 				null;
 			}
 		}
@@ -3427,9 +3448,9 @@ Function5Extensions.swallow = function(f) {
 		try {
 			f(a,b,c,d,e);
 		}
-		catch( $e31 ) {
+		catch( $e33 ) {
 			{
-				var e1 = $e31;
+				var e1 = $e33;
 				null;
 			}
 		}
@@ -4416,8 +4437,8 @@ IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
 	if(show == null) show = $closure(Std,"string");
 	var s = prefix;
 	var isFirst = true;
-	{ var $it32 = i.iterator();
-	while( $it32.hasNext() ) { var t = $it32.next();
+	{ var $it34 = i.iterator();
+	while( $it34.hasNext() ) { var t = $it34.next();
 	{
 		if(isFirst) isFirst = false;
 		else s += sep;
@@ -4437,8 +4458,8 @@ IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
 }
 IterableExtensions.toArray = function(i) {
 	var a = [];
-	{ var $it33 = i.iterator();
-	while( $it33.hasNext() ) { var e = $it33.next();
+	{ var $it35 = i.iterator();
+	while( $it35.hasNext() ) { var e = $it35.next();
 	a.push(e);
 	}}
 	return a;
@@ -4522,8 +4543,8 @@ IntHash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it34 = it;
-	while( $it34.hasNext() ) { var i = $it34.next();
+	{ var $it36 = it;
+	while( $it36.hasNext() ) { var i = $it36.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -5023,8 +5044,8 @@ haxe.functional.Predicate1Extensions.and = function(p1,p2) {
 haxe.functional.Predicate1Extensions.andAll = function(p1,ps) {
 	return function(value) {
 		var result = p1(value);
-		{ var $it35 = ps.iterator();
-		while( $it35.hasNext() ) { var p = $it35.next();
+		{ var $it37 = ps.iterator();
+		while( $it37.hasNext() ) { var p = $it37.next();
 		{
 			if(!result) break;
 			result = result && p(value);
@@ -5041,8 +5062,8 @@ haxe.functional.Predicate1Extensions.or = function(p1,p2) {
 haxe.functional.Predicate1Extensions.orAny = function(p1,ps) {
 	return function(value) {
 		var result = p1(value);
-		{ var $it36 = ps.iterator();
-		while( $it36.hasNext() ) { var p = $it36.next();
+		{ var $it38 = ps.iterator();
+		while( $it38.hasNext() ) { var p = $it38.next();
 		{
 			if(result) break;
 			result = result || p(value);
@@ -5194,8 +5215,8 @@ haxe.test.Must.beLessThanInt = function(ref) {
 haxe.test.Must.haveLength = function(length) {
 	return function(value) {
 		var len = 0;
-		{ var $it37 = value.iterator();
-		while( $it37.hasNext() ) { var e = $it37.next();
+		{ var $it39 = value.iterator();
+		while( $it39.hasNext() ) { var e = $it39.next();
 		++len;
 		}}
 		var result = { assertion : "x.length == " + length, negation : "x.length != " + length}
@@ -5249,24 +5270,24 @@ Lambda = function() { }
 Lambda.__name__ = ["Lambda"];
 Lambda.array = function(it) {
 	var a = new Array();
-	{ var $it38 = it.iterator();
-	while( $it38.hasNext() ) { var i = $it38.next();
+	{ var $it40 = it.iterator();
+	while( $it40.hasNext() ) { var i = $it40.next();
 	a.push(i);
 	}}
 	return a;
 }
 Lambda.list = function(it) {
 	var l = new List();
-	{ var $it39 = it.iterator();
-	while( $it39.hasNext() ) { var i = $it39.next();
+	{ var $it41 = it.iterator();
+	while( $it41.hasNext() ) { var i = $it41.next();
 	l.add(i);
 	}}
 	return l;
 }
 Lambda.map = function(it,f) {
 	var l = new List();
-	{ var $it40 = it.iterator();
-	while( $it40.hasNext() ) { var x = $it40.next();
+	{ var $it42 = it.iterator();
+	while( $it42.hasNext() ) { var x = $it42.next();
 	l.add(f(x));
 	}}
 	return l;
@@ -5274,66 +5295,66 @@ Lambda.map = function(it,f) {
 Lambda.mapi = function(it,f) {
 	var l = new List();
 	var i = 0;
-	{ var $it41 = it.iterator();
-	while( $it41.hasNext() ) { var x = $it41.next();
+	{ var $it43 = it.iterator();
+	while( $it43.hasNext() ) { var x = $it43.next();
 	l.add(f(i++,x));
 	}}
 	return l;
 }
 Lambda.has = function(it,elt,cmp) {
 	if(cmp == null) {
-		{ var $it42 = it.iterator();
-		while( $it42.hasNext() ) { var x = $it42.next();
+		{ var $it44 = it.iterator();
+		while( $it44.hasNext() ) { var x = $it44.next();
 		if(x == elt) return true;
 		}}
 	}
 	else {
-		{ var $it43 = it.iterator();
-		while( $it43.hasNext() ) { var x = $it43.next();
+		{ var $it45 = it.iterator();
+		while( $it45.hasNext() ) { var x = $it45.next();
 		if(cmp(x,elt)) return true;
 		}}
 	}
 	return false;
 }
 Lambda.exists = function(it,f) {
-	{ var $it44 = it.iterator();
-	while( $it44.hasNext() ) { var x = $it44.next();
+	{ var $it46 = it.iterator();
+	while( $it46.hasNext() ) { var x = $it46.next();
 	if(f(x)) return true;
 	}}
 	return false;
 }
 Lambda.foreach = function(it,f) {
-	{ var $it45 = it.iterator();
-	while( $it45.hasNext() ) { var x = $it45.next();
+	{ var $it47 = it.iterator();
+	while( $it47.hasNext() ) { var x = $it47.next();
 	if(!f(x)) return false;
 	}}
 	return true;
 }
 Lambda.iter = function(it,f) {
-	{ var $it46 = it.iterator();
-	while( $it46.hasNext() ) { var x = $it46.next();
+	{ var $it48 = it.iterator();
+	while( $it48.hasNext() ) { var x = $it48.next();
 	f(x);
 	}}
 }
 Lambda.filter = function(it,f) {
 	var l = new List();
-	{ var $it47 = it.iterator();
-	while( $it47.hasNext() ) { var x = $it47.next();
+	{ var $it49 = it.iterator();
+	while( $it49.hasNext() ) { var x = $it49.next();
 	if(f(x)) l.add(x);
 	}}
 	return l;
 }
 Lambda.fold = function(it,f,first) {
-	{ var $it48 = it.iterator();
-	while( $it48.hasNext() ) { var x = $it48.next();
+	{ var $it50 = it.iterator();
+	while( $it50.hasNext() ) { var x = $it50.next();
 	first = f(x,first);
 	}}
 	return first;
 }
 Lambda.count = function(it) {
 	var n = 0;
-	{ var $it49 = it.iterator();
-	while( $it49.hasNext() ) { var _ = $it49.next();
+	{ var $it51 = it.iterator();
+	while( $it51.hasNext() ) { var _ = $it51.next();
 	++n;
 	}}
 	return n;
@@ -6246,8 +6267,8 @@ haxe.test.ui.common.PackageResult.prototype.addResult = function(result,flattenP
 haxe.test.ui.common.PackageResult.prototype.classNames = function(errorsHavePriority) {
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
-	{ var $it50 = this.classes.keys();
-	while( $it50.hasNext() ) { var name = $it50.next();
+	{ var $it52 = this.classes.keys();
+	while( $it52.hasNext() ) { var name = $it52.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -6288,8 +6309,8 @@ haxe.test.ui.common.PackageResult.prototype.classNames = function(errorsHavePrio
 haxe.test.ui.common.PackageResult.prototype.classes = null;
 haxe.test.ui.common.PackageResult.prototype.createFixture = function(method,assertations) {
 	var f = new haxe.test.ui.common.FixtureResult(method);
-	{ var $it51 = assertations.iterator();
-	while( $it51.hasNext() ) { var assertation = $it51.next();
+	{ var $it53 = assertations.iterator();
+	while( $it53.hasNext() ) { var assertation = $it53.next();
 	f.add(assertation);
 	}}
 	return f;
@@ -6339,8 +6360,8 @@ haxe.test.ui.common.PackageResult.prototype.packageNames = function(errorsHavePr
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
 	if(this.packageName == null) names.push("");
-	{ var $it52 = this.packages.keys();
-	while( $it52.hasNext() ) { var name = $it52.next();
+	{ var $it54 = this.packages.keys();
+	while( $it54.hasNext() ) { var name = $it54.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -6839,9 +6860,9 @@ haxe.test.Assert.throwsException = function(method,type,msg,pos) {
 		if(name == null) name = "" + type;
 		haxe.test.Assert.fail(("exception of type " + name) + " not raised",pos);
 	}
-	catch( $e53 ) {
+	catch( $e55 ) {
 		{
-			var ex = $e53;
+			var ex = $e55;
 			{
 				var name = Type.getClassName(type);
 				if(name == null) name = "" + type;
@@ -6965,25 +6986,6 @@ haxe.test.Assert.typeToString = function(t) {
 		var _t = Type.getClass(t);
 		if(_t != null) t = _t;
 	}
-	catch( $e54 ) {
-		{
-			var e = $e54;
-			null;
-		}
-	}
-	try {
-		return Type.getClassName(t);
-	}
-	catch( $e55 ) {
-		{
-			var e = $e55;
-			null;
-		}
-	}
-	try {
-		var _t = Type.getEnum(t);
-		if(_t != null) t = _t;
-	}
 	catch( $e56 ) {
 		{
 			var e = $e56;
@@ -6991,7 +6993,7 @@ haxe.test.Assert.typeToString = function(t) {
 		}
 	}
 	try {
-		return Type.getEnumName(t);
+		return Type.getClassName(t);
 	}
 	catch( $e57 ) {
 		{
@@ -7000,7 +7002,8 @@ haxe.test.Assert.typeToString = function(t) {
 		}
 	}
 	try {
-		return Std.string(Type["typeof"](t));
+		var _t = Type.getEnum(t);
+		if(_t != null) t = _t;
 	}
 	catch( $e58 ) {
 		{
@@ -7009,11 +7012,29 @@ haxe.test.Assert.typeToString = function(t) {
 		}
 	}
 	try {
-		return Std.string(t);
+		return Type.getEnumName(t);
 	}
 	catch( $e59 ) {
 		{
 			var e = $e59;
+			null;
+		}
+	}
+	try {
+		return Std.string(Type["typeof"](t));
+	}
+	catch( $e60 ) {
+		{
+			var e = $e60;
+			null;
+		}
+	}
+	try {
+		return Std.string(t);
+	}
+	catch( $e61 ) {
+		{
+			var e = $e61;
 			null;
 		}
 	}
@@ -7103,8 +7124,8 @@ haxe.test.ui.text.PlainTextReport.prototype.getResults = function() {
 								buf.b[buf.b.length] = "WARNING ";
 							}
 							var messages = "";
-							{ var $it60 = fix.iterator();
-							while( $it60.hasNext() ) { var assertation = $it60.next();
+							{ var $it62 = fix.iterator();
+							while( $it62.hasNext() ) { var assertation = $it62.next();
 							{
 								var $e = (assertation);
 								switch( $e[1] ) {
@@ -7233,9 +7254,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e61 ) {
+	catch( $e63 ) {
 		{
-			var e = $e61;
+			var e = $e63;
 			{
 				
 				for(var i in this.h)
@@ -7278,8 +7299,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it62 = it;
-	while( $it62.hasNext() ) { var i = $it62.next();
+	{ var $it64 = it;
+	while( $it64.hasNext() ) { var i = $it64.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -7347,9 +7368,9 @@ haxe.test.TestHandler.prototype.addAsync = function(f,timeout) {
 			handler.bindHandler();
 			f();
 		}
-		catch( $e63 ) {
+		catch( $e65 ) {
 			{
-				var e = $e63;
+				var e = $e65;
 				{
 					handler.results.add(haxe.test.Assertation.AsyncError(e,haxe.test.TestHandler.exceptionStack(0)));
 				}
@@ -7371,9 +7392,9 @@ haxe.test.TestHandler.prototype.addEvent = function(f,timeout) {
 			handler.bindHandler();
 			f(e);
 		}
-		catch( $e64 ) {
+		catch( $e66 ) {
 			{
-				var e1 = $e64;
+				var e1 = $e66;
 				{
 					handler.results.add(haxe.test.Assertation.AsyncError(e1,haxe.test.TestHandler.exceptionStack(0)));
 				}
@@ -7402,9 +7423,9 @@ haxe.test.TestHandler.prototype.completed = function() {
 	try {
 		this.executeMethodByName(this.fixture.teardown);
 	}
-	catch( $e65 ) {
+	catch( $e67 ) {
 		{
-			var e = $e65;
+			var e = $e67;
 			{
 				this.results.add(haxe.test.Assertation.TeardownError(e,haxe.test.TestHandler.exceptionStack(2)));
 			}
@@ -7419,18 +7440,18 @@ haxe.test.TestHandler.prototype.execute = function() {
 		try {
 			this.executeMethod($closure(this.fixture,"method"));
 		}
-		catch( $e66 ) {
+		catch( $e68 ) {
 			{
-				var e = $e66;
+				var e = $e68;
 				{
 					this.results.add(haxe.test.Assertation.Error(e,haxe.test.TestHandler.exceptionStack()));
 				}
 			}
 		}
 	}
-	catch( $e67 ) {
+	catch( $e69 ) {
 		{
-			var e = $e67;
+			var e = $e69;
 			{
 				this.results.add(haxe.test.Assertation.SetupError(e,haxe.test.TestHandler.exceptionStack()));
 			}
@@ -7572,8 +7593,8 @@ haxe.test.ui.common.ClassResult.prototype.hasTeardown = null;
 haxe.test.ui.common.ClassResult.prototype.methodNames = function(errorsHavePriority) {
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
-	{ var $it68 = this.fixtures.keys();
-	while( $it68.hasNext() ) { var name = $it68.next();
+	{ var $it70 = this.fixtures.keys();
+	while( $it70.hasNext() ) { var name = $it70.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -7665,8 +7686,8 @@ haxe.data.collections.Set.prototype.add = function(t) {
 }
 haxe.data.collections.Set.prototype.addAll = function(it) {
 	var set = this;
-	{ var $it69 = it.iterator();
-	while( $it69.hasNext() ) { var e = $it69.next();
+	{ var $it71 = it.iterator();
+	while( $it71.hasNext() ) { var e = $it71.next();
 	set = set.add(e);
 	}}
 	return set;
@@ -7686,8 +7707,8 @@ haxe.data.collections.Set.prototype.empty = function() {
 haxe.data.collections.Set.prototype.equal = null;
 haxe.data.collections.Set.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it70 = this._map.iterator();
-	while( $it70.hasNext() ) { var e = $it70.next();
+	{ var $it72 = this._map.iterator();
+	while( $it72.hasNext() ) { var e = $it72.next();
 	{
 		acc = f(acc,e._1);
 	}
@@ -7706,8 +7727,8 @@ haxe.data.collections.Set.prototype.remove = function(t) {
 }
 haxe.data.collections.Set.prototype.removeAll = function(it) {
 	var set = this;
-	{ var $it71 = it.iterator();
-	while( $it71.hasNext() ) { var e = $it71.next();
+	{ var $it73 = it.iterator();
+	while( $it73.hasNext() ) { var e = $it73.next();
 	set = set.remove(e);
 	}}
 	return set;
@@ -7784,9 +7805,9 @@ haxe.test.Runner.prototype.addAfterAll = function(test,totalTestsHolder,f) {
 				try {
 					method();
 				}
-				catch( $e72 ) {
+				catch( $e74 ) {
 					{
-						var e = $e72;
+						var e = $e74;
 						{
 							runAfterAll();
 							throw e;
@@ -7801,8 +7822,8 @@ haxe.test.Runner.prototype.addAfterAll = function(test,totalTestsHolder,f) {
 }
 haxe.test.Runner.prototype.addAll = function(tests,prefix,pattern) {
 	if(prefix == null) prefix = "test";
-	{ var $it73 = tests.iterator();
-	while( $it73.hasNext() ) { var test = $it73.next();
+	{ var $it75 = tests.iterator();
+	while( $it75.hasNext() ) { var test = $it75.next();
 	{
 		this.add(test,prefix,pattern);
 	}
@@ -7835,8 +7856,8 @@ haxe.test.Runner.prototype.addFixture = function(fixture) {
 	return this;
 }
 haxe.test.Runner.prototype.addFixtures = function(fixtures) {
-	{ var $it74 = fixtures.iterator();
-	while( $it74.hasNext() ) { var fixture = $it74.next();
+	{ var $it76 = fixtures.iterator();
+	while( $it76.hasNext() ) { var fixture = $it76.next();
 	this.addFixture(fixture);
 	}}
 	return this;
@@ -7849,9 +7870,9 @@ haxe.test.Runner.prototype.isMethod = function(test,name) {
 	try {
 		return Reflect.isFunction(Reflect.field(test,name));
 	}
-	catch( $e75 ) {
+	catch( $e77 ) {
 		{
-			var e = $e75;
+			var e = $e77;
 			{
 				return false;
 			}
@@ -8271,8 +8292,8 @@ haxe.functional.FoldableExtensions.append = function(foldable,e) {
 }
 haxe.functional.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
-	{ var $it76 = i.iterator();
-	while( $it76.hasNext() ) { var e = $it76.next();
+	{ var $it78 = i.iterator();
+	while( $it78.hasNext() ) { var e = $it78.next();
 	{
 		acc = acc.append(acc,e);
 	}
@@ -8534,8 +8555,8 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 		var keys1 = v1.keySet();
 		var keys2 = v2.keySet();
 		if(!haxe.data.collections.Set.EqualT(kequal).equal(keys1,keys2)) return false;
-		{ var $it77 = keys1.iterator();
-		while( $it77.hasNext() ) { var key = $it77.next();
+		{ var $it79 = keys1.iterator();
+		while( $it79.hasNext() ) { var key = $it79.next();
 		{
 			var v11 = OptionExtensions.get(v1.get(key));
 			var v21 = OptionExtensions.get(v2.get(key));
@@ -8606,8 +8627,8 @@ haxe.data.collections.Map.prototype.add = function(t) {
 }
 haxe.data.collections.Map.prototype.addAll = function(i) {
 	var map = this;
-	{ var $it78 = i.iterator();
-	while( $it78.hasNext() ) { var t = $it78.next();
+	{ var $it80 = i.iterator();
+	while( $it80.hasNext() ) { var t = $it80.next();
 	map = map.add(t);
 	}}
 	return map;
@@ -8623,8 +8644,8 @@ haxe.data.collections.Map.prototype.call = function(k) {
 }
 haxe.data.collections.Map.prototype.contains = function(t) {
 	var tupleEqual = Tuple2.EqualT(this.keyEqual,this.valueEqual);
-	{ var $it79 = this.entries().iterator();
-	while( $it79.hasNext() ) { var e = $it79.next();
+	{ var $it81 = this.entries().iterator();
+	while( $it81.hasNext() ) { var e = $it81.next();
 	{
 		if(tupleEqual.equal(e,t)) return true;
 	}
@@ -8703,8 +8724,8 @@ haxe.data.collections.Map.prototype.entries = function() {
 }
 haxe.data.collections.Map.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it80 = this.entries().iterator();
-	while( $it80.hasNext() ) { var e = $it80.next();
+	{ var $it82 = this.entries().iterator();
+	while( $it82.hasNext() ) { var e = $it82.next();
 	{
 		acc = f(acc,e);
 	}
@@ -8816,8 +8837,8 @@ haxe.data.collections.Map.prototype.rebalance = function() {
 				this._buckets.push([]);
 			}
 		}
-		{ var $it81 = all.iterator();
-		while( $it81.hasNext() ) { var e = $it81.next();
+		{ var $it83 = all.iterator();
+		while( $it83.hasNext() ) { var e = $it83.next();
 		{
 			var bucket = this.bucketFor(e._1);
 			this._buckets[bucket].push(e);
@@ -8830,16 +8851,16 @@ haxe.data.collections.Map.prototype.remove = function(t) {
 }
 haxe.data.collections.Map.prototype.removeAll = function(i) {
 	var map = this;
-	{ var $it82 = i.iterator();
-	while( $it82.hasNext() ) { var t = $it82.next();
+	{ var $it84 = i.iterator();
+	while( $it84.hasNext() ) { var t = $it84.next();
 	map = map.remove(t);
 	}}
 	return map;
 }
 haxe.data.collections.Map.prototype.removeAllByKey = function(i) {
 	var map = this;
-	{ var $it83 = i.iterator();
-	while( $it83.hasNext() ) { var k = $it83.next();
+	{ var $it85 = i.iterator();
+	while( $it85.hasNext() ) { var k = $it85.next();
 	map = map.removeByKey(k);
 	}}
 	return map;
@@ -8907,8 +8928,8 @@ resources.CollectionTester.prototype.assertIterableEquals = function(i1,i2) {
 	var size1 = haxe.data.collections.IterableExtensions.size(i1);
 	var size2 = haxe.data.collections.IterableExtensions.size(i2);
 	if(size1 != size2) {
-		haxe.Log.trace((("Iterable Sizes Not Equal.  Iterable 1 length = " + size1) + " and Iterable 2 length =  ") + size2,{ fileName : "BCollectionTester.hx", lineNumber : 206, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
-		this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 207, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+		haxe.Log.trace((("Iterable Sizes Not Equal.  Iterable 1 length = " + size1) + " and Iterable 2 length =  ") + size2,{ fileName : "BCollectionTester.hx", lineNumber : 213, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+		this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 214, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 	}
 	var iterator1 = i1.iterator();
 	var iterator2 = i2.iterator();
@@ -8917,12 +8938,12 @@ resources.CollectionTester.prototype.assertIterableEquals = function(i1,i2) {
 		var e1 = iterator1.next();
 		var e2 = iterator2.next();
 		if(e1 != e2) {
-			haxe.Log.trace((((("Iterables not equal at index [" + index) + "].  Element 1 = ") + e1) + " and Element 2 = ") + e2,{ fileName : "BCollectionTester.hx", lineNumber : 219, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
-			this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 220, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+			haxe.Log.trace((((("Iterables not equal at index [" + index) + "].  Element 1 = ") + e1) + " and Element 2 = ") + e2,{ fileName : "BCollectionTester.hx", lineNumber : 226, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+			this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 227, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 		}
 		++index;
 	}
-	this.assertTrue(true,null,{ fileName : "BCollectionTester.hx", lineNumber : 224, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+	this.assertTrue(true,null,{ fileName : "BCollectionTester.hx", lineNumber : 231, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 }
 resources.CollectionTester.prototype.testThatItXAppendWorks = function() {
 	var i = [1,2,3,4,5];
@@ -9045,6 +9066,18 @@ resources.CollectionTester.prototype.testThatItXTakeWorks = function() {
 	this.assertEquals(Std.string(haxe.data.collections.IterableExtensions.take(i1,3)),"[1]",null,null,{ fileName : "BCollectionTester.hx", lineNumber : 68, className : "resources.CollectionTester", methodName : "testThatItXTakeWorks"});
 	var i2 = [];
 	this.assertIterableEquals(haxe.data.collections.IterableExtensions.take(i2,3),[]);
+}
+resources.CollectionTester.prototype.testThatItXUnionByWorks = function() {
+	var a = [1,2,3,4];
+	var b = [4,6,9,10];
+	this.assertIterableEquals([1,2,3,4,4,10],haxe.data.collections.IterableExtensions.unionBy(a,b,function(a1,b1) {
+		return a1 * 3 == b1;
+	}));
+}
+resources.CollectionTester.prototype.testThatItXUnionWorks = function() {
+	var a = [1,2,3,4];
+	var b = [4,6,9,10];
+	this.assertIterableEquals([1,2,3,4,6,9,10],haxe.data.collections.IterableExtensions.union(a,b));
 }
 resources.CollectionTester.prototype.testThatTraceWorks = function() {
 	haxe.Log.trace("Trace is working",{ fileName : "BCollectionTester.hx", lineNumber : 17, className : "resources.CollectionTester", methodName : "testThatTraceWorks"});
