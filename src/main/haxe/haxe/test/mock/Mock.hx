@@ -17,12 +17,18 @@
 package haxe.test.mock;
 
 import haxe.test.TestCase;
+import Prelude;
+import PreludeExtensions;
+import haxe.data.collections.Map;
+import haxe.data.collections.List;
 
-class Mock<T> extends Dynamic {
-  var _expects: Hash<String, Array<Dynamic>>;
+using PreludeExtensions;
+
+class Mock<T> implements Dynamic<T>{
+  var _expects: Map<String, Array<Dynamic>>;
   
     private function new() {
-      _expects = new Hash<String, Array<Dynamic>>();
+      _expects = Map.create(String.HasherT(), String.EqualT(), Array.HasherT(DynamicExtensions.HasherT()), Array.EqualT(DynamicExtensions.EqualT()));
     }
     
     public function expect1<P1, R>(name: String, f: Function<P1, R>, times: Int = 1): Void {
@@ -107,10 +113,10 @@ class Mock<T> extends Dynamic {
     
   public function verifyAllExpectations(): Void {
     for (key in _expects.keys()) {
-      var array = _expects.get(key);
+      var array = _expects.getOrElseC(key, []);
       
       if (array.length > 0) {
-        throw "Expected function " + name + " to be invoked " + array.length + " more time" + (if (array.length == 1) "" else "s");
+        throw "Expected function " + key + " to be invoked " + array.length + " more time" + (if (array.length == 1) "" else "s");
       }
     }
   }
@@ -120,9 +126,9 @@ class Mock<T> extends Dynamic {
   }
   
   private function internal_add(name: String, f: Dynamic): Void {
-    var a = _expects.get(name);
+    var a = _expects.getOrElseC(name, []);
     
-    if (a == null) { a = []; _expects.set(name, a); }
+    if (a == []) {_expects.set(name, a); }
     
     a.push(f);
     
@@ -130,7 +136,7 @@ class Mock<T> extends Dynamic {
   }
   
   private function internal_remove(name: String): Void {
-    var array = _expects.get(name);
+    var array = _expects.getOrElseC(name, []);
     
     array.shift();
     
@@ -139,8 +145,8 @@ class Mock<T> extends Dynamic {
     }
   }
   
-  private static function internal_create(): Mock {
-    return new Mock();
+  public static function internal_create<T>(): Mock<T> {
+    return new Mock<T>();
   }
 }
 
@@ -150,6 +156,7 @@ class MockTestCase extends TestCase {
   var _runningTest: Bool;
   
   public function new() {
+    super();
     _runningTest = false;
   }
   
