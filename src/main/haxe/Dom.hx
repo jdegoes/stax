@@ -38,7 +38,7 @@ extern class DomCollection<T> implements ArrayAccess<T>, implements Dynamic<T> {
 *
 */
 
-extern interface DOMStringMap {
+typedef DOMStringMap = {
     public function getter(name: DOMString): Void;
     
     public function setter(name: DOMString, value: DOMString): Void;
@@ -48,7 +48,7 @@ extern interface DOMStringMap {
     public function deleter(name: DOMString): Void;
 }
 
-extern interface DOMTokenList {
+typedef DOMTokenList = {
     public var length       (default, null): Int;
     
     public function item(index: Int): DOMString;
@@ -64,15 +64,29 @@ extern interface DOMTokenList {
     public function stringifier(): DOMString;
 }
 
-extern interface DOMSettableTokenList implements DOMTokenList {
+typedef DOMSettableTokenList = {
     public var value:       DOMString;
+    
+    public var length       (default, null): Int;
+    
+    public function item(index: Int): DOMString;
+    
+    public function contains(token: DOMString): Bool;
+    
+    public function add(token: DOMString): Void;
+    
+    public function remove(token: DOMString): Void;
+    
+    public function toggle(token: DOMString): Bool;
+    
+    public function stringifier(): DOMString;
 }
 
-extern interface DOMException {
+typedef DOMException = {
     public var code: Int;
 }
 
-extern interface DOMStringList {
+typedef DOMStringList = {
     public function item(index: Int): DOMString;
     
     public function contains(str: DOMString): Bool;
@@ -81,7 +95,7 @@ extern interface DOMStringList {
     
 }
 
-extern interface NameList {
+typedef NameList = {
     public function getName(index: Int): DOMString;
     
     public function getNamespaceURI(index: Int): DOMString;
@@ -93,13 +107,13 @@ extern interface NameList {
     public var length       (default,null): Int;
 }
 // Unable to Test
-extern interface DOMImplementationSource {
+typedef DOMImplementationSource = {
     public function getDOMImplementation(features: DOMString): DOMImplementation;
     
     public function getDOMImplementationList(features: DOMString): DomCollection<DOMImplementation>;
 }
 //Tested
-extern interface DOMImplementation {
+typedef DOMImplementation = {
     public function hasFeature(feature: DOMString, version: DOMString): Bool;
 
     public function createDocumentType(qualifiedName: DOMString, publicId: DOMString, systemId: DOMString): DocumentType;
@@ -110,7 +124,7 @@ extern interface DOMImplementation {
 }
 
 //Tested
-extern interface EventTarget {
+typedef EventTarget = {
     public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
 
     public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
@@ -123,7 +137,7 @@ extern interface EventTarget {
 }
 
 //Tested
-extern interface Node implements EventTarget {
+typedef Node = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
@@ -152,6 +166,16 @@ extern interface Node implements EventTarget {
     
     public function hasAttributes(): Bool;
     
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
     public var namespaceURI     (default,null): DOMString;
     public var prefix           (default,null): DOMString;                      
     public var localName        (default,null): DOMString;
@@ -178,7 +202,7 @@ extern interface Node implements EventTarget {
     public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface NamedNodeMap {
+typedef NamedNodeMap = {
     public function getNamedItem(name: DOMString): Node;
     
     public function setNamedItem(arg: Node): Node;
@@ -196,7 +220,7 @@ extern interface NamedNodeMap {
     public var length (default,null): Int;
 }
 //Tested throuh Text
-extern interface CharacterData implements Node {
+typedef CharacterData = {
     public var data:    DOMString;
     public var length   (default,null): Int;
     
@@ -209,18 +233,149 @@ extern interface CharacterData implements Node {
     public function deleteData(offset: Int, count: Int): Void;
     
     public function replaceData(offset: Int, count: Int, arg: DOMString): Void;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
+    
 }
 //Tested
-extern interface Attr implements Node {
+typedef Attr = {
     public var name             (default,null): DOMString;
     public var specified        (default,null): Bool;
     public var value            (default,null): DOMString;
     public var ownerElement     (default,null): Element;
     public var schemaTypeInfo   (default,null): TypeInfo;
     public var isID             (default,null): Bool;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface Element implements Node {
+typedef Element = {
     public var schemaTypeInfo   (default,null): TypeInfo;
     public var tagName          (default, null): DOMString;
     public var scrollTop:       Int;  
@@ -272,23 +427,246 @@ extern interface Element implements Node {
     public function getClientRects(): DomCollection<ClientRect>;
     
     public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface Text implements CharacterData {
+typedef Text = {
     public function splitText(offset: Int): Text;
     
     public function replaceWholeText(content: DOMString): Text;
     
     public var isElementContentWhitespace   (default,null): Bool;
     public var wholeText                    (default,null): DOMString;
+    
+    //CharacterData
+    
+    public var data:    DOMString;
+    public var length   (default,null): Int;
+    
+    public function substringData(offset: Int, count: Int): DOMString;
+    
+    public function appendData(arg: DOMString): Void;
+    
+    public function insertData(offset: Int, arg: DOMString): Void;
+    
+    public function deleteData(offset: Int, count: Int): Void;
+    
+    public function replaceData(offset: Int, count: Int, arg: DOMString): Void;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
-extern interface Comment implements CharacterData {
+typedef Comment = {
+    //CharacterData
     
+    public var data:    DOMString;
+    public var length   (default,null): Int;
+    
+    public function substringData(offset: Int, count: Int): DOMString;
+    
+    public function appendData(arg: DOMString): Void;
+    
+    public function insertData(offset: Int, arg: DOMString): Void;
+    
+    public function deleteData(offset: Int, count: Int): Void;
+    
+    public function replaceData(offset: Int, count: Int, arg: DOMString): Void;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
 //Unable to Test
-extern interface TypeInfo {
+typedef TypeInfo = {
     public var typeName         (default,null): DOMString;
     public var typeNamespace    (default,null): DOMString;
     
@@ -296,12 +674,12 @@ extern interface TypeInfo {
 }
 
 //Unable to Test
-extern interface UserDataHandler {
+typedef UserDataHandler = {
     public function handle(operationType: Int, key: DOMString, data: DOMUserData, src: Node, dst: Node): Void;
 }
 
 //Unable to Test
-extern interface DOMError {
+typedef DOMError = {
     public var severity         (default,null): Int;
     public var message          (default,null): DOMString;
     public var type             (default,null): DOMString;
@@ -310,11 +688,11 @@ extern interface DOMError {
     public var location         (default,null): DOMLocator;
 }
 //Unable to Test
-extern interface DOMErrorHandler {
+typedef DOMErrorHandler = {
     public function handleError(error: DOMError): Bool;
 }
 //Unable to Test
-extern interface DOMLocator {
+typedef DOMLocator = {
     public var lineNumber   (default,null): Int;
     public var columnNumber (default,null): Int;
     public var byteOffset   (default,null): Int;
@@ -323,7 +701,7 @@ extern interface DOMLocator {
     public var uri          (default,null): DOMString;
 }
 //Unable to Test
-extern interface DOMConfiguration {
+typedef DOMConfiguration = {
     public function setParameter(name: DOMString, value: DOMUserData): Void;
     
     public function getParameter(name: DOMString): DOMUserData;
@@ -333,48 +711,522 @@ extern interface DOMConfiguration {
     public var parameterNames(default, null): DOMStringList;
 }
 
-extern interface CDATASection implements Text {
+typedef CDATASection = {
+  //Text
+  
+  public function splitText(offset: Int): Text;
+  
+  public function replaceWholeText(content: DOMString): Text;
+  
+  public var isElementContentWhitespace   (default,null): Bool;
+  public var wholeText                    (default,null): DOMString;
+  
+  //CharacterData
+  
+  public var data:    DOMString;
+  public var length   (default,null): Int;
+  
+  public function substringData(offset: Int, count: Int): DOMString;
+  
+  public function appendData(arg: DOMString): Void;
+  
+  public function insertData(offset: Int, arg: DOMString): Void;
+  
+  public function deleteData(offset: Int, count: Int): Void;
+  
+  public function replaceData(offset: Int, count: Int, arg: DOMString): Void;
+  
+  //Node
+  
+  public var nodeName         (default,null): DOMString;
+  public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+  public var nodeType         (default,null): Int;
+  public var parentNode       (default,null): Node;
+  public var childNodes       (default,null): DomCollection<Node>;
+  public var firstChild       (default,null): Node;
+  public var lastChild        (default,null): Node;
+  public var previousSibling  (default,null): Node;
+  public var nextSibling      (default,null): Node;
+  public var attributes       (default,null): NamedNodeMap;
+  public var ownerDocument    (default,null): Document;
+  
+  public function hasChildNodes(): Bool;
+  
+  public function insertBefore(newChild: Node, refChild: Node): Node;
+  
+  public function replaceChild(newChild: Node, oldChild: Node): Node;
+  
+  public function removeChild(oldChild: Node): Node;
+  
+  public function appendChild(newChild: Node): Node;
+  
+  public function cloneNode(deep: Bool): Node;
+  
+  public function isSupported(feature: DOMString, version: DOMString): Bool;
+  
+  public function hasAttributes(): Bool;
+  
+  public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+  public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+  public function dispatchEvent(evt: Event): Bool;
+  
+  public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+  
+  public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+  
+  public var namespaceURI     (default,null): DOMString;
+  public var prefix           (default,null): DOMString;                      
+  public var localName        (default,null): DOMString;
+  public var baseURI          (default,null): DOMString;
+  public var textContent:     DOMString;
+  
+  
+  public function compareDocumentPosition(other: Node): Int;
+  
+  public function isSameNode(other: Node): Bool;
+  
+  public function lookupPrefix(namespaceURI: DOMString): DOMString;
+  
+  public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+  
+  public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+  
+  public function isEqualNode(arg: Node): Bool;
+  
+  public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+  
+  public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+  
+  public function getUserData(key: DOMString): DOMUserData;
     
 }
 //Tested
-extern interface DocumentType implements Node {
+typedef DocumentType = {
     public var name             (default,null): DOMString;
     public var entities         (default,null): NamedNodeMap;
     public var notations        (default,null): NamedNodeMap;
     public var publicId         (default,null): DOMString;
     public var systemId         (default,null): DOMString;
     public var internalSubset   (default,null): DOMString;
-}
-//Unagle to Test
-extern interface Notation implements Node {
-    public var publicId         (default,null): DOMString;
-    public var systemId         (default,null): DOMString;
+    
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Unable to Test
-extern interface Entity implements Node {
+typedef Notation = {
+    public var publicId         (default,null): DOMString;
+    public var systemId         (default,null): DOMString;
+    
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
+}
+//Unable to Test
+typedef Entity = {
     public var publicId         (default,null): DOMString;
     public var systemId         (default,null): DOMString;
     public var notationName     (default,null): DOMString;
     public var inputEncoding    (default,null): DOMString;
     public var xmlEncoding      (default,null): DOMString;
     public var xmlVersion       (default,null): DOMString;
+    
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
-extern interface EntityReference implements Node {
-    
+typedef EntityReference = {
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //XML Only
-extern interface ProcessingInstruction implements Node {
+typedef ProcessingInstruction = {
     public var target           (default, null):      DOMString;
     public var data:        DOMString;
+    
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
-extern interface DocumentFragment implements Node {
-    
+typedef DocumentFragment = {
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
 //Tested
-extern interface Document implements Node {
+typedef Document = {
     public var doctype                  (default, null): DocumentType;
     public var implementation           (default, null): DOMImplementation;
     public var documentElement          (default, null): Element;
@@ -432,9 +1284,74 @@ extern interface Document implements Node {
     public function renameNode(n: Node, namespaceURI: DOMString, qualifiedName: DOMString): Node;
     
     public function getOverrideStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
+    
+    //Node
+
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+
+    public function hasChildNodes(): Bool;
+
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+
+    public function removeChild(oldChild: Node): Node;
+
+    public function appendChild(newChild: Node): Node;
+
+    public function cloneNode(deep: Bool): Node;
+
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+
+    public function hasAttributes(): Bool;
+
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+
+
+    public function compareDocumentPosition(other: Node): Int;
+
+    public function isSameNode(other: Node): Bool;
+
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+
+    public function isEqualNode(arg: Node): Bool;
+
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+
+    public function getUserData(key: DOMString): DOMUserData;
 }
 
-extern interface Storage {
+typedef Storage = {
     public var length       (default, null): Int;
     
     public function key(index: Int): DOMString;
@@ -453,7 +1370,7 @@ extern interface Storage {
 *
 */
 //Tested
-extern interface HTMLCollection {
+typedef HTMLCollection = {
     public var length (default,null): Int;
     
     public function item(index: Int): Node;
@@ -461,11 +1378,11 @@ extern interface HTMLCollection {
     public function namedItem(name: DOMString): Node;
 }
 
-extern interface MediaError {
+typedef MediaError = {
     public var code                     (default, null): Int;
 }
 
-extern interface TimedTrack {
+typedef TimedTrack = {
     public var kind                 (default, null): DOMString;
     public var label                (default, null): DOMString;
     public var language             (default, null): DOMString;
@@ -479,13 +1396,27 @@ extern interface TimedTrack {
     public var onexitcue            (default, null): EventListener<Event>;
 }
 
-extern interface MutableTimedTrack implements TimedTrack {
+typedef MutableTimedTrack = {
     public function addCue(cue: TimedTrackCue): Void;
     
     public function removeCue(cue: TimedTrackCue): Void;
+    
+    //TimedTrack
+    
+    public var kind                 (default, null): DOMString;
+    public var label                (default, null): DOMString;
+    public var language             (default, null): DOMString;
+    public var readyState           (default, null): Int;
+    public var onload               (default, null): EventListener<Event>;
+    public var onerror              (default, null): EventListener<Event>;
+    public var mode                 : Int;
+    public var cues                 (default, null): TimedTrackCueList;
+    public var activeCues           (default, null): TimedTrackCueList;
+    public var onentercue           (default, null): EventListener<Event>;
+    public var onexitcue            (default, null): EventListener<Event>;
 }
 
-extern interface TimedTrackCueList {
+typedef TimedTrackCueList = {
     public var length               (default, null): Int;
     
     public function getter(index: Int): TimedTrackCue;
@@ -493,7 +1424,7 @@ extern interface TimedTrackCueList {
     public function getCueById(id: DOMString): TimedTrackCue;
 }
 
-extern interface TimedTrackCue {
+typedef TimedTrackCue = {
     public var track                (default, null): TimedTrack;
     public var id                   (default, null): DOMString;
     public var startTime            (default, null): Float;
@@ -555,7 +1486,7 @@ extern interface RadioNodeList implements DomCollection<Node> {
     public var value: DOMString;
 }
 
-extern interface HTMLOptionsCollection {
+typedef HTMLOptionsCollection = {
     public var length (default,null): Int;
     
     public function item(index: Int): Node;
@@ -720,7 +1651,7 @@ extern interface HTMLUnknownElement implements HTMLElement {
 }
 
 //Tested
-extern interface HTMLElement implements Element {
+typedef HTMLElement = {
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -751,7 +1682,7 @@ extern interface HTMLElement implements Element {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	public var offsetLeft       (default,null): Int;
+	  public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -818,17 +1749,574 @@ extern interface HTMLElement implements Element {
     public var ontimeupdate: EventListener<Event>;
     public var onvolumechange: EventListener<Event>;
     public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLHtmlElement implements HTMLElement {
+typedef HTMLHtmlElement = {
     public var version:     DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLHeadElement implements HTMLElement {
+typedef HTMLHeadElement = {
     public var profile:     DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLLinkElement implements HTMLElement {
+typedef HTMLLinkElement = {
     public var disabled (default, null):        Bool;
     public var charset:         DOMString;
     public var href:            DOMString;
@@ -838,13 +2326,451 @@ extern interface HTMLLinkElement implements HTMLElement {
     public var rev:             DOMString;
     public var target:          DOMString;
     public var type:            DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLTitleElement implements HTMLElement {
+typedef HTMLTitleElement = {
     public var text:            DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLMetaElement implements HTMLElement {
+typedef HTMLMetaElement = {
     public var content:         DOMString;
     public var httpEquiv:       DOMString;
     public var lang:            DOMString;
@@ -852,35 +2778,1130 @@ extern interface HTMLMetaElement implements HTMLElement {
     public var dir:             DOMString;
     public var name:            DOMString;
     public var scheme:          DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLBaseElement implements HTMLElement {
+typedef HTMLBaseElement = {
     public var href:            DOMString;
     public var target:          DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Unable to Test
-extern interface HTMLIsIndexElement implements HTMLElement {
+typedef HTMLIsIndexElement = {
     public var form             (default, null): HTMLFormElement;
     public var prompt:          DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLStyleElement implements HTMLElement {
+typedef HTMLStyleElement = {
     public var disabled:        Bool;
     public var media:           DOMString;
     public var type:            DOMString;
     public var scoped:          Bool;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLBodyElement implements HTMLElement {
+typedef HTMLBodyElement = {
     public var aLink:           DOMString;
     public var background:      DOMString;
     public var bgColor:         DOMString;
     public var link:            DOMString;
     public var text:            DOMString;
     public var vLink:           DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLFormElement implements HTMLElement {
+typedef HTMLFormElement = {
     public var elements         (default, null): HTMLCollection;
     public var length           (default, null): Int;
     public var name:            DOMString;
@@ -893,9 +3914,228 @@ extern interface HTMLFormElement implements HTMLElement {
     public function submit(): Void;
     
     public function reset(): Void;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Unable to Test
-extern interface HTMLSelectElement implements HTMLElement {
+typedef HTMLSelectElement = {
     public var type             (default, null): DOMString;
     public var selectedIndex:   Int;
     public var value:           DOMString;
@@ -915,18 +4155,456 @@ extern interface HTMLSelectElement implements HTMLElement {
     public function blur(): Void;
 
     public function focus(): Void;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLCanvasElement implements HTMLElement {
+typedef HTMLCanvasElement = {
     public var width:                      Int;
     public var height:                     Int;
     
     public function toDataURL(type:DOMString, args: Dynamic): DOMString;
     
     public function getContext(contextId: DOMString): Dynamic;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface CanvasRenderingContext2D {
+typedef CanvasRenderingContext2D = {
 
     public var canvas: HTMLCanvasElement;
     
@@ -995,37 +4673,256 @@ extern interface CanvasRenderingContext2D {
     public function putImageData(imagedata: ImageData, dx: Float, dy: Float, dirtyX: Float, dirtyY: Float, dirtyWidth: Float, dirtyHeight: Float):Void;
 }
 //Tested
-extern interface CanvasGradient {
+typedef CanvasGradient = {
     public function addColorStop(offset: Float, color: DOMString): Void;
 }
 
-extern interface CanvasPattern {
+typedef CanvasPattern = {
 
 }
 //Tested
-extern interface TextMetrics {
+typedef TextMetrics = {
     public var width            (default, null): Int;
 }
 //Tested
-extern interface ImageData {
+typedef ImageData = {
     public var width              (default, null): Int;
     public var height             (default, null): Int;
     public var data               (default, null): CanvasPixelArray;
 }
 
-extern interface CanvasPixelArray {
+typedef CanvasPixelArray = {
   public var length(default, null): Int;
 }
 
-extern interface Octet {}
+typedef Octet = {}
 
 //Unable to Test
-extern interface HTMLOptGroupElement implements HTMLElement {
+typedef HTMLOptGroupElement = {
     public var disabled (default, null):        Bool;
     public var label (default, null):           DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLOptionElement implements HTMLElement {
+typedef HTMLOptionElement = {
     public var form             (default, null): HTMLFormElement;
     public var defaultSelected: Bool;
     public var text             (default, null): DOMString;
@@ -1034,9 +4931,228 @@ extern interface HTMLOptionElement implements HTMLElement {
     public var label (default, null):           DOMString;
     public var selected:        Bool;
     public var value:           DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLInputElement implements HTMLElement {
+typedef HTMLInputElement = {
     public var defaultValue:    DOMString;
     public var defaultChecked:  Bool;
     public var form             (default, null): HTMLFormElement;
@@ -1063,9 +5179,228 @@ extern interface HTMLInputElement implements HTMLElement {
     public function select(): Void;
     
     public function click(): Void;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLTextAreaElement implements HTMLElement {
+typedef HTMLTextAreaElement = {
     public var defaultValue:    DOMString;
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
@@ -1083,9 +5418,228 @@ extern interface HTMLTextAreaElement implements HTMLElement {
     public function focus(): Void;
     
     public function select(): Void;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLButtonElement implements HTMLElement {
+typedef HTMLButtonElement = {
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
     public var disabled (default, null):        Bool;
@@ -1093,48 +5647,2019 @@ extern interface HTMLButtonElement implements HTMLElement {
     public var tabIndex:        Int;
     public var type             (default, null): DOMString;
     public var value:           DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLLabelElement implements HTMLElement {
+typedef HTMLLabelElement = {
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
     public var htmlFor:         DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLFieldSetElement implements HTMLElement {
+typedef HTMLFieldSetElement = {
     public var form             (default, null): HTMLFormElement;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLLegendElement implements HTMLElement {
+typedef HTMLLegendElement = {
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
     public var align:           DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLUListElement implements HTMLElement {
+typedef HTMLUListElement = {
     public var compact:         Bool;
     public var type:            DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLOListElement implements HTMLElement {
+typedef HTMLOListElement = {
     public var compact:         Bool;
     public var start:           Int;
     public var type:            DOMString;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLDListElement implements HTMLElement {
+typedef HTMLDListElement = {
     public var compact:         Bool;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLDirectoryElement implements HTMLElement {
+typedef HTMLDirectoryElement = {
     public var compact:         Bool;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLMenuElement implements HTMLElement {
+typedef HTMLMenuElement = {
     public var compact:         Bool;
+    
+    //HTMLElement
+    
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): Node;
+    public var childNodes       (default,null): DomCollection<Node>;
+    public var firstChild       (default,null): Node;
+    public var lastChild        (default,null): Node;
+    public var previousSibling  (default,null): Node;
+    public var nextSibling      (default,null): Node;
+    public var attributes       (default,null): NamedNodeMap;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: Node, refChild: Node): Node;
+    
+    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    
+    public function removeChild(oldChild: Node): Node;
+    
+    public function appendChild(newChild: Node): Node;
+    
+    public function cloneNode(deep: Bool): Node;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: Node): Int;
+    
+    public function isSameNode(other: Node): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: Node): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-extern interface HTMLLIElement implements HTMLElement {
+typedef HTMLLIElement = {
     public var type:            DOMString;
     public var value:           Int;
 }
@@ -1414,7 +7939,7 @@ extern interface HTMLIFrameElement implements HTMLElement {
     public var contentWindow    (default, null): Window;
 }
 //Unable to Test
-extern interface ClientRect {
+typedef ClientRect = {
     public var top              (default, null): Float;
     public var right            (default, null): Float;
     public var bottom           (default, null): Float;
@@ -1428,14 +7953,14 @@ extern interface ClientRect {
 *
 */
 //Unable to Test
-extern interface AbstractView {
+typedef AbstractView = {
     public var document     (default, null): Document;
     
     public var media        (default, null): Media;
 }
 
 //Unable To Test
-extern interface Media {
+typedef Media = {
     public var type         (default, null): DOMString;
     
     public function matchMedium(mediaquery: DOMString): Bool;
@@ -1468,7 +7993,7 @@ extern interface StorageEvent implements Event {
     public function initStorageEvent(typeArg: DOMString, canBubbleArg: Bool, cancelableArg: Bool, keyArg: DOMString, oldValueArg: Dynamic, newValueArg: Dynamic, urlArg: DOMString, storageAreaArg: Storage): Void;
 }
 
-extern interface EventException {
+typedef EventException = {
     public var code:    Int;
 }
 
@@ -1658,7 +8183,7 @@ interface MessagePort {
 }
 
 
-extern interface Event {
+typedef Event = {
     public var type             (default, null): DOMString;
     public var target           (default, null): EventTarget;
     public var currentTarget    (default, null): EventTarget;
@@ -1699,7 +8224,7 @@ extern interface FocusEvent implements UIEvent {
     ): Void;
 }
 
-extern interface DocumentEvent {
+typedef DocumentEvent = {
     public function createEvent(eventType: DOMString): Event;
     
     public function canDispatch(namespaceURI: DOMString, type: DOMString): Bool;
@@ -1844,7 +8369,7 @@ extern interface DragEvent implements MouseEvent {
     ): Void;
 }
 
-extern interface DataTransfer {
+typedef DataTransfer = {
     public var dropEffect:      DOMString;
     public var effectAllowed:   DOMString;
     public var types            (default, null): DOMStringList;
@@ -1861,7 +8386,7 @@ extern interface DataTransfer {
     public function addElement(element: Element): Void;
 }
 
-extern interface Blob {
+typedef Blob = {
       public var size           (default, null): Int;
       
       public function slice(start: Int, length: Int): Blob;
@@ -1934,7 +8459,7 @@ extern interface MutationNameEvent implements MutationEvent {
 * <----------------- Traversal level 2 Port ------------------>
 *
 */
-extern interface NodeIterator {
+typedef NodeIterator = {
     public var root                     (default, null): Node;
     public var whatToShow               (default, null): Int;
     public var filter                   (default, null): NodeFilter;
@@ -1947,11 +8472,11 @@ extern interface NodeIterator {
     public function detach(): Void;
 }
 
-extern interface NodeFilter {
+typedef NodeFilter = {
     public function acceptNode(n: Node): Int;
 }
 
-extern interface TreeWalker {
+typedef TreeWalker = {
     public var root                     (default, null): Node;
     public var whatToShow               (default, null): Int;
     public var filter                   (default, null): NodeFilter;
@@ -1973,7 +8498,7 @@ extern interface TreeWalker {
     public function nextNode():         Node;
 }
 
-extern interface DocumentTraversal {
+typedef DocumentTraversal = {
     public function createNodeIterator(root: Node, whatToShow: Int, filter: NodeFilter, entityReferenceExpansion: Bool): NodeIterator;
     
     public function createTreeWalker(root: Node, whatToShow: Int, filter: NodeFilter, entityReferenceExpansion: Bool): TreeWalker;
@@ -1984,7 +8509,7 @@ extern interface DocumentTraversal {
 *
 */
 
-extern interface TimeRanges {
+typedef TimeRanges = {
   public var length         (default, null): Int;
   
   public function Float(index: Int): Float;
@@ -1992,7 +8517,7 @@ extern interface TimeRanges {
   public function end(index: Int): Float;
 }
 
-extern interface RangeException {
+typedef RangeException = {
     public var code:        Int;
     
     public function getClientRects(): DomCollection<ClientRect>;
@@ -2000,7 +8525,7 @@ extern interface RangeException {
     public function getBoundingClientRect(): ClientRect;
 }
 
-extern interface Range {
+typedef Range = {
     public var startContainer           (default, null): Node;
     public var startOffset              (default, null): Int;
     public var endContainer             (default, null): Node;
@@ -2045,7 +8570,7 @@ extern interface Range {
     public function detach(): Void;
 }
 
-extern interface DocumentRange {
+typedef DocumentRange = {
     public function createRange(): Range;
 }
 
@@ -2054,7 +8579,7 @@ extern interface DocumentRange {
 *
 */
 
-extern interface StyleSheet {
+typedef StyleSheet = {
     public var type             (default, null): DOMString;
     public var disabled         (default, null): Bool;
     public var ownerNode        (default, null): Node;
@@ -2064,7 +8589,7 @@ extern interface StyleSheet {
     public var media            (default, null): MediaList;
 }
 
-extern interface MediaList {
+typedef MediaList = {
     public var mediaText:   DOMString;
     public var length       (default,null): Int;
     
@@ -2075,7 +8600,7 @@ extern interface MediaList {
     public function appendMedium(newMedium: DOMString): Void;
 }
 
-extern interface LinkStyle {
+typedef LinkStyle = {
     public var sheet            (default, null): StyleSheet;
 }
 
@@ -2085,7 +8610,7 @@ extern interface LinkStyle {
 */
 
 //Tested
-extern interface CSSRule {
+typedef CSSRule = {
     public var type             (default, null): Int;
     public var cssText:         DOMString;
     public var parentStyleSheet (default, null): CSSStyleSheet;
@@ -2128,7 +8653,7 @@ extern interface CSSCharsetRule implements CSSRule {
 extern interface CSSUnknownRule implements CSSRule {
 }
 //UnableToTest
-extern interface CSS2Properties {
+typedef CSS2Properties = {
     public var azimuth:              DOMString;
     public var background:           DOMString;
     public var backgroundAttachment: DOMString;
@@ -2253,7 +8778,7 @@ extern interface CSS2Properties {
     public var zIndex:               DOMString;
 }
 //Tested
-extern interface CSSStyleDeclaration {
+typedef CSSStyleDeclaration = {
     public var length       (default,null): Int;
     public var parentRule   (default, null): CSSRule;
     
@@ -2294,7 +8819,7 @@ extern interface CSSInlineStyleDeclaration implements CSS2Properties {
 }
 
 //Unable to Test
-extern interface CSSValue {
+typedef CSSValue = {
     public var cssText:             DOMString;
     public var cssValueType         (default, null): Int;
 }
@@ -2318,20 +8843,20 @@ extern interface CSSPrimitiveValue implements CSSValue {
     public function getRGBValue(): RGBColor;
 }
 //Unable to Test
-extern interface RGBColor {
+typedef RGBColor = {
     public var red          (default, null): CSSPrimitiveValue;
     public var green        (default, null): CSSPrimitiveValue;
     public var blue         (default, null): CSSPrimitiveValue;
 }
 //Unable to Test
-extern interface Rect {
+typedef Rect = {
     public var top          (default, null): CSSPrimitiveValue;
     public var right        (default, null): CSSPrimitiveValue;
     public var bottom       (default, null): CSSPrimitiveValue;
     public var left         (default, null): CSSPrimitiveValue;
 }
 //Unable to Test
-extern interface Counter {
+typedef Counter = {
     public var identifier   (default, null): DOMString;
     public var listStyle    (default, null): DOMString;
     public var separator    (default, null): DOMString;
@@ -2354,7 +8879,7 @@ extern interface DOMImplementationCSS implements DOMImplementation {
     public function createCSSStyleSheet(title: DOMString, media: DOMString): CSSStyleSheet;
 }
 //Tested
-extern interface Navigator {
+typedef Navigator = {
     public var appCodeName      (default, null): DOMString;
     public var cookieEnabled    (default, null): DOMString;
     public var geolocation      (default, null): DOMString;
@@ -2384,7 +8909,7 @@ extern interface Navigator {
     public function yieldForStorageUpdates(): Void;
 }
 //Tested
-extern interface Plugin {
+typedef Plugin = {
     public var length           (default, null): Int;
     public var name             (default, null):DOMString;
     public var filename         (default, null):DOMString;
@@ -2395,9 +8920,9 @@ extern interface Plugin {
     public function namedItem(name:DOMString): Plugin;
 }
 
-extern interface MimeTypeArray {}
+typedef MimeTypeArray = {}
 //Tested
-extern interface History {
+typedef History = {
     public var length           (default, null): Int;
     
     public function back(): Void;
@@ -2411,7 +8936,7 @@ extern interface History {
     public function replaceState(data: Dynamic, title: DOMString, ?url: DOMString): Void;
 }
 //Tested
-extern interface Location {
+typedef Location = {
     public var hash             (default, default): String;
     public var host             (default, default): String;
     public var hostname         (default, default): String;
@@ -2431,7 +8956,7 @@ extern interface Location {
 }
 
 //Tested
-extern interface Screen {
+typedef Screen = {
     public var availHeight  (default, null): String;	
     public var availWidth   (default, null): String;
     public var availTop     (default, null): String;
@@ -2462,7 +8987,7 @@ extern interface ScreenView implements AbstractView {
     public function scrollBy(x: Int, y: Int): Void;
 }
 
-extern interface Crypto {
+typedef Crypto = {
     
 }
 
@@ -2643,12 +9168,12 @@ extern interface Frame implements Window {
     
 }
 //Tested
-extern interface BarProp {
+typedef BarProp = {
     public var visible:     Bool;
 }
 
 //Tested, but many fields and methods unavailable
-extern interface ApplicationCache {
+typedef ApplicationCache = {
     public var status           (default, null): Int;
     public var length           (default, null): Int;
     public var onchecking:      EventListener<Event>;
@@ -2676,7 +9201,7 @@ extern interface ApplicationCache {
     public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
 }
 //Not widely supported yet (HTML5 Spec)
-extern interface UndoManager {
+typedef UndoManager = {
     public var length      (default, null): Int;
     public var position    (default, null): Int;
     
