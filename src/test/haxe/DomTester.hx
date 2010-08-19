@@ -2040,9 +2040,21 @@ class DomTest extends TestCase {
     }
     
     private function testThatRefinementsIFrameOptionWorks(): Void {
-      var iframe = _doc.getElementById('IFRAME');
+      var iframe = _doc.getElementsByTagName('iframe')[0];
       
-      assertEquals("", "");
+      assertEquals("IFRAME", iframe.iframe().nodeName);
+    }
+    
+    private function testThatRefinementsScriptOptionWorks(): Void {
+      var script = _doc.getElementsByTagName('script')[0];
+      
+      assertEquals("SCRIPT", script.script().nodeName);
+    }
+    
+    private function testThatRefinementsDIVOptionWorks(): Void {
+      var div = _doc.getElementsByTagName('div')[0];
+      
+      assertEquals("DIV", div.div().nodeName);
     }
     
     
