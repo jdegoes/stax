@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+    <head>
+        <title>Stax JavaScript Demo</title>
+        <script type="text/javascript">
+            var expandIframe = function() {
+                var iframe = document.getElementById('test-iframe');
+                
+                iframe.style.position   = 'fixed';
+                iframe.style.left       = '50%';
+                iframe.style.top        = '50%';
+                iframe.style.marginLeft = '-150px';
+                iframe.style.marginTop  = '-100px';
+            }
+        </script>
+    </head>
+    <body>
+        <div id="haxe:trace"></div>
+        
+        <!-- 
+        <iframe id="test-iframe" src="http://www.yahoo.com" width="300" height="250"></iframe>
+        <input type="button" value="Fix" onclick="javascript:expandIframe();"/>
+        -->
+        
+        <script type="text/javascript" src="demo.min.js"></script>
+    </body>
+</html>
