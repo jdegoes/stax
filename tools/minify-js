@@ -1,17 +1,5 @@
 #!/usr/bin/perl
 
-=head1 SYNOPSYS
-
-minify-js file1 [file2 [... fileN]] > output.js
-
-=head1 DESCRIPTION
-
-This program minifies HaXe-generated JavaScript. It removes unused classes, static methods, and instance methods, though because of the dynamically-typed nature of JavaScript it doesn't
-necessarily catch everything. Note that this script doesn't work for JS minification in the general case. It relies on HaXe-formatted output, which is of a very specific form. Each definition
-occurs on its own line, and indentation is consistent enough to reflect the structure of the generated code. Neither of these is true for JavaScript in general.
-
-=cut
-
 $|++;
 
 sub d {
@@ -29,21 +17,34 @@ sub uniq {
   grep ! $h{$_}++, @_;
 }
 
-my @pieces = split /^([\$\w\.]+)(\h*=\h*function.*?\{(?:\V|\n\h)+\n^\}+$)/mo, join '', <>;
+my @pieces = split /^([\$\w\.]+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+$|[^()]*$))/mo, join '', <>;
 
 # At this point, @pieces looks like this:
-# ('', 'foo.bar', 'function () {...}', '', 'bif.baz', 'function (x) {...}', ...)
-# We can extract the definitions that are useful.
+# '', 'foo.bar', ' = function () {\n...\n}', 'global = null', 'bif.baz', ' = function (x) {\n...\n}', ...
 my %definitions = map @pieces[$_ * 3 + 1, $_ * 3 + 2], 0 .. $#pieces / 3;
 my @non_defs    = map $pieces[$_ * 3], 0 .. $#pieces / 3;
 
 my @instance    = grep   /\.prototype\./o, keys %definitions;
 my @static      = grep ! /\.prototype\./o, keys %definitions;
 
-my @live_set    = @non_defs, @instance;
+my @live_set    = (@non_defs, @instance);
 my @copy        = ();
 
-@live_set = uniq statics_in(@live_set, @definitions{@copy = @live_set}) until @live_set == @copy;
+@live_set = uniq @live_set, statics_in(@definitions{@copy = @live_set}) until @live_set == @copy;
 my %live_set = map {$_ => 1} @live_set;
 
 print join '', map @pieces[$_ * 3, $live_set{$pieces[$_ * 3 + 1]} ? ($_ * 3 + 1, $_ * 3 + 2) : ()], 0 .. $#pieces / 3;
+
+__END__
+
+=head1 SYNOPSYS
+
+minify-js file1 [file2 [... fileN]] > output.js
+
+=head1 DESCRIPTION
+
+This program minifies HaXe-generated JavaScript. It removes unused classes, static methods, and instance methods, though because of the dynamically-typed nature of JavaScript it doesn't
+necessarily catch everything. Note that this script doesn't work for JS minification in the general case. It relies on HaXe-formatted output, which is of a very specific form. Each definition
+occurs on its own line, and indentation is consistent enough to reflect the structure of the generated code. Neither of these is true for JavaScript in general.
+
+=cut
