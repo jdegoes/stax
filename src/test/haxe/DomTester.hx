@@ -20,6 +20,7 @@ package haxe;
 import Dom;
 import js.Env;
 import js.dom.Quirks;
+import js.dom.Refinements;
 
 import haxe.unit.TestCase;
 import haxe.unit.TestRunner;

@@ -29,11 +29,21 @@ class Refinements {
 	  return scriptOption(e).get();
 	}
 	
+	public static inline function div(e: HTMLElement): HTMLIDivElement {
+	  return divOption(e).get();
+	}
+	
+	
+	// ************************
 	public static inline function iframeOption(e: HTMLElement): Option<HTMLIFrameElement> {
 	  return if (e.nodeName == 'IFRAME') Some(cast e); else None;
 	}
 	
 	public static inline function scriptOption(e: HTMLElement): Option<HTMLScriptElement> {
 	  return if (e.nodeName == 'SCRIPT') Some(cast e); else None;
+	}
+	
+	public static inline function divOption(e: HTMLElement): Option<HTMLDivElement> {
+	  return if (e.nodeName == 'DIV') Some(cast e); else None;
 	}
 }
