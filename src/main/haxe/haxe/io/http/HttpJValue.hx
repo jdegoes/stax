@@ -44,7 +44,7 @@ interface HttpJValue implements Http<JValue> {
 
 #if js
 
-class HttpJValueAsync extends HttpJValueTransformer<String, JValue>, implements HttpJValue {
+class HttpJValueAsync extends HttpTransformer<String, JValue>, implements HttpJValue {
   public function new() {
     super(new HttpStringAsync(), Json.encode, Json.decode);
   }
@@ -137,6 +137,10 @@ class HttpJValueJsonp implements HttpJValue {
   
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
     return Stax.error('JSONP does not support DELETE');
+  }
+  
+  public function custom(request: String, url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
+    return Stax.error('JSONP does not support custom request: ' + request);
   }
 }
 

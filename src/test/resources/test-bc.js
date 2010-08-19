@@ -108,33 +108,9 @@ haxe.test.Notifier.prototype.remove = function(h) {
 	return null;
 }
 haxe.test.Notifier.prototype.__class__ = haxe.test.Notifier;
-if(!haxe.reactive) haxe.reactive = {}
-haxe.reactive.SignalBool = function(p) { if( p === $_ ) return; {
-	null;
-}}
-haxe.reactive.SignalBool.__name__ = ["haxe","reactive","SignalBool"];
-haxe.reactive.SignalBool.not = function(signal) {
-	return haxe.reactive.StreamBool.not(signal.changes()).startsWith(!signal.valueNow());
-}
-haxe.reactive.SignalBool.ifTrue = function(condition,thenS,elseS) {
-	return condition.map(function(b) {
-		return (b?thenS.valueNow():elseS.valueNow());
-	});
-}
-haxe.reactive.SignalBool.and = function(signals) {
-	return haxe.reactive.Signals.zipN(signals).map(function(i) {
-		return haxe.data.collections.IterableExtensions.and(i);
-	});
-}
-haxe.reactive.SignalBool.or = function(signals) {
-	return haxe.reactive.Signals.zipN(signals).map(function(i) {
-		return haxe.data.collections.IterableExtensions.or(i);
-	});
-}
-haxe.reactive.SignalBool.prototype.__class__ = haxe.reactive.SignalBool;
-if(!haxe["abstract"]) haxe["abstract"] = {}
+if(!haxe.functional) haxe.functional = {}
 haxe.functional.Foldable = function() { }
-haxe.functional.Foldable.__name__ = ["haxe","abstract","Foldable"];
+haxe.functional.Foldable.__name__ = ["haxe","functional","Foldable"];
 haxe.functional.Foldable.prototype.append = null;
 haxe.functional.Foldable.prototype.empty = null;
 haxe.functional.Foldable.prototype.foldl = null;
@@ -600,19 +576,25 @@ haxe.test.TestCase.prototype.after = function() {
 haxe.test.TestCase.prototype.afterAll = function() {
 	null;
 }
+haxe.test.TestCase.prototype.assertCanceled = function(future,assertions,timeout) {
+	return haxe.test.Assert.canceled(future,assertions,timeout);
+}
 haxe.test.TestCase.prototype.assertContains = function(values,match,msg,pos) {
-	haxe.test.Assert.contains(match,values,msg,pos);
+	haxe.test.Assert.contains(values,match,msg,pos);
+}
+haxe.test.TestCase.prototype.assertDelivered = function(future,assertions,timeout) {
+	return haxe.test.Assert.delivered(future,assertions,timeout);
 }
 haxe.test.TestCase.prototype.assertEquals = function(expected,value,equal,msg,pos) {
 	if(equal != null) {
 		haxe.test.Assert.isTrue(equal.equal(expected,value),((msg != null?msg:(("expected " + expected) + " but found ") + value)),pos);
 	}
 	else {
-		haxe.test.Assert.equals(expected,value,msg,pos);
+		haxe.test.Assert.equals(expected,value,null,msg,pos);
 	}
 }
 haxe.test.TestCase.prototype.assertEqualsOneOf = function(value,possibilities,msg,pos) {
-	haxe.test.Assert.allows(possibilities,value,msg,pos);
+	haxe.test.Assert.equalsOneOf(value,possibilities,msg,pos);
 }
 haxe.test.TestCase.prototype.assertFalse = function(value,msg,pos) {
 	haxe.test.Assert.isFalse(value,msg,pos);
@@ -623,20 +605,17 @@ haxe.test.TestCase.prototype.assertFloatEquals = function(expected,value,approx,
 haxe.test.TestCase.prototype.assertIs = function(value,type,msg,pos) {
 	haxe.test.Assert["is"](value,type,msg,pos);
 }
-haxe.test.TestCase.prototype.assertLater = function(f,timeout) {
-	return haxe.test.Assert.createAsync(f,timeout);
-}
-haxe.test.TestCase.prototype.assertLaterWithEvent = function(f,timeout) {
-	return haxe.test.Assert.createEvent(f,timeout);
-}
 haxe.test.TestCase.prototype.assertLooksLike = function(expected,value,recursive,msg,pos) {
-	haxe.test.Assert.same(expected,value,recursive,msg,pos);
+	haxe.test.Assert.looksLike(expected,value,recursive,msg,pos);
 }
 haxe.test.TestCase.prototype.assertMatches = function(pattern,value,msg,pos) {
-	haxe.test.Assert.match(pattern,value,msg,pos);
+	haxe.test.Assert.matches(pattern,value,msg,pos);
 }
 haxe.test.TestCase.prototype.assertNotContains = function(values,match,msg,pos) {
-	haxe.test.Assert.notContains(match,values,msg,pos);
+	haxe.test.Assert.notContains(values,match,msg,pos);
+}
+haxe.test.TestCase.prototype.assertNotDelivered = function(future,timeout,pos) {
+	return haxe.test.Assert.notDelivered(future,timeout,pos);
 }
 haxe.test.TestCase.prototype.assertNotEquals = function(expected,value,msg,pos) {
 	haxe.test.Assert.notEquals(expected,value,msg,pos);
@@ -654,22 +633,10 @@ haxe.test.TestCase.prototype.assertStringSequence = function(sequence,value,msg,
 	haxe.test.Assert.stringSequence(sequence,value,msg,pos);
 }
 haxe.test.TestCase.prototype.assertThat = function(obj,cond,msg,pos) {
-	var $e = (cond(obj));
-	switch( $e[1] ) {
-	case 0:
-	var msg1 = $e[2];
-	{
-		haxe.test.Assert.isTrue(false,msg1,pos);
-	}break;
-	case 1:
-	var msg1 = $e[2];
-	{
-		haxe.test.Assert.isTrue(true,msg1,pos);
-	}break;
-	}
+	haxe.test.Assert.that(obj,cond,msg,pos);
 }
 haxe.test.TestCase.prototype.assertThrowsException = function(method,type,msg,pos) {
-	haxe.test.Assert.raises(method,type,msg,pos);
+	haxe.test.Assert.throwsException(method,type,msg,pos);
 }
 haxe.test.TestCase.prototype.assertTrue = function(cond,msg,pos) {
 	haxe.test.Assert.isTrue(cond,msg,pos);
@@ -680,8 +647,15 @@ haxe.test.TestCase.prototype.before = function() {
 haxe.test.TestCase.prototype.beforeAll = function() {
 	null;
 }
+haxe.test.TestCase.prototype.fail = function(msg,pos) {
+	if(msg == null) msg = "failure expected";
+	haxe.test.Assert.fail(msg,pos);
+}
 haxe.test.TestCase.prototype.not = function(c) {
-	return haxe.test.MustMatcherExtensions.not(c);
+	return haxe.test.MustMatcherExtensions.negate(c);
+}
+haxe.test.TestCase.prototype.warn = function(msg) {
+	haxe.test.Assert.warn(msg);
 }
 haxe.test.TestCase.prototype.__class__ = haxe.test.TestCase;
 haxe.test.TestResult = function(p) { if( p === $_ ) return; {
@@ -706,6 +680,7 @@ haxe.test.TestResult.prototype.pack = null;
 haxe.test.TestResult.prototype.setup = null;
 haxe.test.TestResult.prototype.teardown = null;
 haxe.test.TestResult.prototype.__class__ = haxe.test.TestResult;
+if(!haxe.reactive) haxe.reactive = {}
 haxe.reactive.Streams = function(p) { if( p === $_ ) return; {
 	null;
 }}
@@ -1167,6 +1142,347 @@ haxe.test.ui.text.HtmlReport.prototype.wrapHtml = function(title,s) {
 }
 haxe.test.ui.text.HtmlReport.prototype.__class__ = haxe.test.ui.text.HtmlReport;
 haxe.test.ui.text.HtmlReport.__interfaces__ = [haxe.test.ui.common.IReport];
+haxe.functional.PartialFunction1 = function() { }
+haxe.functional.PartialFunction1.__name__ = ["haxe","functional","PartialFunction1"];
+haxe.functional.PartialFunction1.prototype.call = null;
+haxe.functional.PartialFunction1.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction1.prototype.orAlways = null;
+haxe.functional.PartialFunction1.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction1.prototype.orElse = null;
+haxe.functional.PartialFunction1.prototype.toFunction = null;
+haxe.functional.PartialFunction1.prototype.__class__ = haxe.functional.PartialFunction1;
+if(!haxe.functional._PartialFunctionExtensions) haxe.functional._PartialFunctionExtensions = {}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl = function(def) { if( def === $_ ) return; {
+	this._def = def;
+}}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction1Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction1Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype._def = null;
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.call = function(a) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a)) return d._2(a);
+		}
+	}
+	return Stax.error("Function undefined at " + a);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.isDefinedAt = function(a) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a)) return true;
+		}
+	}
+	return false;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+		return true;
+	}),f)]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
+		return true;
+	}),function(a) {
+		return z();
+	})]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.toFunction = function() {
+	var self = this;
+	return function(a) {
+		return (self.isDefinedAt(a)?Option.Some(self.call(a)):Option.None);
+	}
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype.__class__ = haxe.functional._PartialFunctionExtensions.PartialFunction1Impl;
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.__interfaces__ = [haxe.functional.PartialFunction1];
+haxe.functional.PartialFunction1ImplExtensions = function() { }
+haxe.functional.PartialFunction1ImplExtensions.__name__ = ["haxe","functional","PartialFunction1ImplExtensions"];
+haxe.functional.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(def);
+}
+haxe.functional.PartialFunction1ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction1ImplExtensions;
+haxe.functional.PartialFunction2 = function() { }
+haxe.functional.PartialFunction2.__name__ = ["haxe","functional","PartialFunction2"];
+haxe.functional.PartialFunction2.prototype.call = null;
+haxe.functional.PartialFunction2.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction2.prototype.orAlways = null;
+haxe.functional.PartialFunction2.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction2.prototype.orElse = null;
+haxe.functional.PartialFunction2.prototype.toFunction = null;
+haxe.functional.PartialFunction2.prototype.__class__ = haxe.functional.PartialFunction2;
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl = function(def) { if( def === $_ ) return; {
+	this._def = def;
+}}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction2Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction2Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype._def = null;
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.call = function(a,b) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b)) return d._2(a,b);
+		}
+	}
+	return Stax.error(((("Function undefined at (" + a) + ", ") + b) + ")");
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.isDefinedAt = function(a,b) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b)) return true;
+		}
+	}
+	return false;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+		return true;
+	}),f)]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
+		return true;
+	}),function(a,b) {
+		return z();
+	})]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.toFunction = function() {
+	var self = this;
+	return function(a,b) {
+		return (self.isDefinedAt(a,b)?Option.Some(self.call(a,b)):Option.None);
+	}
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype.__class__ = haxe.functional._PartialFunctionExtensions.PartialFunction2Impl;
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.__interfaces__ = [haxe.functional.PartialFunction2];
+haxe.functional.PartialFunction2ImplExtensions = function() { }
+haxe.functional.PartialFunction2ImplExtensions.__name__ = ["haxe","functional","PartialFunction2ImplExtensions"];
+haxe.functional.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(def);
+}
+haxe.functional.PartialFunction2ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction2ImplExtensions;
+haxe.functional.PartialFunction3 = function() { }
+haxe.functional.PartialFunction3.__name__ = ["haxe","functional","PartialFunction3"];
+haxe.functional.PartialFunction3.prototype.call = null;
+haxe.functional.PartialFunction3.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction3.prototype.orAlways = null;
+haxe.functional.PartialFunction3.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction3.prototype.orElse = null;
+haxe.functional.PartialFunction3.prototype.toFunction = null;
+haxe.functional.PartialFunction3.prototype.__class__ = haxe.functional.PartialFunction3;
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl = function(def) { if( def === $_ ) return; {
+	this._def = def;
+}}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction3Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction3Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype._def = null;
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.call = function(a,b,c) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b,c)) return d._2(a,b,c);
+		}
+	}
+	return Stax.error(((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ")");
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.isDefinedAt = function(a,b,c) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b,c)) return true;
+		}
+	}
+	return false;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+		return true;
+	}),f)]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
+		return true;
+	}),function(a,b,c) {
+		return z();
+	})]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.toFunction = function() {
+	var self = this;
+	return function(a,b,c) {
+		return (self.isDefinedAt(a,b,c)?Option.Some(self.call(a,b,c)):Option.None);
+	}
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype.__class__ = haxe.functional._PartialFunctionExtensions.PartialFunction3Impl;
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.__interfaces__ = [haxe.functional.PartialFunction3];
+haxe.functional.PartialFunction3ImplExtensions = function() { }
+haxe.functional.PartialFunction3ImplExtensions.__name__ = ["haxe","functional","PartialFunction3ImplExtensions"];
+haxe.functional.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(def);
+}
+haxe.functional.PartialFunction3ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction3ImplExtensions;
+haxe.functional.PartialFunction4 = function() { }
+haxe.functional.PartialFunction4.__name__ = ["haxe","functional","PartialFunction4"];
+haxe.functional.PartialFunction4.prototype.call = null;
+haxe.functional.PartialFunction4.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction4.prototype.orAlways = null;
+haxe.functional.PartialFunction4.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction4.prototype.orElse = null;
+haxe.functional.PartialFunction4.prototype.toFunction = null;
+haxe.functional.PartialFunction4.prototype.__class__ = haxe.functional.PartialFunction4;
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl = function(def) { if( def === $_ ) return; {
+	this._def = def;
+}}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction4Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction4Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype._def = null;
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.call = function(a,b,c,d) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d)) return def._2(a,b,c,d);
+		}
+	}
+	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.isDefinedAt = function(a,b,c,d) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d)) return true;
+		}
+	}
+	return false;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+		return true;
+	}),f)]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
+		return true;
+	}),function(a,b,c,d) {
+		return z();
+	})]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.toFunction = function() {
+	var self = this;
+	return function(a,b,c,d) {
+		return (self.isDefinedAt(a,b,c,d)?Option.Some(self.call(a,b,c,d)):Option.None);
+	}
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype.__class__ = haxe.functional._PartialFunctionExtensions.PartialFunction4Impl;
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.__interfaces__ = [haxe.functional.PartialFunction4];
+haxe.functional.PartialFunction4ImplExtensions = function() { }
+haxe.functional.PartialFunction4ImplExtensions.__name__ = ["haxe","functional","PartialFunction4ImplExtensions"];
+haxe.functional.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(def);
+}
+haxe.functional.PartialFunction4ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction4ImplExtensions;
+haxe.functional.PartialFunction5 = function() { }
+haxe.functional.PartialFunction5.__name__ = ["haxe","functional","PartialFunction5"];
+haxe.functional.PartialFunction5.prototype.call = null;
+haxe.functional.PartialFunction5.prototype.isDefinedAt = null;
+haxe.functional.PartialFunction5.prototype.orAlways = null;
+haxe.functional.PartialFunction5.prototype.orAlwaysC = null;
+haxe.functional.PartialFunction5.prototype.orElse = null;
+haxe.functional.PartialFunction5.prototype.toFunction = null;
+haxe.functional.PartialFunction5.prototype.__class__ = haxe.functional.PartialFunction5;
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl = function(def) { if( def === $_ ) return; {
+	this._def = def;
+}}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction5Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction5Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype._def = null;
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.call = function(a,b,c,d,e) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d,e)) return def._2(a,b,c,d,e);
+		}
+	}
+	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.isDefinedAt = function(a,b,c,d,e) {
+	{
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d,e)) return true;
+		}
+	}
+	return false;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.orAlways = function(f) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+		return true;
+	}),f)]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.orAlwaysC = function(z) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
+		return true;
+	}),function(a,b,c,d,e) {
+		return z();
+	})]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.orElse = function(that) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.toFunction = function() {
+	var self = this;
+	return function(a,b,c,d,e) {
+		return (self.isDefinedAt(a,b,c,d,e)?Option.Some(self.call(a,b,c,d,e)):Option.None);
+	}
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype.__class__ = haxe.functional._PartialFunctionExtensions.PartialFunction5Impl;
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.__interfaces__ = [haxe.functional.PartialFunction5];
+haxe.functional.PartialFunction5ImplExtensions = function() { }
+haxe.functional.PartialFunction5ImplExtensions.__name__ = ["haxe","functional","PartialFunction5ImplExtensions"];
+haxe.functional.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(def);
+}
+haxe.functional.PartialFunction5ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction5ImplExtensions;
 haxe.test.ui.common.ResultAggregator = function(runner,flattenPackage) { if( runner === $_ ) return; {
 	if(flattenPackage == null) flattenPackage = false;
 	if(runner == null) throw "runner argument is null";
@@ -1299,6 +1615,29 @@ haxe.test.ui.common.FixtureResult.prototype.list = null;
 haxe.test.ui.common.FixtureResult.prototype.methodName = null;
 haxe.test.ui.common.FixtureResult.prototype.stats = null;
 haxe.test.ui.common.FixtureResult.prototype.__class__ = haxe.test.ui.common.FixtureResult;
+haxe.reactive.SignalBool = function(p) { if( p === $_ ) return; {
+	null;
+}}
+haxe.reactive.SignalBool.__name__ = ["haxe","reactive","SignalBool"];
+haxe.reactive.SignalBool.not = function(signal) {
+	return haxe.reactive.StreamBool.not(signal.changes()).startsWith(!signal.valueNow());
+}
+haxe.reactive.SignalBool.ifTrue = function(condition,thenS,elseS) {
+	return condition.map(function(b) {
+		return (b?thenS.valueNow():elseS.valueNow());
+	});
+}
+haxe.reactive.SignalBool.and = function(signals) {
+	return haxe.reactive.Signals.zipN(signals).map(function(i) {
+		return haxe.data.collections.IterableExtensions.and(i);
+	});
+}
+haxe.reactive.SignalBool.or = function(signals) {
+	return haxe.reactive.Signals.zipN(signals).map(function(i) {
+		return haxe.data.collections.IterableExtensions.or(i);
+	});
+}
+haxe.reactive.SignalBool.prototype.__class__ = haxe.reactive.SignalBool;
 haxe.data.collections.IterableExtensions = function() { }
 haxe.data.collections.IterableExtensions.__name__ = ["haxe","data","collections","IterableExtensions"];
 haxe.data.collections.IterableExtensions.size = function(iterable) {
@@ -1611,8 +1950,29 @@ haxe.data.collections.IterableExtensions.intersect = function(iter1,iter2) {
 	});
 }
 haxe.data.collections.IterableExtensions.unionBy = function(iter1,iter2,f) {
-	return haxe.data.collections.IterableExtensions.foldl(iter2,iter1,function(a,b) {
-		return (haxe.data.collections.IterableExtensions.existsP(a,b,f)?a:haxe.data.collections.IterableExtensions.append(a,b));
+	var result = iter1;
+	{ var $it16 = iter2.iterator();
+	while( $it16.hasNext() ) { var e = $it16.next();
+	{
+		var exists = false;
+		{ var $it17 = iter1.iterator();
+		while( $it17.hasNext() ) { var i = $it17.next();
+		{
+			if(f(i,e)) {
+				exists = true;
+			}
+		}
+		}}
+		if(!exists) {
+			result = haxe.data.collections.IterableExtensions.append(result,e);
+		}
+	}
+	}}
+	return result;
+}
+haxe.data.collections.IterableExtensions.union = function(iter1,iter2) {
+	return haxe.data.collections.IterableExtensions.unionBy(iter1,iter2,function(a,b) {
+		return a == b;
 	});
 }
 haxe.data.collections.IterableExtensions.prototype.__class__ = haxe.data.collections.IterableExtensions;
@@ -1621,8 +1981,8 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it16 = arr.iterator();
-	while( $it16.hasNext() ) { var t = $it16.next();
+	{ var $it18 = arr.iterator();
+	while( $it18.hasNext() ) { var t = $it18.next();
 	if(t == field) return true;
 	}}
 	return false;
@@ -1632,9 +1992,9 @@ Reflect.field = function(o,field) {
 	try {
 		v = o[field];
 	}
-	catch( $e17 ) {
+	catch( $e19 ) {
 		{
-			var e = $e17;
+			var e = $e19;
 			null;
 		}
 	}
@@ -1661,9 +2021,9 @@ Reflect.fields = function(o) {
 		try {
 			t = o.__proto__;
 		}
-		catch( $e18 ) {
+		catch( $e20 ) {
 			{
-				var e = $e18;
+				var e = $e20;
 				{
 					t = null;
 				}
@@ -1726,347 +2086,6 @@ Reflect.makeVarArgs = function(f) {
 	}
 }
 Reflect.prototype.__class__ = Reflect;
-haxe.functional.PartialFunction1 = function() { }
-haxe.functional.PartialFunction1.__name__ = ["haxe","abstract","PartialFunction1"];
-haxe.functional.PartialFunction1.prototype.call = null;
-haxe.functional.PartialFunction1.prototype.isDefinedAt = null;
-haxe.functional.PartialFunction1.prototype.orAlways = null;
-haxe.functional.PartialFunction1.prototype.orAlwaysC = null;
-haxe.functional.PartialFunction1.prototype.orElse = null;
-haxe.functional.PartialFunction1.prototype.toFunction = null;
-haxe.functional.PartialFunction1.prototype.__class__ = haxe.functional.PartialFunction1;
-haxe.functional.PartialFunction2 = function() { }
-haxe.functional.PartialFunction2.__name__ = ["haxe","abstract","PartialFunction2"];
-haxe.functional.PartialFunction2.prototype.call = null;
-haxe.functional.PartialFunction2.prototype.isDefinedAt = null;
-haxe.functional.PartialFunction2.prototype.orAlways = null;
-haxe.functional.PartialFunction2.prototype.orAlwaysC = null;
-haxe.functional.PartialFunction2.prototype.orElse = null;
-haxe.functional.PartialFunction2.prototype.toFunction = null;
-haxe.functional.PartialFunction2.prototype.__class__ = haxe.functional.PartialFunction2;
-haxe.functional.PartialFunction3 = function() { }
-haxe.functional.PartialFunction3.__name__ = ["haxe","abstract","PartialFunction3"];
-haxe.functional.PartialFunction3.prototype.call = null;
-haxe.functional.PartialFunction3.prototype.isDefinedAt = null;
-haxe.functional.PartialFunction3.prototype.orAlways = null;
-haxe.functional.PartialFunction3.prototype.orAlwaysC = null;
-haxe.functional.PartialFunction3.prototype.orElse = null;
-haxe.functional.PartialFunction3.prototype.toFunction = null;
-haxe.functional.PartialFunction3.prototype.__class__ = haxe.functional.PartialFunction3;
-haxe.functional.PartialFunction4 = function() { }
-haxe.functional.PartialFunction4.__name__ = ["haxe","abstract","PartialFunction4"];
-haxe.functional.PartialFunction4.prototype.call = null;
-haxe.functional.PartialFunction4.prototype.isDefinedAt = null;
-haxe.functional.PartialFunction4.prototype.orAlways = null;
-haxe.functional.PartialFunction4.prototype.orAlwaysC = null;
-haxe.functional.PartialFunction4.prototype.orElse = null;
-haxe.functional.PartialFunction4.prototype.toFunction = null;
-haxe.functional.PartialFunction4.prototype.__class__ = haxe.functional.PartialFunction4;
-haxe.functional.PartialFunction5 = function() { }
-haxe.functional.PartialFunction5.__name__ = ["haxe","abstract","PartialFunction5"];
-haxe.functional.PartialFunction5.prototype.call = null;
-haxe.functional.PartialFunction5.prototype.isDefinedAt = null;
-haxe.functional.PartialFunction5.prototype.orAlways = null;
-haxe.functional.PartialFunction5.prototype.orAlwaysC = null;
-haxe.functional.PartialFunction5.prototype.orElse = null;
-haxe.functional.PartialFunction5.prototype.toFunction = null;
-haxe.functional.PartialFunction5.prototype.__class__ = haxe.functional.PartialFunction5;
-if(!haxe.functional._PartialFunction) haxe.functional._PartialFunction = {}
-haxe.functional._PartialFunction.PartialFunction1Impl = function(def) { if( def === $_ ) return; {
-	this._def = def;
-}}
-haxe.functional._PartialFunction.PartialFunction1Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction1Impl"];
-haxe.functional._PartialFunction.PartialFunction1Impl.create = function(def) {
-	return new haxe.functional._PartialFunction.PartialFunction1Impl(def);
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype._def = null;
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.call = function(a) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a)) return d._2(a);
-		}
-	}
-	return Stax.error("Function undefined at " + a);
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.isDefinedAt = function(a) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a)) return true;
-		}
-	}
-	return false;
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orAlways = function(f) {
-	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
-		return true;
-	}),f)]));
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orAlwaysC = function(z) {
-	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple((function(a) {
-		return true;
-	}),function(a) {
-		return z();
-	})]));
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.orElse = function(that) {
-	return haxe.functional._PartialFunction.PartialFunction1Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.toFunction = function() {
-	var self = this;
-	return function(a) {
-		return (self.isDefinedAt(a)?Option.Some(self.call(a)):Option.None);
-	}
-}
-haxe.functional._PartialFunction.PartialFunction1Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction1Impl;
-haxe.functional._PartialFunction.PartialFunction1Impl.__interfaces__ = [haxe.functional.PartialFunction1];
-haxe.functional.PartialFunction1ImplExtensions = function() { }
-haxe.functional.PartialFunction1ImplExtensions.__name__ = ["haxe","abstract","PartialFunction1ImplExtensions"];
-haxe.functional.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
-	return haxe.functional._PartialFunction.PartialFunction1Impl.create(def);
-}
-haxe.functional.PartialFunction1ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction1ImplExtensions;
-haxe.functional._PartialFunction.PartialFunction2Impl = function(def) { if( def === $_ ) return; {
-	this._def = def;
-}}
-haxe.functional._PartialFunction.PartialFunction2Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction2Impl"];
-haxe.functional._PartialFunction.PartialFunction2Impl.create = function(def) {
-	return new haxe.functional._PartialFunction.PartialFunction2Impl(def);
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype._def = null;
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.call = function(a,b) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a,b)) return d._2(a,b);
-		}
-	}
-	return Stax.error(((("Function undefined at (" + a) + ", ") + b) + ")");
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.isDefinedAt = function(a,b) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a,b)) return true;
-		}
-	}
-	return false;
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orAlways = function(f) {
-	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
-		return true;
-	}),f)]));
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orAlwaysC = function(z) {
-	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b) {
-		return true;
-	}),function(a,b) {
-		return z();
-	})]));
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.orElse = function(that) {
-	return haxe.functional._PartialFunction.PartialFunction2Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.toFunction = function() {
-	var self = this;
-	return function(a,b) {
-		return (self.isDefinedAt(a,b)?Option.Some(self.call(a,b)):Option.None);
-	}
-}
-haxe.functional._PartialFunction.PartialFunction2Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction2Impl;
-haxe.functional._PartialFunction.PartialFunction2Impl.__interfaces__ = [haxe.functional.PartialFunction2];
-haxe.functional.PartialFunction2ImplExtensions = function() { }
-haxe.functional.PartialFunction2ImplExtensions.__name__ = ["haxe","abstract","PartialFunction2ImplExtensions"];
-haxe.functional.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
-	return haxe.functional._PartialFunction.PartialFunction2Impl.create(def);
-}
-haxe.functional.PartialFunction2ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction2ImplExtensions;
-haxe.functional._PartialFunction.PartialFunction3Impl = function(def) { if( def === $_ ) return; {
-	this._def = def;
-}}
-haxe.functional._PartialFunction.PartialFunction3Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction3Impl"];
-haxe.functional._PartialFunction.PartialFunction3Impl.create = function(def) {
-	return new haxe.functional._PartialFunction.PartialFunction3Impl(def);
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype._def = null;
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.call = function(a,b,c) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a,b,c)) return d._2(a,b,c);
-		}
-	}
-	return Stax.error(((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ")");
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.isDefinedAt = function(a,b,c) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var d = _g1[_g];
-			++_g;
-			if(d._1(a,b,c)) return true;
-		}
-	}
-	return false;
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orAlways = function(f) {
-	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
-		return true;
-	}),f)]));
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orAlwaysC = function(z) {
-	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c) {
-		return true;
-	}),function(a,b,c) {
-		return z();
-	})]));
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.orElse = function(that) {
-	return haxe.functional._PartialFunction.PartialFunction3Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.toFunction = function() {
-	var self = this;
-	return function(a,b,c) {
-		return (self.isDefinedAt(a,b,c)?Option.Some(self.call(a,b,c)):Option.None);
-	}
-}
-haxe.functional._PartialFunction.PartialFunction3Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction3Impl;
-haxe.functional._PartialFunction.PartialFunction3Impl.__interfaces__ = [haxe.functional.PartialFunction3];
-haxe.functional.PartialFunction3ImplExtensions = function() { }
-haxe.functional.PartialFunction3ImplExtensions.__name__ = ["haxe","abstract","PartialFunction3ImplExtensions"];
-haxe.functional.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
-	return haxe.functional._PartialFunction.PartialFunction3Impl.create(def);
-}
-haxe.functional.PartialFunction3ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction3ImplExtensions;
-haxe.functional._PartialFunction.PartialFunction4Impl = function(def) { if( def === $_ ) return; {
-	this._def = def;
-}}
-haxe.functional._PartialFunction.PartialFunction4Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction4Impl"];
-haxe.functional._PartialFunction.PartialFunction4Impl.create = function(def) {
-	return new haxe.functional._PartialFunction.PartialFunction4Impl(def);
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype._def = null;
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.call = function(a,b,c,d) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var def = _g1[_g];
-			++_g;
-			if(def._1(a,b,c,d)) return def._2(a,b,c,d);
-		}
-	}
-	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.isDefinedAt = function(a,b,c,d) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var def = _g1[_g];
-			++_g;
-			if(def._1(a,b,c,d)) return true;
-		}
-	}
-	return false;
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orAlways = function(f) {
-	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
-		return true;
-	}),f)]));
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orAlwaysC = function(z) {
-	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d) {
-		return true;
-	}),function(a,b,c,d) {
-		return z();
-	})]));
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.orElse = function(that) {
-	return haxe.functional._PartialFunction.PartialFunction4Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.toFunction = function() {
-	var self = this;
-	return function(a,b,c,d) {
-		return (self.isDefinedAt(a,b,c,d)?Option.Some(self.call(a,b,c,d)):Option.None);
-	}
-}
-haxe.functional._PartialFunction.PartialFunction4Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction4Impl;
-haxe.functional._PartialFunction.PartialFunction4Impl.__interfaces__ = [haxe.functional.PartialFunction4];
-haxe.functional.PartialFunction4ImplExtensions = function() { }
-haxe.functional.PartialFunction4ImplExtensions.__name__ = ["haxe","abstract","PartialFunction4ImplExtensions"];
-haxe.functional.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
-	return haxe.functional._PartialFunction.PartialFunction4Impl.create(def);
-}
-haxe.functional.PartialFunction4ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction4ImplExtensions;
-haxe.functional._PartialFunction.PartialFunction5Impl = function(def) { if( def === $_ ) return; {
-	this._def = def;
-}}
-haxe.functional._PartialFunction.PartialFunction5Impl.__name__ = ["haxe","abstract","_PartialFunction","PartialFunction5Impl"];
-haxe.functional._PartialFunction.PartialFunction5Impl.create = function(def) {
-	return new haxe.functional._PartialFunction.PartialFunction5Impl(def);
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype._def = null;
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.call = function(a,b,c,d,e) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var def = _g1[_g];
-			++_g;
-			if(def._1(a,b,c,d,e)) return def._2(a,b,c,d,e);
-		}
-	}
-	return Stax.error(((((((("Function undefined at (" + a) + ", ") + b) + ", ") + c) + ", ") + d) + ")");
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.isDefinedAt = function(a,b,c,d,e) {
-	{
-		var _g = 0, _g1 = this._def;
-		while(_g < _g1.length) {
-			var def = _g1[_g];
-			++_g;
-			if(def._1(a,b,c,d,e)) return true;
-		}
-	}
-	return false;
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orAlways = function(f) {
-	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
-		return true;
-	}),f)]));
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orAlwaysC = function(z) {
-	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple((function(a,b,c,d,e) {
-		return true;
-	}),function(a,b,c,d,e) {
-		return z();
-	})]));
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.orElse = function(that) {
-	return haxe.functional._PartialFunction.PartialFunction5Impl.create(this._def.concat([Tuple2.create($closure(that,"isDefinedAt"),$closure(that,"call"))]));
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.toFunction = function() {
-	var self = this;
-	return function(a,b,c,d,e) {
-		return (self.isDefinedAt(a,b,c,d,e)?Option.Some(self.call(a,b,c,d,e)):Option.None);
-	}
-}
-haxe.functional._PartialFunction.PartialFunction5Impl.prototype.__class__ = haxe.functional._PartialFunction.PartialFunction5Impl;
-haxe.functional._PartialFunction.PartialFunction5Impl.__interfaces__ = [haxe.functional.PartialFunction5];
-haxe.functional.PartialFunction5ImplExtensions = function() { }
-haxe.functional.PartialFunction5ImplExtensions.__name__ = ["haxe","abstract","PartialFunction5ImplExtensions"];
-haxe.functional.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
-	return haxe.functional._PartialFunction.PartialFunction5Impl.create(def);
-}
-haxe.functional.PartialFunction5ImplExtensions.prototype.__class__ = haxe.functional.PartialFunction5ImplExtensions;
 haxe.test.ui.common.ResultStats = function(p) { if( p === $_ ) return; {
 	this.assertations = 0;
 	this.successes = 0;
@@ -2228,9 +2247,9 @@ haxe.Stack.makeStack = function(s) {
 		try {
 			$r = eval(s);
 		}
-		catch( $e19 ) {
+		catch( $e21 ) {
 			{
-				var e = $e19;
+				var e = $e21;
 				$r = [];
 			}
 		}
@@ -2262,6 +2281,101 @@ IntIter.prototype.next = function() {
 	return this.min++;
 }
 IntIter.prototype.__class__ = IntIter;
+haxe.reactive.SignalCollection = function(p) { if( p === $_ ) return; {
+	null;
+}}
+haxe.reactive.SignalCollection.__name__ = ["haxe","reactive","SignalCollection"];
+haxe.reactive.SignalCollection.concatS = function(b1,b2) {
+	return b1.zip(b2).map(function(c) {
+		return haxe.functional.FoldableExtensions.concat(c._1,c._2);
+	});
+}
+haxe.reactive.SignalCollection.join = function(b,$char) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.mkString(c,$char);
+	});
+}
+haxe.reactive.SignalCollection.size = function(b) {
+	return b.map(function(c) {
+		return c.getSize();
+	});
+}
+haxe.reactive.SignalCollection.zipS = function(b1,b2) {
+	return b1.zip(b2).map(function(c) {
+		return c._1.zip(c._2);
+	});
+}
+haxe.reactive.SignalCollection.append = function(b,element) {
+	return b.map(function(c) {
+		return c.add(element);
+	});
+}
+haxe.reactive.SignalCollection.count = function(b,predicate) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.count(c,predicate);
+	});
+}
+haxe.reactive.SignalCollection.all = function(b,tester) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.forAll(c,tester);
+	});
+}
+haxe.reactive.SignalCollection.any = function(b,tester) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.forAny(c,tester);
+	});
+}
+haxe.reactive.SignalCollection.forEach = function(b,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.foreach(c,f);
+	});
+}
+haxe.reactive.SignalCollection.each = function(b,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.foreach(c,f);
+	});
+}
+haxe.reactive.SignalCollection.map = function(b,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.map(c,f);
+	});
+}
+haxe.reactive.SignalCollection.mapTo = function(b,t,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.mapTo(c,t,f);
+	});
+}
+haxe.reactive.SignalCollection.partition = function(b,filter) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.partition(c,filter);
+	});
+}
+haxe.reactive.SignalCollection.filter = function(b,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.filter(c,f);
+	});
+}
+haxe.reactive.SignalCollection.flatMap = function(b,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.flatMap(c,f);
+	});
+}
+haxe.reactive.SignalCollection.toArray = function(b) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.toArray(c);
+	});
+}
+haxe.reactive.SignalCollection.foldr = function(b,initial,f) {
+	return b.map(function(c) {
+		return haxe.functional.FoldableExtensions.foldr(c,initial,f);
+	});
+}
+haxe.reactive.SignalCollection.foldl = function(b,initial,f) {
+	return b.map(function(c) {
+		return c.foldl(initial,f);
+	});
+}
+haxe.reactive.SignalCollection.prototype.__class__ = haxe.reactive.SignalCollection;
 ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] }
 ValueType.TBool = ["TBool",3];
 ValueType.TBool.toString = $estr;
@@ -2314,9 +2428,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e20 ) {
+	catch( $e22 ) {
 		{
-			var e = $e20;
+			var e = $e22;
 			{
 				cl = null;
 			}
@@ -2330,9 +2444,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e21 ) {
+	catch( $e23 ) {
 		{
-			var err = $e21;
+			var err = $e23;
 			{
 				e = null;
 			}
@@ -2426,9 +2540,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e22 ) {
+	catch( $e24 ) {
 		{
-			var e = $e22;
+			var e = $e24;
 			{
 				return false;
 			}
@@ -2530,9 +2644,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e23 ) {
+		catch( $e25 ) {
 			{
-				var e = $e23;
+				var e = $e25;
 				{
 					return "???";
 				}
@@ -2589,9 +2703,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e24 ) {
+	catch( $e26 ) {
 		{
-			var e = $e24;
+			var e = $e26;
 			{
 				if(cl == null) return false;
 			}
@@ -2673,110 +2787,6 @@ js.Boot.__init = function() {
 	$closure = js.Boot.__closure;
 }
 js.Boot.prototype.__class__ = js.Boot;
-haxe.Timer = function(time_ms) { if( time_ms === $_ ) return; {
-	this.id = haxe.Timer.arr.length;
-	haxe.Timer.arr[this.id] = this;
-	this.timerId = window.setInterval(("haxe.Timer.arr[" + this.id) + "].run();",time_ms);
-}}
-haxe.Timer.__name__ = ["haxe","Timer"];
-haxe.Timer.delay = function(f,time_ms) {
-	var t = new haxe.Timer(time_ms);
-	t.run = function() {
-		t.stop();
-		f();
-	}
-	return t;
-}
-haxe.Timer.stamp = function() {
-	return Date.now().getTime() / 1000;
-}
-haxe.Timer.prototype.id = null;
-haxe.Timer.prototype.run = function() {
-	null;
-}
-haxe.Timer.prototype.stop = function() {
-	if(this.id == null) return;
-	window.clearInterval(this.timerId);
-	haxe.Timer.arr[this.id] = null;
-	if(this.id > 100 && this.id == haxe.Timer.arr.length - 1) {
-		var p = this.id - 1;
-		while(p >= 0 && haxe.Timer.arr[p] == null) p--;
-		haxe.Timer.arr = haxe.Timer.arr.slice(0,p + 1);
-	}
-	this.id = null;
-}
-haxe.Timer.prototype.timerId = null;
-haxe.Timer.prototype.__class__ = haxe.Timer;
-IntHash = function(p) { if( p === $_ ) return; {
-	this.h = {}
-	if(this.h.__proto__ != null) {
-		this.h.__proto__ = null;
-		delete(this.h.__proto__);
-	}
-	else null;
-}}
-IntHash.__name__ = ["IntHash"];
-IntHash.prototype.exists = function(key) {
-	return this.h[key] != null;
-}
-IntHash.prototype.get = function(key) {
-	return this.h[key];
-}
-IntHash.prototype.h = null;
-IntHash.prototype.iterator = function() {
-	return { ref : this.h, it : this.keys(), hasNext : function() {
-		return this.it.hasNext();
-	}, next : function() {
-		var i = this.it.next();
-		return this.ref[i];
-	}}
-}
-IntHash.prototype.keys = function() {
-	var a = new Array();
-	
-			for( x in this.h )
-				a.push(x);
-		;
-	return a.iterator();
-}
-IntHash.prototype.remove = function(key) {
-	if(this.h[key] == null) return false;
-	delete(this.h[key]);
-	return true;
-}
-IntHash.prototype.set = function(key,value) {
-	this.h[key] = value;
-}
-IntHash.prototype.toString = function() {
-	var s = new StringBuf();
-	s.b[s.b.length] = "{";
-	var it = this.keys();
-	{ var $it25 = it;
-	while( $it25.hasNext() ) { var i = $it25.next();
-	{
-		s.b[s.b.length] = i;
-		s.b[s.b.length] = " => ";
-		s.b[s.b.length] = Std.string(this.get(i));
-		if(it.hasNext()) s.b[s.b.length] = ", ";
-	}
-	}}
-	s.b[s.b.length] = "}";
-	return s.b.join("");
-}
-IntHash.prototype.__class__ = IntHash;
-haxe.test.Assertation = { __ename__ : ["haxe","test","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] }
-haxe.test.Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-haxe.test.Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
-Unit = { __ename__ : ["Unit"], __constructs__ : ["Unit"] }
-Unit.Unit = ["Unit",0];
-Unit.Unit.toString = $estr;
-Unit.Unit.__enum__ = Unit;
 DynamicExtensions = function() { }
 DynamicExtensions.__name__ = ["DynamicExtensions"];
 DynamicExtensions.ShowT = function() {
@@ -2997,6 +3007,9 @@ StringExtensions.trim = function(v) {
 StringExtensions.contains = function(v,s) {
 	return v.indexOf(s) != -1;
 }
+StringExtensions.replace = function(s,sub,by) {
+	return StringTools.replace(s,sub,by);
+}
 StringExtensions.OrderT = function(c) {
 	return OrderTypeclass.create({ compare : function(v1,v2) {
 		{
@@ -3155,8 +3168,8 @@ ArrayExtensions.flatMap = function(a,f) {
 		while(_g < a.length) {
 			var e1 = a[_g];
 			++_g;
-			{ var $it26 = f(e1).iterator();
-			while( $it26.hasNext() ) { var e2 = $it26.next();
+			{ var $it27 = f(e1).iterator();
+			while( $it27.hasNext() ) { var e2 = $it27.next();
 			n.push(e2);
 			}}
 		}
@@ -3200,7 +3213,7 @@ ArrayExtensions.zip = function(a,b) {
 	return r;
 }
 ArrayExtensions.append = function(a,t) {
-	var copy = [].concat(a);
+	var copy = ArrayExtensions.snapshot(a);
 	copy.push(t);
 	return copy;
 }
@@ -3210,8 +3223,14 @@ ArrayExtensions.snapshot = function(a) {
 ArrayExtensions.first = function(a) {
 	return a[0];
 }
+ArrayExtensions.firstOption = function(a) {
+	return (a.length == 0?Option.None:Option.Some(a[0]));
+}
 ArrayExtensions.last = function(a) {
 	return a[a.length - 1];
+}
+ArrayExtensions.lastOption = function(a) {
+	return (a.length == 0?Option.None:Option.Some(a[a.length - 1]));
 }
 ArrayExtensions.contains = function(a,t) {
 	{
@@ -3219,7 +3238,7 @@ ArrayExtensions.contains = function(a,t) {
 		while(_g < a.length) {
 			var e = a[_g];
 			++_g;
-			if(e == t) return true;
+			if(t == e) return true;
 		}
 	}
 	return false;
@@ -3236,24 +3255,53 @@ ArrayExtensions.foreach = function(a,f) {
 	return a;
 }
 ArrayExtensions.prototype.__class__ = ArrayExtensions;
-FunctionExtensions = function() { }
-FunctionExtensions.__name__ = ["FunctionExtensions"];
-FunctionExtensions.toFunction1 = function(f) {
+Function0Extensions = function() { }
+Function0Extensions.__name__ = ["Function0Extensions"];
+Function0Extensions.swallow = function(f) {
+	return function() {
+		try {
+			f();
+		}
+		catch( $e28 ) {
+			{
+				var e = $e28;
+				null;
+			}
+		}
+	}
+}
+Function0Extensions.prototype.__class__ = Function0Extensions;
+Function1Extensions = function() { }
+Function1Extensions.__name__ = ["Function1Extensions"];
+Function1Extensions.swallow = function(f) {
+	return function(a) {
+		try {
+			f(a);
+		}
+		catch( $e29 ) {
+			{
+				var e = $e29;
+				null;
+			}
+		}
+	}
+}
+Function1Extensions.toFunction1 = function(f) {
 	return function(v) {
 		return f();
 	}
 }
-FunctionExtensions.compose = function(f1,f2) {
+Function1Extensions.compose = function(f1,f2) {
 	return function(u) {
 		return f1(f2(u));
 	}
 }
-FunctionExtensions.andThen = function(f1,f2) {
+Function1Extensions.andThen = function(f1,f2) {
 	return function(u) {
 		return f2(f1(u));
 	}
 }
-FunctionExtensions.lazy = function(f,p1) {
+Function1Extensions.lazy = function(f,p1) {
 	var r = null;
 	return function() {
 		return (r == null?(function($this) {
@@ -3264,9 +3312,22 @@ FunctionExtensions.lazy = function(f,p1) {
 		}(this)):r);
 	}
 }
-FunctionExtensions.prototype.__class__ = FunctionExtensions;
+Function1Extensions.prototype.__class__ = Function1Extensions;
 Function2Extensions = function() { }
 Function2Extensions.__name__ = ["Function2Extensions"];
+Function2Extensions.swallow = function(f) {
+	return function(a,b) {
+		try {
+			f(a,b);
+		}
+		catch( $e30 ) {
+			{
+				var e = $e30;
+				null;
+			}
+		}
+	}
+}
 Function2Extensions.flip = function(f) {
 	return function(p2,p1) {
 		return f(p1,p2);
@@ -3298,6 +3359,19 @@ Function2Extensions.lazy = function(f,p1,p2) {
 Function2Extensions.prototype.__class__ = Function2Extensions;
 Function3Extensions = function() { }
 Function3Extensions.__name__ = ["Function3Extensions"];
+Function3Extensions.swallow = function(f) {
+	return function(a,b,c) {
+		try {
+			f(a,b,c);
+		}
+		catch( $e31 ) {
+			{
+				var e = $e31;
+				null;
+			}
+		}
+	}
+}
 Function3Extensions.curry = function(f) {
 	return function(p1) {
 		return function(p2) {
@@ -3326,6 +3400,19 @@ Function3Extensions.lazy = function(f,p1,p2,p3) {
 Function3Extensions.prototype.__class__ = Function3Extensions;
 Function4Extensions = function() { }
 Function4Extensions.__name__ = ["Function4Extensions"];
+Function4Extensions.swallow = function(f) {
+	return function(a,b,c,d) {
+		try {
+			f(a,b,c,d);
+		}
+		catch( $e32 ) {
+			{
+				var e = $e32;
+				null;
+			}
+		}
+	}
+}
 Function4Extensions.curry = function(f) {
 	return function(p1) {
 		return function(p2) {
@@ -3356,6 +3443,19 @@ Function4Extensions.lazy = function(f,p1,p2,p3,p4) {
 Function4Extensions.prototype.__class__ = Function4Extensions;
 Function5Extensions = function() { }
 Function5Extensions.__name__ = ["Function5Extensions"];
+Function5Extensions.swallow = function(f) {
+	return function(a,b,c,d,e) {
+		try {
+			f(a,b,c,d,e);
+		}
+		catch( $e33 ) {
+			{
+				var e1 = $e33;
+				null;
+			}
+		}
+	}
+}
 Function5Extensions.curry = function(f) {
 	return function(p1) {
 		return function(p2) {
@@ -3386,11 +3486,6 @@ Function5Extensions.lazy = function(f,p1,p2,p3,p4,p5) {
 	}
 }
 Function5Extensions.prototype.__class__ = Function5Extensions;
-Option = { __ename__ : ["Option"], __constructs__ : ["None","Some"] }
-Option.None = ["None",0];
-Option.None.toString = $estr;
-Option.None.__enum__ = Option;
-Option.Some = function(v) { var $x = ["Some",1,v]; $x.__enum__ = Option; $x.toString = $estr; return $x; }
 OptionExtensions = function() { }
 OptionExtensions.__name__ = ["OptionExtensions"];
 OptionExtensions.OrderT = function(c,order) {
@@ -3814,9 +3909,6 @@ OptionExtensions.isEmpty = function(o) {
 	}(this));
 }
 OptionExtensions.prototype.__class__ = OptionExtensions;
-Either = { __ename__ : ["Either"], __constructs__ : ["Left","Right"] }
-Either.Left = function(v) { var $x = ["Left",0,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
-Either.Right = function(v) { var $x = ["Right",1,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
 EitherExtensions = function() { }
 EitherExtensions.__name__ = ["EitherExtensions"];
 EitherExtensions.OrderT = function(c,order1,order2) {
@@ -4093,6 +4185,28 @@ EitherExtensions.right = function(e) {
 		return $r;
 	}(this));
 }
+EitherExtensions.get = function(e) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+		var v = $e[2];
+		{
+			$r = v;
+		}break;
+		case 1:
+		var v = $e[2];
+		{
+			$r = v;
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
 EitherExtensions.mapLeft = function(e,f) {
 	return (function($this) {
 		var $r;
@@ -4302,6 +4416,167 @@ EitherExtensions.composeRight = function(e1,e2,ac,bc) {
 	}(this));
 }
 EitherExtensions.prototype.__class__ = EitherExtensions;
+FutureExtensions = function() { }
+FutureExtensions.__name__ = ["FutureExtensions"];
+FutureExtensions.toFuture = function(t) {
+	return Future.create().deliver(t);
+}
+FutureExtensions.prototype.__class__ = FutureExtensions;
+IterableExtensions = function() { }
+IterableExtensions.__name__ = ["IterableExtensions"];
+IterableExtensions.toString = function(i,show,prefix,suffix,sep) {
+	if(sep == null) sep = ", ";
+	if(suffix == null) suffix = ")";
+	if(prefix == null) prefix = "(";
+	return IterableExtensions.mkString(i,show,prefix,suffix,sep);
+}
+IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
+	if(sep == null) sep = ", ";
+	if(suffix == null) suffix = ")";
+	if(prefix == null) prefix = "(";
+	if(show == null) show = $closure(Std,"string");
+	var s = prefix;
+	var isFirst = true;
+	{ var $it34 = i.iterator();
+	while( $it34.hasNext() ) { var t = $it34.next();
+	{
+		if(isFirst) isFirst = false;
+		else s += sep;
+		s += show(t);
+	}
+	}}
+	return s + suffix;
+}
+IterableExtensions.toList = function(i,equal) {
+	return haxe.data.collections.List.create(equal).addAll(i);
+}
+IterableExtensions.toSet = function(i,hash,equal) {
+	return haxe.data.collections.Set.create(hash,equal).addAll(i);
+}
+IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
+	return haxe.data.collections.Map.create(khash,kequal,vhash,vequal).addAll(i);
+}
+IterableExtensions.toArray = function(i) {
+	var a = [];
+	{ var $it35 = i.iterator();
+	while( $it35.hasNext() ) { var e = $it35.next();
+	a.push(e);
+	}}
+	return a;
+}
+IterableExtensions.prototype.__class__ = IterableExtensions;
+haxe.Timer = function(time_ms) { if( time_ms === $_ ) return; {
+	this.id = haxe.Timer.arr.length;
+	haxe.Timer.arr[this.id] = this;
+	this.timerId = window.setInterval(("haxe.Timer.arr[" + this.id) + "].run();",time_ms);
+}}
+haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.delay = function(f,time_ms) {
+	var t = new haxe.Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	}
+	return t;
+}
+haxe.Timer.stamp = function() {
+	return Date.now().getTime() / 1000;
+}
+haxe.Timer.prototype.id = null;
+haxe.Timer.prototype.run = function() {
+	null;
+}
+haxe.Timer.prototype.stop = function() {
+	if(this.id == null) return;
+	window.clearInterval(this.timerId);
+	haxe.Timer.arr[this.id] = null;
+	if(this.id > 100 && this.id == haxe.Timer.arr.length - 1) {
+		var p = this.id - 1;
+		while(p >= 0 && haxe.Timer.arr[p] == null) p--;
+		haxe.Timer.arr = haxe.Timer.arr.slice(0,p + 1);
+	}
+	this.id = null;
+}
+haxe.Timer.prototype.timerId = null;
+haxe.Timer.prototype.__class__ = haxe.Timer;
+IntHash = function(p) { if( p === $_ ) return; {
+	this.h = {}
+	if(this.h.__proto__ != null) {
+		this.h.__proto__ = null;
+		delete(this.h.__proto__);
+	}
+	else null;
+}}
+IntHash.__name__ = ["IntHash"];
+IntHash.prototype.exists = function(key) {
+	return this.h[key] != null;
+}
+IntHash.prototype.get = function(key) {
+	return this.h[key];
+}
+IntHash.prototype.h = null;
+IntHash.prototype.iterator = function() {
+	return { ref : this.h, it : this.keys(), hasNext : function() {
+		return this.it.hasNext();
+	}, next : function() {
+		var i = this.it.next();
+		return this.ref[i];
+	}}
+}
+IntHash.prototype.keys = function() {
+	var a = new Array();
+	
+			for( x in this.h )
+				a.push(x);
+		;
+	return a.iterator();
+}
+IntHash.prototype.remove = function(key) {
+	if(this.h[key] == null) return false;
+	delete(this.h[key]);
+	return true;
+}
+IntHash.prototype.set = function(key,value) {
+	this.h[key] = value;
+}
+IntHash.prototype.toString = function() {
+	var s = new StringBuf();
+	s.b[s.b.length] = "{";
+	var it = this.keys();
+	{ var $it36 = it;
+	while( $it36.hasNext() ) { var i = $it36.next();
+	{
+		s.b[s.b.length] = i;
+		s.b[s.b.length] = " => ";
+		s.b[s.b.length] = Std.string(this.get(i));
+		if(it.hasNext()) s.b[s.b.length] = ", ";
+	}
+	}}
+	s.b[s.b.length] = "}";
+	return s.b.join("");
+}
+IntHash.prototype.__class__ = IntHash;
+haxe.test.Assertation = { __ename__ : ["haxe","test","Assertation"], __constructs__ : ["Success","Failure","Error","SetupError","TeardownError","TimeoutError","AsyncError","Warning"] }
+haxe.test.Assertation.AsyncError = function(e,stack) { var $x = ["AsyncError",6,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.Error = function(e,stack) { var $x = ["Error",2,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.Failure = function(msg,pos) { var $x = ["Failure",1,msg,pos]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.SetupError = function(e,stack) { var $x = ["SetupError",3,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.Success = function(pos) { var $x = ["Success",0,pos]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.TeardownError = function(e,stack) { var $x = ["TeardownError",4,e,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.TimeoutError = function(missedAsyncs,stack) { var $x = ["TimeoutError",5,missedAsyncs,stack]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+haxe.test.Assertation.Warning = function(msg) { var $x = ["Warning",7,msg]; $x.__enum__ = haxe.test.Assertation; $x.toString = $estr; return $x; }
+Unit = { __ename__ : ["Unit"], __constructs__ : ["Unit"] }
+Unit.Unit = ["Unit",0];
+Unit.Unit.toString = $estr;
+Unit.Unit.__enum__ = Unit;
+Option = { __ename__ : ["Option"], __constructs__ : ["None","Some"] }
+Option.None = ["None",0];
+Option.None.toString = $estr;
+Option.None.__enum__ = Option;
+Option.Some = function(v) { var $x = ["Some",1,v]; $x.__enum__ = Option; $x.toString = $estr; return $x; }
+Either = { __ename__ : ["Either"], __constructs__ : ["Left","Right"] }
+Either.Left = function(v) { var $x = ["Left",0,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
+Either.Right = function(v) { var $x = ["Right",1,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
 Future = function(p) { if( p === $_ ) return; {
 	this._listeners = [];
 	this._result = null;
@@ -4468,55 +4743,6 @@ Future.prototype.zip = function(f2) {
 	return zipped;
 }
 Future.prototype.__class__ = Future;
-FutureExtensions = function() { }
-FutureExtensions.__name__ = ["FutureExtensions"];
-FutureExtensions.toFuture = function(t) {
-	return Future.create().deliver(t);
-}
-FutureExtensions.prototype.__class__ = FutureExtensions;
-IterableExtensions = function() { }
-IterableExtensions.__name__ = ["IterableExtensions"];
-IterableExtensions.toString = function(i,show,prefix,suffix,sep) {
-	if(sep == null) sep = ", ";
-	if(suffix == null) suffix = ")";
-	if(prefix == null) prefix = "(";
-	return IterableExtensions.mkString(i,show,prefix,suffix,sep);
-}
-IterableExtensions.mkString = function(i,show,prefix,suffix,sep) {
-	if(sep == null) sep = ", ";
-	if(suffix == null) suffix = ")";
-	if(prefix == null) prefix = "(";
-	if(show == null) show = $closure(Std,"string");
-	var s = prefix;
-	var isFirst = true;
-	{ var $it27 = i.iterator();
-	while( $it27.hasNext() ) { var t = $it27.next();
-	{
-		if(isFirst) isFirst = false;
-		else s += sep;
-		s += show(t);
-	}
-	}}
-	return s + suffix;
-}
-IterableExtensions.toList = function(i,equal) {
-	return haxe.data.collections.List.create(equal).addAll(i);
-}
-IterableExtensions.toSet = function(i,hash,equal) {
-	return haxe.data.collections.Set.create(hash,equal).addAll(i);
-}
-IterableExtensions.toMap = function(i,khash,kequal,vhash,vequal) {
-	return haxe.data.collections.Map.create(khash,kequal,vhash,vequal).addAll(i);
-}
-IterableExtensions.toArray = function(i) {
-	var a = [];
-	{ var $it28 = i.iterator();
-	while( $it28.hasNext() ) { var e = $it28.next();
-	a.push(e);
-	}}
-	return a;
-}
-IterableExtensions.prototype.__class__ = IterableExtensions;
 Product = function() { }
 Product.__name__ = ["Product"];
 Product.prototype.productArity = null;
@@ -4804,214 +5030,83 @@ HasherTypeclass.prototype.__class__ = HasherTypeclass;
 Stax = function() { }
 Stax.__name__ = ["Stax"];
 Stax.error = function(msg) {
-	return (Stax.errorT(msg))();
-}
-Stax.errorT = function(msg) {
-	return function() {
-		throw msg;
-		return null;
-	}
+	throw msg;
+	return null;
 }
 Stax.prototype.__class__ = Stax;
+haxe.functional.Predicate1Extensions = function() { }
+haxe.functional.Predicate1Extensions.__name__ = ["haxe","functional","Predicate1Extensions"];
+haxe.functional.Predicate1Extensions.and = function(p1,p2) {
+	return function(value) {
+		return p1(value) && p2(value);
+	}
+}
+haxe.functional.Predicate1Extensions.andAll = function(p1,ps) {
+	return function(value) {
+		var result = p1(value);
+		{ var $it37 = ps.iterator();
+		while( $it37.hasNext() ) { var p = $it37.next();
+		{
+			if(!result) break;
+			result = result && p(value);
+		}
+		}}
+		return result;
+	}
+}
+haxe.functional.Predicate1Extensions.or = function(p1,p2) {
+	return function(value) {
+		return p1(value) || p2(value);
+	}
+}
+haxe.functional.Predicate1Extensions.orAny = function(p1,ps) {
+	return function(value) {
+		var result = p1(value);
+		{ var $it38 = ps.iterator();
+		while( $it38.hasNext() ) { var p = $it38.next();
+		{
+			if(result) break;
+			result = result || p(value);
+		}
+		}}
+		return result;
+	}
+}
+haxe.functional.Predicate1Extensions.negate = function(p) {
+	return function(value) {
+		return !p(value);
+	}
+}
+haxe.functional.Predicate1Extensions.prototype.__class__ = haxe.functional.Predicate1Extensions;
 haxe.test.MustMatcherExtensions = function() { }
 haxe.test.MustMatcherExtensions.__name__ = ["haxe","test","MustMatcherExtensions"];
-haxe.test.MustMatcherExtensions.not = function(c) {
+haxe.test.MustMatcherExtensions.negate = function(c) {
+	var inverter = function(result) {
+		return { assertion : result.negation, negation : result.assertion}
+	}
 	return function(value) {
-		return EitherExtensions.map(c(value),function(err) {
-			return err;
-		},function(suc) {
-			return ("!(" + suc) + ")";
-		});
+		return EitherExtensions.map(c(value),inverter,inverter);
 	}
 }
 haxe.test.MustMatcherExtensions.or = function(c1,c2) {
+	var transformer = function(r1,r2) {
+		return { assertion : ((("(" + r1.assertion) + ") || (") + r2.assertion) + ")", negation : ((("(" + r1.negation) + ") && (") + r2.negation) + ")"}
+	}
 	return function(value) {
-		return EitherExtensions.composeRight(c1(value),c2(value),function(err1,err2) {
-			return ((("(" + err1) + ") && (") + err2) + ")";
-		},function(suc1,suc2) {
-			return ((("(" + suc1) + ") || (") + suc2) + ")";
-		});
+		return EitherExtensions.composeRight(c1(value),c2(value),transformer,transformer);
 	}
 }
 haxe.test.MustMatcherExtensions.and = function(c1,c2) {
+	var transformer = function(r1,r2) {
+		return { assertion : ((("(" + r1.assertion) + ") && (") + r2.assertion) + ")", negation : ((("(" + r1.negation) + ") || (") + r2.negation) + ")"}
+	}
 	return function(value) {
-		return EitherExtensions.composeLeft(c1(value),c2(value),function(err1,err2) {
-			return ((("(" + err1) + ") || (") + err2) + ")";
-		},function(suc1,suc2) {
-			return ((("(" + suc1) + ") && (") + suc2) + ")";
-		});
+		return EitherExtensions.composeLeft(c1(value),c2(value),transformer,transformer);
 	}
 }
 haxe.test.MustMatcherExtensions.prototype.__class__ = haxe.test.MustMatcherExtensions;
-StringBuf = function(p) { if( p === $_ ) return; {
-	this.b = new Array();
-}}
-StringBuf.__name__ = ["StringBuf"];
-StringBuf.prototype.add = function(x) {
-	this.b[this.b.length] = x;
-}
-StringBuf.prototype.addChar = function(c) {
-	this.b[this.b.length] = String.fromCharCode(c);
-}
-StringBuf.prototype.addSub = function(s,pos,len) {
-	this.b[this.b.length] = s.substr(pos,len);
-}
-StringBuf.prototype.b = null;
-StringBuf.prototype.toString = function() {
-	return this.b.join("");
-}
-StringBuf.prototype.__class__ = StringBuf;
-haxe.test.Must = function() { }
-haxe.test.Must.__name__ = ["haxe","test","Must"];
-haxe.test.Must.equal = function(expected,equal) {
-	if(equal == null) equal = DynamicExtensions.EqualT();
-	return function(value) {
-		return (!equal.equal(value,expected)?Either.Left((expected + " != ") + value):Either.Right((expected + " == ") + value));
-	}
-}
-haxe.test.Must.contain = function(c,element) {
-	return function(value) {
-		return (!c.contains(element)?Either.Left(((("![" + haxe.functional.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"):Either.Right(((("[" + haxe.functional.FoldableExtensions.mkString(c,", ")) + "].contains(") + value) + ")"));
-	}
-}
-haxe.test.Must.beNull = function() {
-	return function(value) {
-		return (value != null?Either.Left(value + " != null"):Either.Right(value + " == null"));
-	}
-}
-haxe.test.Must.beNonNull = function() {
-	return function(value) {
-		return (value == null?Either.Left(value + " == null"):Either.Right(value + " != null"));
-	}
-}
-haxe.test.Must.prototype.__class__ = haxe.test.Must;
-Lambda = function() { }
-Lambda.__name__ = ["Lambda"];
-Lambda.array = function(it) {
-	var a = new Array();
-	{ var $it29 = it.iterator();
-	while( $it29.hasNext() ) { var i = $it29.next();
-	a.push(i);
-	}}
-	return a;
-}
-Lambda.list = function(it) {
-	var l = new List();
-	{ var $it30 = it.iterator();
-	while( $it30.hasNext() ) { var i = $it30.next();
-	l.add(i);
-	}}
-	return l;
-}
-Lambda.map = function(it,f) {
-	var l = new List();
-	{ var $it31 = it.iterator();
-	while( $it31.hasNext() ) { var x = $it31.next();
-	l.add(f(x));
-	}}
-	return l;
-}
-Lambda.mapi = function(it,f) {
-	var l = new List();
-	var i = 0;
-	{ var $it32 = it.iterator();
-	while( $it32.hasNext() ) { var x = $it32.next();
-	l.add(f(i++,x));
-	}}
-	return l;
-}
-Lambda.has = function(it,elt,cmp) {
-	if(cmp == null) {
-		{ var $it33 = it.iterator();
-		while( $it33.hasNext() ) { var x = $it33.next();
-		if(x == elt) return true;
-		}}
-	}
-	else {
-		{ var $it34 = it.iterator();
-		while( $it34.hasNext() ) { var x = $it34.next();
-		if(cmp(x,elt)) return true;
-		}}
-	}
-	return false;
-}
-Lambda.exists = function(it,f) {
-	{ var $it35 = it.iterator();
-	while( $it35.hasNext() ) { var x = $it35.next();
-	if(f(x)) return true;
-	}}
-	return false;
-}
-Lambda.foreach = function(it,f) {
-	{ var $it36 = it.iterator();
-	while( $it36.hasNext() ) { var x = $it36.next();
-	if(!f(x)) return false;
-	}}
-	return true;
-}
-Lambda.iter = function(it,f) {
-	{ var $it37 = it.iterator();
-	while( $it37.hasNext() ) { var x = $it37.next();
-	f(x);
-	}}
-}
-Lambda.filter = function(it,f) {
-	var l = new List();
-	{ var $it38 = it.iterator();
-	while( $it38.hasNext() ) { var x = $it38.next();
-	if(f(x)) l.add(x);
-	}}
-	return l;
-}
-Lambda.fold = function(it,f,first) {
-	{ var $it39 = it.iterator();
-	while( $it39.hasNext() ) { var x = $it39.next();
-	first = f(x,first);
-	}}
-	return first;
-}
-Lambda.count = function(it) {
-	var n = 0;
-	{ var $it40 = it.iterator();
-	while( $it40.hasNext() ) { var _ = $it40.next();
-	++n;
-	}}
-	return n;
-}
-Lambda.empty = function(it) {
-	return !it.iterator().hasNext();
-}
-Lambda.prototype.__class__ = Lambda;
-haxe.test.TestFixture = function(target,methodName,method,setup,teardown,expectAssertions) { if( target === $_ ) return; {
-	if(expectAssertions == null) expectAssertions = true;
-	this.target = target;
-	this.methodName = methodName;
-	this.method = method;
-	this.setup = setup;
-	this.teardown = teardown;
-	this.expectAssertions = expectAssertions;
-	this.onTested = new haxe.test.Dispatcher();
-	this.onTimeout = new haxe.test.Dispatcher();
-	this.onComplete = new haxe.test.Dispatcher();
-}}
-haxe.test.TestFixture.__name__ = ["haxe","test","TestFixture"];
-haxe.test.TestFixture.prototype.checkMethod = function(name,arg) {
-	var field = Reflect.field(this.target,name);
-	if(field == null) throw ((arg + " function ") + name) + " is not a field of target";
-	if(!Reflect.isFunction(field)) throw ((arg + " function ") + name) + " is not a function";
-}
-haxe.test.TestFixture.prototype.expectAssertions = null;
-haxe.test.TestFixture.prototype.method = null;
-haxe.test.TestFixture.prototype.methodName = null;
-haxe.test.TestFixture.prototype.onComplete = null;
-haxe.test.TestFixture.prototype.onTested = null;
-haxe.test.TestFixture.prototype.onTimeout = null;
-haxe.test.TestFixture.prototype.setup = null;
-haxe.test.TestFixture.prototype.target = null;
-haxe.test.TestFixture.prototype.teardown = null;
-haxe.test.TestFixture.prototype.__class__ = haxe.test.TestFixture;
 haxe.functional.P = function() { }
-haxe.functional.P.__name__ = ["haxe","abstract","P"];
+haxe.functional.P.__name__ = ["haxe","functional","P"];
 haxe.functional.P.isGreaterThan = function(ref) {
 	return function(value) {
 		return value > ref;
@@ -5054,6 +5149,245 @@ haxe.functional.P.contains = function(s) {
 	}
 }
 haxe.functional.P.prototype.__class__ = haxe.functional.P;
+StringBuf = function(p) { if( p === $_ ) return; {
+	this.b = new Array();
+}}
+StringBuf.__name__ = ["StringBuf"];
+StringBuf.prototype.add = function(x) {
+	this.b[this.b.length] = x;
+}
+StringBuf.prototype.addChar = function(c) {
+	this.b[this.b.length] = String.fromCharCode(c);
+}
+StringBuf.prototype.addSub = function(s,pos,len) {
+	this.b[this.b.length] = s.substr(pos,len);
+}
+StringBuf.prototype.b = null;
+StringBuf.prototype.toString = function() {
+	return this.b.join("");
+}
+StringBuf.prototype.__class__ = StringBuf;
+haxe.test.Must = function() { }
+haxe.test.Must.__name__ = ["haxe","test","Must"];
+haxe.test.Must.equal = function(expected,equal) {
+	if(equal == null) equal = DynamicExtensions.EqualT();
+	return function(value) {
+		var result = { assertion : "x == " + value, negation : "x != " + value}
+		return (!equal.equal(value,expected)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beTrue = function() {
+	return function(value) {
+		var result = { assertion : "x == true", negation : "x == false"}
+		return (!value?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beFalse = function() {
+	return function(value) {
+		var result = { assertion : "x == false", negation : "x == true"}
+		return (value?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beGreaterThan = function(ref) {
+	return function(value) {
+		var result = { assertion : "x > " + ref, negation : "x <= " + ref}
+		return (value <= ref?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beLessThan = function(ref) {
+	return function(value) {
+		var result = { assertion : "x < " + ref, negation : "x >= " + ref}
+		return (value >= ref?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beGreaterThanInt = function(ref) {
+	return function(value) {
+		var result = { assertion : "x > " + ref, negation : "x <= " + ref}
+		return (value <= ref?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beLessThanInt = function(ref) {
+	return function(value) {
+		var result = { assertion : "x < " + ref, negation : "x >= " + ref}
+		return (value >= ref?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.haveLength = function(length) {
+	return function(value) {
+		var len = 0;
+		{ var $it39 = value.iterator();
+		while( $it39.hasNext() ) { var e = $it39.next();
+		++len;
+		}}
+		var result = { assertion : "x.length == " + length, negation : "x.length != " + length}
+		return (len != length?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.haveClass = function(c) {
+	return function(value) {
+		var result = { assertion : ("x.isInstanceOf(" + Type.getClassName(c)) + ")", negation : ("!x.isInstanceOf(" + Type.getClassName(c)) + ")"}
+		return (!Std["is"](value,c)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.containElement = function(element) {
+	return function(c) {
+		var result = { assertion : ("x.contains(" + element) + ")", negation : ("!x.contains(" + element) + ")"}
+		return (!c.contains(element)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.containString = function(sub) {
+	return function(value) {
+		var result = { assertion : ("x.contains(\"" + sub) + "\")", negation : ("!x.contains(\"" + sub) + "\")"}
+		return (!StringExtensions.contains(value,sub)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.startWithString = function(s) {
+	return function(value) {
+		var result = { assertion : ("x.startsWith(\"" + s) + "\")", negation : ("!x.startsWith(\"" + s) + "\")"}
+		return (!StringExtensions.startsWith(value,s)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.endWithString = function(s) {
+	return function(value) {
+		var result = { assertion : ("x.endsWith(\"" + s) + "\")", negation : ("!x.endsWith(\"" + s) + "\")"}
+		return (!StringExtensions.endsWith(value,s)?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beNull = function() {
+	return function(value) {
+		var result = { assertion : "x == null", negation : "x != null"}
+		return (value != null?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.beNonNull = function() {
+	return function(value) {
+		var result = { assertion : "x != null", negation : "x == null"}
+		return (value == null?Either.Left(result):Either.Right(result));
+	}
+}
+haxe.test.Must.prototype.__class__ = haxe.test.Must;
+Lambda = function() { }
+Lambda.__name__ = ["Lambda"];
+Lambda.array = function(it) {
+	var a = new Array();
+	{ var $it40 = it.iterator();
+	while( $it40.hasNext() ) { var i = $it40.next();
+	a.push(i);
+	}}
+	return a;
+}
+Lambda.list = function(it) {
+	var l = new List();
+	{ var $it41 = it.iterator();
+	while( $it41.hasNext() ) { var i = $it41.next();
+	l.add(i);
+	}}
+	return l;
+}
+Lambda.map = function(it,f) {
+	var l = new List();
+	{ var $it42 = it.iterator();
+	while( $it42.hasNext() ) { var x = $it42.next();
+	l.add(f(x));
+	}}
+	return l;
+}
+Lambda.mapi = function(it,f) {
+	var l = new List();
+	var i = 0;
+	{ var $it43 = it.iterator();
+	while( $it43.hasNext() ) { var x = $it43.next();
+	l.add(f(i++,x));
+	}}
+	return l;
+}
+Lambda.has = function(it,elt,cmp) {
+	if(cmp == null) {
+		{ var $it44 = it.iterator();
+		while( $it44.hasNext() ) { var x = $it44.next();
+		if(x == elt) return true;
+		}}
+	}
+	else {
+		{ var $it45 = it.iterator();
+		while( $it45.hasNext() ) { var x = $it45.next();
+		if(cmp(x,elt)) return true;
+		}}
+	}
+	return false;
+}
+Lambda.exists = function(it,f) {
+	{ var $it46 = it.iterator();
+	while( $it46.hasNext() ) { var x = $it46.next();
+	if(f(x)) return true;
+	}}
+	return false;
+}
+Lambda.foreach = function(it,f) {
+	{ var $it47 = it.iterator();
+	while( $it47.hasNext() ) { var x = $it47.next();
+	if(!f(x)) return false;
+	}}
+	return true;
+}
+Lambda.iter = function(it,f) {
+	{ var $it48 = it.iterator();
+	while( $it48.hasNext() ) { var x = $it48.next();
+	f(x);
+	}}
+}
+Lambda.filter = function(it,f) {
+	var l = new List();
+	{ var $it49 = it.iterator();
+	while( $it49.hasNext() ) { var x = $it49.next();
+	if(f(x)) l.add(x);
+	}}
+	return l;
+}
+Lambda.fold = function(it,f,first) {
+	{ var $it50 = it.iterator();
+	while( $it50.hasNext() ) { var x = $it50.next();
+	first = f(x,first);
+	}}
+	return first;
+}
+Lambda.count = function(it) {
+	var n = 0;
+	{ var $it51 = it.iterator();
+	while( $it51.hasNext() ) { var _ = $it51.next();
+	++n;
+	}}
+	return n;
+}
+Lambda.empty = function(it) {
+	return !it.iterator().hasNext();
+}
+Lambda.prototype.__class__ = Lambda;
+haxe.test.TestFixture = function(target,methodName,method,setup,teardown) { if( target === $_ ) return; {
+	this.target = target;
+	this.methodName = methodName;
+	this.method = method;
+	this.setup = setup;
+	this.teardown = teardown;
+	this.onTested = new haxe.test.Dispatcher();
+	this.onTimeout = new haxe.test.Dispatcher();
+	this.onComplete = new haxe.test.Dispatcher();
+}}
+haxe.test.TestFixture.__name__ = ["haxe","test","TestFixture"];
+haxe.test.TestFixture.prototype.checkMethod = function(name,arg) {
+	var field = Reflect.field(this.target,name);
+	if(field == null) throw ((arg + " function ") + name) + " is not a field of target";
+	if(!Reflect.isFunction(field)) throw ((arg + " function ") + name) + " is not a function";
+}
+haxe.test.TestFixture.prototype.method = null;
+haxe.test.TestFixture.prototype.methodName = null;
+haxe.test.TestFixture.prototype.onComplete = null;
+haxe.test.TestFixture.prototype.onTested = null;
+haxe.test.TestFixture.prototype.onTimeout = null;
+haxe.test.TestFixture.prototype.setup = null;
+haxe.test.TestFixture.prototype.target = null;
+haxe.test.TestFixture.prototype.teardown = null;
+haxe.test.TestFixture.prototype.__class__ = haxe.test.TestFixture;
 haxe.reactive.External = function() { }
 haxe.reactive.External.__name__ = ["haxe","reactive","External"];
 haxe.reactive.External.setTimeout = function(f,time) {
@@ -5765,11 +6099,11 @@ haxe.reactive.Signal.prototype.liftS = function(f) {
 haxe.reactive.Signal.prototype.map = function(f) {
 	return this.lift(f);
 }
-haxe.reactive.Signal.prototype.mapS = function(f) {
-	return this.liftS(f);
-}
 haxe.reactive.Signal.prototype.mapC = function(f) {
 	return f(this.changes()).startsWith(this.valueNow());
+}
+haxe.reactive.Signal.prototype.mapS = function(f) {
+	return this.liftS(f);
 }
 haxe.reactive.Signal.prototype.sendSignal = function(value) {
 	this.changes().sendEvent(value);
@@ -5862,6 +6196,53 @@ haxe.reactive.Signal.prototype.zipN = function(signals) {
 	return haxe.reactive.Signals.zipN(signals1);
 }
 haxe.reactive.Signal.prototype.__class__ = haxe.reactive.Signal;
+haxe.reactive.Signals = function(p) { if( p === $_ ) return; {
+	null;
+}}
+haxe.reactive.Signals.__name__ = ["haxe","reactive","Signals"];
+haxe.reactive.Signals.constant = function(value) {
+	return haxe.reactive.Streams.identity().startsWith(value);
+}
+haxe.reactive.Signals.cond = function(conditions,elseS) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.data.collections.IterableExtensions.headOption(conditions));
+		switch( $e[1] ) {
+		case 0:
+		{
+			$r = elseS;
+		}break;
+		case 1:
+		var h = $e[2];
+		{
+			$r = haxe.reactive.SignalBool.ifTrue(h._1,h._2,haxe.reactive.Signals.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseS));
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+haxe.reactive.Signals.zipN = function(signals) {
+	var zipValueNow = function() {
+		return haxe.data.collections.IterableExtensions.map(signals,function(b) {
+			return b.valueNow();
+		});
+	}
+	return haxe.reactive.Streams.create(function(pulse) {
+		return haxe.reactive.Propagation.propagate(pulse.withValue(zipValueNow()));
+	},haxe.data.collections.IterableExtensions.map(signals,function(b) {
+		return b.changes();
+	})).startsWith(zipValueNow());
+}
+haxe.reactive.Signals.sample = function(time) {
+	return haxe.reactive.Streams.timer(time).startsWith(Std["int"](haxe.reactive.External.now()));
+}
+haxe.reactive.Signals.sampleS = function(time) {
+	return haxe.reactive.Streams.timerS(time).startsWith(Std["int"](haxe.reactive.External.now()));
+}
+haxe.reactive.Signals.prototype.__class__ = haxe.reactive.Signals;
 haxe.test.ui.common.PackageResult = function(packageName) { if( packageName === $_ ) return; {
 	this.packageName = packageName;
 	this.classes = new Hash();
@@ -5886,8 +6267,8 @@ haxe.test.ui.common.PackageResult.prototype.addResult = function(result,flattenP
 haxe.test.ui.common.PackageResult.prototype.classNames = function(errorsHavePriority) {
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
-	{ var $it41 = this.classes.keys();
-	while( $it41.hasNext() ) { var name = $it41.next();
+	{ var $it52 = this.classes.keys();
+	while( $it52.hasNext() ) { var name = $it52.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -5928,8 +6309,8 @@ haxe.test.ui.common.PackageResult.prototype.classNames = function(errorsHavePrio
 haxe.test.ui.common.PackageResult.prototype.classes = null;
 haxe.test.ui.common.PackageResult.prototype.createFixture = function(method,assertations) {
 	var f = new haxe.test.ui.common.FixtureResult(method);
-	{ var $it42 = assertations.iterator();
-	while( $it42.hasNext() ) { var assertation = $it42.next();
+	{ var $it53 = assertations.iterator();
+	while( $it53.hasNext() ) { var assertation = $it53.next();
 	f.add(assertation);
 	}}
 	return f;
@@ -5979,8 +6360,8 @@ haxe.test.ui.common.PackageResult.prototype.packageNames = function(errorsHavePr
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
 	if(this.packageName == null) names.push("");
-	{ var $it43 = this.packages.keys();
-	while( $it43.hasNext() ) { var name = $it43.next();
+	{ var $it54 = this.packages.keys();
+	while( $it54.hasNext() ) { var name = $it54.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -6044,6 +6425,20 @@ haxe.test.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors.__e
 haxe.test.Assert = function() { }
 haxe.test.Assert.__name__ = ["haxe","test","Assert"];
 haxe.test.Assert.results = null;
+haxe.test.Assert.that = function(obj,cond,msg,pos) {
+	var $e = (cond(obj));
+	switch( $e[1] ) {
+	case 0:
+	var result = $e[2];
+	{
+		haxe.test.Assert.isTrue(false,(("Expected: " + result.assertion) + ", Found: x = ") + haxe.test.Assert.q(obj),pos);
+	}break;
+	case 1:
+	{
+		haxe.test.Assert.isTrue(true,null,pos);
+	}break;
+	}
+}
 haxe.test.Assert.isTrue = function(cond,msg,pos) {
 	if(haxe.test.Assert.results == null) throw "Assert.results is not currently bound to any assert context";
 	if(null == msg) msg = "expected true";
@@ -6070,11 +6465,12 @@ haxe.test.Assert.notEquals = function(expected,value,msg,pos) {
 	if(msg == null) msg = ((("expected " + haxe.test.Assert.q(expected)) + " and testa value ") + haxe.test.Assert.q(value)) + " should be different";
 	haxe.test.Assert.isFalse(expected == value,msg,pos);
 }
-haxe.test.Assert.equals = function(expected,value,msg,pos) {
+haxe.test.Assert.equals = function(expected,value,equal,msg,pos) {
+	if(equal == null) equal = DynamicExtensions.EqualT();
 	if(msg == null) msg = (("expected " + haxe.test.Assert.q(expected)) + " but was ") + haxe.test.Assert.q(value);
-	haxe.test.Assert.isTrue(expected == value,msg,pos);
+	haxe.test.Assert.isTrue(equal.equal(expected,value),msg,pos);
 }
-haxe.test.Assert.match = function(pattern,value,msg,pos) {
+haxe.test.Assert.matches = function(pattern,value,msg,pos) {
 	if(msg == null) msg = ("the value " + haxe.test.Assert.q(value)) + "does not match the provided pattern";
 	haxe.test.Assert.isTrue(pattern.match(value),msg,pos);
 }
@@ -6446,7 +6842,7 @@ haxe.test.Assert.q = function(v) {
 	else if(Std["is"](v,String)) return ("\"" + StringTools.replace(v,"\"","\\\"")) + "\"";
 	else return "" + v;
 }
-haxe.test.Assert.same = function(expected,value,recursive,msg,pos) {
+haxe.test.Assert.looksLike = function(expected,value,recursive,msg,pos) {
 	if(null == recursive) recursive = true;
 	var status = { recursive : recursive, path : "", error : null}
 	if(haxe.test.Assert.sameAs(expected,value,status)) {
@@ -6456,7 +6852,7 @@ haxe.test.Assert.same = function(expected,value,recursive,msg,pos) {
 		haxe.test.Assert.fail((msg == null?status.error:msg),pos);
 	}
 }
-haxe.test.Assert.raises = function(method,type,msg,pos) {
+haxe.test.Assert.throwsException = function(method,type,msg,pos) {
 	if(type == null) type = String;
 	try {
 		method();
@@ -6464,9 +6860,9 @@ haxe.test.Assert.raises = function(method,type,msg,pos) {
 		if(name == null) name = "" + type;
 		haxe.test.Assert.fail(("exception of type " + name) + " not raised",pos);
 	}
-	catch( $e44 ) {
+	catch( $e55 ) {
 		{
-			var ex = $e44;
+			var ex = $e55;
 			{
 				var name = Type.getClassName(type);
 				if(name == null) name = "" + type;
@@ -6475,7 +6871,7 @@ haxe.test.Assert.raises = function(method,type,msg,pos) {
 		}
 	}
 }
-haxe.test.Assert.allows = function(possibilities,value,msg,pos) {
+haxe.test.Assert.equalsOneOf = function(value,possibilities,msg,pos) {
 	if(Lambda.has(possibilities,value)) {
 		haxe.test.Assert.isTrue(true,msg,pos);
 	}
@@ -6483,7 +6879,7 @@ haxe.test.Assert.allows = function(possibilities,value,msg,pos) {
 		haxe.test.Assert.fail((msg == null?(("value " + haxe.test.Assert.q(value)) + " not found in the expected possibilities ") + possibilities:msg),pos);
 	}
 }
-haxe.test.Assert.contains = function(match,values,msg,pos) {
+haxe.test.Assert.contains = function(values,match,msg,pos) {
 	if(Lambda.has(values,match)) {
 		haxe.test.Assert.isTrue(true,msg,pos);
 	}
@@ -6491,7 +6887,7 @@ haxe.test.Assert.contains = function(match,values,msg,pos) {
 		haxe.test.Assert.fail((msg == null?(("values " + values) + " do not contain ") + match:msg),pos);
 	}
 }
-haxe.test.Assert.notContains = function(match,values,msg,pos) {
+haxe.test.Assert.notContains = function(values,match,msg,pos) {
 	if(!Lambda.has(values,match)) {
 		haxe.test.Assert.isTrue(true,msg,pos);
 	}
@@ -6549,6 +6945,37 @@ haxe.test.Assert.createAsync = function(f,timeout) {
 		null;
 	}
 }
+haxe.test.Assert.delivered = function(future,assertions,timeout) {
+	var f = haxe.test.Assert.createAsync(function() {
+		if(future.isCanceled()) {
+			haxe.test.Assert.fail(("expected delivery of future " + haxe.test.Assert.q(future)) + ", but it was canceled",{ fileName : "Assert.hx", lineNumber : 681, className : "haxe.test.Assert", methodName : "delivered"});
+		}
+		else {
+			assertions(OptionExtensions.get(future.value()));
+		}
+	},timeout);
+	future.deliverTo(function(value) {
+		f();
+	});
+	future.ifCanceled(f);
+}
+haxe.test.Assert.canceled = function(future,assertions,timeout) {
+	future.ifCanceled(haxe.test.Assert.createAsync(assertions,timeout));
+}
+haxe.test.Assert.notDelivered = function(future,timeout,pos) {
+	var f = haxe.test.Assert.createAsync(function() {
+		if(future.isDelivered()) {
+			haxe.test.Assert.fail("Did not expect delivery of: " + OptionExtensions.get(future.value()),pos);
+		}
+		else {
+			haxe.test.Assert.isTrue(true,null,{ fileName : "Assert.hx", lineNumber : 708, className : "haxe.test.Assert", methodName : "notDelivered"});
+		}
+	},timeout + 10);
+	haxe.Timer.delay(f,timeout);
+	future.deliverTo(function(value) {
+		f();
+	});
+}
 haxe.test.Assert.createEvent = function(f,timeout) {
 	return function(e) {
 		null;
@@ -6559,18 +6986,18 @@ haxe.test.Assert.typeToString = function(t) {
 		var _t = Type.getClass(t);
 		if(_t != null) t = _t;
 	}
-	catch( $e45 ) {
+	catch( $e56 ) {
 		{
-			var e = $e45;
+			var e = $e56;
 			null;
 		}
 	}
 	try {
 		return Type.getClassName(t);
 	}
-	catch( $e46 ) {
+	catch( $e57 ) {
 		{
-			var e = $e46;
+			var e = $e57;
 			null;
 		}
 	}
@@ -6578,36 +7005,36 @@ haxe.test.Assert.typeToString = function(t) {
 		var _t = Type.getEnum(t);
 		if(_t != null) t = _t;
 	}
-	catch( $e47 ) {
+	catch( $e58 ) {
 		{
-			var e = $e47;
+			var e = $e58;
 			null;
 		}
 	}
 	try {
 		return Type.getEnumName(t);
 	}
-	catch( $e48 ) {
+	catch( $e59 ) {
 		{
-			var e = $e48;
+			var e = $e59;
 			null;
 		}
 	}
 	try {
 		return Std.string(Type["typeof"](t));
 	}
-	catch( $e49 ) {
+	catch( $e60 ) {
 		{
-			var e = $e49;
+			var e = $e60;
 			null;
 		}
 	}
 	try {
 		return Std.string(t);
 	}
-	catch( $e50 ) {
+	catch( $e61 ) {
 		{
-			var e = $e50;
+			var e = $e61;
 			null;
 		}
 	}
@@ -6697,8 +7124,8 @@ haxe.test.ui.text.PlainTextReport.prototype.getResults = function() {
 								buf.b[buf.b.length] = "WARNING ";
 							}
 							var messages = "";
-							{ var $it51 = fix.iterator();
-							while( $it51.hasNext() ) { var assertation = $it51.next();
+							{ var $it62 = fix.iterator();
+							while( $it62.hasNext() ) { var assertation = $it62.next();
 							{
 								var $e = (assertation);
 								switch( $e[1] ) {
@@ -6827,9 +7254,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e52 ) {
+	catch( $e63 ) {
 		{
-			var e = $e52;
+			var e = $e63;
 			{
 				
 				for(var i in this.h)
@@ -6872,8 +7299,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it53 = it;
-	while( $it53.hasNext() ) { var i = $it53.next();
+	{ var $it64 = it;
+	while( $it64.hasNext() ) { var i = $it64.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -6941,9 +7368,9 @@ haxe.test.TestHandler.prototype.addAsync = function(f,timeout) {
 			handler.bindHandler();
 			f();
 		}
-		catch( $e54 ) {
+		catch( $e65 ) {
 			{
-				var e = $e54;
+				var e = $e65;
 				{
 					handler.results.add(haxe.test.Assertation.AsyncError(e,haxe.test.TestHandler.exceptionStack(0)));
 				}
@@ -6965,9 +7392,9 @@ haxe.test.TestHandler.prototype.addEvent = function(f,timeout) {
 			handler.bindHandler();
 			f(e);
 		}
-		catch( $e55 ) {
+		catch( $e66 ) {
 			{
-				var e1 = $e55;
+				var e1 = $e66;
 				{
 					handler.results.add(haxe.test.Assertation.AsyncError(e1,haxe.test.TestHandler.exceptionStack(0)));
 				}
@@ -6996,9 +7423,9 @@ haxe.test.TestHandler.prototype.completed = function() {
 	try {
 		this.executeMethodByName(this.fixture.teardown);
 	}
-	catch( $e56 ) {
+	catch( $e67 ) {
 		{
-			var e = $e56;
+			var e = $e67;
 			{
 				this.results.add(haxe.test.Assertation.TeardownError(e,haxe.test.TestHandler.exceptionStack(2)));
 			}
@@ -7013,18 +7440,18 @@ haxe.test.TestHandler.prototype.execute = function() {
 		try {
 			this.executeMethod($closure(this.fixture,"method"));
 		}
-		catch( $e57 ) {
+		catch( $e68 ) {
 			{
-				var e = $e57;
+				var e = $e68;
 				{
 					this.results.add(haxe.test.Assertation.Error(e,haxe.test.TestHandler.exceptionStack()));
 				}
 			}
 		}
 	}
-	catch( $e58 ) {
+	catch( $e69 ) {
 		{
-			var e = $e58;
+			var e = $e69;
 			{
 				this.results.add(haxe.test.Assertation.SetupError(e,haxe.test.TestHandler.exceptionStack()));
 			}
@@ -7057,7 +7484,7 @@ haxe.test.TestHandler.prototype.setTimeout = function(timeout) {
 	this.expireson = ((this.expireson == null)?newexpire:((newexpire > this.expireson?newexpire:this.expireson)));
 }
 haxe.test.TestHandler.prototype.tested = function() {
-	if(this.results.length == 0 && this.fixture.expectAssertions) this.results.add(haxe.test.Assertation.Warning("no assertions"));
+	if(this.results.length == 0) this.results.add(haxe.test.Assertation.Warning("no assertions"));
 	this.onTested.dispatch(this);
 	this.completed();
 }
@@ -7136,50 +7563,6 @@ EReg.prototype.split = function(s) {
 	return s.replace(this.r,d).split(d);
 }
 EReg.prototype.__class__ = EReg;
-haxe.functional.Predicate1Extensions = function() { }
-haxe.functional.Predicate1Extensions.__name__ = ["haxe","abstract","Predicate1Extensions"];
-haxe.functional.Predicate1Extensions.and = function(p1,p2) {
-	return function(value) {
-		return p1(value) && p2(value);
-	}
-}
-haxe.functional.Predicate1Extensions.andAll = function(p1,ps) {
-	return function(value) {
-		var result = p1(value);
-		{ var $it59 = ps.iterator();
-		while( $it59.hasNext() ) { var p = $it59.next();
-		{
-			if(!result) break;
-			result = result && p(value);
-		}
-		}}
-		return result;
-	}
-}
-haxe.functional.Predicate1Extensions.or = function(p1,p2) {
-	return function(value) {
-		return p1(value) || p2(value);
-	}
-}
-haxe.functional.Predicate1Extensions.orAny = function(p1,ps) {
-	return function(value) {
-		var result = p1(value);
-		{ var $it60 = ps.iterator();
-		while( $it60.hasNext() ) { var p = $it60.next();
-		{
-			if(result) break;
-			result = result || p(value);
-		}
-		}}
-		return result;
-	}
-}
-haxe.functional.Predicate1Extensions.negate = function(p) {
-	return function(value) {
-		return !p(value);
-	}
-}
-haxe.functional.Predicate1Extensions.prototype.__class__ = haxe.functional.Predicate1Extensions;
 haxe.test.ui.common.ClassResult = function(className,setupName,teardownName) { if( className === $_ ) return; {
 	this.fixtures = new Hash();
 	this.className = className;
@@ -7210,8 +7593,8 @@ haxe.test.ui.common.ClassResult.prototype.hasTeardown = null;
 haxe.test.ui.common.ClassResult.prototype.methodNames = function(errorsHavePriority) {
 	if(errorsHavePriority == null) errorsHavePriority = true;
 	var names = [];
-	{ var $it61 = this.fixtures.keys();
-	while( $it61.hasNext() ) { var name = $it61.next();
+	{ var $it70 = this.fixtures.keys();
+	while( $it70.hasNext() ) { var name = $it70.next();
 	names.push(name);
 	}}
 	if(errorsHavePriority) {
@@ -7254,397 +7637,6 @@ haxe.test.ui.common.ClassResult.prototype.setupName = null;
 haxe.test.ui.common.ClassResult.prototype.stats = null;
 haxe.test.ui.common.ClassResult.prototype.teardownName = null;
 haxe.test.ui.common.ClassResult.prototype.__class__ = haxe.test.ui.common.ClassResult;
-haxe.reactive.Signals = function(p) { if( p === $_ ) return; {
-	null;
-}}
-haxe.reactive.Signals.__name__ = ["haxe","reactive","Signals"];
-haxe.reactive.Signals.constant = function(value) {
-	return haxe.reactive.Streams.identity().startsWith(value);
-}
-haxe.reactive.Signals.cond = function(conditions,elseS) {
-	return (function($this) {
-		var $r;
-		var $e = (haxe.data.collections.IterableExtensions.headOption(conditions));
-		switch( $e[1] ) {
-		case 0:
-		{
-			$r = elseS;
-		}break;
-		case 1:
-		var h = $e[2];
-		{
-			$r = haxe.reactive.SignalBool.ifTrue(h._1,h._2,haxe.reactive.Signals.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseS));
-		}break;
-		default:{
-			$r = null;
-		}break;
-		}
-		return $r;
-	}(this));
-}
-haxe.reactive.Signals.zipN = function(signals) {
-	var zipValueNow = function() {
-		return haxe.data.collections.IterableExtensions.map(signals,function(b) {
-			return b.valueNow();
-		});
-	}
-	return haxe.reactive.Streams.create(function(pulse) {
-		return haxe.reactive.Propagation.propagate(pulse.withValue(zipValueNow()));
-	},haxe.data.collections.IterableExtensions.map(signals,function(b) {
-		return b.changes();
-	})).startsWith(zipValueNow());
-}
-haxe.reactive.Signals.sample = function(time) {
-	return haxe.reactive.Streams.timer(time).startsWith(Std["int"](haxe.reactive.External.now()));
-}
-haxe.reactive.Signals.sampleS = function(time) {
-	return haxe.reactive.Streams.timerS(time).startsWith(Std["int"](haxe.reactive.External.now()));
-}
-haxe.reactive.Signals.prototype.__class__ = haxe.reactive.Signals;
-haxe.functional.FoldableExtensions = function() { }
-haxe.functional.FoldableExtensions.__name__ = ["haxe","abstract","FoldableExtensions"];
-haxe.functional.FoldableExtensions.foldr = function(foldable,z,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	a.reverse();
-	var acc = z;
-	{
-		var _g = 0;
-		while(_g < a.length) {
-			var e = a[_g];
-			++_g;
-			acc = f(e,acc);
-		}
-	}
-	return acc;
-}
-haxe.functional.FoldableExtensions.filter = function(foldable,f) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (f(b)?foldable.append(a,b):a);
-	});
-}
-haxe.functional.FoldableExtensions.partition = function(foldable,f) {
-	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
-		return (f(b)?Tuple2.create(foldable.append(a._1,b),a._2):Tuple2.create(a._1,foldable.append(a._2,b)));
-	});
-}
-haxe.functional.FoldableExtensions.partitionWhile = function(foldable,f) {
-	var partitioning = true;
-	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
-		return (partitioning?(f(b)?Tuple2.create(foldable.append(a._1,b),a._2):(function($this) {
-			var $r;
-			partitioning = false;
-			$r = Tuple2.create(a._1,foldable.append(a._2,b));
-			return $r;
-		}(this))):Tuple2.create(a._1,foldable.append(a._2,b)));
-	});
-}
-haxe.functional.FoldableExtensions.map = function(foldable,f) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return foldable.append(a,f(b));
-	});
-}
-haxe.functional.FoldableExtensions.mapTo = function(src,dest,f) {
-	return src.foldl(dest,function(a,b) {
-		return dest.append(a,f(b));
-	});
-}
-haxe.functional.FoldableExtensions.flatMap = function(foldable,f) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		var fb = f(b);
-		return fb.foldl(a,function(a1,b1) {
-			return fb.append(a1,b1);
-		});
-	});
-}
-haxe.functional.FoldableExtensions.flatMapTo = function(src,dest,f) {
-	return src.foldl(dest,function(a,b) {
-		return f(b).foldl(a,function(a1,b1) {
-			return dest.append(a1,b1);
-		});
-	});
-}
-haxe.functional.FoldableExtensions.take = function(foldable,n) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (n-- > 0?foldable.append(a,b):a);
-	});
-}
-haxe.functional.FoldableExtensions.takeWhile = function(foldable,f) {
-	var taking = true;
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (taking?(f(b)?foldable.append(a,b):(function($this) {
-			var $r;
-			taking = false;
-			$r = a;
-			return $r;
-		}(this))):a);
-	});
-}
-haxe.functional.FoldableExtensions.drop = function(foldable,n) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (n-- > 0?a:foldable.append(a,b));
-	});
-}
-haxe.functional.FoldableExtensions.dropWhile = function(foldable,f) {
-	var dropping = true;
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (dropping?(f(b)?a:(function($this) {
-			var $r;
-			dropping = false;
-			$r = foldable.append(a,b);
-			return $r;
-		}(this))):foldable.append(a,b));
-	});
-}
-haxe.functional.FoldableExtensions.count = function(foldable,f) {
-	return foldable.foldl(0,function(a,b) {
-		return a + ((f(b)?1:0));
-	});
-}
-haxe.functional.FoldableExtensions.countWhile = function(foldable,f) {
-	var counting = true;
-	return foldable.foldl(0,function(a,b) {
-		return (!counting?a:(f(b)?a + 1:(function($this) {
-			var $r;
-			counting = false;
-			$r = a;
-			return $r;
-		}(this))));
-	});
-}
-haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	var accum = init;
-	var result = [init];
-	{
-		var _g = 0;
-		while(_g < a.length) {
-			var e = a[_g];
-			++_g;
-			result.push(f(e,accum));
-		}
-	}
-	return result;
-}
-haxe.functional.FoldableExtensions.scanr = function(foldable,init,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	a.reverse();
-	var accum = init;
-	var result = [init];
-	{
-		var _g = 0;
-		while(_g < a.length) {
-			var e = a[_g];
-			++_g;
-			result.push(f(e,accum));
-		}
-	}
-	return result;
-}
-haxe.functional.FoldableExtensions.scanl1 = function(foldable,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	var iterator = a.iterator();
-	var accum = null;
-	var result = [];
-	while(iterator.hasNext()) {
-		if(result[0] == null) {
-			var first = iterator.next();
-			result.push(first);
-			accum = first;
-		}
-		else result.push(f(iterator.next(),accum));
-	}
-	return result;
-}
-haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	a.reverse();
-	var iterator = a.iterator();
-	var accum = null;
-	var result = [];
-	while(iterator.hasNext()) {
-		if(result[0] == null) {
-			var first = iterator.next();
-			result.push(first);
-			accum = first;
-		}
-		else result.push(f(iterator.next(),accum));
-	}
-	return result;
-}
-haxe.functional.FoldableExtensions.elements = function(foldable) {
-	return haxe.functional.FoldableExtensions.toArray(foldable);
-}
-haxe.functional.FoldableExtensions.toArray = function(foldable) {
-	var es = [];
-	foldable.foldl(foldable.empty(),function(a,b) {
-		es.push(b);
-		return a;
-	});
-	return es;
-}
-haxe.functional.FoldableExtensions.concat = function(foldable,rest) {
-	return rest.foldl(foldable,function(a,b) {
-		return foldable.append(a,b);
-	});
-}
-haxe.functional.FoldableExtensions.append = function(foldable,e) {
-	return foldable.append(foldable,e);
-}
-haxe.functional.FoldableExtensions.appendAll = function(foldable,i) {
-	var acc = foldable;
-	{ var $it62 = i.iterator();
-	while( $it62.hasNext() ) { var e = $it62.next();
-	{
-		acc = acc.append(acc,e);
-	}
-	}}
-	return acc;
-}
-haxe.functional.FoldableExtensions.iterator = function(foldable) {
-	return haxe.functional.FoldableExtensions.elements(foldable).iterator();
-}
-haxe.functional.FoldableExtensions.isEmpty = function(foldable) {
-	return !haxe.functional.FoldableExtensions.iterator(foldable).hasNext();
-}
-haxe.functional.FoldableExtensions.foreach = function(foldable,f) {
-	foldable.foldl(1,function(a,b) {
-		f(b);
-		return a;
-	});
-	return foldable;
-}
-haxe.functional.FoldableExtensions.find = function(foldable,f) {
-	return foldable.foldl(Option.None,function(a,b) {
-		return (function($this) {
-			var $r;
-			var $e = (a);
-			switch( $e[1] ) {
-			case 0:
-			{
-				$r = OptionExtensions.filter(OptionExtensions.toOption(b),f);
-			}break;
-			default:{
-				$r = a;
-			}break;
-			}
-			return $r;
-		}(this));
-	});
-}
-haxe.functional.FoldableExtensions.forAll = function(foldable,f) {
-	return foldable.foldl(true,function(a,b) {
-		return (function($this) {
-			var $r;
-			switch(a) {
-			case true:{
-				$r = f(b);
-			}break;
-			case false:{
-				$r = false;
-			}break;
-			default:{
-				$r = null;
-			}break;
-			}
-			return $r;
-		}(this));
-	});
-}
-haxe.functional.FoldableExtensions.forAny = function(foldable,f) {
-	return foldable.foldl(true,function(a,b) {
-		return (function($this) {
-			var $r;
-			switch(a) {
-			case false:{
-				$r = f(b);
-			}break;
-			case true:{
-				$r = true;
-			}break;
-			default:{
-				$r = null;
-			}break;
-			}
-			return $r;
-		}(this));
-	});
-}
-haxe.functional.FoldableExtensions.exists = function(foldable,f) {
-	return (function($this) {
-		var $r;
-		var $e = (haxe.functional.FoldableExtensions.find(foldable,f));
-		switch( $e[1] ) {
-		case 1:
-		var v = $e[2];
-		{
-			$r = true;
-		}break;
-		case 0:
-		{
-			$r = false;
-		}break;
-		default:{
-			$r = null;
-		}break;
-		}
-		return $r;
-	}(this));
-}
-haxe.functional.FoldableExtensions.existsP = function(foldable,ref,f) {
-	var result = false;
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	{
-		var _g = 0;
-		while(_g < a.length) {
-			var e = a[_g];
-			++_g;
-			if(f(e,ref)) result = true;
-		}
-	}
-	return result;
-}
-haxe.functional.FoldableExtensions.member = function(foldable,member) {
-	return haxe.functional.FoldableExtensions.exists(foldable,function(e) {
-		return e == member;
-	});
-}
-haxe.functional.FoldableExtensions.nubBy = function(foldable,f) {
-	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (haxe.functional.FoldableExtensions.existsP(a,b,f)?a:foldable.append(a,b));
-	});
-}
-haxe.functional.FoldableExtensions.nub = function(foldable) {
-	return haxe.functional.FoldableExtensions.nubBy(foldable,function(a,b) {
-		return a == b;
-	});
-}
-haxe.functional.FoldableExtensions.intersectBy = function(foldable1,foldable2,f) {
-	return foldable1.foldl(foldable1.empty(),function(a,b) {
-		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,f)?haxe.functional.FoldableExtensions.append(a,b):a);
-	});
-}
-haxe.functional.FoldableExtensions.intersect = function(foldable1,foldable2) {
-	return foldable1.foldl(foldable1.empty(),function(a,b) {
-		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,function(a1,b1) {
-			return a1 == b1;
-		})?haxe.functional.FoldableExtensions.append(a,b):a);
-	});
-}
-haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
-	if(sep == null) sep = ", ";
-	show = (show == null?DynamicExtensions.ShowT().show:show);
-	var isFirst = true;
-	return foldable.foldl("",function(a,b) {
-		var prefix = (isFirst?(function($this) {
-			var $r;
-			isFirst = false;
-			$r = "";
-			return $r;
-		}(this)):sep);
-		return (a + prefix) + show(b);
-	});
-}
-haxe.functional.FoldableExtensions.prototype.__class__ = haxe.functional.FoldableExtensions;
 haxe.data.collections.Set = function(hasher,equal,map) { if( hasher === $_ ) return; {
 	this.hasher = hasher;
 	this.equal = equal;
@@ -7694,8 +7686,8 @@ haxe.data.collections.Set.prototype.add = function(t) {
 }
 haxe.data.collections.Set.prototype.addAll = function(it) {
 	var set = this;
-	{ var $it63 = it.iterator();
-	while( $it63.hasNext() ) { var e = $it63.next();
+	{ var $it71 = it.iterator();
+	while( $it71.hasNext() ) { var e = $it71.next();
 	set = set.add(e);
 	}}
 	return set;
@@ -7715,8 +7707,8 @@ haxe.data.collections.Set.prototype.empty = function() {
 haxe.data.collections.Set.prototype.equal = null;
 haxe.data.collections.Set.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it64 = this._map.iterator();
-	while( $it64.hasNext() ) { var e = $it64.next();
+	{ var $it72 = this._map.iterator();
+	while( $it72.hasNext() ) { var e = $it72.next();
 	{
 		acc = f(acc,e._1);
 	}
@@ -7735,8 +7727,8 @@ haxe.data.collections.Set.prototype.remove = function(t) {
 }
 haxe.data.collections.Set.prototype.removeAll = function(it) {
 	var set = this;
-	{ var $it65 = it.iterator();
-	while( $it65.hasNext() ) { var e = $it65.next();
+	{ var $it73 = it.iterator();
+	while( $it73.hasNext() ) { var e = $it73.next();
 	set = set.remove(e);
 	}}
 	return set;
@@ -7813,9 +7805,9 @@ haxe.test.Runner.prototype.addAfterAll = function(test,totalTestsHolder,f) {
 				try {
 					method();
 				}
-				catch( $e66 ) {
+				catch( $e74 ) {
 					{
-						var e = $e66;
+						var e = $e74;
 						{
 							runAfterAll();
 							throw e;
@@ -7830,8 +7822,8 @@ haxe.test.Runner.prototype.addAfterAll = function(test,totalTestsHolder,f) {
 }
 haxe.test.Runner.prototype.addAll = function(tests,prefix,pattern) {
 	if(prefix == null) prefix = "test";
-	{ var $it67 = tests.iterator();
-	while( $it67.hasNext() ) { var test = $it67.next();
+	{ var $it75 = tests.iterator();
+	while( $it75.hasNext() ) { var test = $it75.next();
 	{
 		this.add(test,prefix,pattern);
 	}
@@ -7864,8 +7856,8 @@ haxe.test.Runner.prototype.addFixture = function(fixture) {
 	return this;
 }
 haxe.test.Runner.prototype.addFixtures = function(fixtures) {
-	{ var $it68 = fixtures.iterator();
-	while( $it68.hasNext() ) { var fixture = $it68.next();
+	{ var $it76 = fixtures.iterator();
+	while( $it76.hasNext() ) { var fixture = $it76.next();
 	this.addFixture(fixture);
 	}}
 	return this;
@@ -7878,9 +7870,9 @@ haxe.test.Runner.prototype.isMethod = function(test,name) {
 	try {
 		return Reflect.isFunction(Reflect.field(test,name));
 	}
-	catch( $e69 ) {
+	catch( $e77 ) {
 		{
-			var e = $e69;
+			var e = $e77;
 			{
 				return false;
 			}
@@ -8097,161 +8089,6 @@ haxe.test.ui.common.ReportTools.hasOutput = function(report,stats) {
 	return haxe.test.ui.common.ReportTools.hasHeader(report,stats);
 }
 haxe.test.ui.common.ReportTools.prototype.__class__ = haxe.test.ui.common.ReportTools;
-haxe.reactive.SignalCollection = function(p) { if( p === $_ ) return; {
-	null;
-}}
-haxe.reactive.SignalCollection.__name__ = ["haxe","reactive","SignalCollection"];
-haxe.reactive.SignalCollection.concatS = function(b1,b2) {
-	return b1.zip(b2).map(function(c) {
-		return haxe.functional.FoldableExtensions.concat(c._1,c._2);
-	});
-}
-haxe.reactive.SignalCollection.join = function(b,$char) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.mkString(c,$char);
-	});
-}
-haxe.reactive.SignalCollection.size = function(b) {
-	return b.map(function(c) {
-		return c.getSize();
-	});
-}
-haxe.reactive.SignalCollection.zipS = function(b1,b2) {
-	return b1.zip(b2).map(function(c) {
-		return c._1.zip(c._2);
-	});
-}
-haxe.reactive.SignalCollection.append = function(b,element) {
-	return b.map(function(c) {
-		return c.add(element);
-	});
-}
-haxe.reactive.SignalCollection.count = function(b,predicate) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.count(c,predicate);
-	});
-}
-haxe.reactive.SignalCollection.all = function(b,tester) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.forAll(c,tester);
-	});
-}
-haxe.reactive.SignalCollection.any = function(b,tester) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.forAny(c,tester);
-	});
-}
-haxe.reactive.SignalCollection.forEach = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.foreach(c,f);
-	});
-}
-haxe.reactive.SignalCollection.each = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.foreach(c,f);
-	});
-}
-haxe.reactive.SignalCollection.map = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.map(c,f);
-	});
-}
-haxe.reactive.SignalCollection.mapTo = function(b,t,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.mapTo(c,t,f);
-	});
-}
-haxe.reactive.SignalCollection.partition = function(b,filter) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.partition(c,filter);
-	});
-}
-haxe.reactive.SignalCollection.filter = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.filter(c,f);
-	});
-}
-haxe.reactive.SignalCollection.flatMap = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.flatMap(c,f);
-	});
-}
-haxe.reactive.SignalCollection.toArray = function(b) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.toArray(c);
-	});
-}
-haxe.reactive.SignalCollection.foldr = function(b,initial,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.foldr(c,initial,f);
-	});
-}
-haxe.reactive.SignalCollection.foldl = function(b,initial,f) {
-	return b.map(function(c) {
-		return c.foldl(initial,f);
-	});
-}
-haxe.reactive.SignalCollection.scanl = function(b,initial,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.scanl(c,initial,f);
-	});
-}
-haxe.reactive.SignalCollection.scanr = function(b,initial,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.scanr(c,initial,f);
-	});
-}
-haxe.reactive.SignalCollection.scanrP = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.scanr1(c,f);
-	});
-}
-haxe.reactive.SignalCollection.scanlP = function(b,f) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.scanl1(c,f);
-	});
-}
-haxe.reactive.SignalCollection.member = function(b,element) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.member(c,element);
-	});
-}
-haxe.reactive.SignalCollection.exists = function(b,cmp) {
-	return b.map(function(v) {
-		return haxe.functional.FoldableExtensions.exists(v,cmp);
-	});
-}
-haxe.reactive.SignalCollection.existsP = function(b,ref,cmp) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.existsP(c,ref,cmp);
-	});
-}
-haxe.reactive.SignalCollection.find = function(b,cmp) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.find(c,cmp);
-	});
-}
-haxe.reactive.SignalCollection.nubBy = function(b,cmp) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.nubBy(c,cmp);
-	});
-}
-haxe.reactive.SignalCollection.nub = function(b) {
-	return b.map(function(c) {
-		return haxe.functional.FoldableExtensions.nub(c);
-	});
-}
-haxe.reactive.SignalCollection.intersectS = function(b1,b2) {
-	return b1.zip(b2).map(function(c) {
-		return haxe.functional.FoldableExtensions.intersect(c._1,c._2);
-	});
-}
-haxe.reactive.SignalCollection.intersectByS = function(b1,b2,cmp) {
-	return b1.zip(b2).map(function(c) {
-		return haxe.functional.FoldableExtensions.intersectBy(c._1,c._2,cmp);
-	});
-}
-haxe.reactive.SignalCollection.prototype.__class__ = haxe.reactive.SignalCollection;
 haxe.test.ui.Report = function() { }
 haxe.test.ui.Report.__name__ = ["haxe","test","ui","Report"];
 haxe.test.ui.Report.create = function(runner,displaySuccessResults,headerDisplayMode) {
@@ -8264,6 +8101,350 @@ haxe.test.ui.Report.create = function(runner,displaySuccessResults,headerDisplay
 	return report;
 }
 haxe.test.ui.Report.prototype.__class__ = haxe.test.ui.Report;
+haxe.functional.FoldableExtensions = function() { }
+haxe.functional.FoldableExtensions.__name__ = ["haxe","functional","FoldableExtensions"];
+haxe.functional.FoldableExtensions.foldr = function(foldable,z,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	a.reverse();
+	var acc = z;
+	{
+		var _g = 0;
+		while(_g < a.length) {
+			var e = a[_g];
+			++_g;
+			acc = f(e,acc);
+		}
+	}
+	return acc;
+}
+haxe.functional.FoldableExtensions.filter = function(foldable,f) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (f(b)?foldable.append(a,b):a);
+	});
+}
+haxe.functional.FoldableExtensions.partition = function(foldable,f) {
+	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
+		return (f(b)?Tuple2.create(foldable.append(a._1,b),a._2):Tuple2.create(a._1,foldable.append(a._2,b)));
+	});
+}
+haxe.functional.FoldableExtensions.partitionWhile = function(foldable,f) {
+	var partitioning = true;
+	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
+		return (partitioning?(f(b)?Tuple2.create(foldable.append(a._1,b),a._2):(function($this) {
+			var $r;
+			partitioning = false;
+			$r = Tuple2.create(a._1,foldable.append(a._2,b));
+			return $r;
+		}(this))):Tuple2.create(a._1,foldable.append(a._2,b)));
+	});
+}
+haxe.functional.FoldableExtensions.map = function(foldable,f) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return foldable.append(a,f(b));
+	});
+}
+haxe.functional.FoldableExtensions.mapTo = function(src,dest,f) {
+	return src.foldl(dest,function(a,b) {
+		return dest.append(a,f(b));
+	});
+}
+haxe.functional.FoldableExtensions.flatMap = function(foldable,f) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		var fb = f(b);
+		return fb.foldl(a,function(a1,b1) {
+			return fb.append(a1,b1);
+		});
+	});
+}
+haxe.functional.FoldableExtensions.flatMapTo = function(src,dest,f) {
+	return src.foldl(dest,function(a,b) {
+		return f(b).foldl(a,function(a1,b1) {
+			return dest.append(a1,b1);
+		});
+	});
+}
+haxe.functional.FoldableExtensions.take = function(foldable,n) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (n-- > 0?foldable.append(a,b):a);
+	});
+}
+haxe.functional.FoldableExtensions.takeWhile = function(foldable,f) {
+	var taking = true;
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (taking?(f(b)?foldable.append(a,b):(function($this) {
+			var $r;
+			taking = false;
+			$r = a;
+			return $r;
+		}(this))):a);
+	});
+}
+haxe.functional.FoldableExtensions.drop = function(foldable,n) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (n-- > 0?a:foldable.append(a,b));
+	});
+}
+haxe.functional.FoldableExtensions.dropWhile = function(foldable,f) {
+	var dropping = true;
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (dropping?(f(b)?a:(function($this) {
+			var $r;
+			dropping = false;
+			$r = foldable.append(a,b);
+			return $r;
+		}(this))):foldable.append(a,b));
+	});
+}
+haxe.functional.FoldableExtensions.count = function(foldable,f) {
+	return foldable.foldl(0,function(a,b) {
+		return a + ((f(b)?1:0));
+	});
+}
+haxe.functional.FoldableExtensions.countWhile = function(foldable,f) {
+	var counting = true;
+	return foldable.foldl(0,function(a,b) {
+		return (!counting?a:(f(b)?a + 1:(function($this) {
+			var $r;
+			counting = false;
+			$r = a;
+			return $r;
+		}(this))));
+	});
+}
+haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	var accum = init;
+	var result = [init];
+	{
+		var _g = 0;
+		while(_g < a.length) {
+			var e = a[_g];
+			++_g;
+			result.push(f(e,accum));
+		}
+	}
+	return result;
+}
+haxe.functional.FoldableExtensions.scanr = function(foldable,init,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	a.reverse();
+	var accum = init;
+	var result = [init];
+	{
+		var _g = 0;
+		while(_g < a.length) {
+			var e = a[_g];
+			++_g;
+			result.push(f(e,accum));
+		}
+	}
+	return result;
+}
+haxe.functional.FoldableExtensions.scanl1 = function(foldable,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	var iterator = a.iterator();
+	var accum = null;
+	var result = [];
+	while(iterator.hasNext()) {
+		if(result[0] == null) {
+			var first = iterator.next();
+			result.push(first);
+			accum = first;
+		}
+		else result.push(f(iterator.next(),accum));
+	}
+	return result;
+}
+haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	a.reverse();
+	var iterator = a.iterator();
+	var accum = null;
+	var result = [];
+	while(iterator.hasNext()) {
+		if(result[0] == null) {
+			var first = iterator.next();
+			result.push(first);
+			accum = first;
+		}
+		else result.push(f(iterator.next(),accum));
+	}
+	return result;
+}
+haxe.functional.FoldableExtensions.elements = function(foldable) {
+	return haxe.functional.FoldableExtensions.toArray(foldable);
+}
+haxe.functional.FoldableExtensions.toArray = function(foldable) {
+	var es = [];
+	foldable.foldl(foldable.empty(),function(a,b) {
+		es.push(b);
+		return a;
+	});
+	return es;
+}
+haxe.functional.FoldableExtensions.concat = function(foldable,rest) {
+	return rest.foldl(foldable,function(a,b) {
+		return foldable.append(a,b);
+	});
+}
+haxe.functional.FoldableExtensions.append = function(foldable,e) {
+	return foldable.append(foldable,e);
+}
+haxe.functional.FoldableExtensions.appendAll = function(foldable,i) {
+	var acc = foldable;
+	{ var $it78 = i.iterator();
+	while( $it78.hasNext() ) { var e = $it78.next();
+	{
+		acc = acc.append(acc,e);
+	}
+	}}
+	return acc;
+}
+haxe.functional.FoldableExtensions.iterator = function(foldable) {
+	return haxe.functional.FoldableExtensions.elements(foldable).iterator();
+}
+haxe.functional.FoldableExtensions.isEmpty = function(foldable) {
+	return !haxe.functional.FoldableExtensions.iterator(foldable).hasNext();
+}
+haxe.functional.FoldableExtensions.foreach = function(foldable,f) {
+	foldable.foldl(1,function(a,b) {
+		f(b);
+		return a;
+	});
+	return foldable;
+}
+haxe.functional.FoldableExtensions.find = function(foldable,f) {
+	return foldable.foldl(Option.None,function(a,b) {
+		return (function($this) {
+			var $r;
+			var $e = (a);
+			switch( $e[1] ) {
+			case 0:
+			{
+				$r = OptionExtensions.filter(OptionExtensions.toOption(b),f);
+			}break;
+			default:{
+				$r = a;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.functional.FoldableExtensions.forAll = function(foldable,f) {
+	return foldable.foldl(true,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case true:{
+				$r = f(b);
+			}break;
+			case false:{
+				$r = false;
+			}break;
+			default:{
+				$r = null;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.functional.FoldableExtensions.forAny = function(foldable,f) {
+	return foldable.foldl(true,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case false:{
+				$r = f(b);
+			}break;
+			case true:{
+				$r = true;
+			}break;
+			default:{
+				$r = null;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.functional.FoldableExtensions.exists = function(foldable,f) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.functional.FoldableExtensions.find(foldable,f));
+		switch( $e[1] ) {
+		case 1:
+		var v = $e[2];
+		{
+			$r = true;
+		}break;
+		case 0:
+		{
+			$r = false;
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+haxe.functional.FoldableExtensions.existsP = function(foldable,ref,f) {
+	var result = false;
+	var a = haxe.functional.FoldableExtensions.toArray(foldable);
+	{
+		var _g = 0;
+		while(_g < a.length) {
+			var e = a[_g];
+			++_g;
+			if(f(e,ref)) result = true;
+		}
+	}
+	return result;
+}
+haxe.functional.FoldableExtensions.contains = function(foldable,member) {
+	return haxe.functional.FoldableExtensions.exists(foldable,function(e) {
+		return e == member;
+	});
+}
+haxe.functional.FoldableExtensions.nubBy = function(foldable,f) {
+	return foldable.foldl(foldable.empty(),function(a,b) {
+		return (haxe.functional.FoldableExtensions.existsP(a,b,f)?a:foldable.append(a,b));
+	});
+}
+haxe.functional.FoldableExtensions.nub = function(foldable) {
+	return haxe.functional.FoldableExtensions.nubBy(foldable,function(a,b) {
+		return a == b;
+	});
+}
+haxe.functional.FoldableExtensions.intersectBy = function(foldable1,foldable2,f) {
+	return foldable1.foldl(foldable1.empty(),function(a,b) {
+		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,f)?haxe.functional.FoldableExtensions.append(a,b):a);
+	});
+}
+haxe.functional.FoldableExtensions.intersect = function(foldable1,foldable2) {
+	return foldable1.foldl(foldable1.empty(),function(a,b) {
+		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,function(a1,b1) {
+			return a1 == b1;
+		})?haxe.functional.FoldableExtensions.append(a,b):a);
+	});
+}
+haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
+	if(sep == null) sep = ", ";
+	show = (show == null?DynamicExtensions.ShowT().show:show);
+	var isFirst = true;
+	return foldable.foldl("",function(a,b) {
+		var prefix = (isFirst?(function($this) {
+			var $r;
+			isFirst = false;
+			$r = "";
+			return $r;
+		}(this)):sep);
+		return (a + prefix) + show(b);
+	});
+}
+haxe.functional.FoldableExtensions.prototype.__class__ = haxe.functional.FoldableExtensions;
 haxe.reactive.StreamBool = function(p) { if( p === $_ ) return; {
 	null;
 }}
@@ -8374,8 +8555,8 @@ haxe.data.collections.Map.EqualT = function(kequal,vequal) {
 		var keys1 = v1.keySet();
 		var keys2 = v2.keySet();
 		if(!haxe.data.collections.Set.EqualT(kequal).equal(keys1,keys2)) return false;
-		{ var $it70 = keys1.iterator();
-		while( $it70.hasNext() ) { var key = $it70.next();
+		{ var $it79 = keys1.iterator();
+		while( $it79.hasNext() ) { var key = $it79.next();
 		{
 			var v11 = OptionExtensions.get(v1.get(key));
 			var v21 = OptionExtensions.get(v2.get(key));
@@ -8446,8 +8627,8 @@ haxe.data.collections.Map.prototype.add = function(t) {
 }
 haxe.data.collections.Map.prototype.addAll = function(i) {
 	var map = this;
-	{ var $it71 = i.iterator();
-	while( $it71.hasNext() ) { var t = $it71.next();
+	{ var $it80 = i.iterator();
+	while( $it80.hasNext() ) { var t = $it80.next();
 	map = map.add(t);
 	}}
 	return map;
@@ -8463,8 +8644,8 @@ haxe.data.collections.Map.prototype.call = function(k) {
 }
 haxe.data.collections.Map.prototype.contains = function(t) {
 	var tupleEqual = Tuple2.EqualT(this.keyEqual,this.valueEqual);
-	{ var $it72 = this.entries().iterator();
-	while( $it72.hasNext() ) { var e = $it72.next();
+	{ var $it81 = this.entries().iterator();
+	while( $it81.hasNext() ) { var e = $it81.next();
 	{
 		if(tupleEqual.equal(e,t)) return true;
 	}
@@ -8543,8 +8724,8 @@ haxe.data.collections.Map.prototype.entries = function() {
 }
 haxe.data.collections.Map.prototype.foldl = function(z,f) {
 	var acc = z;
-	{ var $it73 = this.entries().iterator();
-	while( $it73.hasNext() ) { var e = $it73.next();
+	{ var $it82 = this.entries().iterator();
+	while( $it82.hasNext() ) { var e = $it82.next();
 	{
 		acc = f(acc,e);
 	}
@@ -8656,8 +8837,8 @@ haxe.data.collections.Map.prototype.rebalance = function() {
 				this._buckets.push([]);
 			}
 		}
-		{ var $it74 = all.iterator();
-		while( $it74.hasNext() ) { var e = $it74.next();
+		{ var $it83 = all.iterator();
+		while( $it83.hasNext() ) { var e = $it83.next();
 		{
 			var bucket = this.bucketFor(e._1);
 			this._buckets[bucket].push(e);
@@ -8670,16 +8851,16 @@ haxe.data.collections.Map.prototype.remove = function(t) {
 }
 haxe.data.collections.Map.prototype.removeAll = function(i) {
 	var map = this;
-	{ var $it75 = i.iterator();
-	while( $it75.hasNext() ) { var t = $it75.next();
+	{ var $it84 = i.iterator();
+	while( $it84.hasNext() ) { var t = $it84.next();
 	map = map.remove(t);
 	}}
 	return map;
 }
 haxe.data.collections.Map.prototype.removeAllByKey = function(i) {
 	var map = this;
-	{ var $it76 = i.iterator();
-	while( $it76.hasNext() ) { var k = $it76.next();
+	{ var $it85 = i.iterator();
+	while( $it85.hasNext() ) { var k = $it85.next();
 	map = map.removeByKey(k);
 	}}
 	return map;
@@ -8747,8 +8928,8 @@ resources.CollectionTester.prototype.assertIterableEquals = function(i1,i2) {
 	var size1 = haxe.data.collections.IterableExtensions.size(i1);
 	var size2 = haxe.data.collections.IterableExtensions.size(i2);
 	if(size1 != size2) {
-		haxe.Log.trace((("Iterable Sizes Not Equal.  Iterable 1 length = " + size1) + " and Iterable 2 length =  ") + size2,{ fileName : "BCollectionTester.hx", lineNumber : 206, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
-		this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 207, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+		haxe.Log.trace((("Iterable Sizes Not Equal.  Iterable 1 length = " + size1) + " and Iterable 2 length =  ") + size2,{ fileName : "BCollectionTester.hx", lineNumber : 213, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+		this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 214, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 	}
 	var iterator1 = i1.iterator();
 	var iterator2 = i2.iterator();
@@ -8757,12 +8938,12 @@ resources.CollectionTester.prototype.assertIterableEquals = function(i1,i2) {
 		var e1 = iterator1.next();
 		var e2 = iterator2.next();
 		if(e1 != e2) {
-			haxe.Log.trace((((("Iterables not equal at index [" + index) + "].  Element 1 = ") + e1) + " and Element 2 = ") + e2,{ fileName : "BCollectionTester.hx", lineNumber : 219, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
-			this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 220, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+			haxe.Log.trace((((("Iterables not equal at index [" + index) + "].  Element 1 = ") + e1) + " and Element 2 = ") + e2,{ fileName : "BCollectionTester.hx", lineNumber : 226, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+			this.assertTrue(false,null,{ fileName : "BCollectionTester.hx", lineNumber : 227, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 		}
 		++index;
 	}
-	this.assertTrue(true,null,{ fileName : "BCollectionTester.hx", lineNumber : 224, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
+	this.assertTrue(true,null,{ fileName : "BCollectionTester.hx", lineNumber : 231, className : "resources.CollectionTester", methodName : "assertIterableEquals"});
 }
 resources.CollectionTester.prototype.testThatItXAppendWorks = function() {
 	var i = [1,2,3,4,5];
@@ -8885,6 +9066,18 @@ resources.CollectionTester.prototype.testThatItXTakeWorks = function() {
 	this.assertEquals(Std.string(haxe.data.collections.IterableExtensions.take(i1,3)),"[1]",null,null,{ fileName : "BCollectionTester.hx", lineNumber : 68, className : "resources.CollectionTester", methodName : "testThatItXTakeWorks"});
 	var i2 = [];
 	this.assertIterableEquals(haxe.data.collections.IterableExtensions.take(i2,3),[]);
+}
+resources.CollectionTester.prototype.testThatItXUnionByWorks = function() {
+	var a = [1,2,3,4];
+	var b = [4,6,9,10];
+	this.assertIterableEquals([1,2,3,4,4,10],haxe.data.collections.IterableExtensions.unionBy(a,b,function(a1,b1) {
+		return a1 * 3 == b1;
+	}));
+}
+resources.CollectionTester.prototype.testThatItXUnionWorks = function() {
+	var a = [1,2,3,4];
+	var b = [4,6,9,10];
+	this.assertIterableEquals([1,2,3,4,6,9,10],haxe.data.collections.IterableExtensions.union(a,b));
 }
 resources.CollectionTester.prototype.testThatTraceWorks = function() {
 	haxe.Log.trace("Trace is working",{ fileName : "BCollectionTester.hx", lineNumber : 17, className : "resources.CollectionTester", methodName : "testThatTraceWorks"});

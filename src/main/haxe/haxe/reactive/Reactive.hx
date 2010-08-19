@@ -16,6 +16,7 @@
 package haxe.reactive;
 
 import Prelude;
+import PreludeExtensions;
 import haxe.reactive.Streams;
 
 using PreludeExtensions;

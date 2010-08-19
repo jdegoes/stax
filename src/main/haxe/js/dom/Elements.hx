@@ -24,6 +24,10 @@ using PreludeExtensions;
  * Common elements.
  */
 class Elements {
+  public static function div(): HTMLDivElement {
+    return cast Env.document.createElement('DIV');
+  }
+  
   public static function iframe(?width: Int, ?height: Int): HTMLIFrameElement {
     var iframe: HTMLIFrameElement = cast Env.document.createElement('IFRAME');
     

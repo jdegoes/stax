@@ -69,7 +69,8 @@ You can import this representation and helper functions with the following two l
 
 <pre>
 <code>
-  import haxe.js.Env;
+  import js.Env;
+  import Dom;
 </code>
 </pre>
 

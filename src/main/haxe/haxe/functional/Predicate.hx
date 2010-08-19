@@ -30,6 +30,18 @@ typedef Predicate4<A, B, C, D>    = Function4<A, B, C, D, Bool>
 typedef Predicate5<A, B, C, D, E> = Function5<A, B, C, D, E, Bool>
 
 class P {
+  public static function isNull<T>(): Predicate<T> {
+    return function(value) {
+      return value == null;
+    }
+  }
+  
+  public static function isNotNull<T>(): Predicate<T> {
+    return function(value) {
+      return value != null;
+    }
+  }
+  
   public static function isGreaterThan(ref: Float): Predicate<Float> {
     return function(value) {
       return value > ref;

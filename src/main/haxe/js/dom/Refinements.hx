@@ -13,34 +13,37 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.io.http;
+package js.dom;
 
 import Prelude;
-import haxe.data.collections.Map;
-import haxe.net.Url;
-import haxe.net.HttpResponseCode;
+import Dom;
 
 using PreludeExtensions;
 
-typedef HttpResponse<T> = {
-  code:     HttpResponseCode,
-  body:     Option<T>,
-  headers:  Map<String, String>
-}
-
-/** An interface for performing HTTP requests - GET, POST, PUT, and DELETE. The
- * interface is generic in the type of the request/response data, because some
- * implementations (e.g. JSONP on the JavaScript target) can only deal with 
- * certain kinds of data.
- */
-interface Http<T> {
-  public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-  public function post(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-  public function put(url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-    
-  public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
-  
-  public function custom(request: String, url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>>;
+class Refinements {
+	public static inline function iframe(e: HTMLElement): HTMLIFrameElement {
+	  return iframeOption(e).get();
+	}
+	
+	public static inline function script(e: HTMLElement): HTMLScriptElement {
+	  return scriptOption(e).get();
+	}
+	
+	public static inline function div(e: HTMLElement): HTMLDivElement {
+	  return divOption(e).get();
+	}
+	
+	
+	// ************************
+	public static inline function iframeOption(e: HTMLElement): Option<HTMLIFrameElement> {
+	  return if (e.nodeName == 'IFRAME') Some(cast e); else None;
+	}
+	
+	public static inline function scriptOption(e: HTMLElement): Option<HTMLScriptElement> {
+	  return if (e.nodeName == 'SCRIPT') Some(cast e); else None;
+	}
+	
+	public static inline function divOption(e: HTMLElement): Option<HTMLDivElement> {
+	  return if (e.nodeName == 'DIV') Some(cast e); else None;
+	}
 }

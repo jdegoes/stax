@@ -23,7 +23,8 @@ import haxe.io.http.Http;
 
 using PreludeExtensions;
 
-class HttpJValueTransformer<S, T> implements Http<T> {
+// Transforms an Http<S> into an Http<T> given encoder/decoder functions.
+class HttpTransformer<S, T> implements Http<T> {
   var http: Http<S>;
   var encoder: T -> S;
   var decoder: S -> T;
@@ -48,6 +49,10 @@ class HttpJValueTransformer<S, T> implements Http<T> {
   
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
     return http.delete(url, params, headers).map(transformResponse);
+  }
+  
+  public function custom(method: String, url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.custom(method, url, encoder(data), params, headers).map(transformResponse);
   }
   
   public function transformResponse(r: HttpResponse<S>): HttpResponse<T> {
