@@ -34,7 +34,7 @@ class IFrameIOTestCase extends TestCase {
   var iframeIO2: IFrameIO;
   
 	override public function beforeAll(): Void {
-	  var d = Env.documentHtml;
+	  var d = Env.document;
 	  
 	  var body = d.getElementsByTagName('body')[0];
 	  

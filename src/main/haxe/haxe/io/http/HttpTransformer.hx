@@ -50,6 +50,10 @@ class HttpJValueTransformer<S, T> implements Http<T> {
     return http.delete(url, params, headers).map(transformResponse);
   }
   
+  public function custom(method: String, url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+    return http.custom(method, url, encoder(data), params, headers).map(transformResponse);
+  }
+  
   public function transformResponse(r: HttpResponse<S>): HttpResponse<T> {
     return {
       body:     r.body.map(decoder),

@@ -21,6 +21,7 @@ import haxe.io.http.Http;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.data.collections.Map;
+import haxe.data.collections.Maps;
 
 #if js
 import Dom;
@@ -43,26 +44,22 @@ class HttpStringAsync implements HttpString {
   public function new() { }
   
   public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('GET', url, null, params, headers);
+    return custom('GET', url, null, params, headers);
   }
   
   public function post(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('POST', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
+    return custom('POST', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function put(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('PUT', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
+    return custom('PUT', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('DELETE', url, null, params, headers);
-  }
-
-  private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
-    return OptionExtensions.toOption(_headers).getOrElseC(Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT())).set("Content-Type", contentType);
+    return custom('DELETE', url, null, params, headers);
   }
   
-  public function doRequest(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
+  public function custom(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
     var future: Future<HttpResponse<String>> = new Future();
     
@@ -98,6 +95,10 @@ class HttpStringAsync implements HttpString {
     request.send(data);
     
     return future;
+  }
+  
+  private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
+    return OptionExtensions.toOption(_headers).getOrElseC(Maps.StringString).set("Content-Type", contentType);
   }
 }
 
