@@ -48,7 +48,7 @@ typedef DOMStringMap = {
     public function deleter(name: DOMString): Void;
 }
 
-typedef DOMTokenList = {
+interface DOMTokenList<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public var length       (default, null): Int;
     
     public function item(index: Int): DOMString;
@@ -64,7 +64,7 @@ typedef DOMTokenList = {
     public function stringifier(): DOMString;
 }
 
-typedef DOMSettableTokenList = {
+interface DOMSettableTokenList<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public var value:       DOMString;
     
     public var length       (default, null): Int;
@@ -86,7 +86,7 @@ typedef DOMException = {
     public var code: Int;
 }
 
-typedef DOMStringList = {
+interface DOMStringList implements ArrayAccess<DOMString> {
     public function item(index: Int): DOMString;
     
     public function contains(str: DOMString): Bool;
@@ -95,7 +95,7 @@ typedef DOMStringList = {
     
 }
 
-typedef NameList = {
+interface NameList<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public function getName(index: Int): DOMString;
     
     public function getNamespaceURI(index: Int): DOMString;
@@ -147,7 +147,7 @@ typedef Node = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -202,7 +202,7 @@ typedef Node = {
     public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
-typedef NamedNodeMap = {
+interface NamedNodeMap<T> implements ArrayAccess<T> {
     public function getNamedItem(name: DOMString): Node;
     
     public function setNamedItem(arg: Node): Node;
@@ -245,7 +245,7 @@ typedef CharacterData = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -320,7 +320,7 @@ typedef Attr = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -400,7 +400,7 @@ typedef Element = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<Element>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -439,7 +439,7 @@ typedef Element = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -528,7 +528,7 @@ typedef Text = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -610,7 +610,7 @@ typedef Comment = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -747,7 +747,7 @@ typedef CDATASection = {
   public var lastChild        (default,null): Node;
   public var previousSibling  (default,null): Node;
   public var nextSibling      (default,null): Node;
-  public var attributes       (default,null): NamedNodeMap;
+  public var attributes       (default,null): NamedNodeMap<Attr>;
   public var ownerDocument    (default,null): Document;
   
   public function hasChildNodes(): Bool;
@@ -805,8 +805,8 @@ typedef CDATASection = {
 //Tested
 typedef DocumentType = {
     public var name             (default,null): DOMString;
-    public var entities         (default,null): NamedNodeMap;
-    public var notations        (default,null): NamedNodeMap;
+    public var entities         (default,null): NamedNodeMap<Entity>;
+    public var notations        (default,null): NamedNodeMap<Notation>;
     public var publicId         (default,null): DOMString;
     public var systemId         (default,null): DOMString;
     public var internalSubset   (default,null): DOMString;
@@ -822,7 +822,7 @@ typedef DocumentType = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -892,7 +892,7 @@ typedef Notation = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -966,7 +966,7 @@ typedef Entity = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -1033,7 +1033,7 @@ typedef EntityReference = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -1103,7 +1103,7 @@ typedef ProcessingInstruction = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -1170,7 +1170,7 @@ typedef DocumentFragment = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -1296,7 +1296,7 @@ typedef Document = {
     public var lastChild        (default,null): Node;
     public var previousSibling  (default,null): Node;
     public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -1390,8 +1390,8 @@ typedef TimedTrack = {
     public var onload               (default, null): EventListener<Event>;
     public var onerror              (default, null): EventListener<Event>;
     public var mode                 : Int;
-    public var cues                 (default, null): TimedTrackCueList;
-    public var activeCues           (default, null): TimedTrackCueList;
+    public var cues                 (default, null): TimedTrackCueList<TimedTrackCue>;
+    public var activeCues           (default, null): TimedTrackCueList<TimedTrackCue>;
     public var onentercue           (default, null): EventListener<Event>;
     public var onexitcue            (default, null): EventListener<Event>;
 }
@@ -1410,13 +1410,13 @@ typedef MutableTimedTrack = {
     public var onload               (default, null): EventListener<Event>;
     public var onerror              (default, null): EventListener<Event>;
     public var mode                 : Int;
-    public var cues                 (default, null): TimedTrackCueList;
-    public var activeCues           (default, null): TimedTrackCueList;
+    public var cues                 (default, null): TimedTrackCueList<TimedTrackCue>;
+    public var activeCues           (default, null): TimedTrackCueList<TimedTrackCue>;
     public var onentercue           (default, null): EventListener<Event>;
     public var onexitcue            (default, null): EventListener<Event>;
 }
 
-typedef TimedTrackCueList = {
+interface TimedTrackCueList<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public var length               (default, null): Int;
     
     public function getter(index: Int): TimedTrackCue;
@@ -1478,8 +1478,8 @@ typedef HTMLMediaElement = {
     
     public function addTrack(label: DOMString, kind: DOMString, language: DOMString): MutableTimedTrack;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -1604,7 +1604,7 @@ typedef HTMLMediaElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -1616,7 +1616,7 @@ typedef HTMLMediaElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -1637,26 +1637,26 @@ typedef HTMLMediaElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -1679,9 +1679,9 @@ typedef HTMLMediaElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -1689,14 +1689,13 @@ typedef HTMLMediaElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 
 extern interface HTMLFormControlsCollection<T> implements HTMLCollection<T> {
 }
@@ -1759,7 +1758,7 @@ typedef HTMLDocument = {
     public var anchors      (default, null): HTMLCollection<HTMLAnchorElement>;
     public var cookie:      DOMString;
     
-    public function getElementsByName(elementName: DOMString): DomCollection<Node>;
+    public function getElementsByName(elementName: DOMString): DomCollection<HTMLElement>;
     
     public var location (default, null): Location;
     public var lastModified (default, null): DOMString;
@@ -1779,7 +1778,7 @@ typedef HTMLDocument = {
     public function getter(name: DOMString): Dynamic;
     
     
-    public function getElementsByClassName(classNames: DOMString): DomCollection<Node>;
+    public function getElementsByClassName(classNames: DOMString): DomCollection<HTMLElement>;
     
     // dynamic markup insertion
     public var innerHTML      : DOMString;
@@ -1793,7 +1792,7 @@ typedef HTMLDocument = {
     public function writeln(text: DOMString): Void;
 
     // user interaction  
-    public var activeElement    (default, null): Element;
+    public var activeElement    (default, null): HTMLElement;
     public var designMode       :DOMString;
     public var commands         :HTMLCollection<DOMString>;
     
@@ -1871,7 +1870,7 @@ typedef HTMLDocument = {
     
     public var doctype                  (default, null): DocumentType;
     public var implementation           (default, null): DOMImplementation;
-    public var documentElement          (default, null): Element;
+    public var documentElement          (default, null): HTMLElement;
     public var inputEncoding            (default, null): DOMString;
     public var xmlEncoding              (default, null): DOMString;
     public var domConfig                (default, null): DOMConfiguration;
@@ -1891,7 +1890,7 @@ typedef HTMLDocument = {
     
     public var defaultView  (default, null): Window;    
     
-    public function createElement(tagName: DOMString): Element;
+    public function createElement(tagName: DOMString): HTMLElement;
     
     public function createDocumentFragment(): DocumentFragment;
     
@@ -1907,51 +1906,51 @@ typedef HTMLDocument = {
     
     public function createEntityReference(name: DOMString): EntityReference;
     
-    public function getElementsByTagName(tagname: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(tagname: DOMString): DomCollection<HTMLElement>;
     
-    public function importNode(importedNode: Node, deep: Bool): Node;
+    public function importNode(importedNode: HTMLElement, deep: Bool): HTMLElement;
     
-    public function createElementNS(namespaceURI: DOMString, qualifiedName: DOMString): Element;
+    public function createElementNS(namespaceURI: DOMString, qualifiedName: DOMString): HTMLElement;
     
     public function createAttributeNS(nameSpaceURI: DOMString, qualifiedName: DOMString): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function getElementById(elementId: DOMString): HTMLElement;
     
-    public function adoptNode(source: Node): Node;
+    public function adoptNode(source: HTMLElement): HTMLElement;
     
     public function normalizeDocument(): Void;
     
-    public function renameNode(n: Node, namespaceURI: DOMString, qualifiedName: DOMString): Node;
+    public function renameNode(n: HTMLElement, namespaceURI: DOMString, qualifiedName: DOMString): HTMLElement;
     
-    public function getOverrideStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
+    public function getOverrideStyle(elt: HTMLElement, pseudoElt: DOMString): CSSStyleDeclaration;
     
     //Node
 
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
 
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
 
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
 
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
 
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
 
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
 
     public function isSupported(feature: DOMString, version: DOMString): Bool;
 
@@ -1974,9 +1973,9 @@ typedef HTMLDocument = {
     public var textContent:     DOMString;
 
 
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
 
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
 
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
 
@@ -1984,7 +1983,7 @@ typedef HTMLDocument = {
 
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
 
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
 
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
 
@@ -1996,8 +1995,8 @@ typedef HTMLDocument = {
 
 typedef HTMLUnknownElement = {
     
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -2122,7 +2121,7 @@ typedef HTMLUnknownElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -2134,7 +2133,7 @@ typedef HTMLUnknownElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -2155,26 +2154,26 @@ typedef HTMLUnknownElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -2197,9 +2196,9 @@ typedef HTMLUnknownElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -2207,14 +2206,13 @@ typedef HTMLUnknownElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 
 //Tested
 typedef HTMLElement = {
@@ -2342,7 +2340,7 @@ typedef HTMLElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -2354,7 +2352,7 @@ typedef HTMLElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -2375,26 +2373,26 @@ typedef HTMLElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -2417,9 +2415,9 @@ typedef HTMLElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -2427,7 +2425,250 @@ typedef HTMLElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
+}
+
+typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving a text node
+    public function splitText(offset: Int): Text;
+   
+    public function replaceWholeText(content: DOMString): Text;
+  
+    public var isElementContentWhitespace   (default,null): Bool;
+    public var wholeText                    (default,null): DOMString;
+  
+    //CharacterData
+  
+    public var data:    DOMString;
+    public var length   (default,null): Int;
+  
+    public function substringData(offset: Int, count: Int): DOMString;
+  
+    public function appendData(arg: DOMString): Void;
+   
+    public function insertData(offset: Int, arg: DOMString): Void;
+  
+    public function deleteData(offset: Int, count: Int): Void;
+    
+    public function replaceData(offset: Int, count: Int, arg: DOMString): Void;
+  
+  //HTMLElement
+  
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
+    
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
+    
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
+    
+    public function appendChild(newChild: HTMLElement): HTMLElement;
+    
+    public function cloneNode(deep: Bool): HTMLElement;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: HTMLElement): Int;
+    
+    public function isSameNode(other: HTMLElement): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
@@ -2439,8 +2680,8 @@ typedef HTMLElement = {
 typedef HTMLHtmlElement = {
     public var version:     DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -2565,7 +2806,7 @@ typedef HTMLHtmlElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -2577,7 +2818,7 @@ typedef HTMLHtmlElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -2598,26 +2839,26 @@ typedef HTMLHtmlElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -2640,9 +2881,9 @@ typedef HTMLHtmlElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -2650,20 +2891,19 @@ typedef HTMLHtmlElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLHeadElement = {
     public var profile:     DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -2788,7 +3028,7 @@ typedef HTMLHeadElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -2800,7 +3040,7 @@ typedef HTMLHeadElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -2821,26 +3061,26 @@ typedef HTMLHeadElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -2863,9 +3103,9 @@ typedef HTMLHeadElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -2873,14 +3113,13 @@ typedef HTMLHeadElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLLinkElement = {
     public var disabled (default, null):        Bool;
@@ -2893,8 +3132,8 @@ typedef HTMLLinkElement = {
     public var target:          DOMString;
     public var type:            DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -3018,7 +3257,7 @@ typedef HTMLLinkElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -3030,7 +3269,7 @@ typedef HTMLLinkElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -3051,26 +3290,26 @@ typedef HTMLLinkElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -3093,9 +3332,9 @@ typedef HTMLLinkElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -3103,20 +3342,19 @@ typedef HTMLLinkElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLTitleElement = {
     public var text:            DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -3241,7 +3479,7 @@ typedef HTMLTitleElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -3253,7 +3491,7 @@ typedef HTMLTitleElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -3274,26 +3512,26 @@ typedef HTMLTitleElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -3316,9 +3554,9 @@ typedef HTMLTitleElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -3326,14 +3564,13 @@ typedef HTMLTitleElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLMetaElement = {
     public var content:         DOMString;
@@ -3344,8 +3581,8 @@ typedef HTMLMetaElement = {
     public var name:            DOMString;
     public var scheme:          DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var title:           DOMString;
     public var className:       DOMString;
     public var innerHTML:       DOMString;
@@ -3467,7 +3704,7 @@ typedef HTMLMetaElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -3479,7 +3716,7 @@ typedef HTMLMetaElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -3500,26 +3737,26 @@ typedef HTMLMetaElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -3542,9 +3779,9 @@ typedef HTMLMetaElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -3552,21 +3789,20 @@ typedef HTMLMetaElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLBaseElement = {
     public var href:            DOMString;
     public var target:          DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -3691,7 +3927,7 @@ typedef HTMLBaseElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -3703,7 +3939,7 @@ typedef HTMLBaseElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -3724,26 +3960,26 @@ typedef HTMLBaseElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -3766,9 +4002,9 @@ typedef HTMLBaseElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -3776,21 +4012,20 @@ typedef HTMLBaseElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Unable to Test
-typedef HTMLIsIndexElement<T> = {
+typedef HTMLIsIndexElement = {
     public var form             (default, null): HTMLFormElement;
     public var prompt:          DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -3915,7 +4150,7 @@ typedef HTMLIsIndexElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -3927,7 +4162,7 @@ typedef HTMLIsIndexElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -3948,26 +4183,26 @@ typedef HTMLIsIndexElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -3990,9 +4225,9 @@ typedef HTMLIsIndexElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -4000,14 +4235,13 @@ typedef HTMLIsIndexElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLStyleElement = {
     public var disabled:        Bool;
@@ -4015,8 +4249,8 @@ typedef HTMLStyleElement = {
     public var type:            DOMString;
     public var scoped:          Bool;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -4140,7 +4374,7 @@ typedef HTMLStyleElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -4152,7 +4386,7 @@ typedef HTMLStyleElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -4173,26 +4407,26 @@ typedef HTMLStyleElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -4215,9 +4449,9 @@ typedef HTMLStyleElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -4225,14 +4459,13 @@ typedef HTMLStyleElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLBodyElement = {
     public var aLink:           DOMString;
@@ -4242,8 +4475,8 @@ typedef HTMLBodyElement = {
     public var text:            DOMString;
     public var vLink:           DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -4368,7 +4601,7 @@ typedef HTMLBodyElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -4380,7 +4613,7 @@ typedef HTMLBodyElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -4401,26 +4634,26 @@ typedef HTMLBodyElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -4443,9 +4676,9 @@ typedef HTMLBodyElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -4453,14 +4686,13 @@ typedef HTMLBodyElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 
 
 
@@ -4479,8 +4711,8 @@ typedef HTMLFormElement = {
     
     public function reset(): Void;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -4605,7 +4837,7 @@ typedef HTMLFormElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -4617,7 +4849,7 @@ typedef HTMLFormElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -4638,26 +4870,26 @@ typedef HTMLFormElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -4680,9 +4912,9 @@ typedef HTMLFormElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -4690,23 +4922,22 @@ typedef HTMLFormElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Unable to Test
-typedef HTMLSelectElement<T> = {
+typedef HTMLSelectElement = {
     public var type             (default, null): DOMString;
     public var selectedIndex:   Int;
     public var value:           DOMString;
     public var length           (default, null): Int;
     public var form             (default, null): HTMLFormElement;
     public var options          (default, null): HTMLOptionsCollection;
-    public var disabled (default, null):        Bool;
+    public var disabled         (default, null):        Bool;
     public var multiple:        Bool;
     public var name:            DOMString;
     public var size:            Int;
@@ -4720,8 +4951,8 @@ typedef HTMLSelectElement<T> = {
 
     public function focus(): Void;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -4841,7 +5072,7 @@ typedef HTMLSelectElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -4853,7 +5084,7 @@ typedef HTMLSelectElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -4874,26 +5105,26 @@ typedef HTMLSelectElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -4916,9 +5147,9 @@ typedef HTMLSelectElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -4926,14 +5157,13 @@ typedef HTMLSelectElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLCanvasElement = {
     public var width:                      Int;
@@ -4943,8 +5173,8 @@ typedef HTMLCanvasElement = {
     
     public function getContext(contextId: DOMString): Dynamic;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -5069,7 +5299,7 @@ typedef HTMLCanvasElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -5081,7 +5311,7 @@ typedef HTMLCanvasElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -5102,26 +5332,26 @@ typedef HTMLCanvasElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -5144,9 +5374,9 @@ typedef HTMLCanvasElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -5154,14 +5384,13 @@ typedef HTMLCanvasElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef CanvasRenderingContext2D = {
 
@@ -5261,8 +5490,8 @@ typedef HTMLOptGroupElement = {
     public var disabled (default, null):        Bool;
     public var label (default, null):           DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -5385,7 +5614,7 @@ typedef HTMLOptGroupElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -5397,7 +5626,7 @@ typedef HTMLOptGroupElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -5418,26 +5647,26 @@ typedef HTMLOptGroupElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -5460,9 +5689,9 @@ typedef HTMLOptGroupElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -5470,14 +5699,13 @@ typedef HTMLOptGroupElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLOptionElement = {
     public var form             (default, null): HTMLFormElement;
@@ -5489,8 +5717,8 @@ typedef HTMLOptionElement = {
     public var selected:        Bool;
     public var value:           DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -5510,6 +5738,7 @@ typedef HTMLOptionElement = {
     
     //command API
     public var commandType      (default, null): DOMString;
+
     public var icon             (default, null): DOMString;
     public var checked          (default, null): Bool;
     
@@ -5613,7 +5842,7 @@ typedef HTMLOptionElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -5625,7 +5854,7 @@ typedef HTMLOptionElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -5646,26 +5875,26 @@ typedef HTMLOptionElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -5688,9 +5917,9 @@ typedef HTMLOptionElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -5698,14 +5927,13 @@ typedef HTMLOptionElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLInputElement = {
     public var defaultValue:    DOMString;
@@ -5735,8 +5963,8 @@ typedef HTMLInputElement = {
     
     public function click(): Void;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -5770,8 +5998,6 @@ typedef HTMLInputElement = {
     public var offsetHeight     (default,null): Int;
     
     public function scrollIntoView(?top: Bool): Void;
-    
-    
     
     public var onabort: EventListener<Event>;
     public var onblur: EventListener<Event>;
@@ -5854,7 +6080,7 @@ typedef HTMLInputElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -5866,7 +6092,7 @@ typedef HTMLInputElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -5887,26 +6113,26 @@ typedef HTMLInputElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -5929,9 +6155,9 @@ typedef HTMLInputElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -5939,14 +6165,13 @@ typedef HTMLInputElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLTextAreaElement = {
     public var defaultValue:    DOMString;
@@ -5967,8 +6192,8 @@ typedef HTMLTextAreaElement = {
     
     public function select(): Void;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -6003,7 +6228,6 @@ typedef HTMLTextAreaElement = {
     public var offsetHeight     (default,null): Int;
     
     public function scrollIntoView(?top: Bool): Void;
-    
     
     public function click(): Void;
     
@@ -6088,7 +6312,7 @@ typedef HTMLTextAreaElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -6100,7 +6324,7 @@ typedef HTMLTextAreaElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -6121,26 +6345,26 @@ typedef HTMLTextAreaElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -6163,9 +6387,9 @@ typedef HTMLTextAreaElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -6173,14 +6397,13 @@ typedef HTMLTextAreaElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLButtonElement = {
     public var form             (default, null): HTMLFormElement;
@@ -6191,8 +6414,8 @@ typedef HTMLButtonElement = {
     public var type             (default, null): DOMString;
     public var value:           DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -6315,7 +6538,7 @@ typedef HTMLButtonElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -6327,7 +6550,7 @@ typedef HTMLButtonElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -6348,26 +6571,26 @@ typedef HTMLButtonElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -6390,9 +6613,9 @@ typedef HTMLButtonElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -6400,22 +6623,21 @@ typedef HTMLButtonElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLLabelElement = {
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
     public var htmlFor:         DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -6539,7 +6761,7 @@ typedef HTMLLabelElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -6551,7 +6773,7 @@ typedef HTMLLabelElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -6572,26 +6794,26 @@ typedef HTMLLabelElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -6614,9 +6836,9 @@ typedef HTMLLabelElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -6624,20 +6846,19 @@ typedef HTMLLabelElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLFieldSetElement<T> = {
+typedef HTMLFieldSetElement = {
     public var form             (default, null): HTMLFormElement;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -6762,7 +6983,7 @@ typedef HTMLFieldSetElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -6774,7 +6995,7 @@ typedef HTMLFieldSetElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -6795,26 +7016,26 @@ typedef HTMLFieldSetElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -6837,9 +7058,9 @@ typedef HTMLFieldSetElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -6847,22 +7068,21 @@ typedef HTMLFieldSetElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLLegendElement<T> = {
+typedef HTMLLegendElement = {
     public var form             (default, null): HTMLFormElement;
     public var accessKey (default, null):       DOMString;
     public var align:           DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -6986,7 +7206,7 @@ typedef HTMLLegendElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -6998,7 +7218,7 @@ typedef HTMLLegendElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -7019,26 +7239,26 @@ typedef HTMLLegendElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -7061,9 +7281,9 @@ typedef HTMLLegendElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -7071,21 +7291,20 @@ typedef HTMLLegendElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLUListElement = {
     public var compact:         Bool;
     public var type:            DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -7210,7 +7429,7 @@ typedef HTMLUListElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -7222,7 +7441,7 @@ typedef HTMLUListElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -7243,26 +7462,26 @@ typedef HTMLUListElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -7285,9 +7504,9 @@ typedef HTMLUListElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -7295,22 +7514,21 @@ typedef HTMLUListElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLOListElement = {
     public var compact:         Bool;
     public var start:           Int;
     public var type:            DOMString;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -7435,7 +7653,7 @@ typedef HTMLOListElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -7447,7 +7665,7 @@ typedef HTMLOListElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -7468,26 +7686,26 @@ typedef HTMLOListElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -7510,9 +7728,9 @@ typedef HTMLOListElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -7520,20 +7738,19 @@ typedef HTMLOListElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLDListElement = {
     public var compact:         Bool;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -7658,7 +7875,7 @@ typedef HTMLDListElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -7670,7 +7887,7 @@ typedef HTMLDListElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -7691,26 +7908,26 @@ typedef HTMLDListElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -7733,9 +7950,9 @@ typedef HTMLDListElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -7743,20 +7960,19 @@ typedef HTMLDListElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLDirectoryElement = {
     public var compact:         Bool;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -7881,7 +8097,7 @@ typedef HTMLDirectoryElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -7893,7 +8109,7 @@ typedef HTMLDirectoryElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -7914,26 +8130,26 @@ typedef HTMLDirectoryElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -7956,9 +8172,9 @@ typedef HTMLDirectoryElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -7966,20 +8182,19 @@ typedef HTMLDirectoryElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLMenuElement = {
     public var compact:         Bool;
     
-    //HTMLElement
-    
+            
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -8104,7 +8319,7 @@ typedef HTMLMenuElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -8116,7 +8331,7 @@ typedef HTMLMenuElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -8137,26 +8352,26 @@ typedef HTMLMenuElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -8179,9 +8394,9 @@ typedef HTMLMenuElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -8189,14 +8404,13 @@ typedef HTMLMenuElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLLIElement = {
     public var type:            DOMString;
@@ -8205,8 +8419,8 @@ typedef HTMLLIElement = {
 //Tested
 typedef HTMLDivElement = {
     public var align:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -8331,7 +8545,7 @@ typedef HTMLDivElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -8343,7 +8557,7 @@ typedef HTMLDivElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -8364,26 +8578,26 @@ typedef HTMLDivElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -8406,9 +8620,9 @@ typedef HTMLDivElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -8416,19 +8630,18 @@ typedef HTMLDivElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLParagraphElement = {
     public var align:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -8553,7 +8766,7 @@ typedef HTMLParagraphElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -8565,7 +8778,7 @@ typedef HTMLParagraphElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -8586,26 +8799,26 @@ typedef HTMLParagraphElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -8628,9 +8841,9 @@ typedef HTMLParagraphElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -8638,19 +8851,18 @@ typedef HTMLParagraphElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLHeadingElement = {
     public var align:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -8775,7 +8987,7 @@ typedef HTMLHeadingElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -8787,7 +8999,7 @@ typedef HTMLHeadingElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -8808,26 +9020,26 @@ typedef HTMLHeadingElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -8850,9 +9062,9 @@ typedef HTMLHeadingElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -8860,19 +9072,18 @@ typedef HTMLHeadingElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLQuoteElement = {
     public var cite:            DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -8997,7 +9208,7 @@ typedef HTMLQuoteElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -9009,7 +9220,7 @@ typedef HTMLQuoteElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -9030,26 +9241,26 @@ typedef HTMLQuoteElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -9072,9 +9283,9 @@ typedef HTMLQuoteElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -9082,19 +9293,18 @@ typedef HTMLQuoteElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLPreElement = {
     public var width:           Int;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -9219,7 +9429,7 @@ typedef HTMLPreElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -9231,7 +9441,7 @@ typedef HTMLPreElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -9252,26 +9462,26 @@ typedef HTMLPreElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -9294,9 +9504,9 @@ typedef HTMLPreElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -9304,19 +9514,18 @@ typedef HTMLPreElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLBRElement = {
     public var clear:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -9441,7 +9650,7 @@ typedef HTMLBRElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -9453,7 +9662,7 @@ typedef HTMLBRElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -9474,26 +9683,26 @@ typedef HTMLBRElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -9516,9 +9725,9 @@ typedef HTMLBRElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -9526,21 +9735,20 @@ typedef HTMLBRElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested -- only supported by Internet Explorer
 typedef HTMLBaseFontElement = {
     public var color:           DOMString;
     public var face:            DOMString;
     public var size:            Int;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -9665,7 +9873,7 @@ typedef HTMLBaseFontElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -9677,7 +9885,7 @@ typedef HTMLBaseFontElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -9698,26 +9906,26 @@ typedef HTMLBaseFontElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -9740,9 +9948,9 @@ typedef HTMLBaseFontElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -9750,21 +9958,20 @@ typedef HTMLBaseFontElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLFontElement = {
     public var color:           DOMString;
     public var face:            DOMString;
     public var size:            DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -9889,7 +10096,7 @@ typedef HTMLFontElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -9901,7 +10108,7 @@ typedef HTMLFontElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -9922,26 +10129,26 @@ typedef HTMLFontElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -9964,9 +10171,9 @@ typedef HTMLFontElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -9974,22 +10181,21 @@ typedef HTMLFontElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLHRElement = {
     public var align:           DOMString;
     public var noShade:         Bool;
     public var size:            DOMString;
     public var width:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -10114,7 +10320,7 @@ typedef HTMLHRElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -10126,7 +10332,7 @@ typedef HTMLHRElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -10147,26 +10353,26 @@ typedef HTMLHRElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -10189,9 +10395,9 @@ typedef HTMLHRElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -10199,20 +10405,19 @@ typedef HTMLHRElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLModElement = {
     public var cite:            DOMString;
     public var dateTime:        DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -10337,7 +10542,7 @@ typedef HTMLModElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -10349,7 +10554,7 @@ typedef HTMLModElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -10370,26 +10575,26 @@ typedef HTMLModElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -10412,9 +10617,9 @@ typedef HTMLModElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -10422,14 +10627,13 @@ typedef HTMLModElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLAnchorElement = {
     public var accessKey (default, null):       DOMString;
@@ -10449,8 +10653,8 @@ typedef HTMLAnchorElement = {
     
     public function focus(): Void;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -10459,7 +10663,7 @@ typedef HTMLAnchorElement = {
     public var innerHTML:       DOMString;
     public var style:           CSSInlineStyleDeclaration;
     public var hidden:          Bool;
-
+    
     public var accessKeyLabel       (default, null): DOMString;
     public var draggable            (default, null): Bool;
     public var contentEditable      (default, null): DOMString;
@@ -10570,7 +10774,7 @@ typedef HTMLAnchorElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -10582,7 +10786,7 @@ typedef HTMLAnchorElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -10603,26 +10807,26 @@ typedef HTMLAnchorElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -10645,9 +10849,9 @@ typedef HTMLAnchorElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -10655,14 +10859,13 @@ typedef HTMLAnchorElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLImageElement = {
     public var name:            DOMString;
@@ -10677,8 +10880,8 @@ typedef HTMLImageElement = {
     public var useMap:          DOMString;
     public var vspace:          Int;
     public var width:           Int;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -10803,7 +11006,7 @@ typedef HTMLImageElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -10815,7 +11018,7 @@ typedef HTMLImageElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -10836,26 +11039,26 @@ typedef HTMLImageElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -10878,9 +11081,9 @@ typedef HTMLImageElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -10888,16 +11091,15 @@ typedef HTMLImageElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLObjectElement<T> = {
+typedef HTMLObjectElement = {
     public var form             (default, null): HTMLFormElement;
     public var code:            DOMString;
     public var align:           DOMString;
@@ -10918,8 +11120,8 @@ typedef HTMLObjectElement<T> = {
     public var width:           DOMString;
     public var contentDocument  (default, null): Document;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -11044,7 +11246,7 @@ typedef HTMLObjectElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -11056,7 +11258,7 @@ typedef HTMLObjectElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -11077,26 +11279,26 @@ typedef HTMLObjectElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -11119,9 +11321,9 @@ typedef HTMLObjectElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -11129,22 +11331,21 @@ typedef HTMLObjectElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLParamElement = {
     public var name:            DOMString;
     public var type:            DOMString;
     public var value:           DOMString;
     public var valueType:       DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -11269,7 +11470,7 @@ typedef HTMLParamElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -11281,7 +11482,7 @@ typedef HTMLParamElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -11302,26 +11503,26 @@ typedef HTMLParamElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -11344,9 +11545,9 @@ typedef HTMLParamElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -11354,14 +11555,13 @@ typedef HTMLParamElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLAppletElement = {
     public var align:           DOMString;
@@ -11375,8 +11575,8 @@ typedef HTMLAppletElement = {
     public var object:          DOMString;
     public var vspace:          Int;
     public var width:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -11501,7 +11701,7 @@ typedef HTMLAppletElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -11513,7 +11713,7 @@ typedef HTMLAppletElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -11534,26 +11734,26 @@ typedef HTMLAppletElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -11576,9 +11776,9 @@ typedef HTMLAppletElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -11586,21 +11786,20 @@ typedef HTMLAppletElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLMapElement<T> = {
-    public var areas            (default, null): HTMLCollection<T>;
+typedef HTMLMapElement = {
+    public var areas            (default, null): HTMLCollection<HTMLAreaElement>;
     public var name:            DOMString;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -11725,7 +11924,7 @@ typedef HTMLMapElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -11737,7 +11936,7 @@ typedef HTMLMapElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -11758,26 +11957,26 @@ typedef HTMLMapElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -11800,9 +11999,9 @@ typedef HTMLMapElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -11810,14 +12009,13 @@ typedef HTMLMapElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLAreaElement = {
     public var accessKey (default, null):       DOMString;
@@ -11829,8 +12027,8 @@ typedef HTMLAreaElement = {
     public var tabIndex:        Int;
     public var target:          DOMString;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -11954,7 +12152,7 @@ typedef HTMLAreaElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -11966,7 +12164,7 @@ typedef HTMLAreaElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -11987,26 +12185,26 @@ typedef HTMLAreaElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -12029,9 +12227,9 @@ typedef HTMLAreaElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -12039,14 +12237,13 @@ typedef HTMLAreaElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLScriptElement = {
     public var text:            DOMString;
@@ -12056,8 +12253,8 @@ typedef HTMLScriptElement = {
     public var defer:           Bool;
     public var src:             DOMString;
     public var type:            DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -12182,7 +12379,7 @@ typedef HTMLScriptElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -12194,7 +12391,7 @@ typedef HTMLScriptElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -12215,26 +12412,26 @@ typedef HTMLScriptElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -12257,9 +12454,9 @@ typedef HTMLScriptElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -12267,21 +12464,20 @@ typedef HTMLScriptElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLTableElement<T> = {
+typedef HTMLTableElement = {
     public var caption:         HTMLTableCaptionElement;
-    public var tHead:           HTMLTableSectionElement<T>;
-    public var tFoot:           HTMLTableSectionElement<T>;
-    public var rows             (default, null): HTMLCollection<T>;
-    public var tBodies          (default, null): HTMLCollection<T>;
+    public var tHead:           HTMLTableSectionElement;
+    public var tFoot:           HTMLTableSectionElement;
+    public var rows             (default, null): HTMLCollection<HTMLTableRowElement>;
+    public var tBodies          (default, null): HTMLCollection<HTMLTableSectionElement>;
     public var align:           DOMString;
     public var bgColor:         DOMString;
     public var border:          DOMString;
@@ -12308,8 +12504,8 @@ typedef HTMLTableElement<T> = {
     
     public function deleteRow(index: Int): Void;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -12434,7 +12630,7 @@ typedef HTMLTableElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -12446,7 +12642,7 @@ typedef HTMLTableElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -12467,26 +12663,26 @@ typedef HTMLTableElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -12509,9 +12705,9 @@ typedef HTMLTableElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -12519,19 +12715,18 @@ typedef HTMLTableElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLTableCaptionElement = {
     public var align:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -12656,7 +12851,7 @@ typedef HTMLTableCaptionElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -12668,7 +12863,7 @@ typedef HTMLTableCaptionElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -12689,26 +12884,26 @@ typedef HTMLTableCaptionElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -12731,9 +12926,9 @@ typedef HTMLTableCaptionElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -12741,14 +12936,13 @@ typedef HTMLTableCaptionElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLTableColElement = {
     public var align:           DOMString;
@@ -12757,8 +12951,8 @@ typedef HTMLTableColElement = {
     public var span:            Int;
     public var vAlign:          DOMString;
     public var width:           DOMString;
-//  HTMLElement
-    
+        
+    //  HTMLElement
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -12883,7 +13077,7 @@ typedef HTMLTableColElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -12895,7 +13089,7 @@ typedef HTMLTableColElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -12916,26 +13110,26 @@ typedef HTMLTableColElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -12958,9 +13152,9 @@ typedef HTMLTableColElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -12968,28 +13162,27 @@ typedef HTMLTableColElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLTableSectionElement<T> = {
+typedef HTMLTableSectionElement = {
     public var align:           DOMString;
     public var ch:              DOMString;
     public var chOff:           DOMString;
     public var vAlign:          DOMString;
-    public var rows             (default, null): HTMLCollection<T>;
+    public var rows             (default, null): HTMLCollection<HTMLTableRowElement>;
     
     public function insertRow(index: Int): HTMLElement;
     
     public function deleteRow(index: Int): Void;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -13114,7 +13307,7 @@ typedef HTMLTableSectionElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -13126,7 +13319,7 @@ typedef HTMLTableSectionElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -13147,26 +13340,26 @@ typedef HTMLTableSectionElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -13189,9 +13382,9 @@ typedef HTMLTableSectionElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -13199,19 +13392,18 @@ typedef HTMLTableSectionElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
-typedef HTMLTableRowElement<T> = {
+typedef HTMLTableRowElement = {
     public var rowIndex         (default, null): Int;
     public var sectionRowIndex  (default, null): Int;
-    public var cells            (default, null): HTMLCollection<T>;
+    public var cells            (default, null): HTMLCollection<HTMLTableCellElement>;
     public var align:           DOMString;
     public var bgColor:         DOMString;
     public var ch:              DOMString;
@@ -13222,8 +13414,8 @@ typedef HTMLTableRowElement<T> = {
     
     public function deleteCell(index: Int): Void;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -13348,7 +13540,7 @@ typedef HTMLTableRowElement<T> = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -13360,7 +13552,7 @@ typedef HTMLTableRowElement<T> = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -13381,26 +13573,26 @@ typedef HTMLTableRowElement<T> = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -13423,9 +13615,9 @@ typedef HTMLTableRowElement<T> = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -13433,14 +13625,13 @@ typedef HTMLTableRowElement<T> = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLTableCellElement = {
     public var cellIndex        (default, null): Int;
@@ -13459,8 +13650,8 @@ typedef HTMLTableCellElement = {
     public var vAlign:          DOMString;
     public var width:           DOMString;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -13585,7 +13776,7 @@ typedef HTMLTableCellElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -13597,7 +13788,7 @@ typedef HTMLTableCellElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -13618,26 +13809,26 @@ typedef HTMLTableCellElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -13660,9 +13851,9 @@ typedef HTMLTableCellElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -13670,20 +13861,19 @@ typedef HTMLTableCellElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Unable to Test
 typedef HTMLFrameSetElement = {
     public var cols:            DOMString;
     public var rows:            DOMString;
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -13808,7 +13998,7 @@ typedef HTMLFrameSetElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -13820,7 +14010,7 @@ typedef HTMLFrameSetElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -13841,26 +14031,26 @@ typedef HTMLFrameSetElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -13883,9 +14073,9 @@ typedef HTMLFrameSetElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -13893,14 +14083,13 @@ typedef HTMLFrameSetElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Unable to Test
 typedef HTMLFrameElement = {
     public var frameBorder:     DOMString;
@@ -13914,8 +14103,8 @@ typedef HTMLFrameElement = {
     public var contentDocument  (default, null): Document;
     public var contentWindow    (default, null): Window;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -14040,7 +14229,7 @@ typedef HTMLFrameElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -14052,7 +14241,7 @@ typedef HTMLFrameElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -14073,26 +14262,26 @@ typedef HTMLFrameElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -14115,9 +14304,9 @@ typedef HTMLFrameElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -14125,14 +14314,13 @@ typedef HTMLFrameElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Tested
 typedef HTMLIFrameElement = {
     public var align:           DOMString;
@@ -14148,8 +14336,8 @@ typedef HTMLIFrameElement = {
     public var contentDocument  (default, null): Document;
     public var contentWindow    (default, null): Window;
     
+            
     //  HTMLElement
-    
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -14274,7 +14462,7 @@ typedef HTMLIFrameElement = {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -14286,7 +14474,7 @@ typedef HTMLIFrameElement = {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -14307,26 +14495,26 @@ typedef HTMLIFrameElement = {
     public var nodeName         (default,null): DOMString;
     public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
     public var nodeType         (default,null): Int;
-    public var parentNode       (default,null): Node;
-    public var childNodes       (default,null): DomCollection<Node>;
-    public var firstChild       (default,null): Node;
-    public var lastChild        (default,null): Node;
-    public var previousSibling  (default,null): Node;
-    public var nextSibling      (default,null): Node;
-    public var attributes       (default,null): NamedNodeMap;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
     
-    public function insertBefore(newChild: Node, refChild: Node): Node;
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
     
-    public function replaceChild(newChild: Node, oldChild: Node): Node;
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
     
-    public function removeChild(oldChild: Node): Node;
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
     
-    public function appendChild(newChild: Node): Node;
+    public function appendChild(newChild: HTMLElement): HTMLElement;
     
-    public function cloneNode(deep: Bool): Node;
+    public function cloneNode(deep: Bool): HTMLElement;
     
     public function isSupported(feature: DOMString, version: DOMString): Bool;
     
@@ -14349,9 +14537,9 @@ typedef HTMLIFrameElement = {
     public var textContent:     DOMString;
     
     
-    public function compareDocumentPosition(other: Node): Int;
+    public function compareDocumentPosition(other: HTMLElement): Int;
     
-    public function isSameNode(other: Node): Bool;
+    public function isSameNode(other: HTMLElement): Bool;
     
     public function lookupPrefix(namespaceURI: DOMString): DOMString;
     
@@ -14359,14 +14547,13 @@ typedef HTMLIFrameElement = {
     
     public function lookupNamespaceUrI(prefix: DOMString): DOMString;
     
-    public function isEqualNode(arg: Node): Bool;
+    public function isEqualNode(arg: HTMLElement): Bool;
     
     public function getFeature(feature: DOMString, version: DOMString): DOMObject;
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;
-}
+    public function getUserData(key: DOMString): DOMUserData;}
 //Unable to Test
 typedef ClientRect = {
     public var top              (default, null): Float;
@@ -15764,7 +15951,7 @@ typedef StyleSheet = {
     public var media            (default, null): MediaList;
 }
 
-typedef MediaList = {
+interface MediaList implements ArrayAccess<HTMLMediaElement> {
     public var mediaText:   DOMString;
     public var length       (default,null): Int;
     
