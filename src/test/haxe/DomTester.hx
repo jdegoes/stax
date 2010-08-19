@@ -20,7 +20,7 @@ package haxe;
 import Dom;
 import js.Env;
 import js.dom.Quirks;
-import js.dom.Refinements;
+using  js.dom.Refinements;
 
 import haxe.unit.TestCase;
 import haxe.unit.TestRunner;
@@ -30,7 +30,7 @@ class DomTest extends TestCase {
 
     public function new():Void {
         super();
-        _doc = Env.documentHtml;
+        _doc = Env.document;
     }
     
     public function handleEvent(e: Event): Void {
@@ -2038,6 +2038,32 @@ class DomTest extends TestCase {
         verifyThatPropertiesExist(imgData, imgDataProperties);
         verifyThatPropertiesExist(pixArray, pixArrayProperties);
     }
+    
+    private function testThatRefinementsIFrameOptionWorks(): Void {
+      var iframe = _doc.getElementById('IFRAME');
+      
+      assertEquals("", "");
+    }
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private function alertObject(obj) {
         untyped __js__('
@@ -2069,6 +2095,8 @@ class DomTest extends TestCase {
             else assertTrue(true);
         }
     }
+    
+    
 
 }
 

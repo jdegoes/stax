@@ -16185,6 +16185,7 @@ typedef CSS2Properties = {
     public var widows:               DOMString;
     public var width:                DOMString;
     public var wordSpacing:          DOMString;
+    public var opacity:              DOMString;
     public var zIndex:               DOMString;
 }
 //Tested
@@ -16350,6 +16351,7 @@ typedef CSSInlineStyleDeclaration = {
     public var widows:               DOMString;
     public var width:                DOMString;
     public var wordSpacing:          DOMString;
+    public var opacity:              DOMString;
     public var zIndex:               DOMString;
 }
 
@@ -16685,7 +16687,7 @@ typedef Window = {
     
     public function btoa(unencodedString: DOMString): DOMString;
     
-    public var getComputedStyle (default, null): Element -> DOMString -> CSSStyleDeclaration;
+    public var getComputedStyle (default, null): HTMLElement -> DOMString -> CSSStyleDeclaration;
     
     public var postMessage (default, null): DOMString -> DOMString -> Void;
     

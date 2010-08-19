@@ -13,7 +13,7 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package js.dom.Refinements;
+package js.dom;
 
 import Prelude;
 import Dom;
@@ -25,11 +25,11 @@ class Refinements {
 	  return iframeOption(e).get();
 	}
 	
-	public static inline function script(e: HTMLElement): HTMLIFrameElement {
+	public static inline function script(e: HTMLElement): HTMLScriptElement {
 	  return scriptOption(e).get();
 	}
 	
-	public static inline function div(e: HTMLElement): HTMLIDivElement {
+	public static inline function div(e: HTMLElement): HTMLDivElement {
 	  return divOption(e).get();
 	}
 	
