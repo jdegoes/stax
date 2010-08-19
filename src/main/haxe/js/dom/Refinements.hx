@@ -25,7 +25,15 @@ class Refinements {
 	  return iframeOption(e).get();
 	}
 	
+	public static inline function script(e: HTMLElement): HTMLIFrameElement {
+	  return scriptOption(e).get();
+	}
+	
 	public static inline function iframeOption(e: HTMLElement): Option<HTMLIFrameElement> {
 	  return if (e.nodeName == 'IFRAME') Some(cast e); else None;
+	}
+	
+	public static inline function scriptOption(e: HTMLElement): Option<HTMLScriptElement> {
+	  return if (e.nodeName == 'SCRIPT') Some(cast e); else None;
 	}
 }
