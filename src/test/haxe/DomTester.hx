@@ -25,11 +25,11 @@ import haxe.unit.TestCase;
 import haxe.unit.TestRunner;
 
 class DomTest extends TestCase {
-    var _doc: Env.Document;
+    var _doc: Env.HTMLDocument;
 
     public function new():Void {
         super();
-        _doc = Env.document;
+        _doc = Env.documentHtml;
     }
     
     public function handleEvent(e: Event): Void {
@@ -245,21 +245,21 @@ class DomTest extends TestCase {
     }
     
     public function testThatElementHasProperties(): Void {
-        var element1 = _doc.createElement("div");
+        var element1: HTMLElement = cast _doc.createElement("div");
         _doc.createAttribute("id");
         element1.setAttribute("id", "created-element");
         element1.setAttribute("value", "hasValue");
         element1.setAttribute("name", "hasName");
         
-        var element2 = _doc.createElement("div");
+        var element2: HTMLElement = cast _doc.createElement("div");
         element2.setAttribute("id", "created-element-sibling");
         var main = _doc.getElementById("main");
         main.appendChild(element1);
         main.appendChild(element2);
         
-        var element = _doc.getElementById("created-element");
+        var element: HTMLElement = cast _doc.getElementById("created-element");
 
-        var childspan = _doc.createElement("span");
+        var childspan: HTMLElement = cast _doc.createElement("span");
         childspan.setAttribute("class", "text");
         element.appendChild(childspan);
         
@@ -322,7 +322,7 @@ class DomTest extends TestCase {
         
         var element2 = _doc.createElement("div");
         element2.setAttribute("id", "created-element-sibling");
-        var main = _doc.getElementById("main");
+        var main: HTMLElement = _doc.getElementById("main");
         main.appendChild(element1);
         main.appendChild(element2);
         
