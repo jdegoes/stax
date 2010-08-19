@@ -21,16 +21,28 @@ import Dom;
 using PreludeExtensions;
 
 class Refinements {
-	public static inline function iframe(e: HTMLElement): HTMLIFrameElement {
+	public static inline function asIframe(e: HTMLElement): HTMLIFrameElement {
 	  return iframeOption(e).get();
 	}
 	
-	public static inline function script(e: HTMLElement): HTMLScriptElement {
+	public static inline function asScript(e: HTMLElement): HTMLScriptElement {
 	  return scriptOption(e).get();
 	}
 	
-	public static inline function div(e: HTMLElement): HTMLDivElement {
+	public static inline function asDiv(e: HTMLElement): HTMLDivElement {
 	  return divOption(e).get();
+	}
+	
+	public static inline function asForm(e: HTMLElement): HTMLFormElement {
+	  return formOption(e).get();
+	}
+	
+	public static inline function asBody(e: HTMLElement): HTMLBodyElement {
+	  return bodyOption(e).get();
+	}
+	
+	public static inline function asStyle(e: HTMLElement): HTMLStyleElement {
+	  return styleOption(e).get();
 	}
 	
 	
@@ -45,5 +57,17 @@ class Refinements {
 	
 	public static inline function divOption(e: HTMLElement): Option<HTMLDivElement> {
 	  return if (e.nodeName == 'DIV') Some(cast e); else None;
+	}
+	
+	public static inline function formOption(e: HTMLElement): Option<HTMLFormElement> {
+	  return if (e.nodeName == 'FORM') Some(cast e); else None;
+	}
+	
+	public static inline function bodyOption(e: HTMLElement): Option<HTMLBodyElement> {
+	  return if (e.nodeName == 'BODY') Some(cast e); else None;
+	}
+	
+	public static inline function styleOption(e: HTMLElement): Option<HTMLStyleElement> {
+	  return if (e.nodeName == 'STYLE') Some(cast e); else None;
 	}
 }

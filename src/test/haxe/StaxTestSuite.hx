@@ -40,6 +40,7 @@ import haxe.framework.Injector;
 #if js
 import haxe.io.http.HttpStringTestCase;
 
+import js.dom.RefinementsTester;
 import js.io.IFrameIOTestCase;
 import haxe.io.http.HttpJValueJsonpTestCase;
 #end
@@ -68,6 +69,7 @@ class StaxTestSuite {
           , new HttpStringTestCase() // This one should be cross-platform, eventually
           , new IFrameIOTestCase()      
           , new HttpJValueJsonpTestCase()
+          , new RefinementsTestCase()
           #end
         ]);
 
