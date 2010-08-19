@@ -340,9 +340,26 @@ class IterableExtensions {
 	}
 	
 	public static function unionBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-	  return foldl(iter2, iter1, function(a, b) {
-	    return if (existsP(a, b, f)) a; else append(a, b);
-	  });
+	  var result = iter1;
+	  
+	  for (e in iter2) {
+	    var exists = false;
+	    
+	    for (i in iter1) {
+	      if (f(i, e)) {
+	        exists = true;
+	      }
+	    }
+	    if (!exists) {
+	      result = append(result, e);
+	    }
+	  }
+	  
+	  return result;
+	}
+	
+	public static function union<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
+	  return unionBy(iter1, iter2, function(a, b) { return a == b; });
 	}
 
 }

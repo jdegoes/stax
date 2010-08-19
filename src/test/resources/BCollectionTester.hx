@@ -165,14 +165,21 @@ class CollectionTester extends TestCase {
     
     assertIterableEquals([2,2,4], a.intersect(b));
   }
-  /*
+  
   public function testThatItXUnionByWorks(): Void {
     var a: Iterable<Int> = [1,2,3,4];
     var b: Iterable<Int> = [4,6,9,10];
-    trace(a.unionBy(b, function(a, b) { return a == b; }));
+        
     assertIterableEquals([1,2,3,4,4,10], a.unionBy(b, function(a, b) { return a * 3 == b; }));
   }
-  */
+  
+  public function testThatItXUnionWorks(): Void {
+    var a: Iterable<Int> = [1,2,3,4];
+    var b: Iterable<Int> = [4,6,9,10];
+        
+    assertIterableEquals([1,2,3,4,6,9,10], a.union(b));
+  }
+  
   
   
   
