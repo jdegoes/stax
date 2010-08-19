@@ -217,9 +217,23 @@ class FloatExtensions {
   }
 }
 class StringExtensions {
-  public static function toBool(v: String): Bool { return if (v.toLowerCase() == "false" || v == "0") false else true; }
-  public static function toInt(v: String): Int { return Std.parseInt(v); }
-  public static function toFloat(v: String): Float { return Std.parseFloat(v); }  
+  public static function toBool(v: String, ?d: Bool): Bool {
+    if (v == null) return d;
+    
+    var vLower = v.toLowerCase();
+    
+    return (if (vLower == 'false' || v == '0') Some(false) else if (vLower == 'true' || v == '1') Some(true) else None).getOrElseC(d);
+  }
+  public static function toInt(v: String, ?d: Null<Int>): Int {
+    if (v == null) return d;
+    
+    return Std.parseInt(v).toOption().filter(function(i) return !Math.isNaN(i)).getOrElseC(d);
+  }
+  public static function toFloat(v: String, ?d: Null<Float>): Float { 
+    if (v == null) return d;
+    
+    return Std.parseFloat(v).toOption().filter(function(i) return !Math.isNaN(i)).getOrElseC(d);
+  }
   public static function startsWith(v: String, frag: String): Bool {
     return if (v.length >= frag.length && frag == v.substr(0, frag.length)) true else false;
   }
@@ -352,7 +366,7 @@ class ArrayExtensions {
   public static function ShowT<T>(c: Class<Array<Dynamic>>, show: Show<T>): Show<Array<T>> {
     return ShowTypeclass.create({
       show: function(v: Array<T>) {
-        return "[" + v.map(function(e) { return show.show(e); }).join(", ") + "]";
+        return "[" + v.map(function(e) return show.show(e)).join(", ") + "]";
       }
     });
   }
@@ -492,6 +506,13 @@ class Function0Extensions {
     }
   }
   
+  public static function thenDo(f1: Void -> Void, f2: Void -> Void): Void -> Void {
+    return function() {
+      f1();
+      f2();
+    }
+  }
+  
   public static function promote<A, Z>(f: Void -> Z): A -> Z {
     return function(a: A): Z {
       return f();
@@ -502,6 +523,16 @@ class Function0Extensions {
     return function(a: A): Void {
       f();
     }
+  }
+  
+  public static function stage<Z, T>(f: Void -> Z, before: Void -> T, after: T -> Void): Z {
+    var state = before();
+    
+    var result = f();
+    
+    after(state);
+    
+    return result;
   }
 }
 class Function1Extensions {

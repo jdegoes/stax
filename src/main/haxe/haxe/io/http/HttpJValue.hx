@@ -139,7 +139,7 @@ class HttpJValueJsonp implements HttpJValue {
     return Stax.error('JSONP does not support DELETE');
   }
   
-  public function custom(request: String, url: Url, data: T, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<T>> {
+  public function custom(request: String, url: Url, data: JValue, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<JValue>> {
     return Stax.error('JSONP does not support custom request: ' + request);
   }
 }

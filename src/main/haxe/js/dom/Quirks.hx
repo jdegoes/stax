@@ -20,9 +20,12 @@ import Prelude;
 import Dom;
 import js.Env;
 import js.detect.BrowserSupport;
+import haxe.functional.Predicate;
 
 using PreludeExtensions;
 using haxe.util.StringExtensions;
+using haxe.util.ObjectExtensions;
+
 
 
 /** 
@@ -103,265 +106,168 @@ class Quirks {
     }
   }
   
+  /** Retrieves the actual property name for the specified css property. 
+   * Because some CSS property names are reserved JavaScript keywords, not 
+   * every CSS property has an identically equal JavaScript property name.
+   */
   public static function getActualCssPropertyName(name: String): String {
-    if (FloatPattern.matches(name)) return BrowserSupport.cssFloat() ? "cssFloat" : "styleFloat";
+    if (FloatPattern.match(name)) return BrowserSupport.cssFloat() ? "cssFloat" : "styleFloat";
     
     return name;
   }
   
-  public static function getCssProperty(elem: HTMLElement, name: String, force: Bool = false): String {
-		var ret = '', style = elem.style, filter;
-		
-		var currentStyleDefined = Env.isDefined(untyped elem.currentStyle);
+  /** Retrieves the computed value for a particular CSS property. 
+   */
+  public static function getComputedCssProperty(elem: HTMLElement, name: String): Option<String> {
+    return (if (BrowserSupport.getComputedStyle()) {
+  		elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
+  		  return defaultView.getComputedStyle(elem, null).toOption();
+  		}).flatMap(function(computedStyle: CSSStyleDeclaration): Option<String> {
+  		  return computedStyle.getPropertyValue(name).toOption().filter(function(style) return style != '');
+  		}).orElse(function() {
+  		  return if (name == 'opacity') Some('1'); else None;
+  		}).getOrElseC('');
+  	}
+  	else if (Env.isDefined(untyped elem.currentStyle)) {
+  		if (name == 'opacity' && !BrowserSupport.opacity()) {
+  		  if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
+  		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
+  		  }
+  		  else "1";
+  		}		
+  		else {
+  			var style = untyped elem.currentStyle[name];
 
-		// IE uses filters for opacity
-		if (!BrowserSupport.opacity() && name == "opacity" && currentStyleDefined) {
-		  return if (OpacityPattern.matches(untyped elem.currentStyle.filter)) {
-		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
-		  }
-		  else "1";
-		}
+  			// From the awesome hack by Dean Edwards
+  			// http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
+  			if (NumberPattern.match(style) && !NumberPixelPattern.match(style)) {
+  				// Remember the original values
+  				var oldLeft   = elem.style.left;
+  				var oldRtLeft = untyped elem.runtimeStyle.left;
 
-		if (!force && style != null && style[getActualCssPropertyName(name)] != null) return style[getActualCssPropertyName(name)];
-		
-		if (BrowserSupport.getComputedStyle()) {
-			// Only "float" is needed here
-			ret = elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
-			  return defaultView.getComputedStyle(elem, null).toOption();
-			}).map(function(computedStyle) {
-			  return computedStyle.getPropertyValue(name);
-			}).filter(function(style) {
-			  return name != 'opacity' || style != '';
-			}).getOrElseC('1');
-		}
-		else if (currentStyleDefined) {
-			var camelCase = name.toCamelCase();
-
-			ret = elem.currentStyle[name].toOption().orElseC(elem.currentStyle[camelCase].toOption()).getOrElseC("");
-
-			// From the awesome hack by Dean Edwards
-			// http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-			
-			var numberWithNonPixelUnit = NumberPattern.matches(ret) && !NumberPixelPattern.matches(ret);
-
-			// If we're not dealing with a regular pixel number
-			// but a number that has a weird ending, we need to convert it to pixels
-			if (numberWithNonPixelUnit) {
-				// Remember the original values
-				var oldLeft   = style.left
-				var oldRtLeft = elem.runtimeStyle.left;
-
-				// Put in the new values to get a computed value out
-				elem.runtimeStyle.left = elem.currentStyle.left;
+  				// Put in the new values to get a computed value out
+  				untyped elem.runtimeStyle.left = elem.currentStyle.left;
 				
-				style.left = (camelCase == "fontSize") ? "1em" : ret;
-				ret = style.pixelLeft + "px";
-
-				// Revert the changed values
-				style.left             = oldLeft;
-				elem.runtimeStyle.left = oldRtLeft;
-			}
-		}
-
-		return ret;
-	}
-  /*
-  public static function getOffset(elem: HTMLElement): { top: Float, left: Float } {
-    if (document.documentElement != null && document.documentElement.getBoundingClientRect != null) {
-      if (elem == null || elem.ownerDocument == null) return null;
-
-  		if (elem === elem.ownerDocument.body) {
-  			return jQuery.offset.bodyOffset(elem);
+  				elem.style.left = (name == "font-size") ? "1em" : style;
+  				
+  				(untyped elem.style.pixelLeft + "px").withEffect(function() untyped {
+    				// Revert the changed values
+    				elem.style.left        = oldLeft;
+    				elem.runtimeStyle.left = oldRtLeft;
+    			});
+  			}
+  			else style;
   		}
+  	}
+		else '').into(function(computedStyle) {
+		  return if (computedStyle == '') None; else computedStyle.toOption();
+		});
+  }
+  
+  /** Retrieves a particular CSS property.
+   */
+  public static function getCssProperty(elem: HTMLElement, name: String): Option<String> {
+		return elem.style.toOption().flatMap(function(style) {
+		  return style.getAny(getActualCssPropertyName(name));
+		}).orElse(function() {
+		  return getComputedCssProperty(elem, name);
+		});
+	}
+	
+	/** Retrieves the offset of the document's body, relative to the window origin.
+	 */
+	public static function getBodyOffset(doc: HTMLDocument): Option<{ top: Int, left: Int }> {
+	  return Env.document.toOption().flatMap(function(document) {
+	    return document.body.toOption();
+	  }).map(function(body) {
+	    var top  = body.offsetTop;
+	    var left = body.offsetLeft;
 
-  		var box = elem.getBoundingClientRect(), doc = elem.ownerDocument, body = doc.body, docElem = doc.documentElement,
-  			clientTop = docElem.clientTop || body.clientTop || 0, clientLeft = docElem.clientLeft || body.clientLeft || 0,
-  			top  = box.top  + (self.pageYOffset || jQuery.support.boxModel && docElem.scrollTop  || body.scrollTop ) - clientTop,
-  			left = box.left + (self.pageXOffset || jQuery.support.boxModel && docElem.scrollLeft || body.scrollLeft) - clientLeft;
+  		if (BrowserSupport.offsetDoesNotIncludeMarginInBodyOffset()) {
+  			top  += getComputedCssProperty(body, 'margin-top').map(function(s) return s.toInt(0)).getOrElseC(0);
+  			left += getComputedCssProperty(body, 'margin-left').map(function(s) return s.toInt(0)).getOrElseC(0);
+  		}
 
   		return { top: top, left: left };
+	  });
+	}
+  
+  /** Retrieves the offset of the element, relative to the window origin.
+   */
+  public static function getOffset(elem: HTMLElement): Option<{ top: Int, left: Int }> {
+    if (elem == null || elem.ownerDocument == null) return None;
+    else if (elem == untyped elem.ownerDocument.body) return getBodyOffset(cast elem.ownerDocument);
+    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.getBoundingClientRect != null) {
+  		var box = untyped elem.getBoundingClientRect();
+  		var doc = elem.ownerDocument;
+  		var body: HTMLBodyElement = untyped doc.body;
+  		var docElem = untyped doc.documentElement;
+  		var clientTop  = [docElem.clientTop,  body.clientTop,  0].filter(P.isNotNull()).first();
+  		var clientLeft = [docElem.clientLeft, body.clientLeft, 0].filter(P.isNotNull()).first();
+  	  var top: Int  = box.top  + [Env.window.pageYOffset, if (BrowserSupport.boxModel()) docElem.scrollTop  else null, body.scrollTop ].filter(P.isNotNull()).first() - clientTop;
+  		var left: Int = box.left + [Env.window.pageXOffset, if (BrowserSupport.boxModel()) docElem.scrollLeft else null, body.scrollLeft].filter(P.isNotNull()).first() - clientLeft;
+
+  		return Some({ top: top, left: left });
     }
     else {
-      if ( !elem || !elem.ownerDocument ) {
-  			return null;
+  		var getStyle = function(elem: HTMLElement): Dynamic {
+  		  var defaultView = elem.ownerDocument.defaultView;
+  		  
+  		  return if (defaultView != null) defaultView.getComputedStyle(elem, null); else untyped elem.currentStyle;
   		}
 
-  		if ( elem === elem.ownerDocument.body ) {
-  			return jQuery.offset.bodyOffset( elem );
-  		}
+  		var offsetParent = elem.offsetParent;
+  		var prevOffsetParent = elem;
+  		var doc = elem.ownerDocument;
+  		var docElem: HTMLElement = cast doc.documentElement;
+  		var body: HTMLBodyElement = untyped doc.body;
+  		var defaultView = doc.defaultView;
+  		var prevComputedStyle = getStyle(elem);
+  		var top: Int  = elem.offsetTop;
+  		var left: Int = elem.offsetLeft;
 
-  		jQuery.offset.initialize();
-
-  		var offsetParent = elem.offsetParent, prevOffsetParent = elem,
-  			doc = elem.ownerDocument, computedStyle, docElem = doc.documentElement,
-  			body = doc.body, defaultView = doc.defaultView,
-  			prevComputedStyle = defaultView ? defaultView.getComputedStyle( elem, null ) : elem.currentStyle,
-  			top = elem.offsetTop, left = elem.offsetLeft;
-
-  		while ( (elem = elem.parentNode) && elem !== body && elem !== docElem ) {
-  			if ( BrowserSupport.positionFixed() && prevComputedStyle.position === "fixed" ) {
+  		while (((elem = cast elem.parentNode) != null) && elem != body && elem != docElem) {
+  			if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
   				break;
   			}
 
-  			computedStyle = defaultView ? defaultView.getComputedStyle(elem, null) : elem.currentStyle;
+  			var computedStyle = getStyle(elem);
+  			
   			top  -= elem.scrollTop;
   			left -= elem.scrollLeft;
 
-  			if ( elem === offsetParent ) {
+  			if (elem == offsetParent) {
   				top  += elem.offsetTop;
   				left += elem.offsetLeft;
 
-  				if ( jQuery.offset.doesNotAddBorder && !(jQuery.offset.doesAddBorderForTableAndCells && /^t(able|d|h)$/i.test(elem.nodeName)) ) {
-  					top  += parseFloat( computedStyle.borderTopWidth  ) || 0;
-  					left += parseFloat( computedStyle.borderLeftWidth ) || 0;
+  				if (BrowserSupport.offsetDoesNotAddBorder() && !(BrowserSupport.offsetAddsBorderForTableAndCells() && ~/^t(able|d|h)$/i.match(elem.nodeName))) {
+  					top  += computedStyle.borderTopWidth.toInt(0);
+  					left += computedStyle.borderLeftWidth.toInt(0);
   				}
 
-  				prevOffsetParent = offsetParent, offsetParent = elem.offsetParent;
+  				prevOffsetParent = offsetParent;
+  				offsetParent     = elem.offsetParent;
   			}
 
-  			if ( jQuery.offset.subtractsBorderForOverflowNotVisible && computedStyle.overflow !== "visible" ) {
-  				top  += parseFloat( computedStyle.borderTopWidth  ) || 0;
-  				left += parseFloat( computedStyle.borderLeftWidth ) || 0;
+  			if (BrowserSupport.offsetSubtractsBorderForOverflowNotVisible() && computedStyle.overflow != "visible") {
+  				top  += computedStyle.borderTopWidth.toInt(0);
+  				left += computedStyle.borderLeftWidth.toInt(0);
   			}
 
   			prevComputedStyle = computedStyle;
   		}
 
-  		if ( prevComputedStyle.position === "relative" || prevComputedStyle.position === "static" ) {
+  		if (prevComputedStyle.position == "relative" || prevComputedStyle.position == "static") {
   			top  += body.offsetTop;
   			left += body.offsetLeft;
   		}
 
-  		if ( jQuery.offset.supportsFixedPosition && prevComputedStyle.position === "fixed" ) {
-  			top  += Math.max( docElem.scrollTop, body.scrollTop );
-  			left += Math.max( docElem.scrollLeft, body.scrollLeft );
+  		if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
+  			top  += Math.max(docElem.scrollTop,  body.scrollTop).toInt();
+  			left += Math.max(docElem.scrollLeft, body.scrollLeft).toInt();
   		}
 
-  		return { top: top, left: left };
+  		return Some({ top: top, left: left });
     }
   }
-  */
-  /*
-  public static function getCss(name: String): String {
- 		var ret, style = elem.style, filter;
-
-		// IE uses filters for opacity
-		if ( !jQuery.support.opacity && name === "opacity" && elem.currentStyle ) {
-			ret = ropacity.test(elem.currentStyle.filter || "") ?
-				(parseFloat(RegExp.$1) / 100) + "" :
-				"";
-
-			return ret === "" ?
-				"1" :
-				ret;
-		}
-
-		// Make sure we're using the right name for getting the float value
-		if ( rfloat.test( name ) ) {
-			name = styleFloat;
-		}
-
-		if ( !force && style && style[ name ] ) {
-			ret = style[ name ];
-
-		} else if ( getComputedStyle ) {
-
-			// Only "float" is needed here
-			if ( rfloat.test( name ) ) {
-				name = "float";
-			}
-
-			name = name.replace( rupper, "-$1" ).toLowerCase();
-
-			var defaultView = elem.ownerDocument.defaultView;
-
-			if ( !defaultView ) {
-				return null;
-			}
-
-			var computedStyle = defaultView.getComputedStyle( elem, null );
-
-			if ( computedStyle ) {
-				ret = computedStyle.getPropertyValue( name );
-			}
-
-			// We should always get a number back from opacity
-			if ( name === "opacity" && ret === "" ) {
-				ret = "1";
-			}
-
-		} else if ( elem.currentStyle ) {
-			var camelCase = name.replace(rdashAlpha, fcamelCase);
-
-			ret = elem.currentStyle[ name ] || elem.currentStyle[ camelCase ];
-
-			// From the awesome hack by Dean Edwards
-			// http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-
-			// If we're not dealing with a regular pixel number
-			// but a number that has a weird ending, we need to convert it to pixels
-			if ( !rnumpx.test( ret ) && rnum.test( ret ) ) {
-				// Remember the original values
-				var left = style.left, rsLeft = elem.runtimeStyle.left;
-
-				// Put in the new values to get a computed value out
-				elem.runtimeStyle.left = elem.currentStyle.left;
-				style.left = camelCase === "fontSize" ? "1em" : (ret || 0);
-				ret = style.pixelLeft + "px";
-
-				// Revert the changed values
-				style.left = left;
-				elem.runtimeStyle.left = rsLeft;
-			}
-		}
-
-		return ret;
-  }
-  */
-/*
-  public static function getComputedStyle(e: Element, pseudo: DOMString): CSSStyleDeclaration {
-    if (Env.window.getComputedStyle != null) {
-      return Env.window.getComputedStyle(e, pseudo);
-    }
-    else {
-      
-      public var length       (default,null): Int;
-      public var parentRule   (default, null): CSSRule;
-
-      public var cssText:     DOMString;
-
-      public function removeProperty(propertyName: DOMString): Void;
-
-      public function getPropertyValue(propertyName: DOMString): DOMString;
-
-      public function getPropertyCSSValue(propertyName: DOMString): CSSValue;
-
-      public function getPropertyPriority(propertyName: DOMString): DOMString;
-
-      public function getPropertyShorthand(propertyName: DOMString): DOMString; //Not supported by Firefox
-
-      public function setProperty(propertyName: DOMString, value: DOMString, priority: DOMString): Void;
-
-      public function isPropertyImplicit(propertyName: DOMString): Bool;  //Not supported by Firefox
-
-      public function item(index: Int): DOMString;
-      
-      return cast {
-        length:   
-              this.el = el;
-        getPropertyValue: function(prop) {
-            var re = ~/(\-([a-z]){1})/g;
-            if (prop == 'float') prop = 'styleFloat';
-            if (re.matches(prop)) {
-                prop = prop.replace(re, function () {
-                    return arguments[2].toUpperCase();
-                });
-            }
-            return el.currentStyle[prop] ? el.currentStyle[prop] : null;
-        }
-      }
-    }
-  }
-  
-  */
 }

@@ -21,6 +21,7 @@ import haxe.io.http.Http;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.data.collections.Map;
+import haxe.data.collections.Maps;
 
 #if js
 import Dom;
@@ -43,28 +44,23 @@ class HttpStringAsync implements HttpString {
   public function new() { }
   
   public function get(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('GET', url, params, headers);
+    return custom('GET', url, null, params, headers);
   }
   
   public function post(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('POST', url, params, headers);
+    return custom('POST', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function put(url: Url, data: String, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('PUT', url, params, headers);
+    return custom('PUT', url, data, params, makeHeader(headers, "application/x-www-form-urlencoded"));
   }
   
   public function delete(url: Url, ?params: QueryParameters, ?headers: Map<String, String>): Future<HttpResponse<String>> {
-    return doRequest('DELETE', url, params, headers);
+    return custom('DELETE', url, null, params, headers);
   }
   
-  public function custom(request: String, url: Url, data: T, ?headers: Map<String, String>): Future<HttpResponse<T>> {
-    
-  }
-  
-  public function doRequest(method: String, _url: Url, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
+  public function custom(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
     var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
-    
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -83,23 +79,26 @@ class HttpStringAsync implements HttpString {
         });
       }
     }
-    
-    _headers.toOption().map(function(headers) {
-      headers.foreach(function(header) {
-        request.setRequestHeader(header._1, header._2);
-      });
-    });
-    
+
     try {
       request.open(method, url, true);
     }
     catch (e: Dynamic) {
       future.cancel();
     }
-    
-    request.send();
+
+    _headers.toOption().map(function(headers) {
+      headers.foreach(function(header) {
+        request.setRequestHeader(header._1, header._2);
+      });
+    });
+    request.send(data);
     
     return future;
+  }
+  
+  private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
+    return OptionExtensions.toOption(_headers).getOrElseC(Maps.StringString).set("Content-Type", contentType);
   }
 }
 

@@ -73,7 +73,7 @@ interface IFrameIO {
    *
    * @param window  The window of the target/source window.
    */
-  public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO;
+  public function receiveRequests(f: Dynamic -> Future<Dynamic>, url: String, window: Window): IFrameIO;
 
   /** Posts a message to the specified iframe, which should be located at the 
    * exact URL specified.
@@ -201,6 +201,8 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   var bindTarget: Window;
   
   public function new(w: Window) {
+    super();
+    
     this.bindTarget = w;
   }
   
@@ -295,6 +297,8 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   var receiverFuture:     Option<Future<Void>>;
   
 	public function new(w: Window) {
+	  super();
+	  
 	  this.bindTarget         = w;
 		this.executor           = ScheduledExecutor.inject();
 		this.fragmentsToSend    = newFragmentsList();

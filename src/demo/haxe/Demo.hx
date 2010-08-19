@@ -5,6 +5,7 @@ import js.Env;
 import js.io.IFrameIO;
 import js.dom.Elements;
 import js.dom.Quirks;
+import js.detect.BrowserSupport;
 import haxe.framework.Injector;
 import haxe.time.ScheduledExecutor;
 
@@ -28,7 +29,7 @@ class Demo {
     var iframeIO1: IFrameIO;
     var iframeIO2: IFrameIO;
 
-	  var d = Env.documentHtml;
+	  var d = Env.document;
 
 	  var body = d.getElementsByTagName('body')[0];
 
@@ -85,11 +86,37 @@ class Demo {
 	  };
   }
   
+  public static function browserSupportDemo() {
+    Env.document.createElement('div').withEffect(function(div) {
+      div.innerHTML += '<table>' +
+        '<tr><td>positionFixed:</td><td>' + BrowserSupport.positionFixed() + '</td></tr>' +
+        '<tr><td>boxModel:</td><td>' + BrowserSupport.boxModel() + '</td></tr>' +
+        '<tr><td>getAttributeStyle:</td><td>' + BrowserSupport.getAttributeStyle() + '</td></tr>' +
+        '<tr><td>opacity:</td><td>' + BrowserSupport.opacity() + '</td></tr>' +
+        '<tr><td>cssFloat:</td><td>' + BrowserSupport.cssFloat() + '</td></tr>' +
+        '<tr><td>checkboxValueDefaultsToOn:</td><td>' + BrowserSupport.checkboxValueDefaultsToOn() + '</td></tr>' +
+        '<tr><td>defaultSelectedHasSelectProperty:</td><td>' + BrowserSupport.defaultSelectedHasSelectProperty() + '</td></tr>' +
+        '<tr><td>offsetAddsBorderForTableAndCells:</td><td>' + BrowserSupport.offsetAddsBorderForTableAndCells() + '</td></tr>' +
+        '<tr><td>offsetDoesNotIncludeMarginInBodyOffset:</td><td>' + BrowserSupport.offsetDoesNotIncludeMarginInBodyOffset() + '</td></tr>' +
+        '<tr><td>offsetDoesNotAddBorder:</td><td>' + BrowserSupport.offsetDoesNotAddBorder() + '</td></tr>' +
+        '<tr><td>offsetSubtractsBorderForOverflowNotVisible:</td><td>' + BrowserSupport.offsetSubtractsBorderForOverflowNotVisible() + '</td></tr>' +
+        '<tr><td>spuriousTbodyInsertedBug:</td><td>' + BrowserSupport.spuriousTbodyInsertedBug() + '</td></tr>' +
+        '<tr><td>whitespaceDroppedWithInnerHTMLBug:</td><td>' + BrowserSupport.whitespaceDroppedWithInnerHTMLBug() + '</td></tr>' +
+        '<tr><td>linksDroppedWithInnerHTMLBug:</td><td>' + BrowserSupport.linksDroppedWithInnerHTMLBug() + '</td></tr>' +
+        '<tr><td>hrefIsNormalizedBug:</td><td>' + BrowserSupport.hrefIsNormalizedBug() + '</td></tr>' +
+        '</table>';
+        
+      Env.document.body.appendChild(div);
+    });
+  }
+  
 	public static function main() {
 	  Injector.enter(function(c) {
 	    c.bind(ScheduledExecutor, ScheduledExecutorSystem);
 	    
 	    iframeDemo();
+	    
+	    browserSupportDemo();
 	  });
 	}
 }

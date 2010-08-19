@@ -209,6 +209,6 @@ class UrlExtensions {
   }
 	
 	private static function extractField(url: Url, field): String {
-	  return url.toParsedUrl().map(function(parsed) return Reflect.field(parsed, field)).getOrElse('');
+	  return toParsedUrl(url).map(function(parsed) return Reflect.field(parsed, field)).getOrElseC('');
 	}
 }

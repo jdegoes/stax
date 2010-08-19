@@ -219,8 +219,7 @@ extern interface Attr implements Node {
     public var schemaTypeInfo   (default,null): TypeInfo;
     public var isID             (default,null): Bool;
 }
-//Tested
-extern interface Element implements Node {
+extern interface AbstractElement<E: Node> implements Node {
     public var schemaTypeInfo   (default,null): TypeInfo;
     public var tagName          (default, null): DOMString;
     public var scrollTop:       Int;  
@@ -245,7 +244,7 @@ extern interface Element implements Node {
     
     public function removeAttributeNode(oldAttr: Attr): Attr;
     
-    public function getElementsByTagName(name: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(name: DOMString): DomCollection<E>;
     
     public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
     
@@ -257,7 +256,7 @@ extern interface Element implements Node {
     
     public function setAttributeNodeNS(newAttr: Attr): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<E>;
     
     public function hasAttribute(name: DOMString): Bool;
     
@@ -272,6 +271,9 @@ extern interface Element implements Node {
     public function getClientRects(): DomCollection<ClientRect>;
     
     public function getBoundingClientRect(): ClientRect;
+}
+//Tested
+extern interface Element implements AbstractElement<Element> {
 }
 //Tested
 extern interface Text implements CharacterData {
@@ -374,7 +376,7 @@ extern interface DocumentFragment implements Node {
 }
 
 //Tested
-extern interface Document implements Node {
+extern interface AbstractDocument<E> implements Node {
     public var doctype                  (default, null): DocumentType;
     public var implementation           (default, null): DOMImplementation;
     public var documentElement          (default, null): Element;
@@ -397,7 +399,7 @@ extern interface Document implements Node {
     
     public var defaultView  (default, null): Window;    
     
-    public function createElement(tagName: DOMString): Element;
+    public function createElement(tagName: DOMString): E;
     
     public function createDocumentFragment(): DocumentFragment;
     
@@ -413,17 +415,17 @@ extern interface Document implements Node {
     
     public function createEntityReference(name: DOMString): EntityReference;
     
-    public function getElementsByTagName(tagname: DOMString): DomCollection<Node>;
+    public function getElementsByTagName(tagname: DOMString): DomCollection<E>;
     
     public function importNode(importedNode: Node, deep: Bool): Node;
     
-    public function createElementNS(namespaceURI: DOMString, qualifiedName: DOMString): Element;
+    public function createElementNS(namespaceURI: DOMString, qualifiedName: DOMString): E;
     
     public function createAttributeNS(nameSpaceURI: DOMString, qualifiedName: DOMString): Attr;
     
-    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<E>;
     
-    public function getElementById(elementId: DOMString): HTMLElement;
+    public function getElementById(elementId: DOMString): E;
     
     public function adoptNode(source: Node): Node;
     
@@ -431,7 +433,10 @@ extern interface Document implements Node {
     
     public function renameNode(n: Node, namespaceURI: DOMString, qualifiedName: DOMString): Node;
     
-    public function getOverrideStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
+    public function getOverrideStyle(elt: HTMLElement, pseudoElt: DOMString): CSSStyleDeclaration;
+}
+
+extern interface Document implements AbstractDocument<Element> {  
 }
 
 extern interface Storage {
@@ -592,7 +597,7 @@ interface Selection {
     public function stringifier(): DOMString;
 }
 
-extern interface HTMLDocument implements Document {
+extern interface HTMLDocument implements HTMLElement, implements AbstractDocument<HTMLElement> {
     public var title:       DOMString;
     public var referrer     (default, null): DOMString;
     public var domain       (default, null): DOMString;
@@ -605,7 +610,7 @@ extern interface HTMLDocument implements Document {
     public var anchors      (default, null): HTMLCollection;
     public var cookie:      DOMString;
     
-    public function getElementsByName(elementName: DOMString): DomCollection<Node>;
+    public function getElementsByName(elementName: DOMString): DomCollection<HTMLElement>;
     
     public var location (default, null): Location;
     public var lastModified (default, null): DOMString;
@@ -625,7 +630,7 @@ extern interface HTMLDocument implements Document {
     public function getter(name: DOMString): Dynamic;
     
     
-    public function getElementsByClassName(classNames: DOMString): DomCollection<Node>;
+    public function getElementsByClassName(classNames: DOMString): DomCollection<HTMLElement>;
     
     // dynamic markup insertion
     public var innerHTML      : DOMString;
@@ -639,7 +644,7 @@ extern interface HTMLDocument implements Document {
     public function writeln(text: DOMString): Void;
 
     // user interaction  
-    public var activeElement    (default, null): Element;
+    public var activeElement    (default, null): HTMLElement;
     public var designMode       :DOMString;
     public var commands         :HTMLCollection;
     
@@ -712,15 +717,13 @@ extern interface HTMLDocument implements Document {
     public var ontimeupdate: EventListener<Event>;
     public var onvolumechange: EventListener<Event>;
     public var onwaiting: EventListener<Event>;
-    
 }
 
 extern interface HTMLUnknownElement implements HTMLElement {
-    
 }
 
 //Tested
-extern interface HTMLElement implements Element {
+extern interface HTMLElement implements AbstractElement<HTMLElement> {
     public var id:              DOMString;
     public var title:           DOMString;
     public var lang:            DOMString;
@@ -749,9 +752,8 @@ extern interface HTMLElement implements Element {
     public var outerHTML: DOMString;
     
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
-        
     
-	public var offsetLeft       (default,null): Int;
+	  public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -769,7 +771,7 @@ extern interface HTMLElement implements Element {
     public var oncanplay: EventListener<Event>;
     public var oncanplaythrough: EventListener<Event>;
     public var onchange: EventListener<Event>;
-    public var onclick: EventListener<Event>;
+    public var onclick: EventListener<MouseEvent>;
     public var oncontextmenu: EventListener<Event>;
     public var ondblclick: EventListener<MouseEvent>;
     public var ondrag: EventListener<MouseEvent>;
@@ -1445,6 +1447,20 @@ extern interface Media {
 * <----------------- Events level 2 Port ------------------>
 *  *** Unable to Automate testing for all Events ***
 */
+// FIXME!!!!!!!!!
+typedef MessagePortArray = {}
+
+extern interface MessageEvent implements Event {
+  public var data           (default, null): Dynamic;
+  public var origin         (default, null): DOMString;
+  public var lastEventId    (default, null): DOMString;
+  public var source         (default, null): WindowProxy;
+  public var ports          (default, null): MessagePortArray;
+  
+  public function initMessageEvent(typeArg: DOMString, canBubbleArg: Bool, cancelableArg: Bool, dataArg: Dynamic, originArg: DOMString, lastEventIdArg: DOMString, sourceArg: WindowProxy, portsArg: MessagePortArray): Void;
+  
+  public function initMessageEventNS(namespaceURI: DOMString, typeArg: DOMString, canBubbleArg: Bool, cancelableArg: Bool, dataArg: Dynamic, originArg: DOMString, lastEventIdArg: DOMString, sourceArg: WindowProxy, portsArg: MessagePortArray): Void;
+}
 
 extern interface StorageEvent implements Event {
     public var key          (default, null): DOMString;
@@ -2101,7 +2117,7 @@ extern interface CSSCharsetRule implements CSSRule {
 extern interface CSSUnknownRule implements CSSRule {
 }
 //UnableToTest
-extern interface CSS2Properties ArrayAccess<DOMString> {
+extern interface CSS2Properties {
     public var azimuth:              DOMString;
     public var background:           DOMString;
     public var backgroundAttachment: DOMString;
@@ -2175,6 +2191,7 @@ extern interface CSS2Properties ArrayAccess<DOMString> {
     public var maxWidth:             DOMString;
     public var minHeight:            DOMString;
     public var minWidth:             DOMString;
+    public var opacity:              DOMString;
     public var orphans:              DOMString;
     public var outline:              DOMString;
     public var outlineColor:         DOMString;
@@ -2306,7 +2323,7 @@ extern interface CSSStyleSheet implements StyleSheet {
 }
 //Unable to Test
 extern interface ViewCSS implements AbstractView {
-    public function getComputedStyle(elt: Element, pseudoElt: DOMString): CSSStyleDeclaration;
+    public function getComputedStyle(elt: HTMLElement, pseudoElt: DOMString): CSSStyleDeclaration;
 }
 //Unable to Test
 extern interface DOMImplementationCSS implements DOMImplementation {
@@ -2553,9 +2570,9 @@ extern interface Window implements ArrayAccess<WindowProxy>, implements EventTar
     
     public function btoa(unencodedString: DOMString): DOMString;
     
-    public var getComputedStyle (default, null): Element -> DOMString -> CSSStyleDeclaration;
+    public function getComputedStyle(e: HTMLElement, s: DOMString): CSSStyleDeclaration;
     
-    public var postMessage (default, null): DOMString -> DOMString -> Void;
+    public function postMessage(s1: DOMString, s2: DOMString): Void;
     
     public function getSelection(): Selection;
     

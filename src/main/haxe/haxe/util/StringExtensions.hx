@@ -53,7 +53,7 @@ class StringExtensions {
 	}
 	
 	public static function toCamelCase(str: String): String {
-	  return DashAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
+	  return SepAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
 	}
 	
 	public static function fromCamelCase(str: String, sep: String): String {
