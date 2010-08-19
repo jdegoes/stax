@@ -23,7 +23,8 @@ import haxe.io.http.Http;
 
 using PreludeExtensions;
 
-class HttpJValueTransformer<S, T> implements Http<T> {
+// Transforms an Http<S> into an Http<T> given encoder/decoder functions.
+class HttpTransformer<S, T> implements Http<T> {
   var http: Http<S>;
   var encoder: T -> S;
   var decoder: S -> T;

@@ -44,7 +44,7 @@ interface HttpJValue implements Http<JValue> {
 
 #if js
 
-class HttpJValueAsync extends HttpJValueTransformer<String, JValue>, implements HttpJValue {
+class HttpJValueAsync extends HttpTransformer<String, JValue>, implements HttpJValue {
   public function new() {
     super(new HttpStringAsync(), Json.encode, Json.decode);
   }
