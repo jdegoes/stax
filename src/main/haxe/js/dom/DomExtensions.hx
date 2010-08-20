@@ -1,4 +1,4 @@
-package js;
+package js.dom;
 
 import Dom;
 

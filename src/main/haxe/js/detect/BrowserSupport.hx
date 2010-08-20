@@ -21,7 +21,7 @@ import js.Env;
 import js.dom.Quirks;
 
 using PreludeExtensions;
-using js.DomExtensions;
+using js.dom.DomExtensions;
 using haxe.util.ObjectExtensions;
 
 /** Feature detection library */
