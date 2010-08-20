@@ -45,6 +45,10 @@ class Refinements {
 	  return styleOption(e).get();
 	}
 	
+	public static inline function asText(e: HTMLElement): HTMLTextElement {
+	  return textOption(e).get();
+	}
+	
 	
 	// ************************
 	public static inline function iframeOption(e: HTMLElement): Option<HTMLIFrameElement> {
@@ -69,5 +73,9 @@ class Refinements {
 	
 	public static inline function styleOption(e: HTMLElement): Option<HTMLStyleElement> {
 	  return if (e.nodeName == 'STYLE') Some(cast e); else None;
+	}
+	
+	public static inline function textOption(e: HTMLElement): Option<HTMLTextElement> {
+	  return if (e.nodeName == 'TEXT') Some(cast e); else None;
 	}
 }
