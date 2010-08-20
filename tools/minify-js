@@ -10,13 +10,13 @@ sub d {print STDERR ++$count, ': ', join(' ', @_) || '<empty>', "\n";
 sub j {join "\n", @_}
 sub h {map {$_ => 1} @_}
 
-sub fix(&@) {my ($f, @xs) = @_; &$f(@xs) == @xs ? @xs : fix($f, &$f(@xs))}
-sub uniq    {my %h; grep ! $h{$_}++, @_}
+sub fix  {my ($f, @xs) = @_; &$f(@xs) == @xs ? @xs : fix($f, &$f(@xs))}
+sub uniq {my %h; grep ! $h{$_}++, @_}
 
 sub statics_in {map /[\w\$\.]+/go, @_}
 sub methods_in {map /(\.[\w\$]+)/go, @_}
 sub classes_in {map /new\h+([\w\.\$]+)/go, @_}
-sub roots      {fix {uniq map /(([\w\$\.]+)(?:\.[\w\$]+))/go, @_} @_}
+sub roots      {fix sub {uniq map /(([\w\$\.]+)(?:\.[\w\$]+))/go, @_}, @_}
 
 my @pieces = split /^([\$\w\.\[\]"]+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+$|\V*$))/mo, join '', <STDIN>;
 
@@ -28,13 +28,8 @@ my @non_defs    = map $pieces[$_ * 3], 0 .. $#pieces / 3;
 my @instance    = grep   /\.prototype\./o, keys %definitions;
 my @static      = grep ! /\.prototype\./o, keys %definitions;
 
-my @live_set    = (undef);
-my @copy        = ();
-
-until (@live_set == @copy) {
-  @copy = @live_set;
-
-  my @code    = @non_defs, @definitions{@live_set};
+my $cover = sub {
+  my @code    = @non_defs, @definitions{@_};
   my @methods = grep s/^\./\\./, uniq methods_in @code;
   my @statics =                  uniq statics_in @code;
   my @classes =                  uniq classes_in @code;
@@ -42,11 +37,10 @@ until (@live_set == @copy) {
   # Grab all instance methods that might be mentioned here.
   my @resolved_methods = uniq map {my $r = $_; grep(/$r$/, @instance)} @methods;
 
-  @live_set = uniq roots @includes, @live_set, @statics, @classes, @resolved_methods;
-}
+  uniq roots @includes, @_, @statics, @classes, @resolved_methods;
+};
 
-my %live_set = h @live_set;
-
+my %live_set = h fix $cover;
 print join '', map @pieces[$_ * 3, $live_set{$pieces[$_ * 3 + 1]} ? ($_ * 3 + 1, $_ * 3 + 2) : ()], 0 .. $#pieces / 3;
 
 __END__
