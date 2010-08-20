@@ -32,6 +32,7 @@ import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
+import haxe.util.ObjectExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 
 import haxe.time.ScheduledExecutor;
@@ -70,6 +71,7 @@ class StaxTestSuite {
           , new IFrameIOTestCase()      
           , new HttpJValueJsonpTestCase()
           , new RefinementsTestCase()
+          , new ObjectExtensionsTestCase()
           #end
         ]);
 
