@@ -44,10 +44,17 @@ class Refinements {
 	public static inline function asStyle(e: HTMLElement): HTMLStyleElement {
 	  return styleOption(e).get();
 	}
-	
+
 	public static inline function asText(e: HTMLElement): HTMLTextElement {
 	  return textOption(e).get();
 	}
+	
+	public static inline function asVideo(e: HTMLElement): HTMLVideoElement {
+	  return videoOption(e).get();
+	}
+	
+	
+	
 	
 	
 	// ************************
@@ -74,8 +81,18 @@ class Refinements {
 	public static inline function styleOption(e: HTMLElement): Option<HTMLStyleElement> {
 	  return if (e.nodeName == 'STYLE') Some(cast e); else None;
 	}
-	
+
 	public static inline function textOption(e: HTMLElement): Option<HTMLTextElement> {
 	  return if (e.nodeName == 'TEXT') Some(cast e); else None;
 	}
+
+	
+	public static inline function videoOption(e: HTMLElement): Option<HTMLVideoElement> {
+	  return if (e.nodeName == 'VIDEO') Some(cast e); else None;
+	}
+	
+	
+	
+	
+	
 }
