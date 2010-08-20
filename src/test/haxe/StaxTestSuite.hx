@@ -41,7 +41,7 @@ import haxe.framework.Injector;
 #if js
 import haxe.io.http.HttpStringTestCase;
 
-import js.dom.RefinementsTester;
+import js.dom.RefinementsTestCase;
 import js.io.IFrameIOTestCase;
 import haxe.io.http.HttpJValueJsonpTestCase;
 #end
