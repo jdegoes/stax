@@ -3180,7 +3180,8 @@ typedef HTMLUnknownElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 
 //Tested
 typedef HTMLElement = {
@@ -3865,7 +3866,8 @@ typedef HTMLHtmlElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLHeadElement = {
     public var profile:     DOMString;
@@ -4087,7 +4089,8 @@ typedef HTMLHeadElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLLinkElement = {
     public var disabled (default, null):        Bool;
@@ -4316,7 +4319,8 @@ typedef HTMLLinkElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTitleElement = {
     public var text:            DOMString;
@@ -4538,8 +4542,10 @@ typedef HTMLTitleElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
+
 typedef HTMLMetaElement = {
     public var content:         DOMString;
     public var httpEquiv:       DOMString;
@@ -4763,7 +4769,8 @@ typedef HTMLMetaElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLBaseElement = {
     public var href:            DOMString;
@@ -4986,7 +4993,8 @@ typedef HTMLBaseElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Unable to Test
 typedef HTMLIsIndexElement = {
     public var form             (default, null): HTMLFormElement;
@@ -5209,7 +5217,8 @@ typedef HTMLIsIndexElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLStyleElement = {
     public var disabled:        Bool;
@@ -5433,7 +5442,8 @@ typedef HTMLStyleElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLBodyElement = {
     public var aLink:           DOMString;
@@ -5660,7 +5670,8 @@ typedef HTMLBodyElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 
 
 
@@ -5896,7 +5907,8 @@ typedef HTMLFormElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Unable to Test
 typedef HTMLSelectElement = {
     public var type             (default, null): DOMString;
@@ -6131,7 +6143,8 @@ typedef HTMLSelectElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLCanvasElement = {
     public var width:                      Int;
@@ -6358,7 +6371,8 @@ typedef HTMLCanvasElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef CanvasRenderingContext2D = {
 
@@ -6673,7 +6687,8 @@ typedef HTMLOptGroupElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLOptionElement = {
     public var form             (default, null): HTMLFormElement;
@@ -6901,7 +6916,8 @@ typedef HTMLOptionElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLInputElement = {
     public var defaultValue:    DOMString;
@@ -7139,7 +7155,8 @@ typedef HTMLInputElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTextAreaElement = {
     public var defaultValue:    DOMString;
@@ -7371,7 +7388,9 @@ typedef HTMLTextAreaElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
+
 //Tested
 typedef HTMLButtonElement = {
     public var form             (default, null): HTMLFormElement;
@@ -7597,7 +7616,9 @@ typedef HTMLButtonElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
+
 //Tested
 typedef HTMLLabelElement = {
     public var form             (default, null): HTMLFormElement;
@@ -7820,7 +7841,9 @@ typedef HTMLLabelElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
+
 //Tested
 typedef HTMLFieldSetElement = {
     public var form             (default, null): HTMLFormElement;
@@ -8042,7 +8065,8 @@ typedef HTMLFieldSetElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLLegendElement = {
     public var form             (default, null): HTMLFormElement;
@@ -8265,7 +8289,8 @@ typedef HTMLLegendElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLUListElement = {
     public var compact:         Bool;
@@ -8488,7 +8513,8 @@ typedef HTMLUListElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLOListElement = {
     public var compact:         Bool;
@@ -8712,7 +8738,8 @@ typedef HTMLOListElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLDListElement = {
     public var compact:         Bool;
@@ -8934,7 +8961,8 @@ typedef HTMLDListElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLDirectoryElement = {
     public var compact:         Bool;
@@ -9156,7 +9184,8 @@ typedef HTMLDirectoryElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLMenuElement = {
     public var compact:         Bool;
@@ -9378,11 +9407,230 @@ typedef HTMLMenuElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLLIElement = {
     public var type:            DOMString;
     public var value:           Int;
+    
+    //  HTMLElement
+    public var id:              DOMString;
+    public var title:           DOMString;
+    public var lang:            DOMString;
+    public var dir:             DOMString;
+    public var className:       DOMString;
+    public var innerHTML:       DOMString;
+    public var style:           CSSInlineStyleDeclaration;
+    public var hidden:          Bool;
+    
+    public var accessKey            (default, null): DOMString;
+    public var accessKeyLabel       (default, null): DOMString;
+    public var draggable            (default, null): Bool;
+    public var contentEditable      (default, null): DOMString;
+    public var isContentEditable    (default, null): Bool;
+    public var contextMenu          (default, null): HTMLMenuElement;
+    public var spellcheck           (default, null): DOMString;
+    
+    //command API
+    public var commandType      (default, null): DOMString;
+    public var label            (default, null): DOMString;
+    public var icon             (default, null): DOMString;
+    public var disabled         (default, null): Bool;
+    public var checked          (default, null): Bool;
+    
+    // dynamic markup insertion
+    public var outerHTML: DOMString;
+    
+    public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
+        
+    
+	  public var offsetLeft       (default,null): Int;
+    public var offsetTop        (default,null): Int;
+    public var offsetWidth      (default,null): Int;
+    public var offsetHeight     (default,null): Int;
+    
+    public function scrollIntoView(?top: Bool): Void;
+    
+    public function focus(): Void;
+    
+    public function click(): Void;
+    
+    public function blur():  Void;
+    
+    public var onabort: EventListener<Event>;
+    public var onblur: EventListener<Event>;
+    public var oncanplay: EventListener<Event>;
+    public var oncanplaythrough: EventListener<Event>;
+    public var onchange: EventListener<Event>;
+    public var onclick: EventListener<Event>;
+    public var oncontextmenu: EventListener<Event>;
+    public var ondblclick: EventListener<MouseEvent>;
+    public var ondrag: EventListener<MouseEvent>;
+    public var ondragend: EventListener<MouseEvent>;
+    public var ondragenter: EventListener<MouseEvent>;
+    public var ondragleave: EventListener<MouseEvent>;
+    public var ondragover: EventListener<MouseEvent>;
+    public var ondragstart: EventListener<MouseEvent>;
+    public var ondrop: EventListener<MouseEvent>;
+    public var ondurationchange: EventListener<Event>;
+    public var onemptied: EventListener<Event>;
+    public var onended: EventListener<Event>;
+    public var onerror: EventListener<Event>;
+    public var onfocus: EventListener<Event>;
+    public var onformchange: EventListener<Event>;
+    public var onforminput: EventListener<Event>;
+    public var oninput: EventListener<Event>;
+    public var oninvalid: EventListener<Event>;
+    public var onkeydown: EventListener<KeyboardEvent>;
+    public var onkeypress: EventListener<KeyboardEvent>;
+    public var onkeyup: EventListener<KeyboardEvent>;
+    public var onload: EventListener<Event>;
+    public var onloadeddata: EventListener<Event>;
+    public var onloadedmetadata: EventListener<Event>;
+    public var onloadstart: EventListener<Event>;
+    public var onmousedown: EventListener<MouseEvent>;
+    public var onmousemove: EventListener<MouseEvent>;
+    public var onmouseout: EventListener<MouseEvent>;
+    public var onmouseover: EventListener<MouseEvent>;
+    public var onmouseup: EventListener<MouseEvent>;
+    public var onmousewheel: EventListener<MouseEvent>;
+    public var onpause: EventListener<Event>;
+    public var onplay: EventListener<Event>;
+    public var onplaying: EventListener<Event>;
+    public var onprogress: EventListener<Event>;
+    public var onratechange: EventListener<Event>;
+    public var onreadystatechange: EventListener<Event>;
+    public var onscroll: EventListener<MouseEvent>;
+    public var onseeked: EventListener<Event>;
+    public var onseeking: EventListener<Event>;
+    public var onselect: EventListener<Event>;
+    public var onshow: EventListener<Event>;
+    public var onstalled: EventListener<Event>;
+    public var onsubmit: EventListener<Event>;
+    public var onsuspend: EventListener<Event>;
+    public var ontimeupdate: EventListener<Event>;
+    public var onvolumechange: EventListener<Event>;
+    public var onwaiting: EventListener<Event>;
+    
+    //Element
+    
+    public var schemaTypeInfo   (default,null): TypeInfo;
+    public var tagName          (default, null): DOMString;
+    public var scrollTop:       Int;  
+    public var scrollLeft:      Int; 
+    public var scrollWidth      (default, null): Int;
+    public var scrollHeight     (default, null): Int;
+    public var clientTop        (default, null): Int;
+    public var clientLeft       (default, null): Int;
+    public var clientWidth      (default, null): Int;
+    public var clientHeight     (default, null): Int;
+    public var offsetParent     (default, null): HTMLElement;
+    
+    public function getAttribute(name: DOMString): DOMString;
+    
+    public function setAttribute(name: DOMString, value: DOMString): Void;
+    
+    public function removeAttribute(name: DOMString): Void;
+    
+    public function getAttributeNode(name: DOMString): Attr;
+    
+    public function setAttributeNode(newAttr: Attr): Attr;
+    
+    public function removeAttributeNode(oldAttr: Attr): Attr;
+    
+    public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
+    
+    public function getAttributeNS(namespaceURI: DOMString, localName: DOMString): DOMString;
+    
+    public function setAttributeNS(namespaceURI: DOMString, qualifiedName: DOMString, value: DOMString): Void;
+    
+    public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
+    
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    
+    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    
+    public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
+    
+    public function hasAttribute(name: DOMString): Bool;
+    
+    public function hasAttributeNS(namespaceURI: DOMString, localname: DOMString): Bool;
+    
+    public function setIdAttribute(name: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
+    
+    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    
+    public function getClientRects(): DomCollection<ClientRect>;
+    
+    public function getBoundingClientRect(): ClientRect;
+    
+    //Node
+    
+    public var nodeName         (default,null): DOMString;
+    public var nodeValue:       DOMString;  // raises(DOMException) on setting & raises(DOMException) on retrieval
+    public var nodeType         (default,null): Int;
+    public var parentNode       (default,null): HTMLElement;
+    public var childNodes       (default,null): DomCollection<HTMLElement>;
+    public var firstChild       (default,null): HTMLElement;
+    public var lastChild        (default,null): HTMLElement;
+    public var previousSibling  (default,null): HTMLElement;
+    public var nextSibling      (default,null): HTMLElement;
+    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var ownerDocument    (default,null): Document;
+    
+    public function hasChildNodes(): Bool;
+    
+    public function insertBefore(newChild: HTMLElement, refChild: HTMLElement): HTMLElement;
+    
+    public function replaceChild(newChild: HTMLElement, oldChild: HTMLElement): HTMLElement;
+    
+    public function removeChild(oldChild: HTMLElement): HTMLElement;
+    
+    public function appendChild(newChild: HTMLElement): HTMLElement;
+    
+    public function cloneNode(deep: Bool): HTMLElement;
+    
+    public function isSupported(feature: DOMString, version: DOMString): Bool;
+    
+    public function hasAttributes(): Bool;
+    
+    public function addEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function removeEventListener(type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+
+    public function dispatchEvent(evt: Event): Bool;
+    
+    public function addEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public function removeEventListenerNS(namespaceURI: DOMString, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void;
+    
+    public var namespaceURI     (default,null): DOMString;
+    public var prefix           (default,null): DOMString;                      
+    public var localName        (default,null): DOMString;
+    public var baseURI          (default,null): DOMString;
+    public var textContent:     DOMString;
+    
+    
+    public function compareDocumentPosition(other: HTMLElement): Int;
+    
+    public function isSameNode(other: HTMLElement): Bool;
+    
+    public function lookupPrefix(namespaceURI: DOMString): DOMString;
+    
+    public function isDefaultNamespace(namespaceURI: DOMString): Bool;
+    
+    public function lookupNamespaceUrI(prefix: DOMString): DOMString;
+    
+    public function isEqualNode(arg: HTMLElement): Bool;
+    
+    public function getFeature(feature: DOMString, version: DOMString): DOMObject;
+    
+    public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
+    
+    public function getUserData(key: DOMString): DOMUserData;
 }
 //Tested
 typedef HTMLDivElement = {
@@ -9604,7 +9852,8 @@ typedef HTMLDivElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLParagraphElement = {
     public var align:           DOMString;
@@ -9825,7 +10074,8 @@ typedef HTMLParagraphElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLHeadingElement = {
     public var align:           DOMString;
@@ -10046,7 +10296,8 @@ typedef HTMLHeadingElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLQuoteElement = {
     public var cite:            DOMString;
@@ -10267,7 +10518,8 @@ typedef HTMLQuoteElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLPreElement = {
     public var width:           Int;
@@ -10488,7 +10740,8 @@ typedef HTMLPreElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLBRElement = {
     public var clear:           DOMString;
@@ -10709,7 +10962,8 @@ typedef HTMLBRElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested -- only supported by Internet Explorer
 typedef HTMLBaseFontElement = {
     public var color:           DOMString;
@@ -10932,7 +11186,8 @@ typedef HTMLBaseFontElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLFontElement = {
     public var color:           DOMString;
@@ -11155,7 +11410,8 @@ typedef HTMLFontElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLHRElement = {
     public var align:           DOMString;
@@ -11379,7 +11635,8 @@ typedef HTMLHRElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLModElement = {
     public var cite:            DOMString;
@@ -11601,7 +11858,8 @@ typedef HTMLModElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLAnchorElement = {
     public var accessKey (default, null):       DOMString;
@@ -11833,7 +12091,8 @@ typedef HTMLAnchorElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLImageElement = {
     public var name:            DOMString;
@@ -12065,7 +12324,8 @@ typedef HTMLImageElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLObjectElement = {
     public var form             (default, null): HTMLFormElement;
@@ -12305,7 +12565,8 @@ typedef HTMLObjectElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLParamElement = {
     public var name:            DOMString;
@@ -12529,7 +12790,8 @@ typedef HTMLParamElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLAppletElement = {
     public var align:           DOMString;
@@ -12760,7 +13022,8 @@ typedef HTMLAppletElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLMapElement = {
     public var areas            (default, null): HTMLCollection<HTMLAreaElement>;
@@ -12983,7 +13246,8 @@ typedef HTMLMapElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLAreaElement = {
     public var accessKey (default, null):       DOMString;
@@ -13211,7 +13475,8 @@ typedef HTMLAreaElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLScriptElement = {
     public var text:            DOMString;
@@ -13438,7 +13703,8 @@ typedef HTMLScriptElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableElement = {
     public var caption:         HTMLTableCaptionElement;
@@ -13689,7 +13955,8 @@ typedef HTMLTableElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableCaptionElement = {
     public var align:           DOMString;
@@ -13910,7 +14177,8 @@ typedef HTMLTableCaptionElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableColElement = {
     public var align:           DOMString;
@@ -14136,7 +14404,8 @@ typedef HTMLTableColElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableSectionElement = {
     public var align:           DOMString;
@@ -14366,7 +14635,8 @@ typedef HTMLTableSectionElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableRowElement = {
     public var rowIndex         (default, null): Int;
@@ -14599,7 +14869,8 @@ typedef HTMLTableRowElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLTableCellElement = {
     public var cellIndex        (default, null): Int;
@@ -14835,7 +15106,8 @@ typedef HTMLTableCellElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Unable to Test
 typedef HTMLFrameSetElement = {
     public var cols:            DOMString;
@@ -15057,7 +15329,8 @@ typedef HTMLFrameSetElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Unable to Test
 typedef HTMLFrameElement = {
     public var frameBorder:     DOMString;
@@ -15288,7 +15561,8 @@ typedef HTMLFrameElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Tested
 typedef HTMLIFrameElement = {
     public var align:           DOMString;
@@ -15521,7 +15795,8 @@ typedef HTMLIFrameElement = {
     
     public function setUserData(key: DOMString, data: DOMUserData, handler: UserDataHandler): DOMUserData;
     
-    public function getUserData(key: DOMString): DOMUserData;}
+    public function getUserData(key: DOMString): DOMUserData;
+}
 //Unable to Test
 typedef ClientRect = {
     public var top              (default, null): Float;
