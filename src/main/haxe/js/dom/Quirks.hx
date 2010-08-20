@@ -174,6 +174,44 @@ class Quirks {
 		});
 	}
 	
+	/** Retrieves the scroll of the page, in pixels. */
+	public static function getPageScroll(): { left: Int, top: Int } {
+    var xScroll: Int = 0;
+    var yScroll: Int = 0;
+    
+    if (untyped Env.window.pageYOffset != null) {
+      yScroll = untyped Env.window.pageYOffset;
+      xScroll = untyped Env.window.pageXOffset;
+    }
+    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.scrollTop != null) {
+      yScroll = untyped Env.document.documentElement.scrollTop;
+      xScroll = untyped Env.document.documentElement.scrollLeft;
+    }
+    else if (Env.document.body != null) {
+      yScroll = untyped Env.document.body.scrollTop;
+      xScroll = untyped Env.document.body.scrollLeft;
+    }
+    
+    return { left: xScroll, top: yScroll };
+  }
+
+  /** Retrieves the height of the page, in pixels. */
+  public static function getPageHeight(): Int {
+    var windowHeight: Int = 0;
+    
+    if (untyped Env.window.innerHeight != null) {
+      windowHeight = untyped Env.window.innerHeight;
+    }
+    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientHeight != null) {
+      windowHeight = untyped Env.document.documentElement.clientHeight;
+    }
+    else if (Env.document.body != null) {
+      windowHeight = untyped Env.document.body.clientHeight;
+    }
+    
+    return windowHeight;
+  }
+	
 	/** Retrieves the offset of the document's body, relative to the window origin.
 	 */
 	public static function getBodyOffset(doc: HTMLDocument): Option<{ top: Int, left: Int }> {
