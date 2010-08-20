@@ -18,10 +18,10 @@ package haxe.util;
 import Prelude;
 
 import haxe.test.TestCase;
-
-using haxe.util.ObjectExtensions;
+import haxe.util.ObjectExtensions;
 
 using PreludeExtensions;
+using haxe.util.ObjectExtensions;
 
 class ObjectExtensionsTestCase extends TestCase {
 	public function new() {
@@ -29,10 +29,15 @@ class ObjectExtensionsTestCase extends TestCase {
 	}
 	
 	public function tesGet() {
-	  assertEquals("bar", { foo: "bar" }.get("foo"));
+	  var o: Dynamic = { foo: "bar" };
+	  var option: Option<String> = o.getAny("foo");
+	  
+	  assertEquals("bar", option.get());
 	}
 	
 	public function tesSet() {
-	  assertEquals("baz", { foo: "bar" }.set("foo", "baz").get("foo"));
+	  var o: Dynamic = { foo: "bar" };
+	  
+	  assertEquals("baz", o.setAny("foo", "baz").getAny("foo").get());
 	}
 }

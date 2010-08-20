@@ -25,9 +25,9 @@ class ObjectExtensions {
 	}
 	
 	public static function copyTo(src: Dynamic, dest: Dynamic, shallow: Bool = true): Dynamic {
-	  var safecopy = function(d: Dynamic) {
+	  var safecopy = function(d: Dynamic): Dynamic {
 	    return switch (Type.typeof(d)) {
-	      case TObject: copy(d);
+	      case TObject: copy(d, shallow);
 	      
 	      default: d;
 	    }
