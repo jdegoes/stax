@@ -113,8 +113,10 @@ class Future<T> {
   
   /** Creates a "dead" future that is canceled and will never be delivered.
    */
-  public static function dead<T>() {
-    return new Future().cancel();
+  public static function dead<T>(): Future<T> {
+    return new Future().withEffect(function(future) {
+      future.cancel();
+    });
   }
   
   /** Delivers the value of the future to anyone awaiting it. If the value has
