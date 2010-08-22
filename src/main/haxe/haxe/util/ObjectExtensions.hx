@@ -74,6 +74,12 @@ class ObjectExtensions {
 	  return d;
 	}
 	
+	public static function setAllAny(d: Dynamic, fields: Iterable<Tuple2<String, Dynamic>>): Dynamic {
+	  setAll(d, fields);
+	  
+	  return d;
+	}
+	
 	public static function get<T>(d: Dynamic<T>, k: String): Option<T> {
 	  return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
 	}
