@@ -243,7 +243,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function normalizeOpt(url: Url): Option<Url> {
-    return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().toUrl());
+    return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().withoutSearch().toUrl());
   }
   
   private static function normalize(url: Url): Url {
