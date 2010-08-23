@@ -2,43 +2,44 @@
 
 $|++;
 
-my @includes = grep s/^--include=//, @ARGV;
+my @includes = '$Main.init', grep s/^--include=//, @ARGV;
 
 sub d {print STDERR ++$count, ': ', join(' ', @_) || '<empty>', "\n";
        wantarray ? @_ : $_[0]}
 
 sub j {join "\n", @_}
 sub h {map {$_ => 1} @_}
-sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $xs[$_] ne $ys[$_], 0 .. $#$xs}
+sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $$xs[$_] ne $$ys[$_], 0 .. $#$xs}
 
 sub fix  {my ($f, @xs) = @_; my @ys = sort &$f(sort @xs); e(\@xs, \@ys) ? @xs : fix($f, @ys)}
 sub uniq {my %h; grep ! $h{$_}++, @_}
 
-sub statics_in {map /[\.\w\$]+/go, @_}
-sub methods_in {map /\.[\w\$]+/go, @_}
-sub classes_in {map /new\h+([\w\.\$]+)/go, @_}
-sub roots      {fix sub {uniq @_, map /(([\.\w\$]+)(?:\.[\w\$]+))/go, @_}, @_}
+sub statics_in {map(/[\.\w\$\[\]'"]+/go, @_), grep s/\$closure\(([\.\w\$\[\]'"]+),\s*"(\w+)"\)/$1.$2/go, @_}
+sub methods_in {map /\.[\w\$]+|\[["'][^"']+["']\]/go, @_}
+sub classes_in {map /new\h+([\w\.\$\[\]"']+)/go, @_}
+sub roots      {fix sub {uniq @_, map /(([\.\w\$\[\]"']+)(?:\.[\w\$]+|\[["'][^"']+["']\]))/go, @_}, @_}
 
-my @pieces = split /^([\$\w\.\[\]"]+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+$|\V*$))/mo, join '', <STDIN>;
+my @pieces = split /^([\$\w\.\[\]"']+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?$|\V*$))/mo, join '', <STDIN>;
+
+# For my own sanity: Add error backtraces to thrown errors. Nobody in their right mind throws bare strings.
+s/throw\s+(".*;?$)/throw new Error(\1)/g for @pieces;
 
 # At this point, @pieces looks like this:
 # '', 'foo.bar', ' = function () {\n...\n}', 'global = null', 'bif.baz', ' = function (x) {\n...\n}', ...
 my %definitions = map @pieces[$_ * 3 + 1, $_ * 3 + 2], 0 .. $#pieces / 3;
 my @non_defs    = map $pieces[$_ * 3], 0 .. $#pieces / 3;
 
-my @instance    = grep   /\.prototype\./o, keys %definitions;
-my @static      = grep ! /\.prototype\./o, keys %definitions;
+my @instance    = grep   /\.prototype\W/o, keys %definitions;
+my @static      = grep ! /\.prototype\W/o, keys %definitions;
+
+my $extras = sub {my ($base, @xs) = @_; map $definitions{"$base.$_"} ? ($base, "$base.$_") : ($base), @xs};
 
 my $cover = sub {
-  d @_;
-  my @code    = @_, @definitions{@_};
-  my @statics = uniq statics_in(@code), classes_in(@code);
+  my @code    = (@_, @definitions{@_});
+  my @statics = uniq map(&$extras($_, qw/__name__ __interfaces__/), statics_in(@code), classes_in(@code));
 
-  d grep /js\.Boot/, uniq roots statics_in @code;
-
-  # Grab all instance methods that might be mentioned here. The s/^\./\\./ stuff is used to convert leading dots to valid regular expressions. A dot in this case must really match a dot, not
-  # any character (which is what an unescaped dot would mean inside a regexp).
-  my @resolved_methods = uniq map {my $r = $_; grep(/$r$/, @instance)} grep s/^\./\\./, uniq methods_in @code;
+  # Grab all instance methods that might be mentioned here.
+  my @resolved_methods = uniq map {my $r = $_; grep(index($_, $r) == length($_) - length($r), @instance)} uniq methods_in @code;
 
   uniq roots @statics, @resolved_methods;
 };
