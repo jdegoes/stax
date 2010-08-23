@@ -775,6 +775,12 @@ class OptionExtensions {
       case Some(v): Some(f(v));
     }
   }
+  public static function foreach<T>(o: Option<T>, f: T -> Void): Void {
+    return switch (o) {
+      case None: 
+      case Some(v): f(v);
+    }
+  }
   
   public static function filter<T>(o: Option<T>, f: T -> Bool): Option<T> {
     return switch (o) {

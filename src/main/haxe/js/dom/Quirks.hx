@@ -21,6 +21,7 @@ import Dom;
 import js.Env;
 import js.detect.BrowserSupport;
 import haxe.functional.Predicate;
+import haxe.data.collections.Map;
 
 using PreludeExtensions;
 using haxe.util.StringExtensions;
@@ -39,6 +40,13 @@ class Quirks {
   static var UpperCasePattern   = ~/([A-Z])/g;
   static var NumberPixelPattern = ~/^-?\d+(?:px)?$/i;
   static var NumberPattern      = ~/^-?\d/;
+
+  static var cssWidth = [ "left", "right" ];
+  static var cssHeight = [ "top", "bottom" ];
+  static var cssShow = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT()).set('position', 'absolute').set('visibility', 'hidden').set('display', 'block');
+  static var border = "border";
+  static var margin = "margin";
+
   	
 	public static function createXMLHttpRequest(): XMLHttpRequest {
       return untyped if (window.XMLHttpRequest) {
@@ -229,7 +237,92 @@ class Quirks {
   		return { top: top, left: left };
 	  });
 	}
-  
+  /**
+  * 	Set the current coordinates of the element, relative to the document.
+  */
+  public static function setOffset(elem: HTMLElement, offset: { top: Int, left: Int }): HTMLElement{
+    if (elem == null || elem.ownerDocument == null) return elem;
+    else{
+      var position = getComputedCssProperty( elem, 'position' );
+      position.foreach(function(v){
+        if ( v == 'static' ) elem.style.position = 'relative';
+      });
+
+      var curOffset = getOffset(elem).getOrElseC({ top: 0, left: 0});
+			var curTop    = getComputedCssProperty( elem, 'top' ).map(function(s) return s.toInt(0)).getOrElseC(0);
+			var curLeft   = getComputedCssProperty( elem, 'left').map(function(s) return s.toInt(0)).getOrElseC(0);
+
+      elem.style.top  = ((offset.top  - curOffset.top)  + curTop).toString() + "px";
+      elem.style.left = ((offset.left - curOffset.left) + curLeft).toString() + "px";
+
+      return elem;
+    }
+  }
+
+  public static function setWidth(elem: HTMLElement, width: Int): HTMLElement{
+    return setStyle(elem, "width", width.toString() + "px");
+  }
+  public static function setHeight(elem: HTMLElement, hight: Int): HTMLElement{
+    return setStyle(elem, "height", hight.toString() + "px");
+  }
+
+  public static function setStyle(elem: HTMLElement, name: String, value: String): HTMLElement{
+    if (elem == null || elem.ownerDocument == null) return elem;
+    else{
+      untyped elem.style[ name ] = value;
+      return elem;
+    }
+  }
+
+  public static function getHeight(elem: HTMLElement): Option<Int>{
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, None);
+  }
+
+  public static function getWidth(elem: HTMLElement): Option<Int>{
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, None);
+  }
+
+  private static function getWidthOrHeight(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: Option<String>): Option<Int>{
+    if (elem == null || elem.ownerDocument == null) return None;
+    else{
+      var val = 0;
+      if ( elem.offsetWidth != 0 ) {
+        val = getWH(elem, offsetValueExtract, which, extra);
+      } else {
+        var elemStyle = setAndStore(elem, cssShow);
+        val = getWH(elem, offsetValueExtract, which, extra);
+        setAndStore(elem, elemStyle);
+      }
+      return Some(Math.max(0, Math.round(val)).toInt());
+    }
+  }
+
+  private static function setAndStore(elem: HTMLElement, styles: Map<String, String>){
+    var values = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT());
+    for (k in styles.iterator()) {
+      values = values.set(k._1, untyped elem.style[ k._1 ]);
+      untyped elem.style[ k._1 ] = k._2;
+    }
+    return values;
+  }
+
+  private static function getWH(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: Option<String>): Int{
+    var val: Int = untyped elem[offsetValueExtract];
+
+    switch(extra){
+      case Some(border):
+      default:
+        which.foreach(function(v) {
+          switch(extra){
+            case None:    val -= getComputedCssProperty( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);            
+            case Some(margin): val += getComputedCssProperty( elem, 'margin-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
+          }
+          val -= getComputedCssProperty( elem, 'border-' + v + '-width').map(function(s) return s.toInt(0)).getOrElseC(0);
+        });
+    }
+    return val;
+  }
+
   /** Retrieves the offset of the element, relative to the window origin.
    */
   public static function getOffset(elem: HTMLElement): Option<{ top: Int, left: Int }> {
