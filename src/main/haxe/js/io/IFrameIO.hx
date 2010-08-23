@@ -26,6 +26,7 @@ import haxe.data.collections.Map;
 import haxe.time.ScheduledExecutor;
 import haxe.text.json.Json;
 import haxe.net.Url;
+import haxe.io.log.Logger;
 
 using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
@@ -200,6 +201,8 @@ class IFrameIOAutoDetect implements IFrameIO {
 class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   var bindTarget: Window;
   
+  static var log = Logger.debug();
+  
   public function new(w: Window) {
     super();
     
@@ -212,6 +215,8 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
 
   override public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
     var originUrl = getUrlFor(originWindow, originUrl_);
+    
+    log.debug('originUrl = ' + originUrl);
 
     var listener: EventListener<Dynamic> = null;
     
