@@ -28,13 +28,13 @@ class ObjectExtensionsTestCase extends TestCase {
 	  super();
 	}
 	
-	public function tesGet() {
+	public function testGet() {
 	  var o = { foo: "bar" };
 	  
 	  assertEquals("bar", o.getAny("foo").get());
 	}
 	
-	public function tesSet() {
+	public function testSet() {
 	  var o = { foo: "bar" };
 	  
 	  assertEquals("baz", o.setAny("foo", "baz").getAny("foo").get());
