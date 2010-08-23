@@ -11,7 +11,7 @@ sub j {join "\n", @_}
 sub h {map {$_ => 1} @_}
 sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $xs[$_] ne $ys[$_], 0 .. $#$xs}
 
-sub fix  {my ($f, @xs) = @_; e([sort &$f(@xs)], [sort @xs]) ? @xs : fix($f, &$f(@xs))}
+sub fix  {my ($f, @xs) = @_; my @ys = sort &$f(sort @xs); e(\@xs, \@ys) ? @xs : fix($f, @ys)}
 sub uniq {my %h; grep ! $h{$_}++, @_}
 
 sub statics_in {map /[\.\w\$]+/go, @_}
@@ -30,6 +30,7 @@ my @instance    = grep   /\.prototype\./o, keys %definitions;
 my @static      = grep ! /\.prototype\./o, keys %definitions;
 
 my $cover = sub {
+  d @_;
   my @code    = @_, @definitions{@_};
   my @statics = uniq statics_in(@code), classes_in(@code);
 
