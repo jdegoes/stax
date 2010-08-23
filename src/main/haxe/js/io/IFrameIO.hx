@@ -402,7 +402,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 	  if (hash.length > 1) {
 	    var query = '?' + hash.substr(1);
 	    
-	    var unknown = query.toQueryParameters();
+	    var unknown: Dynamic = query.toQueryParameters();
 	    
 	    if (unknown.type == 'delivery') {
 	      var packet: FragmentDelivery = cast unknown;

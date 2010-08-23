@@ -31,4 +31,4 @@ typedef ParsedUrl = {
   public var search:    String;
 }
 
-typedef QueryParameters = Dynamic<String>
+typedef QueryParameters = {}

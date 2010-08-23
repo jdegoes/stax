@@ -29,14 +29,13 @@ class ObjectExtensionsTestCase extends TestCase {
 	}
 	
 	public function tesGet() {
-	  var o: Dynamic = { foo: "bar" };
-	  var option: Option<String> = o.getAny("foo");
+	  var o = { foo: "bar" };
 	  
-	  assertEquals("bar", option.get());
+	  assertEquals("bar", o.getAny("foo").get());
 	}
 	
 	public function tesSet() {
-	  var o: Dynamic = { foo: "bar" };
+	  var o = { foo: "bar" };
 	  
 	  assertEquals("baz", o.setAny("foo", "baz").getAny("foo").get());
 	}

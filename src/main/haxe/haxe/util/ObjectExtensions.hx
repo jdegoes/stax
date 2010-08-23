@@ -19,12 +19,14 @@ import Prelude;
 
 using PreludeExtensions;
 
+typedef Object = {};
+
 class ObjectExtensions {
-	public static function copy(d: Dynamic, shallow: Bool = true): Dynamic {
+	public static function copy(d: Object, shallow: Bool = true): Object {
 	  return copyTo(d, {}, shallow);
 	}
 	
-	public static function copyTo(src: Dynamic, dest: Dynamic, shallow: Bool = true): Dynamic {
+	public static function copyTo(src: Object, dest: Object, shallow: Bool = true): Object {
 	  var safecopy = function(d: Dynamic): Dynamic {
 	    return switch (Type.typeof(d)) {
 	      case TObject: copy(d, shallow);
@@ -42,18 +44,20 @@ class ObjectExtensions {
 	  return src;
 	}
 	
-	public static function extendWith(dest: Dynamic, src: Dynamic, shallow: Bool = true): Dynamic {
+	public static function extendWith(dest: Object, src: Object, shallow: Bool = true): Object {
 	  copyTo(src, dest);
 	  
 	  return dest;
 	}
 	
-	public static function fields(d: Dynamic): Array<String> {
+	public static function fields(d: Object): Array<String> {
 	  return Reflect.fields(d);
 	}
 	
 	public static function map<T, S>(d: Dynamic<T>, f: T -> S): Dynamic<S> {
-	  return setAll({}, fields(d).map(function(name) return name.entuple(f(Reflect.field(d, name)))));
+	  return setAll({}, Reflect.fields(d).map(function(name) {
+	    return name.entuple(f(Reflect.field(d, name)));
+	  }));
 	}
 	
 	public static function set<T>(d: Dynamic<T>, k: String, v: T): Dynamic<T> {
@@ -62,8 +66,10 @@ class ObjectExtensions {
 	  return d;
 	}
 	
-	public static function setAny(d: Dynamic, k: String, v: Dynamic): Dynamic {
-	  return set(d, k, v);
+	public static function setAny(d: Object, k: String, v: Dynamic): Object {
+	  Reflect.setField(d, k, v);
+	  
+	  return d;
 	}
 	
 	public static function setAll<T>(d: Dynamic<T>, fields: Iterable<Tuple2<String, T>>): Dynamic<T> {
@@ -74,8 +80,10 @@ class ObjectExtensions {
 	  return d;
 	}
 	
-	public static function setAllAny(d: Dynamic, fields: Iterable<Tuple2<String, Dynamic>>): Dynamic {
-	  setAll(d, fields);
+	public static function setAllAny(d: Object, fields: Iterable<Tuple2<String, Dynamic>>): Object {
+	  for (field in fields) {
+	    Reflect.setField(d, field._1, field._2);
+	  }
 	  
 	  return d;
 	}
@@ -84,19 +92,19 @@ class ObjectExtensions {
 	  return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
 	}
 	
-	public static function getAny(d: Dynamic, k: String): Option<Dynamic> {
-	  return get(d, k);
+	public static function getAny(d: Object, k: String): Option<Dynamic> {
+	  return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
 	}
 	
 	public static function getAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
-	  return fields(d).map(function(name) return name.entuple(Reflect.field(d, name)));
+	  return Reflect.fields(d).map(function(name) return name.entuple(Reflect.field(d, name)));
 	}
 	
-	public static function getAllAny(d: Dynamic): Array<Tuple2<String, Dynamic>> {
+	public static function getAllAny(d: Object): Array<Tuple2<String, Dynamic>> {
 	  return getAll(d);
 	}
 	
-	public static function extractValuesAny(d: Dynamic, names: Iterable<String>): Array<Dynamic> {
+	public static function extractValuesAny(d: Object, names: Iterable<String>): Array<Dynamic> {
 	  return extractValues(d, names);
 	}
 	
@@ -109,14 +117,14 @@ class ObjectExtensions {
 	  
 	  var result: Array<T> = [];
 	  
-	  for (field in fields(d)) {
+	  for (field in Reflect.fields(d)) {
 	    if (contains(field)) result.push(cast Reflect.field(d, field));
 	  }
 	  
 	  return result;
 	}
 	
-	public static function iterator(d: Dynamic): Iterator<String> {
+	public static function iterator(d: Object): Iterator<String> {
 	  return Reflect.fields(d).iterator();
 	}
 }
