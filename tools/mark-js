@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+my $count = 1;
+chomp and map ++$_, @lines{split /\s+/, $_} while ($_ = <STDIN>) =~ /^[\d\s]+$/;
+print $lines{$count++} ? $_ : "# $_" while <STDIN>;

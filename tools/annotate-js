@@ -1,0 +1,3 @@
+#!/usr/bin/perl
+print "var lines = {};\n";
+++$count and print /^\s*\w/ && ! /^\s*case/ && ! /^\s*else/ && ! /^\s*catch/ ? "lines[$count] = 1; $_" : $_ for <STDIN>;
