@@ -56,6 +56,10 @@ class UrlExtensionsTestCase extends TestCase {
 	  assertEquals('?foo', 'ad-display.js?foo'.extractSearch());
 	}
 	
+	public function testNoProtocolIsPreserved() {
+	  assertEquals('client.html', 'client.html?foo'.toParsedUrl().get().withoutSearch().toUrl());
+	}
+	
 	public function testWithout() {
 	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
 	  
@@ -63,7 +67,7 @@ class UrlExtensionsTestCase extends TestCase {
 	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1#top', p.withoutSearch().toUrl());
 	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar', p.withoutHash().toUrl());
 	  assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
-	  assertEquals('//eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
+	  assertEquals('eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
 	  
 	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
 	}

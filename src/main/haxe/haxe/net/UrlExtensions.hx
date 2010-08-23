@@ -187,13 +187,14 @@ class UrlExtensions {
 	}
 	
 	private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {
-    var host = hostname + (if (port == '') '' else ':' + port);
+    var host  = hostname + (if (port == '') '' else ':' + port);
+    var final = host + pathname + search + hash;
     
     return {
       hash:     hash,
       host:     host,
       hostname: hostname,
-      href:     protocol + '//' + host + pathname + search + hash,
+      href:     if (protocol.length > 0) (protocol + '//' + final) else final,
       pathname: pathname,
       port:     port,
       protocol: protocol,
