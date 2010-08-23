@@ -9,14 +9,15 @@ sub d {print STDERR ++$count, ': ', join(' ', @_) || '<empty>', "\n";
 
 sub j {join "\n", @_}
 sub h {map {$_ => 1} @_}
+sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $xs[$_] ne $ys[$_], 0 .. $#$xs}
 
-sub fix  {my ($f, @xs) = @_; &$f(@xs) == @xs ? @xs : fix($f, &$f(@xs))}
+sub fix  {my ($f, @xs) = @_; e([sort &$f(@xs)], [sort @xs]) ? @xs : fix($f, &$f(@xs))}
 sub uniq {my %h; grep ! $h{$_}++, @_}
 
-sub statics_in {map /[\w\$\.]+/go, @_}
-sub methods_in {map /(\.[\w\$]+)/go, @_}
+sub statics_in {map /[\.\w\$]+/go, @_}
+sub methods_in {map /\.[\w\$]+/go, @_}
 sub classes_in {map /new\h+([\w\.\$]+)/go, @_}
-sub roots      {fix sub {uniq map /(([\w\$\.]+)(?:\.[\w\$]+))/go, @_}, @_}
+sub roots      {fix sub {uniq @_, map /(([\.\w\$]+)(?:\.[\w\$]+))/go, @_}, @_}
 
 my @pieces = split /^([\$\w\.\[\]"]+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+$|\V*$))/mo, join '', <STDIN>;
 
@@ -29,30 +30,33 @@ my @instance    = grep   /\.prototype\./o, keys %definitions;
 my @static      = grep ! /\.prototype\./o, keys %definitions;
 
 my $cover = sub {
-  my @code    = @non_defs, @definitions{@_};
-  my @methods = grep s/^\./\\./, uniq methods_in @code;
-  my @statics =                  uniq statics_in @code;
-  my @classes =                  uniq classes_in @code;
+  my @code    = @_, @definitions{@_};
+  my @statics = uniq statics_in(@code), classes_in(@code);
 
-  # Grab all instance methods that might be mentioned here.
-  my @resolved_methods = uniq map {my $r = $_; grep(/$r$/, @instance)} @methods;
+  d grep /js\.Boot/, uniq roots statics_in @code;
 
-  uniq roots @includes, @_, @statics, @classes, @resolved_methods;
+  # Grab all instance methods that might be mentioned here. The s/^\./\\./ stuff is used to convert leading dots to valid regular expressions. A dot in this case must really match a dot, not
+  # any character (which is what an unescaped dot would mean inside a regexp).
+  my @resolved_methods = uniq map {my $r = $_; grep(/$r$/, @instance)} grep s/^\./\\./, uniq methods_in @code;
+
+  uniq roots @statics, @resolved_methods;
 };
 
-my %live_set = h fix $cover;
+my %live_set = h fix($cover, @includes, @non_defs);
 print join '', map @pieces[$_ * 3, $live_set{$pieces[$_ * 3 + 1]} ? ($_ * 3 + 1, $_ * 3 + 2) : ()], 0 .. $#pieces / 3;
 
 __END__
 
 =head1 SYNOPSYS
 
-minify-js file1 [file2 [... fileN]] > output.js
+minify-js [--include=x] [--include=y] < input.js > output.js
 
 =head1 DESCRIPTION
 
 This program minifies HaXe-generated JavaScript. It removes unused classes, static methods, and instance methods, though because of the dynamically-typed nature of JavaScript it doesn't
 necessarily catch everything. Note that this script doesn't work for JS minification in the general case. It relies on HaXe-formatted output, which is of a very specific form. Each definition
 occurs on its own line, and indentation is consistent enough to reflect the structure of the generated code. Neither of these is true for JavaScript in general.
+
+Manually-specified --include options indicate additional root-set definitions; this can be useful if your code is a library without a single entry point.
 
 =cut
