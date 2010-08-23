@@ -383,31 +383,24 @@ class RefinementsTestCase extends TestCase {
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTABLESECTIONWorks(): Void {
-      var table = createTestElement('TABLE', 'table');
-      var th = _doc.createElement('th');
-      var thead = _doc.createElement('thead');
-      table.appendChild(thead);
-      var text = _doc.createTextNode('foo');
-      var tr = _doc.createElement('tr');
+    private function testThatRefinementsTABLEHEADWorks(): Void {
+      var table = newTable('table');
       
-      var td1 = _doc.createElement('td');
-      var td2 = _doc.createElement('td');
+      assertEquals("THEAD", table.tHead.asTHead().nodeName);
+      removeTestElement('table');
+    }
+    
+    private function testThatRefinementsTABLEBODYWorks(): Void {
+      var table = newTable('table');
       
-      thead.appendChild(tr);
+      assertEquals("TBODY", table.tBodies[0].asTBody().nodeName);
+      removeTestElement('table');
+    }
+    
+    private function testThatRefinementsTABLEFOOTWorks(): Void {
+      var table = newTable('table');
       
-      tr.appendChild(th);
-      th.appendChild(text);
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      
-      var section: HTMLTableElement = table.asTable();
-      
-      //trace("**************table = " + section);
-      //trace("**************section = " + section.tHead);
-            
-      //alertObject(section);
-      assertEquals("TD", "TD");
+      assertEquals("TFOOT", table.tFoot.asTFoot().nodeName);
       removeTestElement('table');
     }
     
@@ -429,7 +422,38 @@ class RefinementsTestCase extends TestCase {
 
 
 
-
+    private function newTable(?id: String = 'test'): HTMLTableElement {
+      var table = createTestElement('TABLE', 'table');
+      
+      table.setAttribute('id', id);
+      
+      var th    = _doc.createElement('th');
+      var cap   = _doc.createElement('caption');
+      var thead = _doc.createElement('thead');
+      var text  = _doc.createTextNode('foo');
+      var tr    = _doc.createElement('tr');
+      var tbody = _doc.createElement('tbody');
+      var td1   = _doc.createElement('td');
+      var td2   = _doc.createElement('td');
+      var tfoot = _doc.createElement('tfoot');
+      
+      table.appendChild(cap);
+      table.appendChild(thead);
+      table.appendChild(tbody);
+      
+      thead.appendChild(tr);
+      
+      tr.appendChild(th);
+      th.appendChild(text);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      
+      tbody.appendChild(tr);
+      
+      table.appendChild(tfoot);
+      
+      return table.asTable();
+    }
 
     private function alertObject(obj) {
         untyped __js__('

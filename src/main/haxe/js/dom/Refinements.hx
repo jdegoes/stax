@@ -221,6 +221,18 @@ class Refinements {
 	  return asTDOption(e).get();
 	}
 	
+	public static inline function asTHead(e: HTMLElement): HTMLTableSectionElement {
+	  return asTHeadOption(e).get();
+	}
+	
+	public static inline function asTBody(e: HTMLElement): HTMLTableSectionElement {
+	  return asTBodyOption(e).get();
+	}
+	
+	public static inline function asTFoot(e: HTMLElement): HTMLTableSectionElement {
+	  return asTFootOption(e).get();
+	}
+	
 	
 	
 	
@@ -432,6 +444,22 @@ class Refinements {
 	public static inline function asTDOption(e: HTMLElement): Option<HTMLTableColElement> {
 	  return if (e.nodeName == 'TD') Some(cast e); else None;
 	}
+	
+	public static inline function asTHeadOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'THEAD') Some(cast e); else None;
+	}
+	
+	public static inline function asTBodyOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'TBODY') Some(cast e); else None;
+	}
+	
+	public static inline function asTFootOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'TFOOT') Some(cast e); else None;
+	}
+	
+	
+	
+	
 	
 	
 	
