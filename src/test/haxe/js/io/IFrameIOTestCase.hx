@@ -21,10 +21,10 @@ import haxe.test.Assert;
 import haxe.test.TestCase;
 import js.Env;
 import js.dom.Quirks;
-import js.dom.Elements;
 import js.io.IFrameIO;
 
 using PreludeExtensions;
+using js.dom.DocumentExtensions;
 
 class IFrameIOTestCase extends TestCase {
   var window1: Window;
@@ -38,8 +38,8 @@ class IFrameIOTestCase extends TestCase {
 	  
 	  var body = d.getElementsByTagName('body')[0];
 	  
-	  var iframe1: HTMLIFrameElement = Elements.iframeInvisible();
-	  var iframe2: HTMLIFrameElement = Elements.iframeInvisible();
+	  var iframe1: HTMLIFrameElement = Env.document.newIframeInvisible();
+	  var iframe2: HTMLIFrameElement = Env.document.newIframeInvisible();
 	  
 	  body.appendChild(iframe1);
 	  body.appendChild(iframe2);

@@ -3,13 +3,13 @@ import Prelude;
 import Dom;
 import js.Env;
 import js.io.IFrameIO;
-import js.dom.Elements;
 import js.dom.Quirks;
 import js.detect.BrowserSupport;
 import haxe.framework.Injector;
 import haxe.time.ScheduledExecutor;
 
 using PreludeExtensions;
+using js.dom.DocumentExtensions;
 
 class Demo {
   public static function iframeDemo() {
@@ -33,8 +33,8 @@ class Demo {
 
 	  var body = d.getElementsByTagName('body')[0];
 
-	  var iframe1: HTMLIFrameElement = Elements.iframe(300, 250);
-	  var iframe2: HTMLIFrameElement = Elements.iframe(300, 250);
+	  var iframe1: HTMLIFrameElement = Env.document.newIframe(300, 250);
+	  var iframe2: HTMLIFrameElement = Env.document.newIframe(300, 250);
 
     body.appendChild(iframe1);
     body.appendChild(iframe2);
