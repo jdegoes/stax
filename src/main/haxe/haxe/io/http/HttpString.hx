@@ -60,7 +60,7 @@ class HttpStringAsync implements HttpString {
   }
   
   public function custom(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
-    var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC({}));
+    var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC(Maps.StringString));
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();

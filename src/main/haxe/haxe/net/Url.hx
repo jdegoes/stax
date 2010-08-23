@@ -15,6 +15,8 @@
 */
 package haxe.net;
 
+import haxe.data.collections.Map;
+
 typedef Url = String
 
 /** A parsed representation of a url chosen to match the DOM's Location 
@@ -31,4 +33,4 @@ typedef ParsedUrl = {
   public var search:    String;
 }
 
-typedef QueryParameters = Dynamic<String>
+typedef QueryParameters = Map<String, String>

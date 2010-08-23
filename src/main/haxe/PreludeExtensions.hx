@@ -16,6 +16,8 @@
 */
 import Prelude;
 
+import haxe.data.collections.Map;
+
 using PreludeExtensions;
 
 class DynamicExtensions {
@@ -79,6 +81,17 @@ class DynamicExtensions {
     return function(s: S) {
       return t;
     }
+  }
+  public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
+    var map: Map<String, T> = Map.create(String.HasherT(), String.EqualT());
+    
+    for (field in Reflect.fields(d)) {
+      var value = Reflect.field(d, field);
+      
+      map = map.set(field, value);
+    }
+    
+    return map;
   }
 }
 

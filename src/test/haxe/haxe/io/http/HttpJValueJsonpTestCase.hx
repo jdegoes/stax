@@ -38,7 +38,7 @@ class HttpJValueJsonpTestCase extends TestCase {
 	}
 	
 	public function testGet() {
-	  Assert.delivered(h.get('http://search.twitter.com/search.json', { q: 'santa' }),
+	  Assert.delivered(h.get('http://search.twitter.com/search.json', { q: 'santa' }.toMap()),
 	    function(data) {
 	      var results = data.body.get().get('results');
 	      

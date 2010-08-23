@@ -392,7 +392,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 	      var fragment = tuple._2;
 	      
 	      // Send this chunk via the hash tag:	      
-	      window.location.href = fragment.to + '#' + fragment.toQueryString().substr(1);
+	      window.location.href = fragment.to + '#' + fragment.toMap().toQueryString().substr(1);
 	  }
 	}
 	

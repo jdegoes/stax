@@ -17,8 +17,11 @@ package haxe.net;
 
 import Prelude;
 import haxe.net.Url;
+import haxe.data.collections.Map;
+import haxe.data.collections.Maps;
 
 using PreludeExtensions;
+using haxe.functional.Foldable;
 
 class UrlExtensions {
   // http://domain.com:80/path?foo=bar#body
@@ -157,17 +160,15 @@ class UrlExtensions {
    * object, whose fields all have string values.
    */
   public static function toQueryParameters(query: String): QueryParameters {
-	  return if (!query.startsWith('?')) {};
+	  return if (!query.startsWith('?')) Maps.StringString;
 	         else query.substr(1).split('&').flatMap(function(kv) {
              var a = kv.split('=').map(function(s) return s.urlDecode());
 	    
 	            return if (a.length == 0) [];
 	                   else if (a.length == 1) [a[0].entuple('')];
 	                   else [a[0].entuple(a[1])];
-      	   }).foldl(cast {}, function(o, t) {
-      	     Reflect.setField(o, t._1, t._2);
-	    
-      	     return o;
+      	   }).foldl(Maps.StringString, function(m, t) {
+      	     return m.add(t);
       	   });
 	}
 	
@@ -175,22 +176,14 @@ class UrlExtensions {
 	 * query string, beginning with the character '?'.
 	 */
 	public static function toQueryString(query: QueryParameters): String {
-	  return Reflect.fields(query).foldl('?', function(url, fieldName) {
-	    var fieldValue = Reflect.field(query, fieldName);
+	  return query.foldl('?', function(url, tuple) {
+	    var fieldName = tuple._1;
+	    var fieldValue = tuple._2;
 	    
 	    var rest = StringTools.urlEncode(fieldName) + '=' + StringTools.urlEncode(fieldValue);
 	    
 	    return url + (if (url == '?') rest else '&' + rest);
 	  });
-	}
-	
-	/** Retrieves the value of a particular query parameter.
-	 */
-	public static function get(query: QueryParameters, key: String): Option<String> {
-	  return if (Reflect.hasField(query, key)) {
-	    Some(Reflect.field(query, key));
-	  }
-	  else None;
 	}
 	
 	private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {

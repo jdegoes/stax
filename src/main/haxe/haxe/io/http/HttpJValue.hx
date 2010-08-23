@@ -77,9 +77,7 @@ class HttpJValueJsonp implements HttpJValue {
     var callbackName     = 'stax_jsonp_callback_' + requestId;
     var callbackFullName = 'haxe.io.http.HttpJValueJsonp.Responders.' + callbackName;
     
-    var params = OptionExtensions.toOption(params_).getOrElseC({});
-    
-    Reflect.setField(params, callbackParameterName, callbackFullName);
+    var params = OptionExtensions.toOption(params_).getOrElseC(Maps.StringString).set(callbackParameterName, callbackFullName);
     
     var url = url_.addQueryParameters(params);
     
