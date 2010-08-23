@@ -355,6 +355,61 @@ class RefinementsTestCase extends TestCase {
       removeTestElement('test');
     }
     
+    private function testThatRefinementsAREAWorks(): Void {
+      var area = createTestElement('AREA', 'test');
+            
+      assertEquals("AREA", area.asArea().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatRefinementsTABLEWorks(): Void {
+      var table = createTestElement('TABLE', 'test');
+            
+      assertEquals("TABLE", table.asTable().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatRefinementsCAPTIONWorks(): Void {
+      var caption = createTestElement('CAPTION', 'test');
+            
+      assertEquals("CAPTION", caption.asCaption().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatRefinementsTDWorks(): Void {
+      var td = createTestElement('TD', 'test');
+            
+      assertEquals("TD", td.asTD().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatRefinementsTABLESECTIONWorks(): Void {
+      var table = createTestElement('TABLE', 'table');
+      var th = _doc.createElement('th');
+      var thead = _doc.createElement('thead');
+      table.appendChild(thead);
+      var text = _doc.createTextNode('foo');
+      var tr = _doc.createElement('tr');
+      
+      var td1 = _doc.createElement('td');
+      var td2 = _doc.createElement('td');
+      
+      thead.appendChild(tr);
+      
+      tr.appendChild(th);
+      th.appendChild(text);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      
+      var section: HTMLTableElement = table.asTable();
+      
+      //trace("**************table = " + section);
+      //trace("**************section = " + section.tHead);
+            
+      //alertObject(section);
+      assertEquals("TD", "TD");
+      removeTestElement('table');
+    }
     
     
     
@@ -362,6 +417,8 @@ class RefinementsTestCase extends TestCase {
     
     
     
+    
+    
 
 
 
@@ -374,7 +431,12 @@ class RefinementsTestCase extends TestCase {
 
 
 
-
+    private function alertObject(obj) {
+        untyped __js__('
+        (function(){for (key in obj) {
+            alert(key);
+        }})')();
+    }
 
     private function createTestElement(name:String, id: String): HTMLElement {
       var body = _doc.getElementsByTagName('body')[0];

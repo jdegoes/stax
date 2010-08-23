@@ -13726,7 +13726,7 @@ typedef HTMLTableElement = {
     
     public function deleteTHead(): Void;
     
-    public function creatTFoot(): HTMLElement;
+    public function createTFoot(): HTMLElement;
     
     public function deleteTFoot(): Void;
     

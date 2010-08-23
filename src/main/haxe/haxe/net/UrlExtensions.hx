@@ -85,6 +85,14 @@ class UrlExtensions {
     return formUrl(parsed.protocol, parsed.hostname, parsed.port, parsed.pathname, parsed.search, hash);
   }
   
+  public static function withFile(parsed: ParsedUrl, file: String): ParsedUrl {
+    var filePattern = new EReg('[/]([^/]*)$', 'i');
+    
+    var newPathname = filePattern.replace(parsed.pathname, '/' + file);
+    
+    return formUrl(parsed.protocol, parsed.hostname, parsed.port, newPathname, parsed.search, parsed.hash);
+  }
+  
   public static function withoutProtocol(parsed: ParsedUrl): ParsedUrl {
     return withProtocol(parsed, '');
   }
@@ -107,6 +115,10 @@ class UrlExtensions {
   
   public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
     return withHash(parsed, '');
+  }
+  
+  public static function withoutFile(parsed: ParsedUrl): ParsedUrl {
+    return withFile(parsed, '');
   }
   
   /** Adds query parameters to an existing URL.
@@ -187,13 +199,14 @@ class UrlExtensions {
 	}
 	
 	private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {
-    var host = hostname + (if (port == '') '' else ':' + port);
+    var host  = hostname + (if (port == '') '' else ':' + port);
+    var final = host + pathname + search + hash;
     
     return {
       hash:     hash,
       host:     host,
       hostname: hostname,
-      href:     protocol + '//' + host + pathname + search + hash,
+      href:     if (protocol.length > 0) (protocol + '//' + final) else final,
       pathname: pathname,
       port:     port,
       protocol: protocol,

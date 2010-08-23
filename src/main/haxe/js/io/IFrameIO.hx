@@ -26,6 +26,7 @@ import haxe.data.collections.Map;
 import haxe.time.ScheduledExecutor;
 import haxe.text.json.Json;
 import haxe.net.Url;
+import haxe.io.log.Logger;
 
 using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
@@ -119,14 +120,13 @@ private class AbstractIFrameIO implements IFrameIO {
   public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO {
     var self = this;
     
-    return receive(function(request) {
-      if (request.__requestId != null) {
-        var response = f(request);
-        
-        response.deliverTo(function(response) {
-          response.__responseId = request.__requestId;
-
-          self.send(response, url, window);
+    return receive(function(message) {
+      if (message.__requestId != null && message.__data != null) {
+        f(message.__data).deliverTo(function(responseData) {
+          self.send({
+            __responseId: message.__requestId,
+            __data:       responseData
+          }, url, window);
         });
       }
     }, url, window);
@@ -136,18 +136,19 @@ private class AbstractIFrameIO implements IFrameIO {
     return Stax.error('Not implemented');
   }
   
-  public function request(request: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
+  public function request(requestData: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
     var requestId = ++requestCounter;
     
     var future: Future<Dynamic> = new Future();
     
-    request.__requestId = requestId;
+    send({
+      __requestId:  requestId,
+      __data:       requestData
+    }, targetUrl, targetWindow);
     
-    send(request, targetUrl, targetWindow);
-    
-    receiveWhile(function(data) {
-      return if (data.__responseId != null && data.__responseId == requestId) {
-        future.deliver(data);
+    receiveWhile(function(message) {
+      return if (message.__responseId != null && message.__responseId == requestId) {
+        future.deliver(message.__data);
         
         false;
       }
@@ -200,6 +201,8 @@ class IFrameIOAutoDetect implements IFrameIO {
 class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   var bindTarget: Window;
   
+  static var log = Logger.debug();
+  
   public function new(w: Window) {
     super();
     
@@ -212,6 +215,8 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
 
   override public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
     var originUrl = getUrlFor(originWindow, originUrl_);
+    
+    //log.debug('originUrl = ' + originUrl + ', originUrl_ = ' + originUrl_);
 
     var listener: EventListener<Dynamic> = null;
     
@@ -243,7 +248,9 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function normalizeOpt(url: Url): Option<Url> {
-    return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().toUrl());
+    //log.debug('normalizeOpt url = ' + url);
+    
+    return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().withoutSearch().toUrl());
   }
   
   private static function normalize(url: Url): Url {
