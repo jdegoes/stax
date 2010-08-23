@@ -52,6 +52,9 @@ class UrlExtensionsTestCase extends TestCase {
 	  assertEquals('?foo=bar', p.search);
 	}
 	
+	public function testExtractSearchForLocalFile() {
+	  assertEquals('?foo', 'ad-display.js?foo'.extractSearch());
+	}
 	
 	public function testWithout() {
 	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
