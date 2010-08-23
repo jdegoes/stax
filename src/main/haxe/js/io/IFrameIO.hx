@@ -120,14 +120,13 @@ private class AbstractIFrameIO implements IFrameIO {
   public function receiveRequests(f: Dynamic -> Future<Dynamic>, url, window: Window): IFrameIO {
     var self = this;
     
-    return receive(function(request) {
-      if (request.__requestId != null) {
-        var response = f(request);
-        
-        response.deliverTo(function(response) {
-          response.__responseId = request.__requestId;
-
-          self.send(response, url, window);
+    return receive(function(message) {
+      if (message.__requestId != null && message.__data != null) {
+        f(message.__data).deliverTo(function(responseData) {
+          self.send({
+            __responseId: message.__requestId,
+            __data:       responseData
+          }, url, window);
         });
       }
     }, url, window);
@@ -137,18 +136,19 @@ private class AbstractIFrameIO implements IFrameIO {
     return Stax.error('Not implemented');
   }
   
-  public function request(request: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
+  public function request(requestData: Dynamic, targetUrl: String, targetWindow: Window): Future<Dynamic> {
     var requestId = ++requestCounter;
     
     var future: Future<Dynamic> = new Future();
     
-    request.__requestId = requestId;
+    send({
+      __requestId:  requestId,
+      __data:       requestData
+    }, targetUrl, targetWindow);
     
-    send(request, targetUrl, targetWindow);
-    
-    receiveWhile(function(data) {
-      return if (data.__responseId != null && data.__responseId == requestId) {
-        future.deliver(data);
+    receiveWhile(function(message) {
+      return if (message.__responseId != null && message.__responseId == requestId) {
+        future.deliver(message.__data);
         
         false;
       }
