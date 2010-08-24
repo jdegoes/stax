@@ -54,7 +54,7 @@ class ObjectExtensions {
 	  return Reflect.fields(d);
 	}
 	
-	public static function map<T, S>(d: Dynamic<T>, f: T -> S): Dynamic<S> {
+	public static function mapValues<T, S>(d: Dynamic<T>, f: T -> S): Dynamic<S> {
 	  return setAll({}, Reflect.fields(d).map(function(name) {
 	    return name.entuple(f(Reflect.field(d, name)));
 	  }));

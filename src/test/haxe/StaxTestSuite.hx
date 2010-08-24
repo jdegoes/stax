@@ -73,7 +73,7 @@ class StaxTestSuite {
           , new HttpStringTestCase() // This one should be cross-platform, eventually
           , new IFrameIOTestCase()      
           , new HttpJValueJsonpTestCase()
-          , new RefinementsTestCase()
+          , new HTMLElementExtensionsTestCase()
           , new QuirksTestCase()
           , new ObjectExtensionsTestCase()
           #end
