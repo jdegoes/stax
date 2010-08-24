@@ -1829,7 +1829,7 @@ typedef Storage = {
 extern interface HTMLCollection<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public var length (default,null): Int;
     
-    public function item(index: Int): Node;
+    public function item(index: Int): HTMLElement;
     
     public function namedItem(name: DOMString): Node;
 }
@@ -2675,7 +2675,7 @@ extern interface RadioNodeList implements DomCollection<Node> {
 typedef HTMLOptionsCollection = {
     public var length (default,null): Int;
     
-    public function item(index: Int): Node;
+    public function item(index: Int): HTMLOptionElement;
     
     public function namedItem(name: DOMString): Node;
 }
@@ -6692,13 +6692,13 @@ typedef HTMLOptGroupElement = {
 //Tested
 typedef HTMLOptionElement = {
     public var form             (default, null): HTMLFormElement;
-    public var defaultSelected: Bool;
+    public var defaultSelected  : Bool;
     public var text             (default, null): DOMString;
     public var index            (default, null): Int;
-    public var disabled (default, null):        Bool;
-    public var label (default, null):           DOMString;
-    public var selected:        Bool;
-    public var value:           DOMString;
+    public var disabled         (default, null): Bool;
+    public var label            (default, null): DOMString;
+    public var selected         : Bool;
+    public var value            : DOMString;
     
             
     //  HTMLElement
