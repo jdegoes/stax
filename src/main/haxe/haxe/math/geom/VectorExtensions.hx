@@ -40,6 +40,13 @@ class Vector2dIntExtensions {
     }
   }
   
+  public static inline function map(v: Vector2d<Int>, f: Int -> Int, g: Int -> Int): Vector2d<Int> {
+    return {
+      dx: f(v.dx),
+      dy: g(v.dy)
+    }
+  }
+  
   public static inline function toPoint(v: Vector2d<Int>): Point2d<Int> {
     return {
       x: v.dx,
@@ -67,6 +74,13 @@ class Vector2dFloatExtensions {
     return {
       dx: v.dx * factor,
       dy: v.dy * factor
+    }
+  }
+  
+  public static inline function map(v: Vector2d<Float>, f: Float -> Float, g: Float -> Float): Vector2d<Float> {
+    return {
+      dx: f(v.dx),
+      dy: g(v.dy)
     }
   }
   

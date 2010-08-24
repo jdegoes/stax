@@ -684,5 +684,25 @@ class HasherTypeclass {
 }
 
 class Stax {
+  public static function noop1<A>() {
+    return function(a: A) { }
+  }
+  public static function noop2<A, B>() {
+    return function(a: A, b: B) { }
+  }
+  public static function noop3<A, B, C>() {
+    return function(a: A, b: B, c: C) { }
+  }
+  public static function noop4<A, B, C, D>() {
+    return function(a: A, b: B, c: C, d: D) { }
+  }
+  public static function noop5<A, B, C, D, E>() {
+    return function(a: A, b: B, c: C, d: D, e: E) { }
+  }
+  
+  public static function identity<A>(): Function<A, A> {
+    return function(a: A) { return a; }
+  }
+  
   public static function error<T>(msg: String): T { throw msg; return null; }
 }

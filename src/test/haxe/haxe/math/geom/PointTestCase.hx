@@ -40,4 +40,8 @@ class PointTestCase extends TestCase {
 	  assertEquals(p2, p1.plus(p2.minus(p1)), cmpInt);
 	}
 	
+	public function testMap() {
+	  assertEquals({x: 2, y: 9}, {x: 1, y: 3}.map(function(x) return x * 2, function(y) return y * 3), cmpInt);
+	}
+	
 }
