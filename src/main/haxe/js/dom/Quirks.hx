@@ -183,7 +183,7 @@ class Quirks {
 	}
 	
 	/** Retrieves the scroll of the page, in pixels. */
-	public static function getPageScroll(): { left: Int, top: Int } {
+	public static function getPageScroll(): { x: Int, y: Int } {
     var xScroll: Int = 0;
     var yScroll: Int = 0;
     
@@ -200,7 +200,7 @@ class Quirks {
       xScroll = untyped Env.document.body.scrollLeft;
     }
     
-    return { left: xScroll, top: yScroll };
+    return { x: xScroll, y: yScroll };
   }
 
   /** Retrieves the height of the page, in pixels. */
@@ -222,7 +222,7 @@ class Quirks {
 	
 	/** Retrieves the offset of the document's body, relative to the window origin.
 	 */
-	public static function getBodyOffset(doc: HTMLDocument): Option<{ top: Int, left: Int }> {
+	public static function getBodyOffset(doc: HTMLDocument): Option<{ x: Int, y: Int }> {
 	  return Env.document.toOption().flatMap(function(document) {
 	    return document.body.toOption();
 	  }).map(function(body) {
@@ -234,13 +234,13 @@ class Quirks {
   			left += getComputedCssProperty(body, 'margin-left').map(function(s) return s.toInt(0)).getOrElseC(0);
   		}
 
-  		return { top: top, left: left };
+  		return { x: left, y: top };
 	  });
 	}
   /**
   * 	Set the current coordinates of the element, relative to the document.
   */
-  public static function setOffset(elem: HTMLElement, offset: { top: Int, left: Int }): HTMLElement{
+  public static function setOffset(elem: HTMLElement, offset: { x: Int, y: Int }): HTMLElement{
     if (elem == null || elem.ownerDocument == null) return elem;
     else{
       var position = getComputedCssProperty( elem, 'position' );
@@ -248,12 +248,12 @@ class Quirks {
         if ( v == 'static' ) elem.style.position = 'relative';
       });
 
-      var curOffset = getOffset(elem).getOrElseC({ top: 0, left: 0});
+      var curOffset = getOffset(elem).getOrElseC({ x: 0, y: 0});
 			var curTop    = getComputedCssProperty( elem, 'top' ).map(function(s) return s.toInt(0)).getOrElseC(0);
 			var curLeft   = getComputedCssProperty( elem, 'left').map(function(s) return s.toInt(0)).getOrElseC(0);
 
-      elem.style.top  = ((offset.top  - curOffset.top)  + curTop).toString() + "px";
-      elem.style.left = ((offset.left - curOffset.left) + curLeft).toString() + "px";
+      elem.style.top  = ((offset.y - curOffset.y) + curTop).toString() + "px";
+      elem.style.left = ((offset.x - curOffset.x) + curLeft).toString() + "px";
 
       return elem;
     }
@@ -325,7 +325,7 @@ class Quirks {
 
   /** Retrieves the offset of the element, relative to the window origin.
    */
-  public static function getOffset(elem: HTMLElement): Option<{ top: Int, left: Int }> {
+  public static function getOffset(elem: HTMLElement): Option<{ x: Int, y: Int }> {
     if (elem == null || elem.ownerDocument == null) return None;
     else if (elem == untyped elem.ownerDocument.body) return getBodyOffset(cast elem.ownerDocument);
     else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.getBoundingClientRect != null) {
@@ -338,7 +338,7 @@ class Quirks {
   	  var top: Int  = box.top  + [Env.window.pageYOffset, if (BrowserSupport.boxModel()) docElem.scrollTop  else null, body.scrollTop ].filter(P.isNotNull()).first() - clientTop;
   		var left: Int = box.left + [Env.window.pageXOffset, if (BrowserSupport.boxModel()) docElem.scrollLeft else null, body.scrollLeft].filter(P.isNotNull()).first() - clientLeft;
 
-  		return Some({ top: top, left: left });
+  		return Some({ x: left, y: top });
     }
     else {
   		var getStyle = function(elem: HTMLElement): Dynamic {
@@ -398,7 +398,7 @@ class Quirks {
   			left += Math.max(docElem.scrollLeft, body.scrollLeft).toInt();
   		}
 
-  		return Some({ top: top, left: left });
+  		return Some({ x: left, y: top });
     }
   }
 }

@@ -21,14 +21,14 @@ class QuirksTestCase extends TestCase {
     body.appendChild(element);
   }
   public function testSetGetOffset(): Void {
-    var offset = {top: 40, left: 50};
+    var offset = {x: 50, y: 40};
 
     element.setOffset(offset);
 
-    var elementOffset = element.getOffset().getOrElseC({top: 0, left: 0});
+    var elementOffset = element.getOffset().getOrElseC({x: 0, y: 0});
 
-    assertEquals(offset.top, elementOffset.top);
-    assertEquals(offset.left, elementOffset.left);
+    assertEquals(offset.x, elementOffset.x);
+    assertEquals(offset.y, elementOffset.y);
   }
   public function testSetGetHight(): Void {
     var hight = 121;
