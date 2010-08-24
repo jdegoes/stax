@@ -20,7 +20,7 @@ import Dom;
 
 using PreludeExtensions;
 
-class Refinements {
+class HTMLElementExtensions {
 	public static inline function asIframe(e: HTMLElement): HTMLIFrameElement {
 	  return asIframeOption(e).get();
 	}
@@ -231,6 +231,22 @@ class Refinements {
 	
 	public static inline function asTFoot(e: HTMLElement): HTMLTableSectionElement {
 	  return asTFootOption(e).get();
+	}
+	
+	public static inline function asTR(e: HTMLElement): HTMLTableRowElement {
+	  return asTROption(e).get();
+	}
+	
+	public static inline function asFrameSet(e: HTMLElement): HTMLFrameSetElement {
+	  return asFrameSetOption(e).get();
+	}
+	
+	public static inline function asFrame(e: HTMLElement): HTMLFrameElement {
+	  return asFrameOption(e).get();
+	}
+	
+	public static inline function asIFrame(e: HTMLElement): HTMLIFrameElement {
+	  return asIFrameOption(e).get();
 	}
 	
 	
@@ -455,6 +471,22 @@ class Refinements {
 	
 	public static inline function asTFootOption(e: HTMLElement): Option<HTMLTableSectionElement> {
 	  return if (e.nodeName == 'TFOOT') Some(cast e); else None;
+	}
+	
+	public static inline function asTROption(e: HTMLElement): Option<HTMLTableRowElement> {
+	  return if (e.nodeName == 'TR') Some(cast e); else None;
+	}
+	
+	public static inline function asFrameSetOption(e: HTMLElement): Option<HTMLFrameSetElement> {
+	  return if (e.nodeName == 'FRAMESET') Some(cast e); else None;
+	}
+	
+	public static inline function asFrameOption(e: HTMLElement): Option<HTMLFrameElement> {
+	  return if (e.nodeName == 'FRAME') Some(cast e); else None;
+	}
+	
+	public static inline function asIFrameOption(e: HTMLElement): Option<HTMLIFrameElement> {
+	  return if (e.nodeName == 'IFRAME') Some(cast e); else None;
 	}
 	
 	

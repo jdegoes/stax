@@ -20,12 +20,12 @@ package js.dom;
 import Dom;
 import js.Env;
 import js.dom.Quirks;
-import js.dom.Refinements;
-using  js.dom.Refinements;
+import js.dom.HTMLElementExtensions;
+using  js.dom.HTMLElementExtensions;
 
 import haxe.test.TestCase;
 
-class RefinementsTestCase extends TestCase {
+class HTMLElementExtensionsTestCase extends TestCase {
     var _doc: Env.HTMLDocument;
 
     public function new():Void {
@@ -33,43 +33,43 @@ class RefinementsTestCase extends TestCase {
         _doc = Env.document;
     }
     
-    private function testThatRefinementsIFrameOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsIFrameOptionWorks(): Void {
       var iframe = _doc.getElementsByTagName('iframe')[0];
       
       assertEquals("IFRAME", iframe.asIframe().nodeName);
     }
     
-    private function testThatRefinementsScriptOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsScriptOptionWorks(): Void {
       var script = _doc.getElementsByTagName('script')[0];
       
       assertEquals("SCRIPT", script.asScript().nodeName);
     }
     
-    private function testThatRefinementsDIVOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsDIVOptionWorks(): Void {
       var div = _doc.getElementsByTagName('div')[0];
       
       assertEquals("DIV", div.asDiv().nodeName);
     }
     
-    private function testThatRefinementsFORMOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsFORMOptionWorks(): Void {
       var form = _doc.getElementsByTagName('form')[0];
       
       assertEquals("FORM", form.asForm().nodeName);
     }
     
-    private function testThatRefinementsBODYOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsBODYOptionWorks(): Void {
       var body = _doc.getElementsByTagName('body')[0];
       
       assertEquals("BODY", body.asBody().nodeName);
     }
     
-    private function testThatRefinementsSTYLEOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsSTYLEOptionWorks(): Void {
       var style = _doc.getElementsByTagName('STYLE')[0];
       
       assertEquals("STYLE", style.asStyle().nodeName);
     }
     
-    private function testThatRefinementsTEXTOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsTEXTOptionWorks(): Void {
       var p = createTestElement('P', 'test');
       var appendText = _doc.createTextNode('foo');
       
@@ -81,49 +81,49 @@ class RefinementsTestCase extends TestCase {
       removeTestElement('test');
     }
     
-    private function testThatRefinementsVideoOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsVideoOptionWorks(): Void {
       var video = createTestElement('video', 'test');
             
       assertEquals("VIDEO", video.asVideo().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsAUDIOOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsAUDIOOptionWorks(): Void {
       var audio = createTestElement('audio', 'test');
             
       assertEquals("AUDIO", audio.asAudio().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsHEADOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsHEADOptionWorks(): Void {
       var head = createTestElement('HEAD', 'test');
       
       assertEquals("HEAD", head.asHead().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsLINKOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsLINKOptionWorks(): Void {
       var link = createTestElement('link', 'test');
             
       assertEquals("LINK", link.asLink().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTITLEOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsTITLEOptionWorks(): Void {
       var title = createTestElement('title', 'test');
             
       assertEquals("TITLE", title.asTitle().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsMETAOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsMETAOptionWorks(): Void {
       var meta = createTestElement('meta', 'test');
             
       assertEquals("META", meta.asMeta().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsBASEOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsBASEOptionWorks(): Void {
       var base = createTestElement('base', 'test');
             
       assertEquals("BASE", base.asBase().nodeName);
@@ -131,277 +131,305 @@ class RefinementsTestCase extends TestCase {
     }
     
     
-    private function testThatRefinementsISINDEXOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsISINDEXOptionWorks(): Void {
       var isIndex = createTestElement('isIndex', 'test');
             
       assertEquals("ISINDEX", isIndex.asIsIndex().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsSELECTOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsSELECTOptionWorks(): Void {
       var select = createTestElement('select', 'test');
             
       assertEquals("SELECT", select.asSelect().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsCANVASOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsCANVASOptionWorks(): Void {
       var canvas = createTestElement('canvas', 'test');
             
       assertEquals("CANVAS", canvas.asCanvas().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsOPTGROUPOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsOPTGROUPOptionWorks(): Void {
       var optGroup = createTestElement('optGroup', 'test');
             
       assertEquals("OPTGROUP", optGroup.asOptGroup().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsOPTIONOptionWorks(): Void {
+    private function testThatHTMLElementExtensionsOPTIONOptionWorks(): Void {
       var option = createTestElement('option', 'test');
             
       assertEquals("OPTION", option.asOption().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsINPUTInputWorks(): Void {
+    private function testThatHTMLElementExtensionsINPUTInputWorks(): Void {
       var input = createTestElement('input', 'test');
             
       assertEquals("INPUT", input.asInput().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTEXTAREATextAreaWorks(): Void {
+    private function testThatHTMLElementExtensionsTEXTAREATextAreaWorks(): Void {
       var textArea = createTestElement('textArea', 'test');
             
       assertEquals("TEXTAREA", textArea.asTextArea().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsBUTTONButtonWorks(): Void {
+    private function testThatHTMLElementExtensionsBUTTONButtonWorks(): Void {
       var button = createTestElement('button', 'test');
             
       assertEquals("BUTTON", button.asButton().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsLABELLabelWorks(): Void {
+    private function testThatHTMLElementExtensionsLABELLabelWorks(): Void {
       var label = createTestElement('label', 'test');
             
       assertEquals("LABEL", label.asLabel().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsFIELDSETWorks(): Void {
+    private function testThatHTMLElementExtensionsFIELDSETWorks(): Void {
       var fieldSet = createTestElement('fieldset', 'test');
             
       assertEquals("FIELDSET", fieldSet.asFieldSet().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsLEGENDWorks(): Void {
+    private function testThatHTMLElementExtensionsLEGENDWorks(): Void {
       var legend = createTestElement('legend', 'test');
             
       assertEquals("LEGEND", legend.asLegend().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsULWorks(): Void {
+    private function testThatHTMLElementExtensionsULWorks(): Void {
       var ul = createTestElement('ul', 'test');
             
       assertEquals("UL", ul.asUList().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsOLWorks(): Void {
+    private function testThatHTMLElementExtensionsOLWorks(): Void {
       var ol = createTestElement('ol', 'test');
             
       assertEquals("OL", ol.asOList().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsDLWorks(): Void {
+    private function testThatHTMLElementExtensionsDLWorks(): Void {
       var dl = createTestElement('dl', 'test');
             
       assertEquals("DL", dl.asDList().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsDIRWorks(): Void {
+    private function testThatHTMLElementExtensionsDIRWorks(): Void {
       var dir = createTestElement('dir', 'test');
             
       assertEquals("DIR", dir.asDir().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsMENUWorks(): Void {
+    private function testThatHTMLElementExtensionsMENUWorks(): Void {
       var menu = createTestElement('menu', 'test');
             
       assertEquals("MENU", menu.asMenu().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsLIWorks(): Void {
+    private function testThatHTMLElementExtensionsLIWorks(): Void {
       var li = createTestElement('li', 'test');
             
       assertEquals("LI", li.asLI().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsPWorks(): Void {
+    private function testThatHTMLElementExtensionsPWorks(): Void {
       var p = createTestElement('p', 'test');
             
       assertEquals("P", p.asP().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsHWorks(): Void {
+    private function testThatHTMLElementExtensionsHWorks(): Void {
       var h = createTestElement('h', 'test');
             
       assertEquals("H", h.asH().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsQUOTEWorks(): Void {
+    private function testThatHTMLElementExtensionsQUOTEWorks(): Void {
       var quote = createTestElement('quote', 'test');
             
       assertEquals("QUOTE", quote.asQuote().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsPREWorks(): Void {
+    private function testThatHTMLElementExtensionsPREWorks(): Void {
       var pre = createTestElement('pre', 'test');
             
       assertEquals("PRE", pre.asPre().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsBRWorks(): Void {
+    private function testThatHTMLElementExtensionsBRWorks(): Void {
       var br = createTestElement('br', 'test');
             
       assertEquals("BR", br.asBR().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsBASEFONTWorks(): Void {
+    private function testThatHTMLElementExtensionsBASEFONTWorks(): Void {
       var baseFont = createTestElement('baseFont', 'test');
             
       assertEquals("BASEFONT", baseFont.asBaseFont().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsFONTWorks(): Void {
+    private function testThatHTMLElementExtensionsFONTWorks(): Void {
       var Font = createTestElement('Font', 'test');
             
       assertEquals("FONT", Font.asFont().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsHRWorks(): Void {
+    private function testThatHTMLElementExtensionsHRWorks(): Void {
       var hr = createTestElement('HR', 'test');
             
       assertEquals("HR", hr.asHR().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsMODWorks(): Void {
+    private function testThatHTMLElementExtensionsMODWorks(): Void {
       var mod = createTestElement('MOD', 'test');
             
       assertEquals("MOD", mod.asMod().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsAWorks(): Void {
+    private function testThatHTMLElementExtensionsAWorks(): Void {
       var a = createTestElement('A', 'test');
             
       assertEquals("A", a.asA().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsIMGWorks(): Void {
+    private function testThatHTMLElementExtensionsIMGWorks(): Void {
       var image = createTestElement('IMG', 'test');
             
       assertEquals("IMG", image.asImage().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsOBJECTWorks(): Void {
+    private function testThatHTMLElementExtensionsOBJECTWorks(): Void {
       var object = createTestElement('OBJECT', 'test');
             
       assertEquals("OBJECT", object.asObject().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsPARAMWorks(): Void {
+    private function testThatHTMLElementExtensionsPARAMWorks(): Void {
       var param = createTestElement('PARAM', 'test');
             
       assertEquals("PARAM", param.asParam().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsAPPLETWorks(): Void {
+    private function testThatHTMLElementExtensionsAPPLETWorks(): Void {
       var applet = createTestElement('APPLET', 'test');
             
       assertEquals("APPLET", applet.asApplet().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsMAPWorks(): Void {
+    private function testThatHTMLElementExtensionsMAPWorks(): Void {
       var map = createTestElement('MAP', 'test');
             
       assertEquals("MAP", map.asMap().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsAREAWorks(): Void {
+    private function testThatHTMLElementExtensionsAREAWorks(): Void {
       var area = createTestElement('AREA', 'test');
             
       assertEquals("AREA", area.asArea().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTABLEWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLEWorks(): Void {
       var table = createTestElement('TABLE', 'test');
             
       assertEquals("TABLE", table.asTable().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsCAPTIONWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLECAPTIONWorks(): Void {
       var caption = createTestElement('CAPTION', 'test');
             
       assertEquals("CAPTION", caption.asCaption().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTDWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLETDWorks(): Void {
       var td = createTestElement('TD', 'test');
             
       assertEquals("TD", td.asTD().nodeName);
       removeTestElement('test');
     }
     
-    private function testThatRefinementsTABLEHEADWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLEHEADWorks(): Void {
       var table = newTable('table');
       
       assertEquals("THEAD", table.tHead.asTHead().nodeName);
       removeTestElement('table');
     }
     
-    private function testThatRefinementsTABLEBODYWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLEBODYWorks(): Void {
       var table = newTable('table');
       
       assertEquals("TBODY", table.tBodies[0].asTBody().nodeName);
       removeTestElement('table');
     }
     
-    private function testThatRefinementsTABLEFOOTWorks(): Void {
+    private function testThatHTMLElementExtensionsTABLEFOOTWorks(): Void {
       var table = newTable('table');
       
       assertEquals("TFOOT", table.tFoot.asTFoot().nodeName);
       removeTestElement('table');
+    }
+    
+    private function testThatHTMLElementExtensionsTABLETRWorks(): Void {
+      var table = newTable('table');
+      
+      assertEquals("TR", table.rows[0].asTR().nodeName);
+      removeTestElement('table');
+    }
+    
+    private function testThatHTMLElementExtensionsFRAMESETWorks(): Void {
+      var frameset = createTestElement('frameset', 'test');
+      
+      assertEquals("FRAMESET", frameset.asFrameSet().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatHTMLElementExtensionsFRAMEWorks(): Void {
+      var frame = createTestElement('frame', 'test');
+      
+      assertEquals("FRAME", frame.asFrame().nodeName);
+      removeTestElement('test');
+    }
+    
+    private function testThatHTMLElementExtensionsIFRAMEWorks(): Void {
+      var iFrame = createTestElement('iFrame', 'test');
+      
+      assertEquals("IFRAME", iFrame.asIFrame().nodeName);
+      removeTestElement('test');
     }
     
     
