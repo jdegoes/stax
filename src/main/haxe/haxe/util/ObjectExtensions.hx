@@ -109,16 +109,12 @@ class ObjectExtensions {
 	}
 	
 	public static function extractValues<T>(d: Dynamic<T>, names: Iterable<String>): Array<T> {
-	  var contains = function(s: String) {
-	    for (e in names) if (e == s) return true;
-	    
-	    return false;
-	  }
-	  
 	  var result: Array<T> = [];
 	  
-	  for (field in Reflect.fields(d)) {
-	    if (contains(field)) result.push(cast Reflect.field(d, field));
+	  for (field in names) {
+	    var value = Reflect.field(d, field);
+	    
+	    if (value != null) result.push(cast value);
 	  }
 	  
 	  return result;
