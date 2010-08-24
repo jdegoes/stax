@@ -205,6 +205,34 @@ class Refinements {
 	  return asMapOption(e).get();
 	}
 	
+	public static inline function asArea(e: HTMLElement): HTMLAreaElement {
+	  return asAreaOption(e).get();
+	}
+	
+	public static inline function asTable(e: HTMLElement): HTMLTableElement {
+	  return asTableOption(e).get();
+	}
+	
+	public static inline function asCaption(e: HTMLElement): HTMLTableCaptionElement {
+	  return asCaptionOption(e).get();
+	}
+	
+	public static inline function asTD(e: HTMLElement): HTMLTableColElement {
+	  return asTDOption(e).get();
+	}
+	
+	public static inline function asTHead(e: HTMLElement): HTMLTableSectionElement {
+	  return asTHeadOption(e).get();
+	}
+	
+	public static inline function asTBody(e: HTMLElement): HTMLTableSectionElement {
+	  return asTBodyOption(e).get();
+	}
+	
+	public static inline function asTFoot(e: HTMLElement): HTMLTableSectionElement {
+	  return asTFootOption(e).get();
+	}
+	
 	
 	
 	
@@ -400,6 +428,38 @@ class Refinements {
 	public static inline function asMapOption(e: HTMLElement): Option<HTMLMapElement> {
 	  return if (e.nodeName == 'MAP') Some(cast e); else None;
 	}
+	
+	public static inline function asAreaOption(e: HTMLElement): Option<HTMLAreaElement> {
+	  return if (e.nodeName == 'AREA') Some(cast e); else None;
+	}
+	
+	public static inline function asTableOption(e: HTMLElement): Option<HTMLTableElement> {
+	  return if (e.nodeName == 'TABLE') Some(cast e); else None;
+	}
+	
+	public static inline function asCaptionOption(e: HTMLElement): Option<HTMLTableCaptionElement> {
+	  return if (e.nodeName == 'CAPTION') Some(cast e); else None;
+	}
+	
+	public static inline function asTDOption(e: HTMLElement): Option<HTMLTableColElement> {
+	  return if (e.nodeName == 'TD') Some(cast e); else None;
+	}
+	
+	public static inline function asTHeadOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'THEAD') Some(cast e); else None;
+	}
+	
+	public static inline function asTBodyOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'TBODY') Some(cast e); else None;
+	}
+	
+	public static inline function asTFootOption(e: HTMLElement): Option<HTMLTableSectionElement> {
+	  return if (e.nodeName == 'TFOOT') Some(cast e); else None;
+	}
+	
+	
+	
+	
 	
 	
 	

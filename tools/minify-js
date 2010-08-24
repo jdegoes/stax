@@ -2,57 +2,63 @@
 
 $|++;
 
-my @includes = grep s/^--include=//, @ARGV;
+my @includes = '$Main.init', grep s/^--include=//, @ARGV;
 
 sub d {print STDERR ++$count, ': ', join(' ', @_) || '<empty>', "\n";
        wantarray ? @_ : $_[0]}
 
 sub j {join "\n", @_}
 sub h {map {$_ => 1} @_}
+sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $$xs[$_] ne $$ys[$_], 0 .. $#$xs}
 
-sub fix  {my ($f, @xs) = @_; &$f(@xs) == @xs ? @xs : fix($f, &$f(@xs))}
+sub fix  {my ($f, @xs) = @_; my @ys = sort &$f(sort @xs); e(\@xs, \@ys) ? @xs : fix($f, @ys)}
 sub uniq {my %h; grep ! $h{$_}++, @_}
 
-sub statics_in {map /[\w\$\.]+/go, @_}
-sub methods_in {map /(\.[\w\$]+)/go, @_}
-sub classes_in {map /new\h+([\w\.\$]+)/go, @_}
-sub roots      {fix sub {uniq map /(([\w\$\.]+)(?:\.[\w\$]+))/go, @_}, @_}
+sub statics_in {map(/[\.\w\$\[\]'"]+/go, @_), grep s/\$closure\(([\.\w\$\[\]'"]+),\s*"(\w+)"\)/$1.$2/go, @_}
+sub methods_in {map /\.[\w\$]+|\[["'][^"']+["']\]/go, @_}
+sub classes_in {map /new\h+([\w\.\$\[\]"']+)/go, @_}
+sub roots      {fix sub {uniq @_, map /(([\.\w\$\[\]"']+)(?:\.[\w\$]+|\[["'][^"']+["']\]))/go, @_}, @_}
 
-my @pieces = split /^([\$\w\.\[\]"]+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+$|\V*$))/mo, join '', <STDIN>;
+my @pieces = split /^([\$\w\.\[\]"']+)(\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?$|\V*$))/mo, join '', <STDIN>;
+
+# For my own sanity: Add error backtraces to thrown errors. Nobody in their right mind throws bare strings.
+s/throw\s+(".*;?$)/throw new Error(\1)/g for @pieces;
 
 # At this point, @pieces looks like this:
 # '', 'foo.bar', ' = function () {\n...\n}', 'global = null', 'bif.baz', ' = function (x) {\n...\n}', ...
 my %definitions = map @pieces[$_ * 3 + 1, $_ * 3 + 2], 0 .. $#pieces / 3;
 my @non_defs    = map $pieces[$_ * 3], 0 .. $#pieces / 3;
 
-my @instance    = grep   /\.prototype\./o, keys %definitions;
-my @static      = grep ! /\.prototype\./o, keys %definitions;
+my @instance    = grep   /\.prototype\W/o, keys %definitions;
+my @static      = grep ! /\.prototype\W/o, keys %definitions;
+
+my $extras = sub {my ($base, @xs) = @_; map $definitions{"$base.$_"} ? ($base, "$base.$_") : ($base), @xs};
 
 my $cover = sub {
-  my @code    = @non_defs, @definitions{@_};
-  my @methods = grep s/^\./\\./, uniq methods_in @code;
-  my @statics =                  uniq statics_in @code;
-  my @classes =                  uniq classes_in @code;
+  my @code    = (@_, @definitions{@_});
+  my @statics = uniq map(&$extras($_, qw/__name__ __interfaces__/), statics_in(@code), classes_in(@code));
 
   # Grab all instance methods that might be mentioned here.
-  my @resolved_methods = uniq map {my $r = $_; grep(/$r$/, @instance)} @methods;
+  my @resolved_methods = uniq map {my $r = $_; grep(index($_, $r) == length($_) - length($r), @instance)} uniq methods_in @code;
 
-  uniq roots @includes, @_, @statics, @classes, @resolved_methods;
+  uniq roots @statics, @resolved_methods;
 };
 
-my %live_set = h fix $cover;
+my %live_set = h fix($cover, @includes, @non_defs);
 print join '', map @pieces[$_ * 3, $live_set{$pieces[$_ * 3 + 1]} ? ($_ * 3 + 1, $_ * 3 + 2) : ()], 0 .. $#pieces / 3;
 
 __END__
 
 =head1 SYNOPSYS
 
-minify-js file1 [file2 [... fileN]] > output.js
+minify-js [--include=x] [--include=y] < input.js > output.js
 
 =head1 DESCRIPTION
 
 This program minifies HaXe-generated JavaScript. It removes unused classes, static methods, and instance methods, though because of the dynamically-typed nature of JavaScript it doesn't
 necessarily catch everything. Note that this script doesn't work for JS minification in the general case. It relies on HaXe-formatted output, which is of a very specific form. Each definition
 occurs on its own line, and indentation is consistent enough to reflect the structure of the generated code. Neither of these is true for JavaScript in general.
+
+Manually-specified --include options indicate additional root-set definitions; this can be useful if your code is a library without a single entry point.
 
 =cut
