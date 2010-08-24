@@ -9,7 +9,7 @@ import haxe.framework.Injector;
 import haxe.time.ScheduledExecutor;
 
 using PreludeExtensions;
-using js.dom.DocumentExtensions;
+using js.dom.HTMLDocumentExtensions;
 
 class Demo {
   public static function iframeDemo() {

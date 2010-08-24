@@ -24,7 +24,7 @@ import js.dom.Quirks;
 import js.io.IFrameIO;
 
 using PreludeExtensions;
-using js.dom.DocumentExtensions;
+using js.dom.HTMLDocumentExtensions;
 
 class IFrameIOTestCase extends TestCase {
   var window1: Window;
