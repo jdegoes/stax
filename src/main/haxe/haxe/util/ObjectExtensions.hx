@@ -104,17 +104,17 @@ class ObjectExtensions {
 	  return getAll(d);
 	}
 	
-	public static function extractValuesAny(d: Object, names: Iterable<String>): Array<Dynamic> {
-	  return extractValues(d, names);
+	public static function extractValuesAny(d: Object, names: Iterable<String>, def: Dynamic): Array<Dynamic> {
+	  return extractValues(d, names, def);
 	}
 	
-	public static function extractValues<T>(d: Dynamic<T>, names: Iterable<String>): Array<T> {
+	public static function extractValues<T>(d: Dynamic<T>, names: Iterable<String>, def: T): Array<T> {
 	  var result: Array<T> = [];
 	  
 	  for (field in names) {
 	    var value = Reflect.field(d, field);
 	    
-	    if (value != null) result.push(cast value);
+	    result.push(if (value != null) cast value else def);
 	  }
 	  
 	  return result;
