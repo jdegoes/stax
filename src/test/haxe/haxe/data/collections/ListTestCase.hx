@@ -144,7 +144,7 @@ class ListTestCase extends TestCase {
       var equal = Tuple2.EqualT(Int.EqualT(), Int.EqualT());
       
       for (z in l) {
-        assertEquals(z, i1.entuple(i2), equal);
+        assertEquals(z, i1.entuple(i2), equal.equal);
         
         ++i1; ++i2;
       }

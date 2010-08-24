@@ -71,9 +71,9 @@ class TestCase {
 		Assert.notEquals(expected, value, msg, pos);
 	}
 	
-	public function assertEquals<T>(expected : T, value : T, ?equal: Equal<T>, ?msg : String , ?pos : PosInfos) {
+	public function assertEquals<T>(expected : T, value : T, ?equal: T -> T -> Bool, ?msg : String , ?pos : PosInfos) {
 	  if (equal != null) {
-	    Assert.isTrue(equal.equal(expected, value), (if (msg != null) msg else 'expected ' + expected + ' but found ' + value), pos);
+	    Assert.isTrue(equal(expected, value), (if (msg != null) msg else 'expected ' + expected + ' but found ' + value), pos);
 	  }
 	  else {
 	    Assert.equals(expected, value, msg, pos);
