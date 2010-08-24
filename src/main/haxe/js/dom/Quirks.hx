@@ -182,6 +182,24 @@ class Quirks {
 		});
 	}
 	
+	/** Retrieves the dimensions of the viewport (inner window of the browser, 
+	 * for top-level windows).
+	 */
+	public static function getViewportSize(): { dx: Int, dy: Int } {
+	  return if (Env.isDefined(Env.window.innerWidth)) {
+	    dx: Env.window.innerWidth,
+	    dy: Env.window.innerHeight
+	  }
+    else if (Env.isDefined(untyped Env.document.documentElement) && Env.isDefined(untyped Env.document.documentElement.clientWidth) && untyped Env.document.documentElement.clientWidth != 0) {
+      dx: untyped Env.document.documentElement.clientWidth,
+      dy: untyped Env.document.documentElement.clientHeight
+    }
+    else {
+      dx: untyped Env.document.body.clientWidth,
+      dy: untyped Env.document.body.clientHeight
+    }
+	}
+	
 	/** Retrieves the scroll of the page, in pixels. */
 	public static function getPageScroll(): { x: Int, y: Int } {
     var xScroll: Int = 0;
