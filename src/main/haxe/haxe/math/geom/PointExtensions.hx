@@ -18,6 +18,8 @@ package haxe.math.geom;
 import haxe.math.geom.Point;
 import haxe.math.geom.Vector;
 
+using PreludeExtensions;
+
 class Point2dIntExtensions {
   public static inline function minus(p1: Point2d<Int>, p2: Point2d<Int>): Vector2d<Int> {
     return {
@@ -44,6 +46,13 @@ class Point2dIntExtensions {
     return {
       dx: p.x,
       dy: p.y
+    }
+  }
+  
+  public static inline function toFloat(p: Point2d<Int>): Point2d<Float> {
+    return {
+      x: p.x.toFloat(),
+      y: p.y.toFloat()
     }
   }
 }
@@ -74,6 +83,13 @@ class Point2dFloatExtensions {
     return {
       dx: p.x,
       dy: p.y
+    }
+  }
+  
+  public static inline function toInt(p: Point2d<Float>): Point2d<Int> {
+    return {
+      x: p.x.round(),
+      y: p.y.round()
     }
   }
 }
