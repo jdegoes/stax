@@ -1829,7 +1829,7 @@ typedef Storage = {
 extern interface HTMLCollection<T> implements ArrayAccess<T>, implements Dynamic<T> {
     public var length (default,null): Int;
     
-    public function item(index: Int): Node;
+    public function item(index: Int): HTMLElement;
     
     public function namedItem(name: DOMString): Node;
 }
@@ -9340,7 +9340,7 @@ typedef HTMLMenuElement = {
     
     public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
     
-    public function getClientRects(): DomCollection<ClientRect>;
+    public function getClientRects(): Domg<ClientRect>;
     
     public function getBoundingClientRect(): ClientRect;
     
