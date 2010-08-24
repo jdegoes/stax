@@ -9340,7 +9340,7 @@ typedef HTMLMenuElement = {
     
     public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
     
-    public function getClientRects(): Domg<ClientRect>;
+    public function getClientRects(): DomCollection<ClientRect>;
     
     public function getBoundingClientRect(): ClientRect;
     
