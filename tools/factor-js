@@ -5,7 +5,7 @@ sub read_file {open my $fh, '<', shift || $_; my $result = join '', <$fh>; close
 sub pieces_for {
   my $code = shift || $_;
   $code = read_file $code if -f $code;
-  map split /^(if.*)$/mo, split /^([\$\w\.\[\]"']+\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?$|\V*$))/mo, $code;
+  map split /^(if.*)$/mo, split(/^([\$\w\.\[\]"']+\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?$|\V*$))/mo, $code);
 }
 
 my @files = map [pieces_for $_], @ARGV;
