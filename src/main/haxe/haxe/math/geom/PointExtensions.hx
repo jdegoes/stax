@@ -15,6 +15,8 @@
 */
 package haxe.math.geom;
 
+import Prelude;
+
 import haxe.math.geom.Point;
 import haxe.math.geom.Vector;
 
@@ -55,6 +57,10 @@ class Point2dIntExtensions {
       y: p.y.toFloat()
     }
   }
+  
+  public static inline function toTuple(p: Point2d<Int>): Tuple2<Int, Int> {
+    return p.x.entuple(p.y);
+  }
 }
 
 class Point2dFloatExtensions {
@@ -91,5 +97,9 @@ class Point2dFloatExtensions {
       x: p.x.round(),
       y: p.y.round()
     }
+  }
+  
+  public static inline function toTuple(p: Point2d<Float>): Tuple2<Float, Float> {
+    return p.x.entuple(p.y);
   }
 }
