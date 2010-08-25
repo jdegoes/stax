@@ -16,6 +16,7 @@
 package js.dom;
 
 import Prelude;
+import PreludeExtensions;
 
 import Dom;
 import js.Env;
@@ -29,7 +30,7 @@ using haxe.util.ObjectExtensions;
 
 
 
-/** 
+/**
  * Common operations that need to be performed differently across browsers.
  */
 class Quirks {
@@ -47,7 +48,7 @@ class Quirks {
   static var border = "border";
   static var margin = "margin";
 
-  	
+
 	public static function createXMLHttpRequest(): XMLHttpRequest {
       return untyped if (window.XMLHttpRequest) {
           __new__("XMLHttpRequest");
@@ -69,7 +70,7 @@ class Quirks {
           throw "Unable to create XMLHttpRequest object."; null;
       }
   }
-  
+
   public static function getIframeDocument(iframe: HTMLIFrameElement): HTMLDocument {
     if (iframe.contentDocument != null) {
       return untyped iframe.contentDocument;
@@ -82,7 +83,7 @@ class Quirks {
     }
     else { throw "Cannot find iframe content document for " + iframe; return null; }
   }
-  
+
   public static function getIframeWindow(iframe: HTMLIFrameElement): Window {
     if (iframe.contentWindow != null) {
       return untyped iframe.contentWindow;
@@ -95,7 +96,7 @@ class Quirks {
     }
     else { throw "Cannot find iframe content document for " + iframe; return null; }
   }
-  
+
   public static function addEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
     if (target.addEventListener != null) {
       target.addEventListener(type, listener, useCapture);
@@ -104,7 +105,7 @@ class Quirks {
       target.attachEvent('on' + type, listener);
     }
   }
-  
+
   public static function removeEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
     if (target.removeEventListener != null) {
       target.removeEventListener(type, listener, useCapture);
@@ -113,18 +114,18 @@ class Quirks {
       target.detachEvent('on' + type, listener);
     }
   }
-  
-  /** Retrieves the actual property name for the specified css property. 
-   * Because some CSS property names are reserved JavaScript keywords, not 
+
+  /** Retrieves the actual property name for the specified css property.
+   * Because some CSS property names are reserved JavaScript keywords, not
    * every CSS property has an identically equal JavaScript property name.
    */
   public static function getActualCssPropertyName(name: String): String {
     if (FloatPattern.match(name)) return BrowserSupport.cssFloat() ? "cssFloat" : "styleFloat";
-    
+
     return name;
   }
-  
-  /** Retrieves the computed value for a particular CSS property. 
+
+  /** Retrieves the computed value for a particular CSS property.
    */
   public static function getComputedCssProperty(elem: HTMLElement, name: String): Option<String> {
     return (if (BrowserSupport.getComputedStyle()) {
@@ -142,7 +143,7 @@ class Quirks {
   		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
   		  }
   		  else "1";
-  		}		
+  		}
   		else {
   			var style = untyped elem.currentStyle[name];
 
@@ -155,9 +156,9 @@ class Quirks {
 
   				// Put in the new values to get a computed value out
   				untyped elem.runtimeStyle.left = elem.currentStyle.left;
-				
+
   				elem.style.left = (name == "font-size") ? "1em" : style;
-  				
+
   				(untyped elem.style.pixelLeft + "px").withEffect(function() untyped {
     				// Revert the changed values
     				elem.style.left        = oldLeft;
@@ -171,7 +172,7 @@ class Quirks {
 		  return if (computedStyle == '') None; else computedStyle.toOption();
 		});
   }
-  
+
   /** Retrieves a particular CSS property.
    */
   public static function getCssProperty(elem: HTMLElement, name: String): Option<String> {
@@ -181,8 +182,8 @@ class Quirks {
 		  return getComputedCssProperty(elem, name);
 		});
 	}
-	
-	/** Retrieves the dimensions of the viewport (inner window of the browser, 
+
+	/** Retrieves the dimensions of the viewport (inner window of the browser,
 	 * for top-level windows).
 	 */
 	public static function getViewportSize(): { dx: Int, dy: Int } {
@@ -199,12 +200,12 @@ class Quirks {
       dy: untyped Env.document.body.clientHeight
     }
 	}
-	
+
 	/** Retrieves the scroll of the page, in pixels. */
 	public static function getPageScroll(): { x: Int, y: Int } {
     var xScroll: Int = 0;
     var yScroll: Int = 0;
-    
+
     if (untyped Env.window.pageYOffset != null) {
       yScroll = untyped Env.window.pageYOffset;
       xScroll = untyped Env.window.pageXOffset;
@@ -217,14 +218,14 @@ class Quirks {
       yScroll = untyped Env.document.body.scrollTop;
       xScroll = untyped Env.document.body.scrollLeft;
     }
-    
+
     return { x: xScroll, y: yScroll };
   }
 
   /** Retrieves the height of the page, in pixels. */
   public static function getPageHeight(): Int {
     var windowHeight: Int = 0;
-    
+
     if (untyped Env.window.innerHeight != null) {
       windowHeight = untyped Env.window.innerHeight;
     }
@@ -234,10 +235,10 @@ class Quirks {
     else if (Env.document.body != null) {
       windowHeight = untyped Env.document.body.clientHeight;
     }
-    
+
     return windowHeight;
   }
-	
+
 	/** Retrieves the offset of the document's body, relative to the window origin.
 	 */
 	public static function getBodyOffset(doc: HTMLDocument): Option<{ x: Int, y: Int }> {
@@ -307,14 +308,19 @@ class Quirks {
       if ( elem.offsetWidth != 0 ) {
         val = getWH(elem, offsetValueExtract, which, extra);
       } else {
-        var elemStyle = setAndStore(elem, cssShow);
-        val = getWH(elem, offsetValueExtract, which, extra);
-        setAndStore(elem, elemStyle);
+        val = swap(elem, cssShow, function(value){
+          return getWH(elem, offsetValueExtract, which, extra);
+        });
       }
       return Some(Math.max(0, Math.round(val)).toInt());
     }
   }
-
+  private static function swap<T>(elem: HTMLElement, values: Map<String, String>, functionCallback: Function<HTMLElement, T>): T{
+    var elemStyle = setAndStore(elem, values);
+    var result = untyped functionCallback.call(elem);
+    setAndStore(elem, elemStyle);
+    return result;
+  }
   private static function setAndStore(elem: HTMLElement, styles: Map<String, String>){
     var values = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT());
     for (k in styles.iterator()) {
@@ -332,7 +338,7 @@ class Quirks {
       default:
         which.foreach(function(v) {
           switch(extra){
-            case None:    val -= getComputedCssProperty( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);            
+            case None:    val -= getComputedCssProperty( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
             case Some(margin): val += getComputedCssProperty( elem, 'margin-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
           }
           val -= getComputedCssProperty( elem, 'border-' + v + '-width').map(function(s) return s.toInt(0)).getOrElseC(0);
@@ -361,7 +367,7 @@ class Quirks {
     else {
   		var getStyle = function(elem: HTMLElement): Dynamic {
   		  var defaultView = elem.ownerDocument.defaultView;
-  		  
+
   		  return if (defaultView != null) defaultView.getComputedStyle(elem, null); else untyped elem.currentStyle;
   		}
 
@@ -381,7 +387,7 @@ class Quirks {
   			}
 
   			var computedStyle = getStyle(elem);
-  			
+
   			top  -= elem.scrollTop;
   			left -= elem.scrollLeft;
 
