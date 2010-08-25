@@ -2,7 +2,7 @@
 
 $|++;
 
-my @includes = '$Main.init', grep s/^--include=//, @ARGV;
+my @includes = ('$Main.init', grep s/^--include=//, @ARGV);
 
 sub d {print STDERR ++$count, ': ', join(' ', @_) || '<empty>', "\n";
        wantarray ? @_ : $_[0]}
@@ -14,7 +14,7 @@ sub e {my ($xs, $ys) = @_; @$xs == @$ys and not scalar grep $$xs[$_] ne $$ys[$_]
 sub fix  {my ($f, @xs) = @_; my @ys = sort &$f(sort @xs); e(\@xs, \@ys) ? @xs : fix($f, @ys)}
 sub uniq {my %h; grep ! $h{$_}++, @_}
 
-sub statics_in {map(/[\.\w\$\[\]'"]+/go, @_), grep s/\$closure\(([\.\w\$\[\]'"]+),\s*"(\w+)"\)/$1.$2/go, @_}
+sub statics_in {map(/(?:[\.\w\$]+|(?:\[['"][\w\$]+['"]\]))*/go, @_), grep s/\$closure\(([\.\w\$\[\]'"]+),\s*"(\w+)"\)/$1.$2/go, @_}
 sub methods_in {map /\.[\w\$]+|\[["'][^"']+["']\]/go, @_}
 sub classes_in {map /new\h+([\w\.\$\[\]"']+)/go, @_}
 sub roots      {fix sub {uniq @_, map /(([\.\w\$\[\]"']+)(?:\.[\w\$]+|\[["'][^"']+["']\]))/go, @_}, @_}
@@ -35,11 +35,12 @@ my @static      = grep ! /\.prototype\W/o, keys %definitions;
 my $extras = sub {my ($base, @xs) = @_; map $definitions{"$base.$_"} ? ($base, "$base.$_") : ($base), @xs};
 
 my $cover = sub {
+  d 'Following graph links';
   my @code    = (@_, @definitions{@_});
   my @statics = uniq map(&$extras($_, qw/__name__ __interfaces__/), statics_in(@code), classes_in(@code));
 
-  # Grab all instance methods that might be mentioned here.
-  my @resolved_methods = uniq map {my $r = $_; grep(index($_, $r) == length($_) - length($r), @instance)} uniq methods_in @code;
+  # Grab all instance methods that might be mentioned here. We have to include statics, since sometimes a field is assigned the value of a static.
+  my @resolved_methods = uniq map {my $r = $_; grep(index($_, $r) == length($_) - length($r), @instance, @static)} uniq methods_in @code;
 
   uniq roots @statics, @resolved_methods;
 };
