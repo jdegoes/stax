@@ -5,7 +5,7 @@ sub read_file {open my $fh, '<', shift || $_; my $result = join '', <$fh>; close
 sub pieces_for {
   my $code = shift || $_;
   $code = read_file $code if -f $code;
-  split /^([\$\w\.\[\]"']+\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?\n?|\V*$))/mo, $code;
+  split /^([\$\w\.\[\]"']+\h*=\h*(?:function.*?\{(?:\V|\n\h)+\n^\}+;?$|\V*$))/mo, $code;
 }
 
 my @files = map [pieces_for $_], @ARGV;
@@ -17,14 +17,14 @@ $intersection{$_} < @files and delete $intersection{$_} for keys %intersection;
 
 # And write the common definitions. Arbitrarily, we use the first file for ordering:
 open my $fh, '>', 'common.js';
-$intersection{$_} and print $fh $_ for @{$files[0]};
+$intersection{$_} and print $fh $_, "\n" for @{$files[0]};
 close $fh;
 
 # Now write the diffs, using whichever ordering each file gives:
 for my $i (0 .. $#files) {
   my ($f, $name) = ($files[$i], $ARGV[$i] =~ /(.*)\.js$/go);
   open my $fh, '>', "$name.diff.js";
-  $intersection{$_} or print $fh $_ for @$f;
+  $intersection{$_} or print $fh $_, "\n" for @$f;
   close $fh;
 }
 
