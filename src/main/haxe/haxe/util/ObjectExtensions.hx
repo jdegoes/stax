@@ -80,12 +80,40 @@ class ObjectExtensions {
 	  return d;
 	}
 	
+	public static function replaceAll<T>(d1: Dynamic<T>, d2: Dynamic<T>, def: T): Object {
+	  var names: Array<String> = Reflect.fields(d1);
+	  
+	  var oldValues = extractValues(d1, names, def);
+	  
+	  extendWith(cast d1, cast d2);
+	  
+	  return names.zip(oldValues).foldl({}, function(o, t) {
+	    Reflect.setField(o, t._1, t._2);
+	    
+	    return o;
+	  });
+	}
+	
 	public static function setAllAny(d: Object, fields: Iterable<Tuple2<String, Dynamic>>): Object {
 	  for (field in fields) {
 	    Reflect.setField(d, field._1, field._2);
 	  }
 	  
 	  return d;
+	}
+	
+	public static function replaceAllAny(d1: Object, d2: Object, def: Dynamic): Object {
+	  var names: Array<String> = Reflect.fields(d1);
+	  
+	  var oldValues = extractValues(d1, names, def);
+	  
+	  extendWith(d1, d2);
+	  
+	  return names.zip(oldValues).foldl({}, function(o, t) {
+	    Reflect.setField(o, t._1, t._2);
+	    
+	    return o;
+	  });
 	}
 	
 	public static function get<T>(d: Dynamic<T>, k: String): Option<T> {
@@ -96,12 +124,12 @@ class ObjectExtensions {
 	  return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
 	}
 	
-	public static function getAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
+	public static function extractAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
 	  return Reflect.fields(d).map(function(name) return name.entuple(Reflect.field(d, name)));
 	}
 	
-	public static function getAllAny(d: Object): Array<Tuple2<String, Dynamic>> {
-	  return getAll(d);
+	public static function extractAllAny(d: Object): Array<Tuple2<String, Dynamic>> {
+	  return extractAll(d);
 	}
 	
 	public static function extractValuesAny(d: Object, names: Iterable<String>, def: Dynamic): Array<Dynamic> {
