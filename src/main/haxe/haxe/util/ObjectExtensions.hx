@@ -80,14 +80,18 @@ class ObjectExtensions {
 	  return d;
 	}
 	
-	public static function replaceAll<T>(d: Dynamic<T>, fields: Iterable<Tuple2<String, T>>, def: T): Array<Tuple2<String, T>> {
+	public static function replaceAll<T>(d: Dynamic<T>, fields: Iterable<Tuple2<String, T>>, def: T): Object {
 	  var names = fields.toArray().map(function(field) return field._1);
 	  
 	  var oldValues = extractValues(d, names, def);
 	  
 	  setAll(d, fields);
 	  
-	  return names.zip(oldValues);
+	  return names.zip(oldValues).foldl({}, function(o, t) {
+	    Reflect.setField(o, t._1, t._2);
+	    
+	    return o;
+	  });
 	}
 	
 	public static function setAllAny(d: Object, fields: Iterable<Tuple2<String, Dynamic>>): Object {
@@ -98,14 +102,18 @@ class ObjectExtensions {
 	  return d;
 	}
 	
-	public static function replaceAllAny(d: Dynamic, fields: Iterable<Tuple2<String, Dynamic>>, def: Dynamic): Array<Tuple2<String, Dynamic>> {
+	public static function replaceAllAny(d: Object, fields: Iterable<Tuple2<String, Dynamic>>, def: Dynamic): Object {
 	  var names = fields.toArray().map(function(field) return field._1);
 	  
 	  var oldValues = extractValuesAny(d, names, def);
 	  
 	  setAllAny(d, fields);
 	  
-	  return names.zip(oldValues);
+	  return names.zip(oldValues).foldl({}, function(o, t) {
+	    Reflect.setField(o, t._1, t._2);
+	    
+	    return o;
+	  });
 	}
 	
 	public static function get<T>(d: Dynamic<T>, k: String): Option<T> {
@@ -116,12 +124,12 @@ class ObjectExtensions {
 	  return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
 	}
 	
-	public static function getAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
+	public static function extractAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
 	  return Reflect.fields(d).map(function(name) return name.entuple(Reflect.field(d, name)));
 	}
 	
-	public static function getAllAny(d: Object): Array<Tuple2<String, Dynamic>> {
-	  return getAll(d);
+	public static function extractAllAny(d: Object): Array<Tuple2<String, Dynamic>> {
+	  return extractAll(d);
 	}
 	
 	public static function extractValuesAny(d: Object, names: Iterable<String>, def: Dynamic): Array<Dynamic> {
