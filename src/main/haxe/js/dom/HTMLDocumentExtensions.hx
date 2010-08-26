@@ -24,6 +24,10 @@ using PreludeExtensions;
  * Common elements.
  */
 class HTMLDocumentExtensions {
+  public static function newImage(doc: HTMLDocument): HTMLImageElement {
+    return cast doc.createElement('IMG');
+  }
+  
   public static function newDiv(doc: HTMLDocument): HTMLDivElement {
     return cast doc.createElement('DIV');
   }
