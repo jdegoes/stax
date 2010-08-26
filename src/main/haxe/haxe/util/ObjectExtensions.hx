@@ -80,12 +80,32 @@ class ObjectExtensions {
 	  return d;
 	}
 	
+	public static function replaceAll<T>(d: Dynamic<T>, fields: Iterable<Tuple2<String, T>>, def: T): Array<Tuple2<String, T>> {
+	  var names = fields.toArray().map(function(field) return field._1);
+	  
+	  var oldValues = extractValues(d, names, def);
+	  
+	  setAll(d, fields);
+	  
+	  return names.zip(oldValues);
+	}
+	
 	public static function setAllAny(d: Object, fields: Iterable<Tuple2<String, Dynamic>>): Object {
 	  for (field in fields) {
 	    Reflect.setField(d, field._1, field._2);
 	  }
 	  
 	  return d;
+	}
+	
+	public static function replaceAllAny(d: Dynamic, fields: Iterable<Tuple2<String, Dynamic>>, def: Dynamic): Array<Tuple2<String, Dynamic>> {
+	  var names = fields.toArray().map(function(field) return field._1);
+	  
+	  var oldValues = extractValuesAny(d, names, def);
+	  
+	  setAllAny(d, fields);
+	  
+	  return names.zip(oldValues);
 	}
 	
 	public static function get<T>(d: Dynamic<T>, k: String): Option<T> {
