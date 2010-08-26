@@ -114,6 +114,15 @@ class Quirks {
       target.detachEvent('on' + type, listener);
     }
   }
+  
+  public static function getOverrideStyle(doc: HTMLDocument, el: HTMLElement, pseudo: String): CSSStyleDeclaration {
+    if (Env.isDefined(untyped el.runtimeStyle)) {
+      return untyped el.runtimeStyle;
+    }
+    else {
+      return doc.getOverrideStyle(el, pseudo);
+    }
+  }
 
   /** Retrieves the actual property name for the specified css property.
    * Because some CSS property names are reserved JavaScript keywords, not
