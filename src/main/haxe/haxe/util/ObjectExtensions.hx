@@ -80,12 +80,12 @@ class ObjectExtensions {
 	  return d;
 	}
 	
-	public static function replaceAll<T>(d: Dynamic<T>, fields: Iterable<Tuple2<String, T>>, def: T): Object {
-	  var names = fields.toArray().map(function(field) return field._1);
+	public static function replaceAll<T>(d1: Dynamic<T>, d2: Dynamic<T>, def: T): Object {
+	  var names: Array<String> = Reflect.fields(d1);
 	  
-	  var oldValues = extractValues(d, names, def);
+	  var oldValues = extractValues(d1, names, def);
 	  
-	  setAll(d, fields);
+	  extendWith(cast d1, cast d2);
 	  
 	  return names.zip(oldValues).foldl({}, function(o, t) {
 	    Reflect.setField(o, t._1, t._2);
