@@ -704,5 +704,42 @@ class Stax {
     return function(a: A) { return a; }
   }
   
+  public static function unfold<T, R>(initial: T, unfolder: T -> Option<Tuple2<T, R>>): Iterable<R> {
+    return {
+      iterator: function(): Iterator<R> {
+        var _next: Option<R> = None;
+        var _progress: T = initial;
+        
+        var precomputeNext = function() {
+          switch (unfolder(_progress)) {
+            case None:
+              _progress = null;
+              _next     = None;
+              
+            case Some(tuple):
+              _progress = tuple._1;
+              _next     = Some(tuple._2);
+          }
+        }
+        
+        precomputeNext();
+        
+        return {
+          hasNext: function(): Bool {
+            return !_next.isEmpty();
+          },
+        
+          next: function(): R {
+            var n = _next.get();
+            
+            precomputeNext();
+            
+            return n;
+          }
+        }
+      }
+    }
+  }
+  
   public static function error<T>(msg: String): T { throw msg; return null; }
 }
