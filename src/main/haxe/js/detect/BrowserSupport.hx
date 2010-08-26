@@ -19,6 +19,8 @@ import Dom;
 import Prelude;
 import js.Env;
 import js.dom.Quirks;
+import haxe.data.collections.Map;
+import PreludeExtensions;
 
 using PreludeExtensions;
 using js.dom.DomExtensions;
@@ -28,108 +30,32 @@ using haxe.util.ObjectExtensions;
 /** Feature detection library */
 // windowEvalEvaluatesInGlobalScope
 class BrowserSupport {
-  static var _positionFixed: Option<Bool> = None;
-  static var _cssTransformationSupported:  Option<Bool> = None;
-  static var _elementTagnameUppercased:    Option<Bool> = None;
-  static var _isEventSrcelementPresent:    Option<Bool> = None;
-  static var _isNativeHasAttributePresent: Option<Bool> = None;
-  static var _isContextMenuEventSupported: Option<Bool> = None;
-  static var _computedStyleReturnsValuesForStaticlyPositionedElements: Option<Bool> = None;
-  static var _isRgbaSupported: Option<Bool> = None;
-  static var _isCssBorderRadiusSupported: Option<Bool> = None;
-  static var _isCanvasSupported: Option<Bool> = None;
-  static var _elemenChildrenReturnsElementNodes: Option<Bool> = None;
-  static var _isCssEnabled: Option<Bool> = None;
-  static var _isQuirksMode: Option<Bool> = None;
-  static var _isContainsBuggy: Option<Bool> = None;
-  static var _isActivexEnabled: Option<Bool> = None;
-  static var _typeofNodelistIsFunctionBug: Option<Bool> = None;
-  static var _getElementsByTagNameReturnsCommentNodesBug: Option<Bool> = None;
-  static var _setAttributeIgnoresNameAttributeBug: Option<Bool> = None;
-  static var _elementPropertiesAreAttributesBug: Option<Bool> = None;
-  static var _stringPrototypeReplaceIgnoresFunctionsBug: Option<Bool> = None;
-  static var _isRegexpWhitespaceCharacterClassBug: Option<Bool> = None;
-  static var _isStringPrototypeSplitRegexpBug: Option<Bool> = None;
-  static var _preElementsIgnoreNewLinesBug: Option<Bool> = None;
-  static var _selectElementInnerhtmlBug: Option<Bool> = None;
-  static var _tableElementInnerHtmlBug: Option<Bool> = None;
-  static var _scriptElementRejectsTextNodeAppendingBug: Option<Bool> = None;
-  static var _documentGetElementByIdConfusesIdsWithNamesBug: Option<Bool> = None;
-  static var _documentGetElementByIdIgnoresCaseBug: Option<Bool> = None;
-  static var _offsetValuesForStaticElementsInsidePositionedOnesBug: Option<Bool> = None;
-  static var _isDocumentGetElementsByNameBug: Option<Bool> = None;
-  static var _namedFunctionExpressionIdentifierLeaksOntoEnclosingScopeBug: Option<Bool> = None;
-  static var _isOverflowStyleBug: Option<Bool> = None;
-  static var _isQuerySelectorAllBug: Option<Bool> = None;
-  static var _html5Audio: Option<Bool> = None;
-  static var _html5AudioInMP3Format: Option<Bool> = None;
-  static var _html5AudioInVorbisFormat: Option<Bool> = None;
-  static var _html5AudioInWavFormat: Option<Bool> = None;
-  static var _html5AudioInAACFormat: Option<Bool> = None;
-  static var _html5Canvas: Option<Bool> = None;
-  static var _html5CanvasTextAPI: Option<Bool> = None;
-  static var _html5Command: Option<Bool> = None;
-  static var _html5Datalist: Option<Bool> = None;
-  static var _html5Details: Option<Bool> = None;
-  static var _html5Device: Option<Bool> = None;
-  static var _html5FormConstraintValidation: Option<Bool> = None;
-  static var _html5IframeSandbox: Option<Bool> = None;
-  static var _html5IframeSrcdoc: Option<Bool> = None;
-  static var _html5InputAutofocus: Option<Bool> = None;
-  static var _html5InputPlaceholder: Option<Bool> = None;
-  static var _html5InputTypeColor: Option<Bool> = None;
-  static var _html5InputTypeEmail: Option<Bool> = None;
-  static var _html5InputTypeNumber: Option<Bool> = None;
-  static var _html5InputTypeRange: Option<Bool> = None;
-  static var _html5InputTypeSearch: Option<Bool> = None;
-  static var _html5InputTypeTel: Option<Bool> = None;
-  static var _html5InputTypeUrl: Option<Bool> = None;
-  static var _html5InputTypeDate: Option<Bool> = None;
-  static var _html5InputTypeTime: Option<Bool> = None;
-  static var _html5InputTypeDatetime: Option<Bool> = None;
-  static var _html5InputTypeDatetimeLocal: Option<Bool> = None;
-  static var _html5InputTypeMonth: Option<Bool> = None;
-  static var _html5InputTypeWeek: Option<Bool> = None;
-  static var _html5Meter: Option<Bool> = None;
-  static var _html5Output: Option<Bool> = None;
-  static var _html5Progress: Option<Bool> = None;
-  static var _html5Time: Option<Bool> = None;
-  static var _html5Video: Option<Bool> = None;
-  static var _html5VideoCaptions: Option<Bool> = None;
-  static var _html5VideoPoster: Option<Bool> = None;
-  static var _html5VidouInWebMFormat: Option<Bool> = None;
-  static var _html5VidouInH264Format: Option<Bool> = None;
-  static var _html5VidouInTheoraFormat: Option<Bool> = None;
-  static var _html5ContentEditable: Option<Bool> = None;
-  static var _html5DragAndDrop: Option<Bool> = None;
-  static var _html5SVGInTextHtml: Option<Bool> = None;
+  static var memorized = Map.create(String.HasherT(), String.EqualT(), Bool.HasherT(), Bool.EqualT());
 
   /**
    * Determines if the browser supports "css transformation".
    */
 	public static function cssTransformationSupported(): Bool {
-	  return _cssTransformationSupported.getOrElse(function() {
-      var isSupported = false;
+    return testFeatureAndMemorize("cssTransformationSupported", function(v){
+      var isSupported = None;
       var docEl = Env.document.documentElement;
       if (docEl != null ) {
         var s = docEl.style;
-        isSupported = Env.isDefined(untyped s.WebkitTransform) || Env.isDefined(untyped s.MozTransform);
-        _cssTransformationSupported = Some(isSupported);
+        isSupported = Some(Env.isDefined(untyped s.WebkitTransform) || Env.isDefined(untyped s.MozTransform));
       }
       return isSupported;
-	  });
+    });
   }
   /**
    * Determines if the browser supports "element tagname" is uppercased. The document must
    * have a body for the detection to be accurate.
    */
 	public static function elementTagnameUppercased(): Bool {
-	  return _elementTagnameUppercased.getOrElse(function() {
-      var isUppercased = false;
+	  return testFeatureAndMemorize("elementTagnameUppercased", function(v) {
+      var isUppercased = None;
       var docEl = Env.document.documentElement;
       if (docEl != null) {
-        isUppercased = 'HTML' == docEl.nodeName;
-        _elementTagnameUppercased = Some(isUppercased);
+        isUppercased = Some('HTML' == docEl.nodeName);
       }
 
       return isUppercased;
@@ -140,17 +66,19 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function querySelectorIgnoresCapitalizedValuesBug(): Bool {
-    var result = false;
-    if (Env.document.createElement != null && (Env.document.compatMode == 'BackCompat')) {
-      var el  = Env.document.createElement('div');
-      var el2 = Env.document.createElement('span');
-      if (el != null && el2 != null && untyped el.querySelector != null) {
-        el2.className = 'Test';
-        el.appendChild(el2);
-        result = untyped (el.querySelector('.Test') != null);
+    return testBugAndMemorize("querySelectorIgnoresCapitalizedValuesBug", function(v){
+      var result = None;
+      if (Env.document.createElement != null && (Env.document.compatMode == 'BackCompat')) {
+        var el  = Env.document.createElement('div');
+        var el2 = Env.document.createElement('span');
+        if (el != null && el2 != null && untyped el.querySelector != null) {
+          el2.className = 'Test';
+          el.appendChild(el2);
+          result = untyped Some((el.querySelector('.Test') != null));
+        }
       }
-    }
-    return false;
+      return result;
+    });
   }
 
   /**
@@ -158,8 +86,8 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function isEventSrcelementPresent(): Bool {
-    return _isEventSrcelementPresent.getOrElse(function() {
-        var isSupported = false;
+    return testFeatureAndMemorize("isEventSrcelementPresent", function(v) {
+        var isSupported = None;
         if (Env.document.createElement != null) {
         var i    = Env.document.createElement('input');
         var root = Env.document.documentElement;
@@ -167,8 +95,7 @@ class BrowserSupport {
           untyped i.type = 'checkbox';
           i.style.display = 'none';
           i.onclick = function(e) {
-            isSupported = Env.isDefined(untyped e.srcElement);
-            _isEventSrcelementPresent = Some(isSupported);
+            isSupported = Some(Env.isDefined(untyped e.srcElement));
           };
           root.appendChild(i);
           i.click();
@@ -185,8 +112,8 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function isNativeHasAttributePresent(): Bool {
-    return _isNativeHasAttributePresent.getOrElse(function() {
-      var isSupported = false;
+    return testFeatureAndMemorize("isNativeHasAttributePresent", function(v) {
+      var isSupported = None;
       if (Env.document.createElement != null) {
         var i       = Env.document.createElement('iframe');
         var root    = Env.document.documentElement;
@@ -202,20 +129,20 @@ class BrowserSupport {
               if (doc != null && doc.write != null ) {
                 doc.write('<html><head><title></title></head><body></body></html>');
                 if (doc.documentElement != null){
-                  isSupported = Env.isDefined(untyped doc.documentElement.hasAttribute);
+                  isSupported = Some(Env.isDefined(untyped doc.documentElement.hasAttribute));
                 }
                 else{
-                  isSupported = false;
+                  isSupported = Some(false);
                 }
                 root.removeChild(i);
                 i = null;
               }
             }
           } catch(e: Dynamic) {
+            isSupported = Some(false);
           }
         }
       }
-      _isNativeHasAttributePresent = Some(isSupported);
       return isSupported;
     });
   }
@@ -224,16 +151,15 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function isContextMenuEventSupported(): Bool {
-    return _isContextMenuEventSupported.getOrElse(function() {
-      var isPresent = false;
+    return testFeatureAndMemorize("isContextMenuEventSupported", function(v) {
+      var isPresent = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('p');
         if (el != null && el.setAttribute != null) {
           el.setAttribute('oncontextmenu', '');
-          isPresent = Env.isDefined(el.oncontextmenu);
+          isPresent = Some(Env.isDefined(el.oncontextmenu));
         }
       }
-      _isContextMenuEventSupported = Some(isPresent);
       return isPresent;
     });
   }
@@ -243,8 +169,8 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function computedStyleReturnsValuesForStaticlyPositionedElements(): Bool {
-    return _computedStyleReturnsValuesForStaticlyPositionedElements.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("computedStyleReturnsValuesForStaticlyPositionedElements", function(v) {
+      var result = None;
       var view = Env.document.defaultView;
       if (view != null && view.getComputedStyle != null) {
         var docEl = Env.document.documentElement;
@@ -258,20 +184,20 @@ class BrowserSupport {
           docElStyle.position = '';
         }
         var computedStyle: CSSInlineStyleDeclaration = cast view.getComputedStyle(docEl, null);
-        var result = computedStyle.left != 'auto';
+        result = Some(computedStyle.left != 'auto');
         if (position != null) {
           var docElStyle: CSSInlineStyleDeclaration = cast docEl.style;
           docElStyle.position = position;
         }
       }
-      _computedStyleReturnsValuesForStaticlyPositionedElements = Some(result);
+
       return result;
     });
   }
 
 	public static function isRgbaSupported(): Bool {
-    return _isRgbaSupported.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("isRgbaSupported", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var value = 'rgba(1,1,1,0.5)';
         var el = Env.document.createElement('p');
@@ -279,61 +205,57 @@ class BrowserSupport {
         if (el != null && el.style != null && Env.typeOf(untyped re.test) == 'function') {
           try {
             el.style.color = value;
-            result = re.test(el.style.color);
+            result = Some(re.test(el.style.color));
           }
           catch(e: Dynamic) {
-            result = false;
+            result = Some(false);
           }
         }
       }
-      _isRgbaSupported = Some(result);
       return result;
     });
   }
 	public static function isCssBorderRadiusSupported(): Bool {
-    return _isCssBorderRadiusSupported.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("isCssBorderRadiusSupported", function(v) {
+      var result = None;
       var docEl = Env.document.documentElement;
       if (docEl != null ) {
         var s = docEl.style;
-        result = (Env.typeOf(untyped s.borderRadius) == 'string'
+        result = Some((Env.typeOf(untyped s.borderRadius) == 'string'
           || Env.typeOf(untyped s.MozBorderRadius) == 'string'
           || Env.typeOf(untyped s.WebkitBorderRadius) == 'string'
-          || Env.typeOf(untyped s.KhtmlBorderRadius) == 'string');
+          || Env.typeOf(untyped s.KhtmlBorderRadius) == 'string'));
       }
-      _isCssBorderRadiusSupported = Some(result);
       return result;
     });
   }
 
 	public static function elemenChildrenReturnsElementNodes(): Bool {
-    return _elemenChildrenReturnsElementNodes.getOrElse(function() {
-      var isSupported = false;
+    return testFeatureAndMemorize("elemenChildrenReturnsElementNodes", function(v) {
+      var isSupported = None;
       var docEl = Env.document.documentElement;
       if (Env.document.createElement != null && Env.isDefined(untyped docEl.children)) {
         var el = Env.document.createElement('div');
         el.innerHTML = '<div><p>a</p></div>b<!-- x -->';
         // Safari 2.x returns ALL elements in `children`
         // We check that first element is a DIV and that it's the only one element returned
-        isSupported = untyped (el.children &&
+        isSupported = untyped Some((el.children &&
           el.children.length == 1 &&
           el.children[0] &&
           el.children[0].tagName &&
-          el.children[0].tagName.toUpperCase() == 'DIV');
+          el.children[0].tagName.toUpperCase() == 'DIV'));
       }
-      _elemenChildrenReturnsElementNodes = Some(isSupported);
       return isSupported;
     });
   }
 
 	public static function isCanvasSupported(): Bool {
-    return _isCanvasSupported.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("isCanvasSupported", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var elCanvas = Env.document.createElement('canvas');
-        result = !!(elCanvas != null && untyped elCanvas.getContext != null && untyped elCanvas.getContext('2d') != null);
+        result = Some(!!(elCanvas != null && untyped elCanvas.getContext != null && untyped elCanvas.getContext('2d') != null));
       }
-      _isCanvasSupported = Some(result);
       return result;
     });
   }
@@ -343,8 +265,8 @@ class BrowserSupport {
    * have a body for the detection to be accurate.
    */
 	public static function positionFixed(): Bool {
-	  return _positionFixed.getOrElse(function() {
-  	    var isSupported = false;
+	  return testFeatureAndMemorize("positionFixed", function(v) {
+  	    var isSupported = None;
 
         if (Env.document.createElement != null) {
           var el = Env.document.createElement('div');
@@ -358,9 +280,7 @@ class BrowserSupport {
             if (root != null) {
               root.appendChild(el);
 
-              isSupported = (el.offsetTop == -10);
-
-              _positionFixed = Some(isSupported);
+              isSupported = Some(el.offsetTop == -10);
 
               root.removeChild(el);
             }
@@ -372,8 +292,8 @@ class BrowserSupport {
   }
 
   public static function isCssEnabled(): Bool {
-    return _isCssEnabled.getOrElse(function() {
-      var isSupported = false;
+    return testFeatureAndMemorize("isCssEnabled", function(v) {
+      var isSupported = None;
       var body = Env.document.body;
       if (Env.document.createElement != null &&
               body != null &&
@@ -383,18 +303,17 @@ class BrowserSupport {
             if (el != null && el.style != null) {
               untyped el.style.display = 'none';
               body.appendChild(el);
-              isSupported = (el.offsetWidth == 0);
+              isSupported = Some(el.offsetWidth == 0);
               body.removeChild(el);
             }
           }
-      _isCssEnabled = Some(isSupported);
       return isSupported;
     });
   }
 
   public static function isQuirksMode(): Bool {
-    return _isQuirksMode.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("isQuirksMode", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('div');
         if (el != null && el.style != null) {
@@ -402,31 +321,29 @@ class BrowserSupport {
           style.width = '1';
         }
         var style: CSSInlineStyleDeclaration = cast el.style;
-        result = (style.width == '1px');
+        result = Some(style.width == '1px');
       }
-      _isQuirksMode = Some(result);
       return result;
     });
   }
 
   public static function isContainsBuggy(): Bool {
-    return _isContainsBuggy.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isContainsBuggy", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el1 = Env.document.createElement('div'),
             el2 = Env.document.createElement('div');
         if (el1 != null && el2 != null && Env.isDefined(untyped el1.contains)) {
-          result = untyped el1.contains(el2);
+          result = untyped Some(el1.contains(el2));
         }
       }
-      _isContainsBuggy = Some(result);
       return result;
     });
   }
 
   public static function isActivexEnabled(): Bool {
-    return _isActivexEnabled.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("isActivexEnabled", function(v) {
+      var result = Some(false);
       untyped if (window.ActiveXObject){
         var xmlVersions = [
           'Microsoft.XMLHTTP',
@@ -438,30 +355,29 @@ class BrowserSupport {
         for (value in xmlVersions) {
           try {
             if (untyped __new__("ActiveXObject",value) != null) {
-              result = true;
+              result = Some(true);
             }
           }
-          catch(ex: Dynamic ) { trace(ex); }
+          catch(ex: Dynamic ) {  }
         }
+        result = Some(result.getOrElseC(false));
       }
-      _isActivexEnabled = Some(result);
       return result;
     });
   }
 
   public static function typeofNodelistIsFunctionBug(): Bool {
-    return _typeofNodelistIsFunctionBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("typeofNodelistIsFunctionBug", function(v) {
+      var result = None;
       if (Env.document.forms != null) {
-        result = (Env.typeOf(Env.document.forms) == 'function');
+        result = Some(Env.typeOf(Env.document.forms) == 'function');
       }
-      _typeofNodelistIsFunctionBug = Some(result);
       return result;
     });
   }
   public static function getElementsByTagNameReturnsCommentNodesBug(): Bool {
-    return _getElementsByTagNameReturnsCommentNodesBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("getElementsByTagNameReturnsCommentNodesBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('div');
         if (el != null && el.getElementsByTagName != null) {
@@ -470,7 +386,7 @@ class BrowserSupport {
           // IE5.5 returns a 0-length collection when calling getElementsByTagName with wildcard
           if (all.length != null) {
             var lastNode = el.getElementsByTagName('*')[1];
-            result = !!(lastNode != null && lastNode.nodeType == 8);
+            result = Some(!!(lastNode != null && lastNode.nodeType == 8));
           }
         }
       }
@@ -478,8 +394,8 @@ class BrowserSupport {
     });
   }
   public static function setAttributeIgnoresNameAttributeBug(): Bool {
-    return _setAttributeIgnoresNameAttributeBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("setAttributeIgnoresNameAttributeBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
             var elForm = Env.document.createElement('form');
             var elInput = Env.document.createElement('input');
@@ -496,55 +412,50 @@ class BrowserSupport {
               // Older Safari (e.g. 2.0.2) populates "elements" collection only when form is within a document
               root.appendChild(elForm);
               untyped if (elForm.elements != null ){
-                result = (Env.typeOf(untyped elForm.elements['test']) == 'undefined');
+                result = Some(Env.typeOf(untyped elForm.elements['test']) == 'undefined');
               }
+              else {result = Some(true);}
               root.removeChild(elForm);
             }
           }
-      _setAttributeIgnoresNameAttributeBug = Some(result);
       return result;
     });
   }
 
   public static function elementPropertiesAreAttributesBug(): Bool {
-    return _elementPropertiesAreAttributesBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("elementPropertiesAreAttributesBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('div');
         if (el != null && el.getAttribute != null) {
           untyped __js__("el.__foo = 'bar'");
-          result = (el.getAttribute('__foo') == 'bar');
+          result = Some(el.getAttribute('__foo') == 'bar');
           el = null;
         }
       }
-      _elementPropertiesAreAttributesBug = Some(result);
       return result;
     });
   }
 
   public static function isRegexpWhitespaceCharacterClassBug(): Bool {
-    return _isRegexpWhitespaceCharacterClassBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isRegexpWhitespaceCharacterClassBug", function(v) {
+      var result = None;
       var str = untyped"\\u0009\\u000A\\u000B\\u000C\\u000D\\u0020\\u00A0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029";
-      result = (~/^\s+$/.match(str));
-      _isRegexpWhitespaceCharacterClassBug = Some(result);
+      result = Some(~/^\s+$/.match(str));
       return result;
     });
   }
 
   public static function isStringPrototypeSplitRegexpBug(): Bool {
-    return _isStringPrototypeSplitRegexpBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isStringPrototypeSplitRegexpBug", function(v) {
       var s = 'a_b';
-       result = untyped __js__("s.split(/(_)/).length != 3");
-      _isStringPrototypeSplitRegexpBug = Some(result);
-      return result;
+      return untyped Some(__js__("s.split(/(_)/).length != 3"));
     });
   }
 
   public static function preElementsIgnoreNewLinesBug(): Bool {
-    return _preElementsIgnoreNewLinesBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("preElementsIgnoreNewLinesBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null && Env.document.createTextNode != null) {
         var el = Env.document.createElement('pre');
         var txt = Env.document.createTextNode('xx');
@@ -563,75 +474,71 @@ class BrowserSupport {
           var isIgnored = (el.offsetHeight == initialHeight);
           root.removeChild(el);
           el = txt = null;
-          result = isIgnored;
+          result = Some(isIgnored);
         }
       }
-      _preElementsIgnoreNewLinesBug = Some(result);
       return result;
     });
   }
 
   public static function selectElementInnerHtmlBug(): Bool {
-    return _selectElementInnerhtmlBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("selectElementInnerHtmlBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('select');
         if (el != null) {
           el.innerHTML = '<option value="test">test</option>';
           untyped if (el.options != null && el.options[0] != null) {
-            result = (el.options[0].nodeName.toUpperCase() != 'OPTION');
+            result = Some(el.options[0].nodeName.toUpperCase() != 'OPTION');
           }
           el = null;
         }
       }
-      _selectElementInnerhtmlBug = Some(result);
       return result;
     });
   }
 
   public static function tableElementInnerHtmlBug(): Bool {
-    return _tableElementInnerHtmlBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("tableElementInnerHtmlBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         try {
           var el = Env.document.createElement('table');
           if (el != null && untyped el.tBodies != null) {
             el.innerHTML = '<tbody><tr><td>test</td></tr></tbody>';
-            result = (Env.typeOf(untyped el.tBodies[0]) == 'undefined');
+            result = Some(Env.typeOf(untyped el.tBodies[0]) == 'undefined');
             el = null;
           }
         } catch(e: Dynamic) {
-          result = true;
+          result = Some(true);
         }
       }
-      _tableElementInnerHtmlBug = Some(result);
       return result;
     });
   }
 
   public static function scriptElementRejectsTextNodeAppendingBug(): Bool {
-    return _scriptElementRejectsTextNodeAppendingBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("scriptElementRejectsTextNodeAppendingBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null && Env.document.createTextNode != null) {
         var s = Env.document.createElement('script');
         if (s != null && s.appendChild != null) {
           try {
             s.appendChild(Env.document.createTextNode(''));
-            result = ((s.firstChild == null) || (s.firstChild != null && s.firstChild.nodeType != 3));
+            result = Some((s.firstChild == null) || (s.firstChild != null && s.firstChild.nodeType != 3));
           } catch(e: Dynamic) {
-            result = true;
+            result = Some(true);
           }
           s = null;
         }
       }
-      _scriptElementRejectsTextNodeAppendingBug = Some(result);
       return result;
     });
   }
 
   public static function documentGetElementByIdConfusesIdsWithNamesBug(): Bool {
-    return _documentGetElementByIdConfusesIdsWithNamesBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("documentGetElementByIdConfusesIdsWithNamesBug", function(v) {
+      var result = Some(false);
       if (Env.document.getElementsByTagName != null && Env.document.createElement != null) {
         // need to feature test all these DOM methods before calling them
         var num = Date.now().getTime();
@@ -647,19 +554,18 @@ class BrowserSupport {
         if (head.appendChild != null && head.removeChild != null) {
           head.appendChild(el);
           var testElement = Env.document.getElementById(name);
-          result = !!((testElement != null) && (testElement.nodeName.toUpperCase() == 'INPUT'));
+          result = Some(!!((testElement != null) && (testElement.nodeName.toUpperCase() == 'INPUT')));
           head.removeChild(el);
           el = null;
         }
       }
-      _documentGetElementByIdConfusesIdsWithNamesBug = Some(result);
       return result;
     });
   }
 
   public static function documentGetElementByIdIgnoresCaseBug(): Bool {
-    return _documentGetElementByIdIgnoresCaseBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("documentGetElementByIdIgnoresCaseBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null && Env.document.getElementsByTagName != null && Env.document.getElementById != null) {
         var el = Env.document.createElement('script');
         var head = Env.document.getElementsByTagName('head')[0];
@@ -667,19 +573,18 @@ class BrowserSupport {
           untyped el.type = 'text/javascript';
           el.id = 'A';
           head.appendChild(el);
-          result = !!(Env.document.getElementById('a') != null);
+          result = Some(!!(Env.document.getElementById('a') != null));
           head.removeChild(el);
           el = null;
         }
       }
-      _documentGetElementByIdIgnoresCaseBug = Some(result);
       return result;
     });
   }
 
   public static function offsetValuesForStaticElementsInsidePositionedOnesBug(): Bool {
-    return _offsetValuesForStaticElementsInsidePositionedOnesBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("offsetValuesForStaticElementsInsidePositionedOnesBug", function(v) {
+      var result = None;
       var body = Env.document.body;
       if (body != null &&
           body.insertBefore != null &&
@@ -703,25 +608,24 @@ class BrowserSupport {
               // buggy, set position to relative and check if it fixes it
               el.style.position = 'relative';
               if (el.offsetTop == 10) {
-                result = true;
+                result = Some(true);
               }
             }
             else {
-              result = false;
+              result = Some(false);
             }
           }
           body.removeChild(wrapper);
         }
         wrapper = null;
       }
-      _offsetValuesForStaticElementsInsidePositionedOnesBug = Some(result);
       return result;
     });
   }
 
   public static function isDocumentGetElementsByNameBug(): Bool {
-    return _isDocumentGetElementsByNameBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isDocumentGetElementsByNameBug", function(v) {
+      var result = None;
       var docEl = Env.document.documentElement;
       if (docEl != null &&
           docEl.appendChild != null &&
@@ -733,18 +637,17 @@ class BrowserSupport {
           var uid = 'x' + (Math.random() + '').substr(2);
           el.id = uid;
           docEl.appendChild(el);
-          result = (Env.document.getElementsByName(uid)[0] == el);
+          result = Some(Env.document.getElementsByName(uid)[0] == el);
           docEl.removeChild(el);
         }
       }
-      _isDocumentGetElementsByNameBug= Some(result);
       return result;
     });
   }
 
   public static function isOverflowStyleBug(): Bool {
-    return _isOverflowStyleBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isOverflowStyleBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('div');
         el.innerHTML = '<p style="overflow: visible;">x</p>';
@@ -752,373 +655,293 @@ class BrowserSupport {
         if (firstChild != null && firstChild.style != null) {
           var style: CSSInlineStyleDeclaration = cast firstChild.style;
           style.overflow = 'hidden';
-          result = (style.overflow != 'hidden');
+          result = Some(style.overflow != 'hidden');
         }
         el = null;
         firstChild = null;
       }
-      _isOverflowStyleBug = Some(result);
       return result;
     });
   }
 
   public static function isQuerySelectorAllBug(): Bool {
-    return _isQuerySelectorAllBug.getOrElse(function() {
-      var result = false;
+    return testBugAndMemorize("isQuerySelectorAllBug", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('div');
         if (el != null && untyped (el.querySelectorAll != null)) {
           el.innerHTML = '<object><param name=""></object>';
-          untyped result = (el.querySelectorAll("param").length != 1);
+          untyped result = Some(el.querySelectorAll("param").length != 1);
         }
         el = null;
       }
-      _isQuerySelectorAllBug = Some(result);
       return result;
     });
   }
   public static function html5Audio(): Bool {
-    return _html5Audio.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("html5Audio", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('audio');
-        result = untyped !!el.canPlayType;
+        result = untyped Some(!!el.canPlayType);
         el = null;
       }
-      _html5Audio = Some(result);
       return result;
     });
   }
 
   public static function html5AudioInMP3Format(): Bool {
-    return _html5AudioInMP3Format.getOrElse(function() {
-      var result = canPlayType('audio', 'audio/mpeg;');
-      _html5AudioInMP3Format = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5AudioInMP3Format", function(v) {
+      return canPlayType('audio', 'audio/mpeg;');
     });
   }
   public static function html5AudioInVorbisFormat(): Bool {
-    return _html5AudioInVorbisFormat.getOrElse(function() {
-      var result = canPlayType('audio', 'audio/ogg; codecs="vorbis"');
-      _html5AudioInVorbisFormat = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5AudioInVorbisFormat", function(v) {
+      return canPlayType('audio', 'audio/ogg; codecs="vorbis"');
     });
   }
   public static function html5AudioInWavFormat(): Bool {
-    return _html5AudioInWavFormat.getOrElse(function() {
-      var result = canPlayType('audio', 'audio/wav; codecs="1"');
-      _html5AudioInWavFormat = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5AudioInWavFormat", function(v) {
+      return  canPlayType('audio', 'audio/wav; codecs="1"');
     });
   }
   public static function html5AudioInAACFormat(): Bool {
-    return _html5AudioInAACFormat.getOrElse(function() {
-      var result = canPlayType('audio', 'audio/mp4; codecs="mp4a.40.2"');
-      _html5AudioInAACFormat = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5AudioInAACFormat", function(v) {
+      return canPlayType('audio', 'audio/mp4; codecs="mp4a.40.2"');
     });
   }
-  private static function canPlayType(element: String, format: String): Bool {
-      var result = false;
-      if (Env.document.createElement != null) {
-        var a = Env.document.createElement(element);
-        result = untyped !!(a.canPlayType && a.canPlayType(format).replace('no', '') != "");
-        a = null;
-      }
-      return result;
+  private static function canPlayType(element: String, format: String): Option<Bool> {
+    var result = None;
+    if (Env.document.createElement != null) {
+      var a = Env.document.createElement(element);
+      result = untyped Some(!!(a.canPlayType && a.canPlayType(format).replace('no', '') != ""));
+      a = null;
+    }
+    return result;
   }
   public static function html5Canvas(): Bool {
-    return _html5Canvas.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("html5Canvas", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var a = Env.document.createElement('canvas');
-        result = untyped !!a.getContext;
+        result = untyped Some(!!a.getContext);
         a = null;
       }
-      _html5Canvas = Some(result);
       return result;
     });
   }
   public static function html5CanvasTextAPI(): Bool {
-    return _html5CanvasTextAPI.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("html5CanvasTextAPI", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var c = Env.document.createElement('canvas');
-        result = untyped c.getContext && Env.typeOf(c.getContext('2d').fillText) == 'function';
+        result = untyped Some(c.getContext && Env.typeOf(c.getContext('2d').fillText) == 'function');
         c = null;
       }
-      _html5CanvasTextAPI = Some(result);
       return result;
     });
   }
   public static function html5Command(): Bool {
-    return _html5Command.getOrElse(function() {
-      var result = checIfExist('command', 'type');
-      _html5Command = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Command", function(v) {
+      return checIfExist('command', 'type');
     });
   }
   public static function html5Datalist(): Bool {
-    return _html5Datalist.getOrElse(function() {
-      var result = checIfExist('datalist', 'options');
-      _html5Datalist = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Datalist", function(v) {
+      return checIfExist('datalist', 'options');
     });
   }
   public static function html5Details(): Bool {
-    return _html5Details.getOrElse(function() {
-      var result = checIfExist('details', 'open');
-      _html5Details = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Details", function(v) {
+      return checIfExist('details', 'open');
     });
   }
   public static function html5Device(): Bool {
-    return _html5Device.getOrElse(function() {
-      var result = checIfExist('device', 'type');
-      _html5Device = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Device", function(v) {
+      return checIfExist('device', 'type');
     });
   }
   public static function html5FormConstraintValidation(): Bool {
-    return _html5FormConstraintValidation.getOrElse(function() {
-      var result = checIfExist('form', 'noValidate');
-      _html5FormConstraintValidation = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5FormConstraintValidation", function(v) {
+      return checIfExist('form', 'noValidate');
     });
   }
   public static function html5IframeSandbox(): Bool {
-    return _html5IframeSandbox.getOrElse(function() {
-      var result = checIfExist('iframe', 'sandbox');
-      _html5IframeSandbox = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5IframeSandbox", function(v) {
+      return checIfExist('iframe', 'sandbox');
     });
   }
   public static function html5IframeSrcdoc(): Bool {
-    return _html5IframeSrcdoc.getOrElse(function() {
-      var result = checIfExist('iframe', 'srcdoc');
-      _html5IframeSrcdoc = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5IframeSrcdoc", function(v) {
+      return checIfExist('iframe', 'srcdoc');
     });
   }
   public static function html5InputAutofocus(): Bool {
-    return _html5InputAutofocus.getOrElse(function() {
-      var result = checIfExist('input', 'autofocus');
-      _html5InputAutofocus = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputAutofocus", function(v) {
+      return checIfExist('input', 'autofocus');
     });
   }
   public static function html5InputPlaceholder(): Bool {
-    return _html5InputPlaceholder.getOrElse(function() {
-      var result = checIfExist('input', 'placeholder');
-      _html5InputPlaceholder = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputPlaceholder", function(v) {
+      return checIfExist('input', 'placeholder');
     });
   }
   public static function html5InputTypeColor(): Bool {
-    return _html5InputTypeColor.getOrElse(function() {
-      var result = checIputTypeProperty('color');
-      _html5InputTypeColor = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeColor", function(v) {
+      return checIputTypeProperty('color');
     });
   }
   public static function html5InputTypeEmail(): Bool {
-    return _html5InputTypeEmail.getOrElse(function() {
-      var result = checIputTypeProperty('email');
-      _html5InputTypeEmail = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeEmail", function(v) {
+      return checIputTypeProperty('email');
     });
   }
   public static function html5InputTypeNumber(): Bool {
-    return _html5InputTypeNumber.getOrElse(function() {
-      var result = checIputTypeProperty('range');
-      _html5InputTypeNumber = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeNumber", function(v) {
+      return checIputTypeProperty('range');
     });
   }
   public static function html5InputTypeRange(): Bool {
-    return _html5InputTypeRange.getOrElse(function() {
-      var result = checIputTypeProperty('color');
-      _html5InputTypeRange = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeRange", function(v) {
+      return checIputTypeProperty('color');
     });
   }
   public static function html5InputTypeSearch(): Bool {
-    return _html5InputTypeSearch.getOrElse(function() {
-      var result = checIputTypeProperty('search');
-      _html5InputTypeSearch = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeSearch", function(v) {
+      return checIputTypeProperty('search');
     });
   }
   public static function html5InputTypeTel(): Bool {
-    return _html5InputTypeTel.getOrElse(function() {
-      var result = checIputTypeProperty('tel');
-      _html5InputTypeTel = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeTel", function(v) {
+      return checIputTypeProperty('tel');
     });
   }
   public static function html5InputTypeUrl(): Bool {
-    return _html5InputTypeUrl.getOrElse(function() {
-      var result = checIputTypeProperty('url');
-      _html5InputTypeUrl = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeUrl", function(v) {
+      return checIputTypeProperty('url');
     });
   }
   public static function html5InputTypeDate(): Bool {
-    return _html5InputTypeDate.getOrElse(function() {
-      var result = checIputTypeProperty('date');
-      _html5InputTypeDate = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeDate", function(v) {
+      return checIputTypeProperty('date');
     });
   }
   public static function html5InputTypeTime(): Bool {
-    return _html5InputTypeTime.getOrElse(function() {
-      var result = checIputTypeProperty('time');
-      _html5InputTypeTime = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeTime", function(v) {
+      return checIputTypeProperty('time');
     });
   }
   public static function html5InputTypeDatetime(): Bool {
-    return _html5InputTypeDatetime.getOrElse(function() {
-      var result = checIputTypeProperty('datetime');
-      _html5InputTypeDatetime = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeDatetime", function(v) {
+      return checIputTypeProperty('datetime');
     });
   }
   public static function html5InputTypeDatetimeLocal(): Bool {
-    return _html5InputTypeDatetimeLocal.getOrElse(function() {
-      var result = checIputTypeProperty('datetime-local');
-      _html5InputTypeDatetimeLocal = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeDatetimeLocal", function(v) {
+      return checIputTypeProperty('datetime-local');
     });
   }
   public static function html5InputTypeWeek(): Bool {
-    return _html5InputTypeWeek.getOrElse(function() {
-      var result = checIputTypeProperty('week');
-      _html5InputTypeWeek = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeWeek", function(v) {
+      return checIputTypeProperty('week');
     });
   }
   public static function html5InputTypeMonth(): Bool {
-    return _html5InputTypeMonth.getOrElse(function() {
-      var result = checIputTypeProperty('month');
-      _html5InputTypeMonth = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5InputTypeMonth", function(v) {
+      return checIputTypeProperty('month');
     });
   }
 
   public static function html5Meter(): Bool {
-    return _html5Meter.getOrElse(function() {
-      var result = checIfExist('meter', 'value');
-      _html5Meter = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Meter", function(v) {
+      return checIfExist('meter', 'value');
     });
   }
   public static function html5Output(): Bool {
-    return _html5Output.getOrElse(function() {
-      var result = checIfExist('output', 'value');
-      _html5Output = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Output", function(v) {
+      return checIfExist('output', 'value');
     });
   }
   public static function html5Progress(): Bool {
-    return _html5Progress.getOrElse(function() {
-      var result = checIfExist('value', 'progress');
-      _html5Progress = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Progress", function(v) {
+      return checIfExist('value', 'progress');
     });
   }
   public static function html5Time(): Bool {
-    return _html5Time.getOrElse(function() {
-      var result = checIfExist('time', 'valueAsDate');
-      _html5Time = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5Time", function(v) {
+      return checIfExist('time', 'valueAsDate');
     });
   }
 
   public static function html5Video(): Bool {
-    return _html5Video.getOrElse(function() {
-      var result = false;
+    return testFeatureAndMemorize("html5Video", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var el = Env.document.createElement('video');
-        result = untyped !!el.canPlayType;
+        result = Some(untyped !!el.canPlayType);
         el = null;
       }
-      _html5Video = Some(result);
       return result;
     });
   }
 
   public static function html5VideoCaptions(): Bool {
-    return _html5VideoCaptions.getOrElse(function() {
-      var result = checIfExist('track', 'track');
-      _html5VideoCaptions = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5VideoCaptions", function(v) {
+      return checIfExist('track', 'track');
     });
   }
 
   public static function html5VideoPoster(): Bool {
-    return _html5VideoPoster.getOrElse(function() {
-      var result = checIfExist('track', 'poster');
-      _html5VideoPoster = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5VideoPoster", function(v) {
+      return checIfExist('track', 'poster');
     });
   }
 
-  private static function checIfExist(elementName: String, property: String): Bool{
-    var result = false;
+  private static function checIfExist(elementName: String, property: String): Option<Bool>{
+    var result = None;
     if (Env.document.createElement != null) {
       var c = Env.document.createElement(elementName);
-      result = (Env.typeOf(untyped c[property]) != 'undefined');
+      result = Some(Env.typeOf(untyped c[property]) != 'undefined');
       c = null;
     }
     return result;
   }
-  private static function checIputTypeProperty(type: String): Bool{
-    var result = false;
+  private static function checIputTypeProperty(type: String): Option<Bool>{
+    var result = None;
     if (Env.document.createElement != null) {
       var i = Env.document.createElement("input");
       i.setAttribute('type', type);
-      result = untyped (i.type != 'text');
+      result = untyped Some(i.type != 'text');
       i = null;
     }
     return result;
   }
   public static function html5VidouInWebMFormat(): Bool {
-    return _html5VidouInWebMFormat.getOrElse(function() {
-      var result = canPlayType('video', 'video/webm; codecs="vp8, vorbis"');
-      _html5VidouInWebMFormat = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5VidouInWebMFormat", function(v) {
+      return canPlayType('video', 'video/webm; codecs="vp8, vorbis"');
     });
   }
   public static function html5VidouInH264Format(): Bool {
-    return _html5VidouInH264Format.getOrElse(function() {
-      var result = canPlayType('video', 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-      _html5VidouInH264Format = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5VidouInH264Format", function(v) {
+      return canPlayType('video', 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
     });
   }
   public static function html5VidouInTheoraFormat(): Bool {
-    return _html5VidouInTheoraFormat.getOrElse(function() {
-      var result = canPlayType('video', 'video/ogg; codecs="theora, vorbis"');
-      _html5VidouInTheoraFormat = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5VidouInTheoraFormat", function(v) {
+      return canPlayType('video', 'video/ogg; codecs="theora, vorbis"');
     });
   }
   public static function html5ContentEditable(): Bool {
-    return _html5ContentEditable.getOrElse(function() {
-      var result = checIfExist('span', 'isContentEditable');
-      _html5ContentEditable = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5ContentEditable", function(v) {
+      return checIfExist('span', 'isContentEditable');
     });
   }
   public static function html5CrossDocumentMessaging(): Bool {
     return Env.isDefined(Env.window.postMessage);
   }
   public static function html5DragAndDrop(): Bool {
-    return _html5DragAndDrop.getOrElse(function() {
-      var result = checIfExist('span', 'draggable');
-      _html5DragAndDrop = Some(result);
-      return result;
+    return testFeatureAndMemorize("html5DragAndDrop", function(v) {
+      return checIfExist('span', 'draggable');
     });
   }
   public static function html5FileApi(): Bool {
@@ -1164,15 +987,14 @@ class BrowserSupport {
     return (Env.document.createElementNS != null) && (untyped Env.document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect != null);
   }
   public static function html5SVGInTextHtml(): Bool {
-        return _html5SVGInTextHtml.getOrElse(function() {
-      var result = false;
+      return testFeatureAndMemorize("html5SVGInTextHtml", function(v) {
+      var result = None;
       if (Env.document.createElement != null) {
         var e = Env.document.createElement("div");
         e.innerHTML = '<svg></svg>';
-        result = untyped !!((Env.window.SVGSVGElement != null) && (Std.is(e.firstChild, Env.window.SVGSVGElement)));
+        result = untyped Some(!!((Env.window.SVGSVGElement != null) && (Std.is(e.firstChild, Env.window.SVGSVGElement))));
         e = null;
       }
-      _html5SVGInTextHtml = Some(result);
       return result;
     });
   }
@@ -1284,15 +1106,17 @@ class BrowserSupport {
    * It's not clear from W3 if this is a bug or not.
    */
   public static function offsetDoesNotIncludeMarginInBodyOffset(): Bool {
-    if (Env.document != null && Env.document.body != null) {
-      return Env.document.body.into(function(body) {
-        var bodyMarginTop = Quirks.getComputedCssProperty(body, "margin-top").map(function(s) return s.toInt(0)).getOrElseC(0);
+    return testFeatureAndMemorize("offsetDoesNotIncludeMarginInBodyOffset", function(v) {
+      if (Env.document != null && Env.document.body != null) {
+        return Env.document.body.into(function(body) {
+          var bodyMarginTop = Quirks.getComputedCssProperty(body, "margin-top").map(function(s) return s.toInt(0)).getOrElseC(0);
 
-        return body.offsetTop != bodyMarginTop;
-      });
-  	}
+          return Some(body.offsetTop != bodyMarginTop);
+        });
+      }
 
-    return true;
+      return None;
+    });
   }
 
 	/**
@@ -1334,88 +1158,93 @@ class BrowserSupport {
    * from W3 if this is a bug or not.
    */
   public static function offsetDoesNotAddBorder(): Bool {
-    if (Env.document != null && Env.document.body != null) {
-      var container = Env.document.createElement("div").withEffect(function(container) {
-        container.style.extendWith({
-    		  position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
-    		});
+    return testFeatureAndMemorize("offsetDoesNotAddBorder", function(v) {
+      if (Env.document != null && Env.document.body != null) {
+        var container = Env.document.createElement("div").withEffect(function(container) {
+          container.style.extendWith({
+            position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
+          });
 
-    		container.innerHTML = "<div style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;'><div></div></div>";
-      });
+          container.innerHTML = "<div style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;'><div></div></div>";
+        });
 
-      return Env.document.body.into(function(body) {
-  		  body.insertBefore(container, body.firstChild);
+        return Some(Env.document.body.into(function(body) {
+          body.insertBefore(container, body.firstChild);
 
-  		  var checkDiv: HTMLElement = cast container.firstChild.firstChild;
+          var checkDiv: HTMLElement = cast container.firstChild.firstChild;
 
-    		return (checkDiv.offsetTop != 5).withEffect(function(_) {
-    		  body.removeChild(container);
-    		});
-  		});
-  	}
+          return (checkDiv.offsetTop != 5).withEffect(function(_) {
+            body.removeChild(container);
+          });
+        }));
+      }
 
-    return true;
+      return None;
+    });
   }
 
   /** Determines if offset calculations includes border for table and cells.
    * It's not clear from W3 if this is a bug or not.
    */
   public static function offsetAddsBorderForTableAndCells(): Bool {
-    if (Env.document != null && Env.document.body != null) {
-      var container = Env.document.createElement("div").withEffect(function(container) {
-        container.style.extendWith({
-    		  position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
-    		});
+    return testFeatureAndMemorize("offsetAddsBorderForTableAndCells", function(v) {
+      if (Env.document != null && Env.document.body != null) {
+        var container = Env.document.createElement("div").withEffect(function(container) {
+          container.style.extendWith({
+            position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
+          });
 
-    		container.innerHTML = "<table style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;' cellpadding='0' cellspacing='0'><tr><td></td></tr></table>";
-      });
+          container.innerHTML = "<table style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;' cellpadding='0' cellspacing='0'><tr><td></td></tr></table>";
+        });
 
-  		return Env.document.body.into(function(body) {
-  		  body.insertBefore(container, body.firstChild);
+        return Some(Env.document.body.into(function(body) {
+          body.insertBefore(container, body.firstChild);
 
-  		  var td: HTMLElement = cast container.getElementsByTagName('td')[0];
+          var td: HTMLElement = cast container.getElementsByTagName('td')[0];
 
-    		return (td.offsetTop == 5).withEffect(function(_) {
-    		  body.removeChild(container);
-    		});
-  		});
-  	}
-
-    return true;
+          return (td.offsetTop == 5).withEffect(function(_) {
+            body.removeChild(container);
+          });
+        }));
+      }
+      return None;
+    });
   }
 
   /** Determines if offset calculations fail to include border when overlay is
    * set to some other value than 'visible'.
    */
   public static function offsetSubtractsBorderForOverflowNotVisible(): Bool {
-    if (Env.document != null && Env.document.body != null) {
-      var container = Env.document.createElement("div").withEffect(function(container) {
-        container.style.extendWith({
-    		  position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
-    		});
+    return testFeatureAndMemorize("offsetSubtractsBorderForOverflowNotVisible", function(v) {
+      if (Env.document != null && Env.document.body != null) {
+        var container = Env.document.createElement("div").withEffect(function(container) {
+          container.style.extendWith({
+            position: "absolute", top: 0, left: 0, margin: 0, border: 0, width: "1px", height: "1px", visibility: "hidden"
+          });
 
-    		container.innerHTML = "<div style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;'><div></div></div>";
-      });
+          container.innerHTML = "<div style='position:absolute;top:0;left:0;margin:0;border:5px solid #000;padding:0;width:1px;height:1px;'><div></div></div>";
+        });
 
-      return Env.document.body.into(function(body) {
-  		  body.insertBefore(container, body.firstChild);
+        return Some(Env.document.body.into(function(body) {
+          body.insertBefore(container, body.firstChild);
 
-  		  var innerDiv: HTMLElement = cast container.firstChild;
+          var innerDiv: HTMLElement = cast container.firstChild;
 
-    		innerDiv.style.extendWith({
-    		  overflow: "hidden",
-    		  position: "relative"
-    		});
+          innerDiv.style.extendWith({
+            overflow: "hidden",
+            position: "relative"
+          });
 
-    		var checkDiv: HTMLElement = cast innerDiv.firstChild;
+          var checkDiv: HTMLElement = cast innerDiv.firstChild;
 
-    		return (checkDiv.offsetTop == -5).withEffect(function(_) {
-    		  body.removeChild(container);
-    		});
-  		});
-  	}
+          return (checkDiv.offsetTop == -5).withEffect(function(_) {
+            body.removeChild(container);
+          });
+        }));
+      }
 
-    return true;
+      return None;
+    });
   }
 
   private static function testSupport(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = false): Bool {
@@ -1435,32 +1264,51 @@ class BrowserSupport {
 	}
 
 	private static function test(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-	  return if (Env.document == null) def1;
-	  else {
-	    var div = Env.document.createElement('div');
+  return testAndMemorize("testInBody" + tagName, def1, function(v) {
+      return if (Env.document == null) None;
+      else {
+        var div = Env.document.createElement('div');
 
-	    div.style.display = 'none';
-	    div.innerHTML = contents;
+        div.style.display = 'none';
+        div.innerHTML = contents;
 
-	    div.getElementsByTagName(tagName).toArray().firstOption().map(f).getOrElseC(def2);
-	  }
+        Some(div.getElementsByTagName(tagName).toArray().firstOption().map(f).getOrElseC(def2));
+      }
+    });
 	}
 
 	private static function testInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-	  return if (Env.document == null || Env.document.body == null) def1;
-	  else {
-	    var div = Env.document.createElement('div');
+    return testAndMemorize("testInBody" + tagName, def1, function(v) {
+      return if (Env.document == null || Env.document.body == null) None;
+      else {
+        var div = Env.document.createElement('div');
 
-	    //div.style.display = 'none';
-	    div.innerHTML = contents;
+        //div.style.display = 'none';
+        div.innerHTML = contents;
 
-	    Env.document.body.insertBefore(div, Env.document.body.firstChild);
+        Env.document.body.insertBefore(div, Env.document.body.firstChild);
 
-	    div.getElementsByTagName(tagName).toArray().firstOption().map(f).getOrElseC(def2).withEffect(function(_) {
-	      Env.document.body.removeChild(div);
+        Some(div.getElementsByTagName(tagName).toArray().firstOption().map(f).getOrElseC(def2).withEffect(function(_) {
+          Env.document.body.removeChild(div);
 
-	      div.style.display = 'none';
-	    });
-	  }
+          div.style.display = 'none';
+        }));
+      }
+    });
 	}
+  private static function testFeatureAndMemorize(key: String, testFunction: Function<Void, Option<Bool>>): Bool{
+    return testAndMemorize(key, true, testFunction);
+  }
+  private static function testBugAndMemorize(key: String, testFunction: Function<Void, Option<Bool>>): Bool{
+    return testAndMemorize(key, false, testFunction);
+  }
+  private static function testAndMemorize(key: String, defaultValue: Bool, testFunction: Function<Void, Option<Bool>>): Bool{
+    return memorized.get(key).getOrElse(function(){
+      var result: Option<Bool> = untyped testFunction.call();
+      result.foreach(function(v){
+        memorized = memorized.set(key, v);
+      });
+      return result.getOrElseC(defaultValue);
+    });
+  }
 }
