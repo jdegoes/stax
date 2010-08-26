@@ -1,0 +1,5 @@
+Notice:
+The Closure Compiler JAR distributed here, called custom-closure-compiler.jar,
+is a derivative work of Google's Closure Compiler. Modifications were made to
+the default settings for advanced optimization to allow Closure to recompile
+HaXe source code without renaming identifiers.
