@@ -2054,11 +2054,11 @@ typedef HTMLVideoElement = {
   
   public function removeAttribute(name: DOMString): Void;
   
-  public function getAttributeNode(name: DOMString): Attr;
+  public function getAttributeNode(name: DOMString): HTMLAttr;
   
-  public function setAttributeNode(newAttr: Attr): Attr;
+  public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
   
-  public function removeAttributeNode(oldAttr: Attr): Attr;
+  public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
   
   public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
   
@@ -2068,9 +2068,9 @@ typedef HTMLVideoElement = {
   
   public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
   
-  public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+  public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
   
-  public function setAttributeNodeNS(newAttr: Attr): Attr;
+  public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
   
   public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
   
@@ -2082,7 +2082,7 @@ typedef HTMLVideoElement = {
   
   public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
   
-  public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+  public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
   
   public function getClientRects(): DomCollection<ClientRect>;
   
@@ -2309,11 +2309,11 @@ typedef HTMLAudioElement = {
   
   public function removeAttribute(name: DOMString): Void;
   
-  public function getAttributeNode(name: DOMString): Attr;
+  public function getAttributeNode(name: DOMString): HTMLAttr;
   
-  public function setAttributeNode(newAttr: Attr): Attr;
+  public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
   
-  public function removeAttributeNode(oldAttr: Attr): Attr;
+  public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
   
   public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
   
@@ -2323,9 +2323,9 @@ typedef HTMLAudioElement = {
   
   public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
   
-  public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+  public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
   
-  public function setAttributeNodeNS(newAttr: Attr): Attr;
+  public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
   
   public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
   
@@ -2337,7 +2337,7 @@ typedef HTMLAudioElement = {
   
   public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
   
-  public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+  public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
   
   public function getClientRects(): DomCollection<ClientRect>;
   
@@ -2354,7 +2354,7 @@ typedef HTMLAudioElement = {
   public var lastChild        (default,null): HTMLElement;
   public var previousSibling  (default,null): HTMLElement;
   public var nextSibling      (default,null): HTMLElement;
-  public var attributes       (default,null): NamedNodeMap<Attr>;
+  public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
   public var ownerDocument    (default,null): Document;
   
   public function hasChildNodes(): Bool;
@@ -2565,11 +2565,11 @@ typedef HTMLMediaElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -2579,9 +2579,9 @@ typedef HTMLMediaElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -2593,7 +2593,7 @@ typedef HTMLMediaElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -2610,7 +2610,7 @@ typedef HTMLMediaElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -2905,7 +2905,7 @@ typedef HTMLDocument = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
 
     public function hasChildNodes(): Bool;
@@ -3083,11 +3083,11 @@ typedef HTMLUnknownElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -3097,9 +3097,9 @@ typedef HTMLUnknownElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -3111,7 +3111,7 @@ typedef HTMLUnknownElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -3128,7 +3128,7 @@ typedef HTMLUnknownElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -3303,11 +3303,11 @@ typedef HTMLElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -3317,9 +3317,9 @@ typedef HTMLElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -3331,7 +3331,7 @@ typedef HTMLElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -3348,7 +3348,7 @@ typedef HTMLElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -3546,11 +3546,11 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -3560,9 +3560,9 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -3574,7 +3574,7 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -3591,7 +3591,7 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -3769,11 +3769,11 @@ typedef HTMLHtmlElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -3783,9 +3783,9 @@ typedef HTMLHtmlElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -3797,7 +3797,7 @@ typedef HTMLHtmlElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -3814,7 +3814,7 @@ typedef HTMLHtmlElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -3992,11 +3992,11 @@ typedef HTMLHeadElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -4006,9 +4006,9 @@ typedef HTMLHeadElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -4020,7 +4020,7 @@ typedef HTMLHeadElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -4037,7 +4037,7 @@ typedef HTMLHeadElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -4222,11 +4222,11 @@ typedef HTMLLinkElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -4236,9 +4236,9 @@ typedef HTMLLinkElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -4250,7 +4250,7 @@ typedef HTMLLinkElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -4267,7 +4267,7 @@ typedef HTMLLinkElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -4445,11 +4445,11 @@ typedef HTMLTitleElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -4459,9 +4459,9 @@ typedef HTMLTitleElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -4473,7 +4473,7 @@ typedef HTMLTitleElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -4490,7 +4490,7 @@ typedef HTMLTitleElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -4672,11 +4672,11 @@ typedef HTMLMetaElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -4686,9 +4686,9 @@ typedef HTMLMetaElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -4700,7 +4700,7 @@ typedef HTMLMetaElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -4717,7 +4717,7 @@ typedef HTMLMetaElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -4896,11 +4896,11 @@ typedef HTMLBaseElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -4910,9 +4910,9 @@ typedef HTMLBaseElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -4924,7 +4924,7 @@ typedef HTMLBaseElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -4941,7 +4941,7 @@ typedef HTMLBaseElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -5120,11 +5120,11 @@ typedef HTMLIsIndexElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -5134,9 +5134,9 @@ typedef HTMLIsIndexElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -5148,7 +5148,7 @@ typedef HTMLIsIndexElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -5165,7 +5165,7 @@ typedef HTMLIsIndexElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -5345,11 +5345,11 @@ typedef HTMLStyleElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -5359,9 +5359,9 @@ typedef HTMLStyleElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -5373,7 +5373,7 @@ typedef HTMLStyleElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -5390,7 +5390,7 @@ typedef HTMLStyleElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -5573,11 +5573,11 @@ typedef HTMLBodyElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -5587,9 +5587,9 @@ typedef HTMLBodyElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -5601,7 +5601,7 @@ typedef HTMLBodyElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -5618,7 +5618,7 @@ typedef HTMLBodyElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -5810,11 +5810,11 @@ typedef HTMLFormElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -5824,9 +5824,9 @@ typedef HTMLFormElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -5838,7 +5838,7 @@ typedef HTMLFormElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -5855,7 +5855,7 @@ typedef HTMLFormElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -6046,11 +6046,11 @@ typedef HTMLSelectElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -6060,9 +6060,9 @@ typedef HTMLSelectElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -6074,7 +6074,7 @@ typedef HTMLSelectElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -6091,7 +6091,7 @@ typedef HTMLSelectElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -6274,11 +6274,11 @@ typedef HTMLCanvasElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -6288,9 +6288,9 @@ typedef HTMLCanvasElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -6302,7 +6302,7 @@ typedef HTMLCanvasElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -6319,7 +6319,7 @@ typedef HTMLCanvasElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -6590,11 +6590,11 @@ typedef HTMLOptGroupElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -6604,9 +6604,9 @@ typedef HTMLOptGroupElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -6618,7 +6618,7 @@ typedef HTMLOptGroupElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -6635,7 +6635,7 @@ typedef HTMLOptGroupElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -6819,11 +6819,11 @@ typedef HTMLOptionElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -6833,9 +6833,9 @@ typedef HTMLOptionElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -6847,7 +6847,7 @@ typedef HTMLOptionElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -6864,7 +6864,7 @@ typedef HTMLOptionElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -7058,11 +7058,11 @@ typedef HTMLInputElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -7072,9 +7072,9 @@ typedef HTMLInputElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -7086,7 +7086,7 @@ typedef HTMLInputElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -7103,7 +7103,7 @@ typedef HTMLInputElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -7291,11 +7291,11 @@ typedef HTMLTextAreaElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -7305,9 +7305,9 @@ typedef HTMLTextAreaElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -7319,7 +7319,7 @@ typedef HTMLTextAreaElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -7336,7 +7336,7 @@ typedef HTMLTextAreaElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -7519,11 +7519,11 @@ typedef HTMLButtonElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -7533,9 +7533,9 @@ typedef HTMLButtonElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -7547,7 +7547,7 @@ typedef HTMLButtonElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -7564,7 +7564,7 @@ typedef HTMLButtonElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -7744,11 +7744,11 @@ typedef HTMLLabelElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -7758,9 +7758,9 @@ typedef HTMLLabelElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -7772,7 +7772,7 @@ typedef HTMLLabelElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -7789,7 +7789,7 @@ typedef HTMLLabelElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -7968,11 +7968,11 @@ typedef HTMLFieldSetElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -7982,9 +7982,9 @@ typedef HTMLFieldSetElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -7996,7 +7996,7 @@ typedef HTMLFieldSetElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -8013,7 +8013,7 @@ typedef HTMLFieldSetElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -8192,11 +8192,11 @@ typedef HTMLLegendElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -8206,9 +8206,9 @@ typedef HTMLLegendElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -8220,7 +8220,7 @@ typedef HTMLLegendElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -8237,7 +8237,7 @@ typedef HTMLLegendElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -8416,11 +8416,11 @@ typedef HTMLUListElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -8430,9 +8430,9 @@ typedef HTMLUListElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -8444,7 +8444,7 @@ typedef HTMLUListElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -8461,7 +8461,7 @@ typedef HTMLUListElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -8641,11 +8641,11 @@ typedef HTMLOListElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -8655,9 +8655,9 @@ typedef HTMLOListElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -8669,7 +8669,7 @@ typedef HTMLOListElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -8686,7 +8686,7 @@ typedef HTMLOListElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -8864,11 +8864,11 @@ typedef HTMLDListElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -8878,9 +8878,9 @@ typedef HTMLDListElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -8892,7 +8892,7 @@ typedef HTMLDListElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -8909,7 +8909,7 @@ typedef HTMLDListElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -9087,11 +9087,11 @@ typedef HTMLDirectoryElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -9101,9 +9101,9 @@ typedef HTMLDirectoryElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -9115,7 +9115,7 @@ typedef HTMLDirectoryElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -9132,7 +9132,7 @@ typedef HTMLDirectoryElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -9310,11 +9310,11 @@ typedef HTMLMenuElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -9324,9 +9324,9 @@ typedef HTMLMenuElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -9338,7 +9338,7 @@ typedef HTMLMenuElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -9355,7 +9355,7 @@ typedef HTMLMenuElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -9533,11 +9533,11 @@ typedef HTMLLIElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -9547,9 +9547,9 @@ typedef HTMLLIElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -9561,7 +9561,7 @@ typedef HTMLLIElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -9578,7 +9578,7 @@ typedef HTMLLIElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -9755,11 +9755,11 @@ typedef HTMLDivElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -9769,9 +9769,9 @@ typedef HTMLDivElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -9783,7 +9783,7 @@ typedef HTMLDivElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -9800,7 +9800,7 @@ typedef HTMLDivElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -9977,11 +9977,11 @@ typedef HTMLParagraphElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -9991,9 +9991,9 @@ typedef HTMLParagraphElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -10005,7 +10005,7 @@ typedef HTMLParagraphElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -10022,7 +10022,7 @@ typedef HTMLParagraphElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -10199,11 +10199,11 @@ typedef HTMLHeadingElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -10213,9 +10213,9 @@ typedef HTMLHeadingElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -10227,7 +10227,7 @@ typedef HTMLHeadingElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -10244,7 +10244,7 @@ typedef HTMLHeadingElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -10421,11 +10421,11 @@ typedef HTMLQuoteElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -10435,9 +10435,9 @@ typedef HTMLQuoteElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -10449,7 +10449,7 @@ typedef HTMLQuoteElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -10466,7 +10466,7 @@ typedef HTMLQuoteElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -10643,11 +10643,11 @@ typedef HTMLPreElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -10657,9 +10657,9 @@ typedef HTMLPreElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -10671,7 +10671,7 @@ typedef HTMLPreElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -10688,7 +10688,7 @@ typedef HTMLPreElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -10865,11 +10865,11 @@ typedef HTMLBRElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -10879,9 +10879,9 @@ typedef HTMLBRElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -10893,7 +10893,7 @@ typedef HTMLBRElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -10910,7 +10910,7 @@ typedef HTMLBRElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -11089,11 +11089,11 @@ typedef HTMLBaseFontElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -11103,9 +11103,9 @@ typedef HTMLBaseFontElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -11117,7 +11117,7 @@ typedef HTMLBaseFontElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -11134,7 +11134,7 @@ typedef HTMLBaseFontElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -11313,11 +11313,11 @@ typedef HTMLFontElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -11327,9 +11327,9 @@ typedef HTMLFontElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -11341,7 +11341,7 @@ typedef HTMLFontElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -11358,7 +11358,7 @@ typedef HTMLFontElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -11538,11 +11538,11 @@ typedef HTMLHRElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -11552,9 +11552,9 @@ typedef HTMLHRElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -11566,7 +11566,7 @@ typedef HTMLHRElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -11583,7 +11583,7 @@ typedef HTMLHRElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -11761,11 +11761,11 @@ typedef HTMLModElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -11775,9 +11775,9 @@ typedef HTMLModElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -11789,7 +11789,7 @@ typedef HTMLModElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -11806,7 +11806,7 @@ typedef HTMLModElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -11994,11 +11994,11 @@ typedef HTMLAnchorElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -12008,9 +12008,9 @@ typedef HTMLAnchorElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -12022,7 +12022,7 @@ typedef HTMLAnchorElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -12039,7 +12039,7 @@ typedef HTMLAnchorElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -12227,11 +12227,11 @@ typedef HTMLImageElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -12241,9 +12241,9 @@ typedef HTMLImageElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -12255,7 +12255,7 @@ typedef HTMLImageElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -12272,7 +12272,7 @@ typedef HTMLImageElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -12468,11 +12468,11 @@ typedef HTMLObjectElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -12482,9 +12482,9 @@ typedef HTMLObjectElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -12496,7 +12496,7 @@ typedef HTMLObjectElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -12513,7 +12513,7 @@ typedef HTMLObjectElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -12693,11 +12693,11 @@ typedef HTMLParamElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -12707,9 +12707,9 @@ typedef HTMLParamElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -12721,7 +12721,7 @@ typedef HTMLParamElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -12738,7 +12738,7 @@ typedef HTMLParamElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -12925,11 +12925,11 @@ typedef HTMLAppletElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -12939,9 +12939,9 @@ typedef HTMLAppletElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -12953,7 +12953,7 @@ typedef HTMLAppletElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -12970,7 +12970,7 @@ typedef HTMLAppletElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -13149,11 +13149,11 @@ typedef HTMLMapElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -13163,9 +13163,9 @@ typedef HTMLMapElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -13177,7 +13177,7 @@ typedef HTMLMapElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -13194,7 +13194,7 @@ typedef HTMLMapElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -13378,11 +13378,11 @@ typedef HTMLAreaElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -13392,9 +13392,9 @@ typedef HTMLAreaElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -13406,7 +13406,7 @@ typedef HTMLAreaElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -13423,7 +13423,7 @@ typedef HTMLAreaElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -13606,11 +13606,11 @@ typedef HTMLScriptElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -13620,9 +13620,9 @@ typedef HTMLScriptElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -13634,7 +13634,7 @@ typedef HTMLScriptElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -13651,7 +13651,7 @@ typedef HTMLScriptElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -13858,11 +13858,11 @@ typedef HTMLTableElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -13872,9 +13872,9 @@ typedef HTMLTableElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -13886,7 +13886,7 @@ typedef HTMLTableElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -13903,7 +13903,7 @@ typedef HTMLTableElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -14080,11 +14080,11 @@ typedef HTMLTableCaptionElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -14094,9 +14094,9 @@ typedef HTMLTableCaptionElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -14108,7 +14108,7 @@ typedef HTMLTableCaptionElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -14125,7 +14125,7 @@ typedef HTMLTableCaptionElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -14307,11 +14307,11 @@ typedef HTMLTableColElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -14321,9 +14321,9 @@ typedef HTMLTableColElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -14335,7 +14335,7 @@ typedef HTMLTableColElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -14352,7 +14352,7 @@ typedef HTMLTableColElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -14538,11 +14538,11 @@ typedef HTMLTableSectionElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -14552,9 +14552,9 @@ typedef HTMLTableSectionElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -14566,7 +14566,7 @@ typedef HTMLTableSectionElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -14583,7 +14583,7 @@ typedef HTMLTableSectionElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -14772,11 +14772,11 @@ typedef HTMLTableRowElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -14786,9 +14786,9 @@ typedef HTMLTableRowElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -14800,7 +14800,7 @@ typedef HTMLTableRowElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -14817,7 +14817,7 @@ typedef HTMLTableRowElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -15009,11 +15009,11 @@ typedef HTMLTableCellElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -15023,9 +15023,9 @@ typedef HTMLTableCellElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -15037,7 +15037,7 @@ typedef HTMLTableCellElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -15054,7 +15054,7 @@ typedef HTMLTableCellElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -15232,11 +15232,11 @@ typedef HTMLFrameSetElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -15246,9 +15246,9 @@ typedef HTMLFrameSetElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -15260,7 +15260,7 @@ typedef HTMLFrameSetElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -15277,7 +15277,7 @@ typedef HTMLFrameSetElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -15464,11 +15464,11 @@ typedef HTMLFrameElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -15478,9 +15478,9 @@ typedef HTMLFrameElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -15492,7 +15492,7 @@ typedef HTMLFrameElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -15509,7 +15509,7 @@ typedef HTMLFrameElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
@@ -15698,11 +15698,11 @@ typedef HTMLIFrameElement = {
     
     public function removeAttribute(name: DOMString): Void;
     
-    public function getAttributeNode(name: DOMString): Attr;
+    public function getAttributeNode(name: DOMString): HTMLAttr;
     
-    public function setAttributeNode(newAttr: Attr): Attr;
+    public function setAttributeNode(newAttr: HTMLAttr): HTMLAttr;
     
-    public function removeAttributeNode(oldAttr: Attr): Attr;
+    public function removeAttributeNode(oldAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagName(name: DOMString): DomCollection<HTMLElement>;
     
@@ -15712,9 +15712,9 @@ typedef HTMLIFrameElement = {
     
     public function removeAttributeNS(namespaceURI: DOMString, localName: DOMString): Void;
     
-    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): Attr;
+    public function getAttributeNodeNS(namespaceURI: DOMString, localName: DOMString): HTMLAttr;
     
-    public function setAttributeNodeNS(newAttr: Attr): Attr;
+    public function setAttributeNodeNS(newAttr: HTMLAttr): HTMLAttr;
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<HTMLElement>;
     
@@ -15726,7 +15726,7 @@ typedef HTMLIFrameElement = {
     
     public function setIdAttributeNS(namespaceURI: DOMString, localname: DOMString, isId: Bool): Void;
     
-    public function setIdAttributeNode(idAttr: Attr, isId: Bool): Void;
+    public function setIdAttributeNode(idAttr: HTMLAttr, isId: Bool): Void;
     
     public function getClientRects(): DomCollection<ClientRect>;
     
@@ -15743,7 +15743,7 @@ typedef HTMLIFrameElement = {
     public var lastChild        (default,null): HTMLElement;
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
-    public var attributes       (default,null): NamedNodeMap<Attr>;
+    public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
     public var ownerDocument    (default,null): Document;
     
     public function hasChildNodes(): Bool;
