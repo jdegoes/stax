@@ -1276,7 +1276,7 @@ class BrowserSupport {
 	}
 
 	private static function test(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-  return testAndMemorize("testInBody" + tagName, def1, function(v) {
+  return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null) None;
       else {
         var div = Env.document.createElement('div');
@@ -1290,7 +1290,7 @@ class BrowserSupport {
 	}
 
 	private static function testInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-    return testAndMemorize("testInBody" + tagName, def1, function(v) {
+    return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null || Env.document.body == null) None;
       else {
         var div = Env.document.createElement('div');
