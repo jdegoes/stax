@@ -115,12 +115,15 @@ class Quirks {
     }
   }
   
-  public static function getOverrideStyle(doc: HTMLDocument, el: HTMLElement, pseudo: String): CSSStyleDeclaration {
-    if (Env.isDefined(untyped el.runtimeStyle)) {
+  public static function getOverrideStyle(doc: HTMLDocument, el: HTMLElement, pseudo: DOMString): CSSStyleDeclaration {
+    if (doc.getOverrideStyle != null && doc.getOverrideStyle(el, pseudo) != null) {
+      return doc.getOverrideStyle(el, pseudo);
+    }
+    else if (Env.isDefined(untyped el.runtimeStyle)) {
       return untyped el.runtimeStyle;
     }
     else {
-      return doc.getOverrideStyle(el, pseudo);
+      return null;
     }
   }
 

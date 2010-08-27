@@ -279,6 +279,11 @@ class List<T> implements Collection<List<T>, T> {
     return reverse().drop(size - n);
   }
   
+  /** Override Foldable to provide higher performance: */
+  public function map(f: T -> T): List<T> {
+    return foldr(empty(), function(e, list) return list.cons(f(e)));
+  }
+  
   /** Returns a list that contains all the elements of this list in reverse 
    * order */
   public function reverse(): List<T> {
