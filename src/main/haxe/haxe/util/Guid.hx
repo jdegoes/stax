@@ -15,6 +15,8 @@
 */
 package haxe.util;
 
+typedef GuidGenerator = Void -> String
+
 class Guid {
 	public static function generate(): String {
     var result = "";

@@ -128,6 +128,8 @@ class Quirks {
     }
   }
   
+  /** Deletes the specified css rule.
+   */
   public static function deleteCssRule(rule: CSSRule): CSSRule {
     if (Env.isDefined(rule.parentStyleSheet)) {
       var sheet = rule.parentStyleSheet;
@@ -162,7 +164,9 @@ class Quirks {
   /** Adds an overriding style to the specified element. These styles will not 
    * override inline styles unless "!important" is specified.
    */
-  public static function addOverridingStyle(doc: HTMLDocument, el: HTMLElement, style: String = ''): CSSStyleRule {
+  public static function addOverridingCssRule(el: HTMLElement, style: String = ''): CSSStyleRule {
+    var doc: HTMLDocument = cast el.ownerDocument;
+    
     var id = el.getAttribute('id').toOption().filter(function(id) return id != '').getOrElse(function() {
       return Guid.generate().withEffect(function(guid) {
         el.setAttribute('id', guid);
