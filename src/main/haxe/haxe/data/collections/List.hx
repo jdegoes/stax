@@ -289,6 +289,11 @@ class List<T> implements Collection<List<T>, T> {
     return foldr(empty(), function(e, list) return list.prependAll(f(e)));
   }
   
+  /** Override Foldable to provide higher performance: */
+  public function filter(f: T -> Bool): List<T> {
+    return foldr(empty(), function(e, list) return if (f(e)) list.cons(e) else list);
+  }
+  
   /** Returns a list that contains all the elements of this list in reverse 
    * order */
   public function reverse(): List<T> {
