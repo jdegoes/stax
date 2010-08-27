@@ -222,23 +222,27 @@ class Quirks {
    */
   public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
     if (Env.isDefined(sheet.insertRule)) {
-      var index = if (index_ == null) sheet.cssRules.length else index_;
+      var rules = getCssRules(sheet);
       
-      var rules    = getCssRules(sheet);
-      var newIndex = sheet.insertRule(rule, rules.length);
+      var index = if (index_ == null) rules.length else index_;
       
-      return rules[newIndex];
+      sheet.insertRule(rule, index);
+      
+      return rules[rules.length];
     }
     else if (Env.isDefined(untyped sheet.addRule)) {
+      var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
+      
       var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
       
       if (Pattern.match(rule)) {
         var index = if (index_ == null) -1 else index_;
-
-        var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
         
-        var rules    = getCssRules(sheet);
-        var newIndex = addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
+        addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
+        
+        var rules = getCssRules(sheet);
+        
+        var newIndex = if (index == -1) rules.length - 1 else index;
 
         return rules[newIndex];
       }
