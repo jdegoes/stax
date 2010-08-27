@@ -23,6 +23,7 @@ import js.Env;
 import js.detect.BrowserSupport;
 import haxe.functional.Predicate;
 import haxe.data.collections.Map;
+import haxe.util.Guid;
 
 using PreludeExtensions;
 using haxe.util.StringExtensions;
@@ -123,6 +124,13 @@ class Quirks {
       return untyped el.runtimeStyle;
     }
     else {
+      var id = el.getAttribute('id').into(function(id) {
+        return if (id != '') id;
+               else Guid.generate().withEffect(function(guid) {
+                 el.setAttribute('id', guid);
+               });
+      });
+      
       return null;
     }
   }
