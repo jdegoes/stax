@@ -124,20 +124,63 @@ class Quirks {
       return untyped el.runtimeStyle;
     }
     else {
-      var id = el.getAttribute('id').into(function(id) {
-        return if (id != '') id;
-               else Guid.generate().withEffect(function(guid) {
-                 el.setAttribute('id', guid);
-               });
-      });
-      
-      return null;
+      return cast {};
     }
+  }
+  
+  public static function deleteCssRule(rule: CSSRule): CSSRule {
+    if (Env.isDefined(rule.parentStyleSheet)) {
+      var sheet = rule.parentStyleSheet;
+      var rules = getCssRules(sheet);
+      
+      var index = 0;
+      
+      for (cur in rules) {
+        if (Env.eq(cur, rule)) break;
+        
+        ++index;
+      }
+      
+      if (index < rules.length) {
+        if (Env.isDefined(sheet.deleteRule)) {
+          sheet.deleteRule(index);
+          
+          return rule;
+        }
+      }
+    }
+    
+    if (Env.isDefined(rule.cssText)) {
+      rule.cssText = '';
+      
+      return rule;
+    }
+    
+    return rule;
+  }
+  
+  /** Adds an overriding style to the specified element. These styles will not 
+   * override inline styles unless "!important" is specified.
+   */
+  public static function addOverridingStyle(doc: HTMLDocument, el: HTMLElement, style: String = ''): CSSStyleRule {
+    var id = el.getAttribute('id').toOption().filter(function(id) return id != '').getOrElse(function() {
+      return Guid.generate().withEffect(function(guid) {
+        el.setAttribute('id', guid);
+      });
+    });
+    
+    if (doc.styleSheets.length < 0) {
+      addCssStylesheet(doc, '');
+    }
+    
+    var lastStyleSheet: CSSStyleSheet = cast doc.styleSheets[doc.styleSheets.length - 1];
+    
+    return cast insertCssRule(lastStyleSheet, '#' + id + ' {' + style + '}');
   }
      
   /** Adds a new style sheet to the document with the specified content.
    */
-  public static function addStylesheet(doc: HTMLDocument, content: String): CSSStyleSheet {
+  public static function addCssStylesheet(doc: HTMLDocument, content: String): CSSStyleSheet {
     var head = doc.getElementsByTagName('HEAD')[0].toOption().getOrElse(function() {
       return doc.createElement('HEAD').withEffect(function(newHead) {
         doc.documentElement.appendChild(newHead);
@@ -145,6 +188,8 @@ class Quirks {
     });
     
     var style = doc.createElement('STYLE');
+    
+    style.setAttribute('type', 'text/css');
     
     try {
       if (Env.isDefined(untyped style.innerText)) {
@@ -184,7 +229,7 @@ class Quirks {
       rules[newIndex];
     }
     else {
-      var Pattern = ~/^([^{]+)\{([^}]+)\}$/;
+      var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
       
       if (Pattern.match(rule)) {
         var index = if (index_ == null) -1 else index_;
