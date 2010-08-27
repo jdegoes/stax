@@ -126,6 +126,71 @@ class Quirks {
       return null;
     }
   }
+     
+  /** Adds a new style sheet to the document with the specified content.
+   */
+  public static function addStylesheet(doc: HTMLDocument, content: String): CSSStyleSheet {
+    var head = doc.getElementsByTagName('HEAD')[0].toOption().getOrElse(function() {
+      return doc.createElement('HEAD').withEffect(function(newHead) {
+        doc.documentElement.appendChild(newHead);
+      });
+    });
+    
+    var style = doc.createElement('STYLE');
+    
+    try {
+      if (Env.isDefined(untyped style.innerText)) {
+        untyped style.innerText = content;
+      }
+      else if (Env.isDefined(untyped style.innerHTML)) {
+        untyped style.innerHTML = content;
+      }
+      
+      head.appendChild(style);
+    }
+    catch (e: Dynamic) {
+      head.appendChild(style);
+      
+      untyped doc.styleSheets[doc.styleSheets.length - 1].cssText = content;
+    }
+    
+    return cast doc.styleSheets[doc.styleSheets.length - 1];
+  }
+  
+  /** Retrieves the rules comprising the specified CSS sheet.
+   */
+  public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
+    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules;
+           else untyped sheet.rules;
+  }
+  
+  /** Inserts the specified rule into the specified CSS sheet.
+   */
+  public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
+    return if (Env.isDefined(sheet.insertRule)) {
+      var index = if (index_ == null) sheet.cssRules.length else index_;
+      
+      var rules    = getCssRules(sheet);
+      var newIndex = sheet.insertRule(rule, rules.length);
+      
+      rules[newIndex];
+    }
+    else {
+      var Pattern = ~/^([^{]+)\{([^}]+)\}$/;
+      
+      if (Pattern.match(rule)) {
+        var index = if (index_ == null) -1 else index_;
+
+        var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
+        
+        var rules    = getCssRules(sheet);
+        var newIndex = addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
+
+        rules[newIndex];
+      }
+      else Stax.error('Invalid rule: ' + rule);
+    }
+  }
 
   /** Retrieves the actual property name for the specified css property.
    * Because some CSS property names are reserved JavaScript keywords, not
