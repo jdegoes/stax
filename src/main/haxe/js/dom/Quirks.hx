@@ -26,6 +26,7 @@ import haxe.data.collections.Map;
 import haxe.util.Guid;
 
 using PreludeExtensions;
+using js.dom.DomExtensions;
 using haxe.util.StringExtensions;
 using haxe.util.ObjectExtensions;
 
@@ -135,27 +136,23 @@ class Quirks {
       var sheet = rule.parentStyleSheet;
       var rules = getCssRules(sheet);
       
-      var index = 0;
+      var index = rules.indexOf(rule);
       
-      for (cur in rules) {
-        if (Env.eq(cur, rule)) break;
-        
-        ++index;
-      }
-      
-      if (index < rules.length) {
+      if (index > 0) {
         if (Env.isDefined(sheet.deleteRule)) {
           sheet.deleteRule(index);
           
           return rule;
         }
+        else return Stax.error('deleteRule is not defined');
+      }
+      else {
+        return Stax.error('could not find rule inside sheet');
       }
     }
     
     if (Env.isDefined(rule.cssText)) {
       rule.cssText = '';
-      
-      return rule;
     }
     
     return rule;
@@ -216,23 +213,23 @@ class Quirks {
   
   /** Retrieves the rules comprising the specified CSS sheet.
    */
-  public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
-    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules;
-           else untyped sheet.rules;
+  public static function getCssRules(sheet: CSSStyleSheet): Array<CSSRule> {
+    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules.toArray();
+           else untyped sheet.rules.toArray();
   }
   
   /** Inserts the specified rule into the specified CSS sheet.
    */
   public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
-    return if (Env.isDefined(sheet.insertRule)) {
+    if (Env.isDefined(sheet.insertRule)) {
       var index = if (index_ == null) sheet.cssRules.length else index_;
       
       var rules    = getCssRules(sheet);
       var newIndex = sheet.insertRule(rule, rules.length);
       
-      rules[newIndex];
+      return rules[newIndex];
     }
-    else {
+    else if (Env.isDefined(untyped sheet.addRule)) {
       var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
       
       if (Pattern.match(rule)) {
@@ -243,10 +240,11 @@ class Quirks {
         var rules    = getCssRules(sheet);
         var newIndex = addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
 
-        rules[newIndex];
+        return rules[newIndex];
       }
-      else Stax.error('Invalid rule: ' + rule);
     }
+    
+    return Stax.error('Invalid rule: ' + rule);
   }
 
   /** Retrieves the actual property name for the specified css property.

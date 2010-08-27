@@ -419,6 +419,18 @@ class ArrayExtensions {
     return count;
   }
   
+  public static function indexOf<T>(a: Array<T>, t: T): Int {
+    var index = 0;
+    
+    for (e in a) { 
+      if (e == t) return index;
+      
+      ++index;
+    }
+    
+    return -1;
+  }
+  
   public static function map<T, S>(a: Array<T>, f: T -> S): Array<S> {
     var n: Array<S> = [];
     
