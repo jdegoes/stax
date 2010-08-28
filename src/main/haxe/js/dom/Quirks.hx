@@ -228,7 +228,7 @@ class Quirks {
       
       sheet.insertRule(rule, index);
       
-      return rules[rules.length];
+      return rules[index];
     }
     else if (Env.isDefined(untyped sheet.addRule)) {
       var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
