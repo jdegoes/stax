@@ -136,7 +136,7 @@ class Quirks {
       var sheet = rule.parentStyleSheet;
       var rules = getCssRules(sheet);
       
-      var index = rules.indexOf(rule);
+      var index = rules.toArray().indexOf(rule);
       
       if (index > 0) {
         if (Env.isDefined(sheet.deleteRule)) {
@@ -213,9 +213,9 @@ class Quirks {
   
   /** Retrieves the rules comprising the specified CSS sheet.
    */
-  public static function getCssRules(sheet: CSSStyleSheet): Array<CSSRule> {
-    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules.toArray();
-           else untyped sheet.rules.toArray();
+  public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
+    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules;
+           else untyped sheet.rules;
   }
   
   /** Inserts the specified rule into the specified CSS sheet.
