@@ -107,14 +107,18 @@ class LogHandlers {
   
   #if js
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
-    (function(text, console: Dynamic) {
-      switch (level) {
-        case All, Debug:          if (console != null && console.debug != null) console.debug(text);
-        case Info:                if (console != null && console.info != null) console.info(text);
-        case Warning:             if (console != null && console.warn != null) console.warn(text);
-        case Error, Fatal, None:  if (console != null && console.error != null) console.error(text);
+    (function(text) {
+      var c = untyped __js__('(typeof console != "undefined") ? console : null');
+      
+      if (c != null) {      
+        switch (level) {
+          case All, Debug:          if (c.debug != null) c.debug(text);
+          case Info:                if (c.info != null) c.info(text);
+          case Warning:             if (c.warn != null) c.warn(text);
+          case Error, Fatal, None:  if (c.error != null) c.error(text);
+        }
       }
-    })(format(text, p), untyped __js__('console'));
+    })(format(text, p));
   }
   #elseif flash
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
