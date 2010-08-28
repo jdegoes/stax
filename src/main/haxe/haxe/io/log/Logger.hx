@@ -109,10 +109,10 @@ class LogHandlers {
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
     (function(text, console: Dynamic) {
       switch (level) {
-        case All, Debug:          if (console.debug != null) console.debug(text);
-        case Info:                if (console.info != null) console.info(text);
-        case Warning:             if (console.warn != null) console.warn(text);
-        case Error, Fatal, None:  if (console.error != null) console.error(text);
+        case All, Debug:          if (console != null && console.debug != null) console.debug(text);
+        case Info:                if (console != null && console.info != null) console.info(text);
+        case Warning:             if (console != null && console.warn != null) console.warn(text);
+        case Error, Fatal, None:  if (console != null && console.error != null) console.error(text);
       }
     })(format(text, p), untyped __js__('console'));
   }
@@ -121,10 +121,10 @@ class LogHandlers {
     (function(text, console: Dynamic) {
       if (flash.external.ExternalInterface.available) {
         switch (level) {
-          case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (console.debug) console.debug(text);})', text);
-          case Info:                flash.external.ExternalInterface.call('(function(text){if (console.warn) console.warn(text);})', text);
-          case Warning:             flash.external.ExternalInterface.call('(function(text){if (console.warn) console.warn(text);})', text);
-          case Error, Fatal, None:  flash.external.ExternalInterface.call('(function(text){if (console.error) console.error(text);})', text);
+          case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (console != null && console.debug) console.debug(text);})', text);
+          case Info:                flash.external.ExternalInterface.call('(function(text){if (console != null && console.warn) console.warn(text);})', text);
+          case Warning:             flash.external.ExternalInterface.call('(function(text){if (console != null && console.warn) console.warn(text);})', text);
+          case Error, Fatal, None:  flash.external.ExternalInterface.call('(function(text){if (console != null && console.error) console.error(text);})', text);
         }
       }
     })(format(text, p));
