@@ -64,6 +64,8 @@ class HTMLDocumentExtensions {
 	  iframe.style.border  = 'none';
 	  iframe.style.backgroundColor = 'transparent';
 	  
+	  untyped iframe.style.filter = 'alpha(opacity=0)';
+	  
 	  return iframe;
   }
   
