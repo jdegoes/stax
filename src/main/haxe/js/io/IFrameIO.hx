@@ -32,6 +32,7 @@ using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 using haxe.util.StringExtensions;
 using haxe.data.collections.IterableExtensions;
+using haxe.data.collections.MapExtensions;
 using haxe.net.UrlExtensions;
 using haxe.framework.Injector;
 
@@ -303,6 +304,8 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   var senderFuture:       Option<Future<Void>>;
   var receiverFuture:     Option<Future<Void>>;
   
+  static var log = Logger.debug();
+  
 	public function new(w: Window) {
 	  super();
 	  
@@ -397,7 +400,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 	      
 	      var window   = tuple._1;
 	      var fragment = tuple._2;
-	      
+	      	      
 	      // Send this chunk via the hash tag:	      
 	      window.location.href = fragment.to + '#' + fragment.toMap().toQueryString().substr(1);
 	  }
@@ -409,7 +412,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 	  if (hash.length > 1) {
 	    var query = '?' + hash.substr(1);
 	    
-	    var unknown: Dynamic = query.toQueryParameters();
+	    var unknown: Dynamic = query.toQueryParameters().toObject();
 	    
 	    if (unknown.type == 'delivery') {
 	      var packet: FragmentDelivery = cast unknown;
