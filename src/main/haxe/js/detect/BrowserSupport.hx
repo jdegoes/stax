@@ -1051,7 +1051,9 @@ class BrowserSupport {
         return styleAttribute.contains("black");
       }
       else if (Env.typeOf(styleAttribute) == 'object'){
-        return untyped styleAttribute.cssText.contains("black");
+        var cssText: String = untyped styleAttribute.cssText;
+        
+        return cssText.contains("black");
       }
       else{return false;}
     });
