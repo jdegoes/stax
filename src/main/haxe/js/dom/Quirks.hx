@@ -144,17 +144,17 @@ class Quirks {
           
           return rule;
         }
-        else return Stax.error('deleteRule is not defined');
-      }
-      else {
-        return Stax.error('Could not find rule inside sheet');
+        else if (untyped sheet.removeRule != null) {
+          untyped sheet.removeRule(index);
+          
+          return rule;
+        }
       }
     }
     
-    if (rule.cssText != null) {
-      rule.cssText = '';
+    if (untyped rule.selectorText != null) {
+      untyped rule.selectorText = '#' + Guid.generate();
     }
-    else Stax.error('cssText not defined');
     
     return rule;
   }
