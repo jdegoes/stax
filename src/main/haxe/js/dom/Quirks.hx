@@ -121,7 +121,7 @@ class Quirks {
     if (doc.getOverrideStyle != null && doc.getOverrideStyle(el, pseudo) != null) {
       return doc.getOverrideStyle(el, pseudo);
     }
-    else if (Env.isDefined(untyped el.runtimeStyle)) {
+    else if (untyped el.runtimeStyle != null) {
       return untyped el.runtimeStyle;
     }
     else {
@@ -132,14 +132,14 @@ class Quirks {
   /** Deletes the specified css rule.
    */
   public static function deleteCssRule(rule: CSSRule): CSSRule {
-    if (Env.isDefined(untyped rule.parentStyleSheet)) {
+    if (rule.parentStyleSheet != null) {
       var sheet = rule.parentStyleSheet;
       var rules = getCssRules(sheet);
       
       var index = rules.toArray().indexOf(rule);
       
       if (index > 0) {
-        if (Env.isDefined(untyped sheet.deleteRule)) {
+        if (sheet.deleteRule != null) {
           sheet.deleteRule(index);
           
           return rule;
@@ -147,13 +147,14 @@ class Quirks {
         else return Stax.error('deleteRule is not defined');
       }
       else {
-        return Stax.error('could not find rule inside sheet');
+        return Stax.error('Could not find rule inside sheet');
       }
     }
     
-    if (Env.isDefined(untyped rule.cssText)) {
+    if (rule.cssText != null) {
       rule.cssText = '';
     }
+    else Stax.error('cssText not defined');
     
     return rule;
   }
@@ -193,10 +194,10 @@ class Quirks {
     style.setAttribute('type', 'text/css');
     
     try {
-      if (Env.isDefined(untyped style.innerText)) {
+      if (untyped style.innerText != null) {
         untyped style.innerText = content;
       }
-      else if (Env.isDefined(untyped style.innerHTML)) {
+      else if (untyped style.innerHTML != null) {
         untyped style.innerHTML = content;
       }
       
@@ -214,14 +215,14 @@ class Quirks {
   /** Retrieves the rules comprising the specified CSS sheet.
    */
   public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
-    return if (Env.isDefined(untyped sheet.cssRules)) sheet.cssRules;
+    return if (untyped sheet.cssRules != null) sheet.cssRules;
            else untyped sheet.rules;
   }
   
   /** Inserts the specified rule into the specified CSS sheet.
    */
   public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
-    if (Env.isDefined(untyped sheet.insertRule)) {
+    if (sheet.insertRule != null) {
       var rules = getCssRules(sheet);
       
       var index = if (index_ == null) rules.length else index_;
@@ -230,7 +231,7 @@ class Quirks {
       
       return rules[index];
     }
-    else if (Env.isDefined(untyped sheet.addRule)) {
+    else if (untyped sheet.addRule != null) {
       var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
       
       var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
@@ -273,7 +274,7 @@ class Quirks {
   		  return if (name == 'opacity') Some('1'); else None;
   		}).getOrElseC('');
   	}
-  	else if (Env.isDefined(untyped elem.currentStyle)) {
+  	else if (untyped elem.currentStyle != null) {
   		if (name == 'opacity' && !BrowserSupport.opacity()) {
   		  if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
   		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
@@ -323,11 +324,11 @@ class Quirks {
 	 * for top-level windows).
 	 */
 	public static function getViewportSize(): { dx: Int, dy: Int } {
-	  return if (Env.isDefined(untyped Env.window.innerWidth)) {
+	  return if (Env.window.innerWidth != null) {
 	    dx: Env.window.innerWidth,
 	    dy: Env.window.innerHeight
 	  }
-    else if (Env.isDefined(untyped Env.document.documentElement) && Env.isDefined(untyped Env.document.documentElement.clientWidth) && untyped Env.document.documentElement.clientWidth != 0) {
+    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientWidth != null && untyped Env.document.documentElement.clientWidth != 0) {
       dx: untyped Env.document.documentElement.clientWidth,
       dy: untyped Env.document.documentElement.clientHeight
     }
