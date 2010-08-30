@@ -43,6 +43,10 @@ class HTMLDocumentExtensions {
     return iframe;
   }
   
+  /** Creates a new iframe intended to be used as a window. This iframe will 
+   * not have borders, will not allow resizing, will not have any margin or
+   * padding, and will be transparent (depending on the body).
+   */
   public static function newIframeWindow(doc: HTMLDocument, width: Int, height: Int): HTMLIFrameElement {
     var iframe = newIframe(doc, width, height);
 	  
@@ -58,6 +62,7 @@ class HTMLDocumentExtensions {
 	  iframe.style.margin  = '0';
 	  iframe.style.padding = '0';
 	  iframe.style.border  = 'none';
+	  iframe.style.backgroundColor = 'transparent';
 	  
 	  return iframe;
   }
