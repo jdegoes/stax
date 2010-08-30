@@ -381,6 +381,19 @@ class Quirks {
 
     return windowHeight;
   }
+  
+  /** Determines if the specified element has the specified attribute.
+   */
+  public static function hasAttribute(e: HTMLElement, attr: String): Bool {
+    if (e.hasAttribute != null) {
+      return e.hasAttribute(attr);
+    }
+    else {
+      var value = e.getAttribute(attr);
+      
+      return if (Env.eq(value, null) || Env.eq(value, '')) false else true;
+    }
+  }
 
 	/** Retrieves the offset of the document's body, relative to the window origin.
 	 */
