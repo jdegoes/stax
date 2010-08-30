@@ -131,29 +131,35 @@ class Quirks {
   
   /** Deletes the specified css rule.
    */
-  public static function deleteCssRule(rule: CSSRule): CSSRule {
-    if (rule.parentStyleSheet != null) {
-      var sheet = rule.parentStyleSheet;
-      var rules = getCssRules(sheet);
-      
-      var index = rules.toArray().indexOf(rule);
+  public static function deleteCssRule(doc: HTMLDocument, rule: CSSRule): CSSRule {
+    var deleteFromSheet = function(sheet: CSSStyleSheet): Bool {
+      var index = getCssRules(sheet).toArray().indexOf(rule);
       
       if (index > 0) {
         if (sheet.deleteRule != null) {
           sheet.deleteRule(index);
           
-          return rule;
+          return true;
         }
         else if (untyped sheet.removeRule != null) {
           untyped sheet.removeRule(index);
           
-          return rule;
+          return true;
         }
       }
+      
+      return false;
     }
     
-    if (untyped rule.selectorText != null) {
-      untyped rule.selectorText = '#' + Guid.generate();
+    if (rule.parentStyleSheet != null) {
+      deleteFromSheet(rule.parentStyleSheet);
+    }
+    else {
+      var stylesheets = doc.styleSheets;
+    
+      for (i in 0...stylesheets.length) {
+        if (deleteFromSheet(cast stylesheets[i])) break;
+      }
     }
     
     return rule;
