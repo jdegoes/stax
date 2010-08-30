@@ -2030,36 +2030,14 @@ class DomTest extends TestCase {
         verifyThatPropertiesExist(pixArray, pixArrayProperties);
     }
 
-    public function testClassCollection(): Void {
-      var classes = getAllSiblings(_doc.getElementsByTagName('body')[0].firstChild);
+    public function testGetElementByClass(): Void {
+      var classes = Env.getElementsByClass('class');
       
-      trace(classes);
-      
-      assertTrue(true);
+      assertEquals(classes.length, 4);
     }
     
-    private function isClass(e: HTMLElement, s: String): Bool {
-      return if (e.getAttribute('class').indexOf(s) > 0) true else false;
-    }
     
-    private function getChildren(e: HTMLElement): Array<HTMLElement> {
-      var result: Array<HTMLElement> = [];
-      
-      if (e.firstChild != null) {
-          
-      }
-      return result;
-    }
     
-    private function getAllSiblings(e: HTMLElement): Array<HTMLElement> {
-      var result = [e];
-      
-      if (e.nextSibling != null) {
-          result.concat(getAllSiblings(e.nextSibling));
-      }
-      
-      return result;
-    }
     
     
     
