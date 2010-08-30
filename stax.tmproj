@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>src/main/haxe/haxe/math/geom/VectorExtensions.hx</string>
+	<string>src/test/haxe/haxe/util/ObjectExtensionsTestCase.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,91 +21,47 @@
 	<integer>434</integer>
 	<key>metaData</key>
 	<dict>
-		<key>demo.html</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>8</integer>
-				<key>line</key>
-				<integer>23</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
-		<key>src/demo/haxe/Demo.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>0</integer>
-				<key>line</key>
-				<integer>0</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
-		</dict>
 		<key>src/main/haxe/Dom.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>26</integer>
+				<integer>53</integer>
 				<key>line</key>
-				<integer>17809</integer>
+				<integer>471</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>17784</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>15</integer>
-				<key>line</key>
-				<integer>17809</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>26</integer>
-				<key>line</key>
-				<integer>17809</integer>
-			</dict>
+			<integer>434</integer>
 		</dict>
 		<key>src/main/haxe/Prelude.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>56</integer>
+				<integer>30</integer>
 				<key>line</key>
-				<integer>702</integer>
+				<integer>706</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>657</integer>
+			<integer>695</integer>
 		</dict>
 		<key>src/main/haxe/PreludeExtensions.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>74</integer>
+				<integer>7</integer>
 				<key>line</key>
-				<integer>85</integer>
+				<integer>396</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>73</integer>
+			<integer>382</integer>
 		</dict>
 		<key>src/main/haxe/haxe/data/collections/Map.hx</key>
 		<dict>
@@ -239,6 +195,20 @@
 				<integer>0</integer>
 			</dict>
 		</dict>
+		<key>src/main/haxe/haxe/io/log/Logger.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>81</integer>
+				<key>line</key>
+				<integer>110</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>96</integer>
+		</dict>
 		<key>src/main/haxe/haxe/math/geom/Point.hx</key>
 		<dict>
 			<key>caret</key>
@@ -281,20 +251,6 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>src/main/haxe/haxe/math/geom/VectorExtensions.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>23</integer>
-				<key>line</key>
-				<integer>90</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>68</integer>
-		</dict>
 		<key>src/main/haxe/haxe/test/TestCase.hx</key>
 		<dict>
 			<key>caret</key>
@@ -314,14 +270,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>79</integer>
+				<integer>46</integer>
 				<key>line</key>
-				<integer>56</integer>
+				<integer>105</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>42</integer>
+			<integer>77</integer>
 		</dict>
 		<key>src/main/haxe/haxe/util/StringExtensions.hx</key>
 		<dict>
@@ -365,33 +321,35 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>src/main/haxe/js/dom/HTMLDocumentExtensions.hx</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>23</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>13</integer>
-		</dict>
 		<key>src/main/haxe/js/dom/Quirks.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>5</integer>
+				<integer>52</integer>
 				<key>line</key>
-				<integer>181</integer>
+				<integer>216</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>161</integer>
+			<integer>195</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>216</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>217</integer>
+			</dict>
 		</dict>
 		<key>src/main/haxe/js/io/IFrameIO.hx</key>
 		<dict>
@@ -468,9 +426,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>49</integer>
+				<integer>53</integer>
 				<key>line</key>
-				<integer>25</integer>
+				<integer>47</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -538,40 +496,17 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>src/main/haxe/js/io/IFrameIO.hx</string>
-		<string>src/test/haxe/haxe/net/UrlExtensionsTestCase.hx</string>
-		<string>src/main/haxe/haxe/io/http/HttpTransformer.hx</string>
-		<string>src/main/haxe/haxe/io/http/HttpString.hx</string>
+		<string>src/main/haxe/js/dom/Quirks.hx</string>
+		<string>src/main/haxe/haxe/io/log/Logger.hx</string>
 		<string>src/main/haxe/haxe/util/ObjectExtensions.hx</string>
 		<string>src/test/haxe/haxe/util/ObjectExtensionsTestCase.hx</string>
 		<string>src/main/haxe/Dom.hx</string>
-		<string>src/demo/haxe/Demo.hx</string>
-		<string>src/main/haxe/js/dom/HTMLDocumentExtensions.hx</string>
-		<string>src/main/haxe/js/dom/Quirks.hx</string>
-		<string>src/test/haxe/js/dom/QuirksTestCase.hx</string>
-		<string>src/main/haxe/haxe/math/geom/Point.hx</string>
-		<string>src/test/haxe/haxe/math/geom/PointTestCase.hx</string>
-		<string>src/main/haxe/haxe/test/TestCase.hx</string>
-		<string>src/test/haxe/haxe/data/collections/ListTestCase.hx</string>
-		<string>src/main/haxe/haxe/math/geom/PointExtensions.hx</string>
-		<string>src/main/haxe/haxe/math/geom/VectorExtensions.hx</string>
-		<string>src/main/haxe/haxe/math/geom/Vector.hx</string>
-		<string>src/test/haxe/haxe/util/StringExtensionsTestCase.hx</string>
-		<string>demo.html</string>
-		<string>src/main/haxe/js/dom/DomExtensions.hx</string>
-		<string>src/main/haxe/haxe/util/StringExtensions.hx</string>
-		<string>src/main/haxe/js/detect/Host.hx</string>
 		<string>src/main/haxe/Prelude.hx</string>
 		<string>src/main/haxe/PreludeExtensions.hx</string>
-		<string>src/test/haxe/haxe/io/http/HttpJValueJsonpTestCase.hx</string>
-		<string>src/main/haxe/haxe/data/collections/Map.hx</string>
-		<string>src/main/haxe/haxe/io/http/Http.hx</string>
-		<string>src/main/haxe/haxe/io/http/HttpJValue.hx</string>
-		<string>src/test/haxe/js/io/IFrameIOTestCase.hx</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{137, 82}, {1365, 960}}</string>
+	<string>{{437, 91}, {1365, 960}}</string>
 </dict>
 </plist>

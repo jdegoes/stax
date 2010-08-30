@@ -132,14 +132,14 @@ class Quirks {
   /** Deletes the specified css rule.
    */
   public static function deleteCssRule(rule: CSSRule): CSSRule {
-    if (Env.isDefined(rule.parentStyleSheet)) {
+    if (Env.isDefined(untyped rule.parentStyleSheet)) {
       var sheet = rule.parentStyleSheet;
       var rules = getCssRules(sheet);
       
       var index = rules.toArray().indexOf(rule);
       
       if (index > 0) {
-        if (Env.isDefined(sheet.deleteRule)) {
+        if (Env.isDefined(untyped sheet.deleteRule)) {
           sheet.deleteRule(index);
           
           return rule;
@@ -151,7 +151,7 @@ class Quirks {
       }
     }
     
-    if (Env.isDefined(rule.cssText)) {
+    if (Env.isDefined(untyped rule.cssText)) {
       rule.cssText = '';
     }
     
@@ -214,14 +214,14 @@ class Quirks {
   /** Retrieves the rules comprising the specified CSS sheet.
    */
   public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
-    return if (Env.isDefined(sheet.cssRules)) sheet.cssRules;
+    return if (Env.isDefined(untyped sheet.cssRules)) sheet.cssRules;
            else untyped sheet.rules;
   }
   
   /** Inserts the specified rule into the specified CSS sheet.
    */
   public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
-    if (Env.isDefined(sheet.insertRule)) {
+    if (Env.isDefined(untyped sheet.insertRule)) {
       var rules = getCssRules(sheet);
       
       var index = if (index_ == null) rules.length else index_;
@@ -323,7 +323,7 @@ class Quirks {
 	 * for top-level windows).
 	 */
 	public static function getViewportSize(): { dx: Int, dy: Int } {
-	  return if (Env.isDefined(Env.window.innerWidth)) {
+	  return if (Env.isDefined(untyped Env.window.innerWidth)) {
 	    dx: Env.window.innerWidth,
 	    dy: Env.window.innerHeight
 	  }
