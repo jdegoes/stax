@@ -32,6 +32,7 @@ import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
+import haxe.util.GuidTestCase;
 import haxe.util.ObjectExtensionsTestCase;
 import haxe.util.OrderExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
@@ -73,7 +74,8 @@ class StaxTestSuite {
           new InjectorTestCase(),
           new HttpHeaderExtensionsTestCase(),
           new PointTestCase(),
-          new OrderExtensionsTestCase()
+          new OrderExtensionsTestCase(),
+          new GuidTestCase()
           #if js
           , new HttpStringTestCase() // This one should be cross-platform, eventually
           , new IFrameIOTestCase()      

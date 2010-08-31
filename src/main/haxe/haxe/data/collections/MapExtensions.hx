@@ -1,5 +1,6 @@
 /*
  HaXe library written by John A. De Goes <john@socialmedia.com>
+ Contributed by Social Media Networks
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -13,40 +14,23 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.util;
+package haxe.data.collections;
 
 import Prelude;
+import PreludeExtensions;
 
-import haxe.test.TestCase;
-import haxe.util.ObjectExtensions;
+import haxe.functional.Foldable;
+import haxe.data.collections.Map;
 
 using PreludeExtensions;
-using haxe.util.ObjectExtensions;
+using haxe.functional.FoldableExtensions;
 
-class ObjectExtensionsTestCase extends TestCase {
-	public function new() {
-	  super();
-	}
-	
-	public function testGet() {
-	  var o = { foo: "bar" };
-	  
-	  assertEquals("bar", o.getAny("foo").get());
-	}
-	
-	public function testSet() {
-	  var o = { foo: "bar" };
-	  
-	  assertEquals("baz", o.setAny("foo", "baz").getAny("foo").get());
-	}
-	
-	public function testReplaceAll() {
-	  var o = { foo: "bar", bar: "foo" };
-	  
-	  var replaced = o.replaceAllAny({foo: "foo"}, '');
-	  
-	  assertEquals("bar", replaced.getAny("foo").get());
-	  
-	  assertTrue(replaced.getAny("bar").isEmpty());
+class MapExtensions {
+	public static function toObject<V>(map: Map<String, V>): Dynamic<V> {
+	  return map.foldl({}, function(object, tuple) {
+      Reflect.setField(object, tuple._1, tuple._2);
+      
+      return object;
+    });
 	}
 }

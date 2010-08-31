@@ -23,8 +23,10 @@ import js.Env;
 import js.detect.BrowserSupport;
 import haxe.functional.Predicate;
 import haxe.data.collections.Map;
+import haxe.util.Guid;
 
 using PreludeExtensions;
+using js.dom.DomExtensions;
 using haxe.util.StringExtensions;
 using haxe.util.ObjectExtensions;
 
@@ -119,12 +121,141 @@ class Quirks {
     if (doc.getOverrideStyle != null && doc.getOverrideStyle(el, pseudo) != null) {
       return doc.getOverrideStyle(el, pseudo);
     }
-    else if (Env.isDefined(untyped el.runtimeStyle)) {
+    else if (untyped el.runtimeStyle != null) {
       return untyped el.runtimeStyle;
     }
     else {
-      return null;
+      return cast {};
     }
+  }
+  
+  /** Deletes the specified css rule.
+   */
+  public static function deleteCssRule(doc: HTMLDocument, rule: CSSRule): CSSRule {
+    var deleteFromSheet = function(sheet: CSSStyleSheet): Bool {
+      var index = getCssRules(sheet).toArray().indexOf(rule);
+      
+      if (index > 0) {
+        if (sheet.deleteRule != null) {
+          sheet.deleteRule(index);
+          
+          return true;
+        }
+        else if (untyped sheet.removeRule != null) {
+          untyped sheet.removeRule(index);
+          
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
+    if (rule.parentStyleSheet != null) {
+      deleteFromSheet(rule.parentStyleSheet);
+    }
+    else {
+      var stylesheets = doc.styleSheets;
+    
+      for (i in 0...stylesheets.length) {
+        if (deleteFromSheet(cast stylesheets[i])) break;
+      }
+    }
+    
+    return rule;
+  }
+  
+  /** Adds an overriding style to the specified element. These styles will not 
+   * override inline styles unless "!important" is specified.
+   */
+  public static function addOverridingCssRule(el: HTMLElement, style: String = ''): CSSStyleRule {
+    var doc: HTMLDocument = cast el.ownerDocument;
+    
+    var id = el.getAttribute('id').toOption().filter(function(id) return id != '').getOrElse(function() {
+      return Guid.generate().withEffect(function(guid) {
+        el.setAttribute('id', guid);
+      });
+    });
+    
+    if (doc.styleSheets.length < 0) {
+      addCssStylesheet(doc, '');
+    }
+    
+    var lastStyleSheet: CSSStyleSheet = cast doc.styleSheets[doc.styleSheets.length - 1];
+    
+    return cast insertCssRule(lastStyleSheet, '#' + id + ' {' + style + '}');
+  }
+     
+  /** Adds a new style sheet to the document with the specified content.
+   */
+  public static function addCssStylesheet(doc: HTMLDocument, content: String): CSSStyleSheet {
+    var head = doc.getElementsByTagName('HEAD')[0].toOption().getOrElse(function() {
+      return doc.createElement('HEAD').withEffect(function(newHead) {
+        doc.documentElement.appendChild(newHead);
+      });
+    });
+    
+    var style = doc.createElement('STYLE');
+    
+    style.setAttribute('type', 'text/css');
+    
+    try {
+      if (untyped style.innerText != null) {
+        untyped style.innerText = content;
+      }
+      else if (untyped style.innerHTML != null) {
+        untyped style.innerHTML = content;
+      }
+      
+      head.appendChild(style);
+    }
+    catch (e: Dynamic) {
+      head.appendChild(style);
+      
+      untyped doc.styleSheets[doc.styleSheets.length - 1].cssText = content;
+    }
+    
+    return cast doc.styleSheets[doc.styleSheets.length - 1];
+  }
+  
+  /** Retrieves the rules comprising the specified CSS sheet.
+   */
+  public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
+    return if (untyped sheet.cssRules != null) sheet.cssRules;
+           else untyped sheet.rules;
+  }
+  
+  /** Inserts the specified rule into the specified CSS sheet.
+   */
+  public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
+    if (sheet.insertRule != null) {
+      var rules = getCssRules(sheet);
+      
+      var index = if (index_ == null) rules.length else index_;
+      
+      sheet.insertRule(rule, index);
+      
+      return rules[index];
+    }
+    else if (untyped sheet.addRule != null) {
+      var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
+      
+      var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
+      
+      if (Pattern.match(rule)) {
+        var index = if (index_ == null) -1 else index_;
+        
+        addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
+        
+        var rules = getCssRules(sheet);
+        
+        var newIndex = if (index == -1) rules.length - 1 else index;
+
+        return rules[newIndex];
+      }
+    }
+    
+    return Stax.error('Invalid rule: ' + rule);
   }
 
   /** Retrieves the actual property name for the specified css property.
@@ -149,7 +280,7 @@ class Quirks {
   		  return if (name == 'opacity') Some('1'); else None;
   		}).getOrElseC('');
   	}
-  	else if (Env.isDefined(untyped elem.currentStyle)) {
+  	else if (untyped elem.currentStyle != null) {
   		if (name == 'opacity' && !BrowserSupport.opacity()) {
   		  if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
   		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
@@ -199,11 +330,11 @@ class Quirks {
 	 * for top-level windows).
 	 */
 	public static function getViewportSize(): { dx: Int, dy: Int } {
-	  return if (Env.isDefined(Env.window.innerWidth)) {
+	  return if (Env.window.innerWidth != null) {
 	    dx: Env.window.innerWidth,
 	    dy: Env.window.innerHeight
 	  }
-    else if (Env.isDefined(untyped Env.document.documentElement) && Env.isDefined(untyped Env.document.documentElement.clientWidth) && untyped Env.document.documentElement.clientWidth != 0) {
+    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientWidth != null && untyped Env.document.documentElement.clientWidth != 0) {
       dx: untyped Env.document.documentElement.clientWidth,
       dy: untyped Env.document.documentElement.clientHeight
     }
@@ -249,6 +380,19 @@ class Quirks {
     }
 
     return windowHeight;
+  }
+  
+  /** Determines if the specified element has the specified attribute.
+   */
+  public static function hasAttribute(e: HTMLElement, attr: String): Bool {
+    if (e.hasAttribute != null) {
+      return e.hasAttribute(attr);
+    }
+    else {
+      var value = e.getAttribute(attr);
+      
+      return if (Env.eq(value, null) || Env.eq(value, '')) false else true;
+    }
   }
 
 	/** Retrieves the offset of the document's body, relative to the window origin.

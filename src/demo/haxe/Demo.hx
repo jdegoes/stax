@@ -199,12 +199,12 @@ class Demo {
   }
 
 	public static function main() {
-	  Injector.enter(function(c) {
+	  Injector.forever(function(c) {
 	    c.bind(ScheduledExecutor, ScheduledExecutorSystem);
-	    
-	    iframeDemo();
-	    
-	    browserSupportDemo();
 	  });
+	    
+    iframeDemo();
+	    
+	  //browserSupportDemo();
 	}
 }

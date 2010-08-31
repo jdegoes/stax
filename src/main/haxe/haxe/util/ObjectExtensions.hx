@@ -81,7 +81,7 @@ class ObjectExtensions {
 	}
 	
 	public static function replaceAll<T>(d1: Dynamic<T>, d2: Dynamic<T>, def: T): Object {
-	  var names: Array<String> = Reflect.fields(d1);
+	  var names: Array<String> = Reflect.fields(d2);
 	  
 	  var oldValues = extractValues(d1, names, def);
 	  
@@ -103,7 +103,7 @@ class ObjectExtensions {
 	}
 	
 	public static function replaceAllAny(d1: Object, d2: Object, def: Dynamic): Object {
-	  var names: Array<String> = Reflect.fields(d1);
+	  var names: Array<String> = Reflect.fields(d2);
 	  
 	  var oldValues = extractValues(d1, names, def);
 	  

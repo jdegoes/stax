@@ -15,38 +15,20 @@
 */
 package haxe.util;
 
-import Prelude;
+typedef GuidGenerator = Void -> String
 
-import haxe.test.TestCase;
-import haxe.util.ObjectExtensions;
+class Guid {
+	public static function generate(): String {
+    var result = "";
 
-using PreludeExtensions;
-using haxe.util.ObjectExtensions;
+    for (j in 0...32) {
+      if ( j == 8 || j == 12|| j == 16|| j == 20) {
+        result += "-";
+      }
 
-class ObjectExtensionsTestCase extends TestCase {
-	public function new() {
-	  super();
-	}
-	
-	public function testGet() {
-	  var o = { foo: "bar" };
-	  
-	  assertEquals("bar", o.getAny("foo").get());
-	}
-	
-	public function testSet() {
-	  var o = { foo: "bar" };
-	  
-	  assertEquals("baz", o.setAny("foo", "baz").getAny("foo").get());
-	}
-	
-	public function testReplaceAll() {
-	  var o = { foo: "bar", bar: "foo" };
-	  
-	  var replaced = o.replaceAllAny({foo: "foo"}, '');
-	  
-	  assertEquals("bar", replaced.getAny("foo").get());
-	  
-	  assertTrue(replaced.getAny("bar").isEmpty());
-	}
+      result += StringTools.hex(Math.floor(Math.random()*16));
+    }
+
+    return result.toUpperCase();
+  }
 }

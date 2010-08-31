@@ -95,7 +95,12 @@ class BrowserSupport {
           untyped i.type = 'checkbox';
           i.style.display = 'none';
           i.onclick = function(e) {
-            isSupported = Some(Env.isDefined(untyped e.srcElement));
+            if (Env.typeOf(e) == 'object') {
+						  isSupported = Some(Env.isDefined(untyped e.srcElement));
+					  }
+					  else{
+						  isSupported = Some(false);
+					  }
           };
           root.appendChild(i);
           i.click();
@@ -440,8 +445,8 @@ class BrowserSupport {
   public static function isRegexpWhitespaceCharacterClassBug(): Bool {
     return testBugAndMemorize("isRegexpWhitespaceCharacterClassBug", function(v) {
       var result = None;
-      var str = untyped"\\u0009\\u000A\\u000B\\u000C\\u000D\\u0020\\u00A0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029";
-      result = Some(~/^\s+$/.match(str));
+      untyped __js__("var str = '\\u0009\\u000A\\u000B\\u000C\\u000D\\u0020\\u00A0\\u1680\\u180E\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200A\\u202F\\u205F\\u3000\\u2028\\u2029'");
+      result = untyped Some(__js__("!/^\\s+$/.test(str)"));
       return result;
     });
   }
@@ -1041,7 +1046,16 @@ class BrowserSupport {
    */
   public static function getAttributeStyle(): Bool {
     return testSupport('<a style="color: black;"></a>', 'a', function(e) {
-      return e.getAttribute('style').contains('black');
+      var styleAttribute =  e.getAttribute('style');
+      if (Env.typeOf(styleAttribute) == 'string'){
+        return styleAttribute.contains("black");
+      }
+      else if (Env.typeOf(styleAttribute) == 'object'){
+        var cssText: String = untyped styleAttribute.cssText;
+        
+        return cssText.contains("black");
+      }
+      else{return false;}
     });
   }
 
@@ -1264,7 +1278,7 @@ class BrowserSupport {
 	}
 
 	private static function test(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-  return testAndMemorize("testInBody" + tagName, def1, function(v) {
+  return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null) None;
       else {
         var div = Env.document.createElement('div');
@@ -1278,7 +1292,7 @@ class BrowserSupport {
 	}
 
 	private static function testInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
-    return testAndMemorize("testInBody" + tagName, def1, function(v) {
+    return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null || Env.document.body == null) None;
       else {
         var div = Env.document.createElement('div');
