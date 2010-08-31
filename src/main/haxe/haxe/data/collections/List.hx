@@ -28,18 +28,6 @@ using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
-/*
-  public static function OrderF<T>(order: Order<T>): Order<List<T>> {
-    return OrderTypeclass.create({
-      compare: function(v1: List<T>, v2: List<T>) {
-        var a1 = v1.toArray();
-        var a2 = v2.toArray();
-        
-        return Array.OrderF(order).compare(a1, a2);
-      }
-    });
-  }
-*/
   public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<List<T>> {
     return function(v1: List<T>, v2: List<T>) {
       var a1 = v1.toArray();

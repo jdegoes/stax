@@ -37,32 +37,7 @@ typedef Function10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, R> = P1 -> P2 -> P3 
 typedef Reducer<T> = T -> T -> T
 
 typedef Factory<T> = Void -> T
-/*
-typedef Show<T> = {
-  show: T -> String 
-}
 
-typedef Read<T> = {
-  read:  String -> T
-}
-
-typedef Equal<T> = { 
-  equal:    T -> T -> Bool,
-  notEqual: T -> T -> Bool
-}
-
-typedef Hasher<T> = { 
-  hash:  T -> Int
-}
-
-typedef Order<T> = {>Equal<T>, 
-  compare:            T -> T -> Int,
-  greaterThan:        T -> T -> Bool,
-  greaterThanOrEqual: T -> T -> Bool,
-  lessThan:           T -> T -> Bool,
-  lessThanOrEqual:    T -> T -> Bool
-}
-*/
 typedef Thunk<T> = Void -> T
 
 /** An option represents an optional value -- the value may or may not be 
@@ -379,7 +354,55 @@ private class AbstractProduct implements Product {
   }
 }
 
-class Tuple2<A, B> extends AbstractProduct {   
+class Tuple2<A, B> extends AbstractProduct {    
+  public var _1 (default, null): A;
+  public var _2 (default, null): B;
+
+  public function new(first: A, second: B) {
+    super([first, second]);
+    
+    this._1  = first; this._2 = second;
+  }
+  
+  override private function getProductPrefix(): String {
+    return "Tuple2";
+  }
+  
+  override private function getProductArity(): Int {
+    return 2;
+  }
+  
+  public function entuple<C>(c: C): Tuple3<A, B, C> {
+    return Tuple3.create(_1, _2, c);
+  }
+  
+  public static function create<A, B>(a: A, b: B): Tuple2<A, B> {
+    return new Tuple2<A, B>(a, b);
+  }
+
+  public function compare(other : Tuple2<A, B>): Int { 
+	var c = Stax.getOrderFor(_1)(_1, other._1);  
+	return if (c != 0) 
+	  c;
+	else
+	  Stax.getOrderFor(_2)(_2, other._2);
+  }    
+
+  public function equals(other : Tuple2<A, B>): Bool {
+	return if (!Stax.getEqualFor(_1)(_1, other._1)) 
+	  false;
+    else
+	  Stax.getEqualFor(_2)(_2, other._2);
+  } 
+
+  override public function toString(): String {
+	return "Tuple2(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ")";
+  }
+
+  public function  hashCode() : Int {
+	return 786433 * Stax.getHasherFor(_1)(_1) + 24593 * Stax.getHasherFor(_2)(_2); 
+  }
+
   public static function OrderF<T1, T2>(order1: OrderFunction<T1>, order2: OrderFunction<T2>): OrderFunction<Tuple2<T1, T2>> {
     return function (v1: Tuple2<T1, T2>, v2: Tuple2<T1, T2>) {
       var c = order1(v1._1, v2._1);
@@ -407,31 +430,6 @@ class Tuple2<A, B> extends AbstractProduct {
     return function (v: Tuple2<T1, T2>) {
       return 786433 * hash1(v._1) + 24593 * hash2(v._2);
     };
-  }
-  
-  public var _1 (default, null): A;
-  public var _2 (default, null): B;
-
-  public function new(first: A, second: B) {
-    super([first, second]);
-    
-    this._1  = first; this._2 = second;
-  }
-  
-  override private function getProductPrefix(): String {
-    return "Tuple2";
-  }
-  
-  override private function getProductArity(): Int {
-    return 2;
-  }
-  
-  public function entuple<C>(c: C): Tuple3<A, B, C> {
-    return Tuple3.create(_1, _2, c);
-  }
-  
-  public static function create<A, B>(a: A, b: B): Tuple2<A, B> {
-    return new Tuple2<A, B>(a, b);
   }
 }
 
@@ -487,6 +485,33 @@ class Tuple3<A, B, C> extends AbstractProduct {
   
   public function entuple<D>(d: D): Tuple4<A, B, C, D> {
     return Tuple4.create(_1, _2, _3, d);
+  }  
+
+  public function compare(other : Tuple3<A, B, C>): Int { 
+	var c = Stax.getOrderFor(_1)(_1, other._1);     
+	if (c != 0) 
+	  return c;
+	c = Stax.getOrderFor(_2)(_2, other._2);
+	if (c != 0) 
+	  return c; 
+	return Stax.getOrderFor(_3)(_3, other._3);   
+  }    
+
+  public function equals(other : Tuple3<A, B, C>): Bool {
+	return if (!Stax.getEqualFor(_1)(_1, other._1)) 
+	  false;
+    else if (!Stax.getEqualFor(_2)(_2, other._2))
+ 	  false
+	else
+	  Stax.getEqualFor(_3)(_3, other._3);
+  } 
+
+  override public function toString(): String {
+	return "Tuple3(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ")";
+  }
+
+  public function  hashCode() : Int {  
+	return 196613 * Stax.getHasherFor(_1)(_1) + 3079 * Stax.getHasherFor(_2)(_2) + 389 * Stax.getHasherFor(_3)(_3); 
   }
 
   public static function create<A, B, C>(a: A, b: B, c: C): Tuple3<A, B, C> {
@@ -550,6 +575,38 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   
   public function entuple<E>(e: E): Tuple5<A, B, C, D, E> {
     return Tuple5.create(_1, _2, _3, _4, e);
+  }     
+
+  public function compare(other : Tuple4<A, B, C, D>): Int { 
+	var c = Stax.getOrderFor(_1)(_1, other._1);  
+	if (c != 0) 
+	  return c;
+	c = Stax.getOrderFor(_2)(_2, other._2);
+	if (c != 0) 
+	  return c;   
+	c = Stax.getOrderFor(_3)(_3, other._3);
+	if (c != 0) 
+	  return c;
+	return Stax.getOrderFor(_4)(_4, other._4);   
+  }    
+
+  public function equals(other : Tuple4<A, B, C, D>): Bool {
+	return if (!Stax.getEqualFor(_1)(_1, other._1)) 
+	  false;
+    else if (!Stax.getEqualFor(_2)(_2, other._2))
+ 	  false
+    else if (!Stax.getEqualFor(_3)(_3, other._3))
+ 	  false
+	else
+	  Stax.getEqualFor(_4)(_4, other._4);
+  } 
+
+  override public function toString(): String {
+	return "Tuple4(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ")";
+  }
+
+  public function  hashCode() : Int {
+	return 1543 * Stax.getHasherFor(_1)(_1) + 49157 * Stax.getHasherFor(_2)(_2) + 196613 * Stax.getHasherFor(_3)(_3) + 97 * Stax.getHasherFor(_4)(_4);  
   }
 
   public static function create<A, B, C, D>(a: A, b: B, c: C, d: D): Tuple4<A, B, C, D> {
@@ -613,6 +670,43 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   
   override private function getProductArity(): Int {
     return 5;
+  } 
+
+  public function compare(other : Tuple5<A, B, C, D, E>): Int { 
+	var c = Stax.getOrderFor(_1)(_1, other._1);  
+	if (c != 0) 
+	  return c;
+	c = Stax.getOrderFor(_2)(_2, other._2);
+	if (c != 0) 
+	  return c;   
+	c = Stax.getOrderFor(_3)(_3, other._3);
+	if (c != 0) 
+	  return c; 
+	c = Stax.getOrderFor(_4)(_4, other._4);
+	if (c != 0) 
+	  return c;
+	return Stax.getOrderFor(_5)(_5, other._5);   
+  }    
+
+  public function equals(other : Tuple5<A, B, C, D, E>): Bool {
+	return if (!Stax.getEqualFor(_1)(_1, other._1)) 
+	  false;
+    else if (!Stax.getEqualFor(_2)(_2, other._2))
+ 	  false
+    else if (!Stax.getEqualFor(_3)(_3, other._3))
+ 	  false 
+    else if (!Stax.getEqualFor(_4)(_4, other._4))
+ 	  false
+	else
+	  Stax.getEqualFor(_5)(_5, other._5);
+  } 
+
+  override public function toString(): String {
+	return "Tuple5(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ", " + Stax.getShowFor(_5)(_5) + ")";
+  }
+
+  public function  hashCode() : Int {        
+	return 12289 * Stax.getHasherFor(_1)(_1) + 769 * Stax.getHasherFor(_2)(_2) + 393241 * Stax.getHasherFor(_3)(_3) + 193 * Stax.getHasherFor(_4)(_4) + 53 * Stax.getHasherFor(_5)(_5); 
   }
 
   public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): Tuple5<A, B, C, D, E> {

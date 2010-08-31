@@ -175,8 +175,8 @@ class FloatExtensions {
   public static function toInt(v: Float): Int { return Std.int(v); }
   public static function toString(v: Float): String { return Std.string(v); }
   public static function OrderF(c: Class<Float>): OrderFunction<Float> {
-    return function(v1: Float, v2: Float) {
-      return if (v1 < v2) -1 else if (v2 > v1) 1 else 0;
+    return function(v1: Float, v2: Float) {   
+      return if (v1 < v2) -1 else if (v1 > v2) 1 else 0;
     };
   }
   public static function EqualF(c: Class<Float>): EqualFunction<Float> {

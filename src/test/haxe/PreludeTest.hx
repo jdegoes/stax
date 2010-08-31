@@ -128,6 +128,71 @@ class PreludeTestCase extends TestCase {
 
   public function testOrderForFunction() {                 
   	this.assertThrowsException(function() Stax.getOrderFor(function() trace("hello world")));
+  }  
+
+  public function testTupleOrder() {    
+	var tests = [
+		Tuple2.create(Tuple2.create("b",0), Tuple2.create("a",0)),
+		Tuple2.create(Tuple2.create("a",1), Tuple2.create("a",0)), 
+		Tuple2.create(Tuple3.create("a",0,0.1), Tuple3.create("a",0,0.05)),
+		Tuple2.create(Tuple4.create("a",0,0.1,"b"), Tuple4.create("a",0,0.1,"a")),
+		Tuple2.create(Tuple5.create("a",0,0.1,"a",1), Tuple5.create("a",0,0.1,"a",0)), 
+	];
+	
+	for(test in tests) {
+    	assertTrue(Stax.getOrderFor(test._1)(test._1, test._2) > 0, "failed to compare " + test._1 + " to " + test._2);
+        assertTrue(test._1.compare(test._2) > 0, "failed to compare " + test._1 + " to " + test._2);  
+    }
+  }
+
+  public function testTupleEqual() {    
+	var tests = [
+		Tuple2.create(Tuple2.create("b",0), Tuple2.create("b",0)),
+		Tuple2.create(Tuple2.create("a",1), Tuple2.create("a",1)), 
+		Tuple2.create(Tuple3.create("a",0,0.1), Tuple3.create("a",0,0.1)),
+		Tuple2.create(Tuple4.create("a",0,0.1,"b"), Tuple4.create("a",0,0.1,"b")),
+		Tuple2.create(Tuple5.create("a",0,0.1,"a",1), Tuple5.create("a",0,0.1,"a",1)), 
+	];
+	
+	for(test in tests) {
+    	assertTrue(Stax.getEqualFor(test._1)(test._1, test._2));
+        assertTrue(test._1.equals(test._2)); 
+    } 
+  }
+
+  public function testTupleString() {    
+	var tests = [
+		Tuple2.create(Tuple2.create("b",0), "Tuple2(b, 0)"),
+		Tuple2.create(Tuple2.create("a",1), "Tuple2(a, 1)"), 
+		Tuple2.create(Tuple3.create("a",0,0.1), "Tuple3(a, 0, 0.1)"),
+		Tuple2.create(Tuple4.create("a",0,0.1,"b"), "Tuple4(a, 0, 0.1, b)"),
+		Tuple2.create(Tuple5.create("a",0,0.1,"a",1), "Tuple5(a, 0, 0.1, a, 1)"), 
+	];
+	
+	for(test in tests) {
+    	assertEquals(test._2, Stax.getShowFor(test._1)(test._1));
+        assertEquals(test._2, test._1.toString());       
+    }
+  }    
+
+  public function testTupleHashCode() {    
+	var tests = [
+		Stax.getHasherFor(Tuple2.create("b",0)),
+		Stax.getHasherFor(Tuple2.create("a",1)), 
+		Stax.getHasherFor(Tuple3.create("a",0,0.1)),
+		Stax.getHasherFor(Tuple4.create("a",0,0.1,"b")),
+		Stax.getHasherFor(Tuple5.create("a",0,0.1,"a",1)), 
+	];
+	 
+	while(tests.length > 0)
+	{
+		var value = tests.pop();
+		// check is unique        
+	    assertFalse(tests.remove(value), "value is not unique hash: " + value);
+		
+		// check is different from zero
+		assertNotEquals(0, value);
+	} 
   }
 
   public function testOrderForEnum() { 
