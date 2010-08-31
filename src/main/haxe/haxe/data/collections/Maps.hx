@@ -21,6 +21,6 @@ import haxe.data.collections.Map;
 using PreludeExtensions;
 
 class Maps {
-	public static var StringString = Map.create(String.HasherT(), String.EqualT(), String.HasherT(), String.EqualT());
+	public static var StringString = Map.create(String.HasherF(), String.EqualF(), String.HasherF(), String.EqualF());
 	
 }

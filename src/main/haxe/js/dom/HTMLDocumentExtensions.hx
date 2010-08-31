@@ -21,7 +21,7 @@ import js.Env;
 using PreludeExtensions;
 
 /** 
- * Common elements.
+ * Comm]on elements.
  */
 class HTMLDocumentExtensions {
   public static function newImage(doc: HTMLDocument): HTMLImageElement {

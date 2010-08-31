@@ -13,50 +13,33 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.util;
+package haxe.util; 
 
 import Prelude;
-import haxe.data.collections.List;
 
-using PreludeExtensions;
-using haxe.functional.FoldableExtensions;
+class OrderExtension
+{
+  public static function greaterThan<T>(order : OrderFunction<T>) : EqualFunction<T> {
+  	return function(v1, v2) return order(v1, v2) > 0;
+  }	
+   
+  public static function greaterThanOrEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
+   	return function(v1, v2) return order(v1, v2) >= 0;
+  }  
 
-class StringExtensions {
-  static var SepAlphaPattern        = ~/(-|_)([a-z])/g;
-  static var AlphaUpperAlphaPattern = ~/-([a-z])([A-Z])/g;
-  
-	public static function chunk(str: String, len: Int): List<String> {
-	  var start = 0;
-	  var end   = (start + len).min(str.length);
-	  
-	  return if (end == 0) List.nil(String.EqualF());
-     else {
-       var prefix = str.substr(start, end);
-       var rest   = str.substr(end);
+  public static function lessThan<T>(order : OrderFunction<T>) : EqualFunction<T> {
+  	return function(v1, v2) return order(v1, v2) < 0;
+  }	
 
-       chunk(rest, len).prepend(prefix);
-     }
-	}
-	
-	public static function chars(str: String): List<String> {
-	  var a = [];
-	  
-	  for (i in 0...str.length) {
-	    a.push(str.charAt(i));
-	  }
-	  
-	  return a.toList(String.EqualF());
-	}
-	
-	public static function string(l: List<String>): String {
-	  return l.foldr('', function(b, a) return b + a);
-	}
-	
-	public static function toCamelCase(str: String): String {
-	  return SepAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
-	}
-	
-	public static function fromCamelCase(str: String, sep: String): String {
-	  return AlphaUpperAlphaPattern.customReplace(str, function(e) { return e.matched(1) + sep + e.matched(2).toLowerCase(); });
-	}
-}
+  public static function lessThanOrEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
+   	return function(v1, v2) return order(v1, v2) <= 0;
+  }
+
+  public static function equal<T>(order : OrderFunction<T>) : EqualFunction<T> {
+   	return function(v1, v2) return order(v1, v2) == 0;
+  }
+
+  public static function notEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
+   	return function(v1, v2) return order(v1, v2) != 0;
+  }
+}     

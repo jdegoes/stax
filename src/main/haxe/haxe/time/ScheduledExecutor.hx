@@ -16,7 +16,7 @@
 */
 package haxe.time;
 
-#if !neko
+#if !(neko || php || cpp)
 import haxe.Timer;
 #end
 
@@ -52,7 +52,7 @@ interface ScheduledExecutor {
   public function forever(f: Void -> Void, ms: Int): Future<Void>;
 }
 
-#if !neko
+#if !(neko || php || cpp)
 
 class ScheduledExecutorSystem implements ScheduledExecutor {
   public function new() {

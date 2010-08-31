@@ -28,41 +28,45 @@ using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
-  public static function OrderT<T>(order: Order<T>): Order<List<T>> {
+/*
+  public static function OrderF<T>(order: Order<T>): Order<List<T>> {
     return OrderTypeclass.create({
       compare: function(v1: List<T>, v2: List<T>) {
         var a1 = v1.toArray();
         var a2 = v2.toArray();
         
-        return Array.OrderT(order).compare(a1, a2);
+        return Array.OrderF(order).compare(a1, a2);
       }
     });
   }
-  public static function EqualT<T>(equal: Equal<T>): Equal<List<T>> {
-    return EqualTypeclass.create({
-      equal: function(v1: List<T>, v2: List<T>) {
-        var a1 = v1.toArray();
-        var a2 = v2.toArray();
-        
-        return Array.EqualT(equal).equal(a1, a2);
-      }
-    });
+*/
+  public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<List<T>> {
+    return function(v1: List<T>, v2: List<T>) {
+      var a1 = v1.toArray();
+      var a2 = v2.toArray();
+      
+      return Array.OrderF(order)(a1, a2);
+    };
   }
-  public static function ShowT<T>(show: Show<T>): Show<List<T>> {
-    return ShowTypeclass.create({
-      show: function(v: List<T>) {
-        return "List" + v.elements().toString(show.show);
-      }
-    });
+  public static function EqualF<T>(equal: EqualFunction<T>): EqualFunction<List<T>> {
+    return function(v1: List<T>, v2: List<T>) {
+      var a1 = v1.toArray();
+      var a2 = v2.toArray();
+      
+      return Array.EqualF(equal)(a1, a2);
+    };
   }
-  public static function HasherT<T>(hasher: Hasher<T>): Hasher<List<T>> {
-    return HasherTypeclass.create({
-      hash: function(v: List<T>) {
-        return v.foldl(12289, function(a, b) {
-          return a * (hasher.hash(b) + 12289);
-        });
-      }
-    });
+  public static function ShowF<T>(show: ShowFunction<T>): ShowFunction<List<T>> {
+    return function(v: List<T>) {
+      return "List" + v.elements().toString(show);
+    };
+  }
+  public static function HasherF<T>(hasher: HasherFunction<T>): HasherFunction<List<T>> {
+    return function(v: List<T>) {
+      return v.foldl(12289, function(a, b) {
+        return a * (hasher(b) + 12289);
+      });
+    };
   }
   
   public var size (getSize, null): Int;
@@ -77,25 +81,25 @@ class List<T> implements Collection<List<T>, T> {
   public var firstOption (getHeadOption, null): Option<T>;
   public var lastOption  (getLastOption, null): Option<T>;
   
-  public var equal (default, null): Equal<T>;
+  public var equal (default, null): EqualFunction<T>;
   
-  public static function nil<T>(?equal: Equal<T>): List<T> {
-    return new Nil(if (equal == null) DynamicExtensions.EqualT(); else equal);
+  public static function nil<T>(?equal: EqualFunction<T>): List<T> {
+    return new Nil(if (equal == null) DynamicExtensions.EqualF(); else equal);
   }
   
-  public static function create<T>(?equal: Equal<T>): List<T> {
+  public static function create<T>(?equal: EqualFunction<T>): List<T> {
     return nil(equal);
   }
   
   /** Creates a factory for lists of the specified type. */
-  public static function factory<T>(?equal: Equal<T>): Factory<List<T>> {
+  public static function factory<T>(?equal: EqualFunction<T>): Factory<List<T>> {
     return function() {
       return List.create(equal);
     }
   }
 
-  private function new(equal: Equal<T>) {
-    this.equal = if (equal == null) DynamicExtensions.EqualT(); else equal;
+  private function new(equal: EqualFunction<T>) {
+    this.equal = if (equal == null) DynamicExtensions.EqualF(); else equal;
   }
   
   public function empty(): List<T> {
@@ -174,7 +178,7 @@ class List<T> implements Collection<List<T>, T> {
     var cur = this;
     
     for (i in 0...size) {
-      if (equal.equal(t, cur.head)) return true;
+      if (equal(t, cur.head)) return true;
       
       cur = cur.tail;
     }
@@ -214,7 +218,7 @@ class List<T> implements Collection<List<T>, T> {
     var cur = this;
       
     for (i in 0...size) {
-      if (equal.equal(t, cur.head)) {
+      if (equal(t, cur.head)) {
         post = cur.tail;
         
         break;
@@ -307,7 +311,7 @@ class List<T> implements Collection<List<T>, T> {
     var iterator1 = this.reverse().drop(0.max(this.size - len)).iterator();
     var iterator2 = that.reverse().drop(0.max(that.size - len)).iterator();
     
-    var r = List.create(Tuple2.EqualT(this.equal, that.equal));
+    var r = List.create(Tuple2.EqualF(this.equal, that.equal));
     
     for (i in 0...len) {
       r = r.cons(Tuple2.create(iterator1.next(), iterator2.next()));
@@ -320,17 +324,18 @@ class List<T> implements Collection<List<T>, T> {
    * 
    * @param f Called with every two consecutive elements to retrieve a list of gaps.
    */
-  public function gaps<G>(f: T -> T -> List<G>, ?equal: Equal<G>): List<G> {
+  public function gaps<G>(f: T -> T -> List<G>, ?equal: EqualFunction<G>): List<G> {
     return zip(drop(1)).flatMapTo(List.nil(equal), function(tuple) return f(tuple._1, tuple._2));
 	}
   
   /** Returns a list that contains all the elements of this list, sorted by
    * the specified ordering function.
-   */
-  public function sort(order: Order<T>): List<T> {
+   */    
+
+  public function sort(order: OrderFunction<T>): List<T> {
     var a = this.toArray();
     
-    a.sort(order.compare);
+    a.sort(order);
     
     var result = empty();
     
@@ -346,7 +351,7 @@ class List<T> implements Collection<List<T>, T> {
   }
   
   public function toString(): String {
-    return List.ShowT(DynamicExtensions.ShowT()).show(this);
+    return List.ShowF(DynamicExtensions.ShowF())(this);
   }
   
   private function getSize(): Int {
@@ -379,7 +384,7 @@ private class Cons<T> extends List<T> {
   var _tail: List<T>;
   var _size: Int;
   
-  public function new(equal: Equal<T>, head: T, tail: List<T>) {
+  public function new(equal: EqualFunction<T>, head: T, tail: List<T>) {
     super(equal);
     
     _head = head;
@@ -419,7 +424,7 @@ private class Cons<T> extends List<T> {
 }
 
 private class Nil<T> extends List<T> {
-  public function new(equal: Equal<T>) {
+  public function new(equal: EqualFunction<T>) {
     super(equal);
   }
 }

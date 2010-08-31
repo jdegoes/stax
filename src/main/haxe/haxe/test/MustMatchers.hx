@@ -29,8 +29,8 @@ typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>
 // Assert.that(9, Must.equal(123).or(Must.beNull());
 // Expected: (x == 123) || (x == null), but found: x == 9
 class Must {
-	public static function equal<T>(expected: T, ?equal: Equal<T>): MustMatcher<T> {
-	  if (equal == null) equal = DynamicExtensions.EqualT();
+	public static function equal<T>(expected: T, ?equal: EqualFunction<T>): MustMatcher<T> {
+	  if (equal == null) equal = DynamicExtensions.EqualF();
 	  
 	  return function(value: T) {
 	    var result = {
@@ -38,7 +38,7 @@ class Must {
 	      negation:  'x != ' + value
 	    }
 	    
-	    return if (!equal.equal(value, expected)) {
+	    return if (!equal(value, expected)) {
 	      Left(result);
 	    }
 	    else {

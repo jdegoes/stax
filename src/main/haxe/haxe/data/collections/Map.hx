@@ -35,88 +35,80 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
   
-  public static function OrderT<K, V>(korder: Order<K>, vorder: Order<V>): Order<Map<K, V>> {
+  public static function OrderF<K, V>(korder: OrderFunction<K>, vorder: OrderFunction<V>): OrderFunction<Map<K, V>> {
     var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
-      return korder.compare(t1._1, t2._1);
+      return korder(t1._1, t2._1);
     }
     
-    return OrderTypeclass.create({
-      compare: function(v1: Map<K, V>, v2: Map<K, V>) {
+    return function(v1: Map<K, V>, v2: Map<K, V>) {
         var a1 = v1.toArray();
         var a2 = v2.toArray();
         
         a1.sort(keySorter);
         a2.sort(keySorter);
         
-        return Array.OrderT(Tuple2.OrderT(korder, vorder)).compare(a1, a2);
-      }
-    });
+        return Array.OrderF(Tuple2.OrderF(korder, vorder))(a1, a2);
+      };
   }
-  public static function EqualT<K, V>(kequal: Equal<K>, vequal: Equal<V>): Equal<Map<K, V>> {
-    return EqualTypeclass.create({
-      equal: function(v1: Map<K, V>, v2: Map<K, V>) {
-        var keys1 = v1.keySet();
-        var keys2 = v2.keySet();
+  public static function EqualF<K, V>(kequal: EqualFunction<K>, vequal: EqualFunction<V>): EqualFunction<Map<K, V>> {
+    return function(v1: Map<K, V>, v2: Map<K, V>) {
+      var keys1 = v1.keySet();
+      var keys2 = v2.keySet();
+      
+      if (!Set.EqualF(kequal)(keys1, keys2)) return false;
+      
+      for (key in keys1) {
+        var v1 = v1.get(key).get();
+        var v2 = v2.get(key).get();
         
-        if (!Set.EqualT(kequal).equal(keys1, keys2)) return false;
-        
-        for (key in keys1) {
-          var v1 = v1.get(key).get();
-          var v2 = v2.get(key).get();
-          
-          if (!vequal.equal(v1, v2)) return false;
-        }
-        
-        return true;
+        if (!vequal(v1, v2)) return false;
       }
-    });
+      
+      return true;
+    };
   }
-  public static function ShowT<K, V>(kshow: Show<K>, vshow: Show<V>): Show<Map<K, V>> {
-    return ShowTypeclass.create({
-      show: function(v: Map<K, V>) {
-        return "Map" + v.elements().toString(function(t) { return kshow.show(t._1) + " -> " + vshow.show(t._2); });
-      }
-    });
+  public static function ShowF<K, V>(kshow: ShowFunction<K>, vshow: ShowFunction<V>): ShowFunction<Map<K, V>> {
+    return function(v: Map<K, V>) {
+      return "Map" + v.elements().toString(function(t) { return kshow(t._1) + " -> " + vshow(t._2); });
+    };
   }
-  public static function HasherT<K, V>(khasher: Hasher<K>, vhasher: Hasher<V>): Hasher<Map<K, V>> {
-    return HasherTypeclass.create({
-      hash: function(v: Map<K, V>) {
-        return v.foldl(786433, function(a, b) {
-          return a + ((khasher.hash(b._1) * 49157 + 6151) * vhasher.hash(b._2));
-        });
-      }
-    });
+  public static function HasherF<K, V>(khasher: HasherFunction<K>, vhasher: HasherFunction<V>): HasherFunction<Map<K, V>> {
+    return function(v: Map<K, V>) {
+      return v.foldl(786433, function(a, b) {
+        return a + ((khasher(b._1) * 49157 + 6151) * vhasher(b._2));
+      });
+    };
   }
   
   public var size (getSize, null): Int;
   
-  public var keyHasher:   Hasher<K>;
-  public var keyEqual:    Equal<K>;
-  public var valueHasher: Hasher<V>;
-  public var valueEqual:  Equal<V>;
+  public var keyHasher:   HasherFunction<K>;
+  public var keyEqual:    EqualFunction<K>;
+  public var valueHasher: HasherFunction<V>;
+  public var valueEqual:  EqualFunction<V>;
   
   var _buckets: Array<Array<Tuple2<K, V>>>;
   
   var _size: Int;
   var _pf: PartialFunction1<K, V>;
   
-  public static function create<K, V>(?khasher: Hasher<K>, ?kequal: Equal<K>, ?vhasher: Hasher<V>, ?vequal: Equal<V>) {
-    var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherT(); else khasher;
-    var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualT();  else kequal;
-    var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherT(); else vhasher;
-    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualT();  else vequal;
+  public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>) {
+    var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherF(); else khasher;
+    var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualF();  else kequal;
+    var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherF(); else vhasher;
+    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualF();  else vequal;
     
     return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, [[]], 0);
   }
   
   /** Creates a factory for maps of the specified types. */
-  public static function factory<K, V>(?khasher: Hasher<K>, ?kequal: Equal<K>, ?vhasher: Hasher<V>, ?vequal: Equal<V>): Factory<Map<K, V>> {
+  public static function factory<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>): Factory<Map<K, V>> {
     return function() {
       return Map.create(khasher, kequal, vhasher, vequal);
     }
   }
   
-  private function new(khasher: Hasher<K>, kequal: Equal<K>, vhasher: Hasher<V>, vequal: Equal<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
+  private function new(khasher: HasherFunction<K>, kequal: EqualFunction<K>, vhasher: HasherFunction<V>, vequal: EqualFunction<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
     var self = this;
     
     this.keyHasher = khasher; this.keyEqual = kequal; this.valueHasher = vhasher; this.valueEqual = vequal;
@@ -190,8 +182,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     for (i in 0...list.length) {
       var entry = list[i];
       
-      if (keyEqual.equal(entry._1, k)) {
-        if (!valueEqual.equal(entry._2, v)) {
+      if (keyEqual(entry._1, k)) {
+        if (!valueEqual(entry._2, v)) {
           var newMap = copyWithMod(bucket);
         
           newMap._buckets[bucket][i] = t;
@@ -251,7 +243,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
 
   public function get(k: K): Option<V> {
     for (e in listFor(k)) {
-      if (keyEqual.equal(e._1, k)) {
+      if (keyEqual(e._1, k)) {
         return Some(e._2);
       }
     }
@@ -274,10 +266,10 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function contains(t: Tuple2<K, V>): Bool {
-    var tupleEqual = Tuple2.EqualT(keyEqual, valueEqual);
+    var tupleEqual = Tuple2.EqualF(keyEqual, valueEqual);
     
     for (e in entries()) {
-      if (tupleEqual.equal(e, t)) return true;
+      if (tupleEqual(e, t)) return true;
     }
     
     return false;
@@ -335,7 +327,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function toString(): String {
-    return Map.ShowT(DynamicExtensions.ShowT(), DynamicExtensions.ShowT()).show(this);
+    return Map.ShowF(DynamicExtensions.ShowF(), DynamicExtensions.ShowF())(this);
   }
   
   public function load(): Int {
@@ -393,8 +385,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     for (i in 0...list.length) {
       var entry = list[i];
       
-      if (keyEqual.equal(entry._1, k)) {
-        if (ignoreValue || valueEqual.equal(entry._2, v)) {
+      if (keyEqual(entry._1, k)) {
+        if (ignoreValue || valueEqual(entry._2, v)) {
           var newMap = copyWithMod(bucket);
         
           newMap._buckets[bucket] = list.slice(0, i).concat(list.slice(i + 1, list.length));
@@ -452,7 +444,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   private function bucketFor(k: K): Int {
-    return keyHasher.hash(k) % _buckets.length;
+    return keyHasher(k) % _buckets.length;
   }
   
   private function listFor(k: K): Array<Tuple2<K, V>> {

@@ -161,8 +161,8 @@ class JsonTestCase extends TestCase {
   }
 
   public function testObjectFold (): Void {
-    assertLooksEqual (Json.decode ("{\"foo\":\"bar\"}").fold         ([], function (xs, x) {return xs.concat (try {[x.extractKey ()];} catch (e: Dynamic) {[];});}), ["foo"]);
-    assertLooksEqual (Json.decode ("{\"a\":\"b\",\"c\":\"d\"}").fold ([], function (xs, x) {return xs.concat (try {[x.extractKey ()];} catch (e: Dynamic) {[];});}), ["a", "c"]);
+    assertLooksEqual (Json.decode ("{\"foo\":\"bar\"}").fold         ([], function (xs, x) {var v = null; try {v = [x.extractKey ()];} catch (e: Dynamic) {v = [];}; return xs.concat (v);}), ["foo"]);
+    assertLooksEqual (Json.decode ("{\"a\":\"b\",\"c\":\"d\"}").fold ([], function (xs, x) {var v = null; try {v = [x.extractKey ()];} catch (e: Dynamic) {v = [];}; return xs.concat (v);}), ["a", "c"]);
   }
 
   public function testObjectEncodings (): Void {

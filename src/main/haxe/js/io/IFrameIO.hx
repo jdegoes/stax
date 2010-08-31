@@ -309,7 +309,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 	  this.bindTarget         = w;
 		this.executor           = ScheduledExecutor.inject();
 		this.fragmentsToSend    = newFragmentsList();
-		this.fragmentsReceived  = Map.create(MessageKey.HasherT(), MessageKey.EqualT());
+		this.fragmentsReceived  = Map.create(MessageKey.HasherF(), MessageKey.EqualF());
 		this.receivers          = new Hash();
 		this.originUrlToWindow  = new Hash();
 		
@@ -564,28 +564,24 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 }
 
 private class MessageKey {
-  public static function HasherT(): Hasher<MessageKey> {
-    var intHasher = Int.HasherT();
-    var stringHasher = String.HasherT();
+  public static function HasherF(): HasherFunction<MessageKey> {
+    var intHasher = Int.HasherF();
+    var stringHasher = String.HasherF();
     
-    return HasherTypeclass.create({
-      hash: function(v: MessageKey) {
-        return intHasher.hash(v.messageId) * 
-               stringHasher.hash(v.from) * 
-               stringHasher.hash(v.to) *
-               intHasher.hash(v.fragmentCount);
-      }
-    });
+    return function(v: MessageKey) {
+      return intHasher(v.messageId) * 
+             stringHasher(v.from) * 
+             stringHasher(v.to) *
+             intHasher(v.fragmentCount);
+    };
   }
-  public static function EqualT(): Equal<MessageKey> {
-    return EqualTypeclass.create({
-      equal: function(v1: MessageKey, v2: MessageKey) {
-        return v1.messageId  == v2.messageId && 
-               v1.from       == v2.from &&
-               v1.to         == v2.to &&
-               v1.fragmentCount == v2.fragmentCount;
-      }
-    });
+  public static function EqualF(): EqualFunction<MessageKey> {
+    return function(v1: MessageKey, v2: MessageKey) {
+      return v1.messageId  == v2.messageId && 
+             v1.from       == v2.from &&
+             v1.to         == v2.to &&
+             v1.fragmentCount == v2.fragmentCount;
+    };
   }
   
   public var messageId     (default, null): Int;

@@ -20,7 +20,7 @@ import Prelude;
 
 import haxe.test.Runner;
 import haxe.test.ui.Report;
-
+                   
 import haxe.text.json.JsonTestCase;
 import haxe.io.log.LoggerTestCase;
 import haxe.data.collections.MapTestCase;
@@ -33,6 +33,7 @@ import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.util.ObjectExtensionsTestCase;
+import haxe.util.OrderExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 import haxe.math.geom.PointTestCase;
 
@@ -52,23 +53,27 @@ class StaxTestSuite {
   public static function main (): Void {
     Injector.forever(
       function(c) {
+#if !(neko || php || cpp)
         c.bind(ScheduledExecutor, ScheduledExecutorSystem);
-      
-        var runner = (new Runner()).addAll([
-          new PreludeTestCase(),
+#end      
+        var runner = (new Runner()).addAll([   
+          new PreludeTestCase(),    
           new JValueTestCase(),
           new MapTestCase(),
           new SetTestCase(),
           new ListTestCase(),
           new LoggerTestCase(),
           new JsonTestCase(),
-          new PartialFunctionTestCase(),
+          new PartialFunctionTestCase(),   
+#if !(neko || php || cpp)  
           new ScheduledExecutorTestCase(),
+#end
           new UrlExtensionsTestCase(),
           new StringExtensionsTestCase(),
           new InjectorTestCase(),
           new HttpHeaderExtensionsTestCase(),
-          new PointTestCase()
+          new PointTestCase(),
+          new OrderExtensionsTestCase()
           #if js
           , new HttpStringTestCase() // This one should be cross-platform, eventually
           , new IFrameIOTestCase()      
@@ -76,7 +81,8 @@ class StaxTestSuite {
           , new HTMLElementExtensionsTestCase()
           , new QuirksTestCase()
           , new ObjectExtensionsTestCase()
-          #end
+          #end   
+  
         ]);
 
         Report.create(runner);

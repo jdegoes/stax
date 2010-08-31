@@ -31,29 +31,29 @@ using haxe.text.json.JValueExtensions;
 
 class JValueTestCase extends TestCase {
     public function testBool() {
-      doTest(Bool.DecomposerT(), Bool.ExtractorT(), [true, false], Bool.EqualT());
+      doTest(Bool.DecomposerT(), Bool.ExtractorT(), [true, false], Bool.EqualF());
     }
     
     public function testInt() {
-      doTest(Int.DecomposerT(), Int.ExtractorT(), [-1234, 9231], Int.EqualT());
+      doTest(Int.DecomposerT(), Int.ExtractorT(), [-1234, 9231], Int.EqualF());
     }
     
     public function testFloat() {
-      doTest(Float.DecomposerT(), Float.ExtractorT(), [0.25, 0.5], Float.EqualT());
+      doTest(Float.DecomposerT(), Float.ExtractorT(), [0.25, 0.5], Float.EqualF());
     }
     
     public function testString() {
-      doTest(String.DecomposerT(), String.ExtractorT(), ["boo", "baz"], String.EqualT());
+      doTest(String.DecomposerT(), String.ExtractorT(), ["boo", "baz"], String.EqualF());
     }
     
     public function testDate() {
-      doTest(Date.DecomposerT(), Date.ExtractorT(), [Date.now(), Date.fromTime(0.0)], Date.EqualT());
+      doTest(Date.DecomposerT(), Date.ExtractorT(), [Date.now(), Date.fromTime(0.0)], Date.EqualF());
     }
     
     public function testOption() {
       var a: Array<Option<Int>> = [Some(123), None];
       
-      doTest(Option.DecomposerT(Int.DecomposerT()), Option.ExtractorT(Int.ExtractorT()), a, Option.EqualT(Int.EqualT()));
+      doTest(Option.DecomposerT(Int.DecomposerT()), Option.ExtractorT(Int.ExtractorT()), a);
     }
     
     public function testTuple2() {
@@ -61,7 +61,7 @@ class JValueTestCase extends TestCase {
       
       doTest(Tuple2.DecomposerT(Int.DecomposerT(), String.DecomposerT()), 
              Tuple2.ExtractorT(Int.ExtractorT(), String.ExtractorT()), a, 
-             Tuple2.EqualT(Int.EqualT(), String.EqualT()));
+             Tuple2.EqualF(Int.EqualF(), String.EqualF()));
     }
     
     public function testTuple3() {
@@ -69,7 +69,7 @@ class JValueTestCase extends TestCase {
       
       doTest(Tuple3.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT()), 
              Tuple3.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT()), a, 
-             Tuple3.EqualT(Int.EqualT(), String.EqualT(), Bool.EqualT()));
+             Tuple3.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF()));
     }
     
     public function testTuple4() {
@@ -77,7 +77,7 @@ class JValueTestCase extends TestCase {
       
       doTest(Tuple4.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT(), Float.DecomposerT()), 
              Tuple4.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT(), Float.ExtractorT()), a, 
-             Tuple4.EqualT(Int.EqualT(), String.EqualT(), Bool.EqualT(), Float.EqualT()));
+             Tuple4.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF()));
     }
     
     public function testTuple5() {
@@ -85,54 +85,59 @@ class JValueTestCase extends TestCase {
       
       doTest(Tuple5.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT(), Float.DecomposerT(), String.DecomposerT()), 
              Tuple5.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT(), Float.ExtractorT(), String.ExtractorT()), a, 
-             Tuple5.EqualT(Int.EqualT(), String.EqualT(), Bool.EqualT(), Float.EqualT(), String.EqualT()));
+             Tuple5.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF(), String.EqualF()));
     }
     
     public function testArray() {
       var a: Array<Array<Int>> = [[123, 9, -23], []];
       
-      doTest(Array.DecomposerT(Int.DecomposerT()), Array.ExtractorT(Int.ExtractorT()), a, Array.EqualT(Int.EqualT()));
+      doTest(Array.DecomposerT(Int.DecomposerT()), Array.ExtractorT(Int.ExtractorT()), a, Array.EqualF(Int.EqualF()));
     }
     
     public function testSet() {
-      var newSet = Set.factory(Int.HasherT(), Int.EqualT());
+      var newSet = Set.factory(Int.HasherF(), Int.EqualF());
       
       var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
       
       doTest(Set.DecomposerT(Int.DecomposerT()), 
-             Set.ExtractorT(Int.ExtractorT(), Int.HasherT(), Int.EqualT()), a, 
-             Set.EqualT(Int.EqualT()));
+             Set.ExtractorT(Int.ExtractorT(), Int.HasherF(), Int.EqualF()), a, 
+             Set.EqualF(Int.EqualF()));
     }
     
     public function testList() {
-      var newList = List.factory(Int.EqualT());
+      var newList = List.factory(Int.EqualF());
       
       var a: Array<List<Int>> = [newList().addAll([123, 9, -23]), newList()];
       
       doTest(List.DecomposerT(Int.DecomposerT()), 
-             List.ExtractorT(Int.ExtractorT(), Int.EqualT()), a, 
-             List.EqualT(Int.EqualT()));
+             List.ExtractorT(Int.ExtractorT(), Int.EqualF()), a, 
+             List.EqualF(Int.EqualF()));
     }
     
     public function testMap() {
-      var newMap = Map.factory(Int.HasherT(), Int.EqualT(), String.HasherT(), String.EqualT());
+      var newMap = Map.factory(Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF());
       
       var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
       
       doTest(Map.DecomposerT(Int.DecomposerT(), String.DecomposerT()), 
-             Map.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Int.HasherT(), Int.EqualT(), String.HasherT(), String.EqualT()), a, 
-             Map.EqualT(Int.EqualT(), String.EqualT()));
+             Map.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF()), a, 
+             Map.EqualF(Int.EqualF(), String.EqualF()));
     }
     
     public function testJValue() {
-      doTest(JValue.DecomposerT(), JValue.ExtractorT(), [JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])], JValue.EqualT());
+      doTest(
+	    JValue.DecomposerT(), 
+	    JValue.ExtractorT(), 
+		[JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])]);
     }
-    
-    private function doTest<T>(decomposer: JDecomposer<T>, extractor: JExtractor<T>, values: Array<T>, eq: Equal<T>): Void {
+
+    private function doTest<T>(decomposer: JDecomposer<T>, extractor: JExtractor<T>, values: Array<T>, ?eq : EqualFunction<T>): Void {  
+	  if(null == eq)
+ 	    eq = Stax.getEqualFor(values[0]);
       for (value in values) {
         var actual = extractor.extract(decomposer.decompose(value));
         
-        var equal = eq.equal(value, actual);
+        var equal = eq(value, actual);
         
         if (!equal) {
           throw "Expected " + value + " but was " + actual;

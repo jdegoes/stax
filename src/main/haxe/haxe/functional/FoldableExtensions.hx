@@ -341,7 +341,7 @@ class FoldableExtensions {
 	}
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
-    show = if (show == null) DynamicExtensions.ShowT().show; else show;
+    show = if (show == null) DynamicExtensions.ShowF(); else show;
     
     var isFirst = true;
     

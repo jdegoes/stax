@@ -14,7 +14,7 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-using PreludeExtensions;
+using PreludeExtensions;  
 
 enum Unit {
   Unit;
@@ -37,7 +37,7 @@ typedef Function10<P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, R> = P1 -> P2 -> P3 
 typedef Reducer<T> = T -> T -> T
 
 typedef Factory<T> = Void -> T
-
+/*
 typedef Show<T> = {
   show: T -> String 
 }
@@ -62,7 +62,7 @@ typedef Order<T> = {>Equal<T>,
   lessThan:           T -> T -> Bool,
   lessThanOrEqual:    T -> T -> Bool
 }
-
+*/
 typedef Thunk<T> = Void -> T
 
 /** An option represents an optional value -- the value may or may not be 
@@ -379,40 +379,34 @@ private class AbstractProduct implements Product {
   }
 }
 
-class Tuple2<A, B> extends AbstractProduct {
-  public static function OrderT<T1, T2>(order1: Order<T1>, order2: Order<T2>): Order<Tuple2<T1, T2>> {
-    return OrderTypeclass.create({
-      compare: function (v1: Tuple2<T1, T2>, v2: Tuple2<T1, T2>) {
-        var c = order1.compare(v1._1, v2._1);
-        if (c != 0) return c;
-      
-        c = order2.compare(v1._2, v2._2);
-        if (c != 0) return c;
-      
-        return 0;
-      }
-    });
+class Tuple2<A, B> extends AbstractProduct {   
+  public static function OrderF<T1, T2>(order1: OrderFunction<T1>, order2: OrderFunction<T2>): OrderFunction<Tuple2<T1, T2>> {
+    return function (v1: Tuple2<T1, T2>, v2: Tuple2<T1, T2>) {
+      var c = order1(v1._1, v2._1);
+      if (c != 0) return c;
+    
+      c = order2(v1._2, v2._2);
+      if (c != 0) return c;
+    
+      return 0;
+    };
   }
-  public static function EqualT<T1, T2>(equal1: Equal<T1>, equal2: Equal<T2>): Equal<Tuple2<T1, T2>> {
-    return EqualTypeclass.create({
-      equal: function (v1: Tuple2<T1, T2>, v2: Tuple2<T1, T2>) {
-        return equal1.equal(v1._1, v2._1) && equal2.equal(v1._2, v2._2);
-      }
-    });
+  public static function EqualF<T1, T2>(equal1: EqualFunction<T1>, equal2: EqualFunction<T2>): EqualFunction<Tuple2<T1, T2>> {
+    return function (v1: Tuple2<T1, T2>, v2: Tuple2<T1, T2>) {
+      return equal1(v1._1, v2._1) && equal2(v1._2, v2._2);
+    };
   }
-  public static function ShowT<T1, T2>(show1: Show<T1>, show2: Show<T2>): Show<Tuple2<T1, T2>> {
-    return ShowTypeclass.create({
-      show: function (v1: Tuple2<T1, T2>) {
-        return "Tuple2(" + show1.show(v1._1) + ", " + show2.show(v1._2) + ")";
-      }
-    });
+
+  public static function ShowF<T1, T2>(show1: ShowFunction<T1>, show2: ShowFunction<T2>): ShowFunction<Tuple2<T1, T2>> {
+    return function (v1: Tuple2<T1, T2>) {
+      return "Tuple2(" + show1(v1._1) + ", " + show2(v1._2) + ")";
+    };
   }
-  public static function HasherT<T1, T2>(hash1: Hasher<T1>, hash2: Hasher<T2>): Hasher<Tuple2<T1, T2>> {
-    return HasherTypeclass.create({
-      hash: function (v: Tuple2<T1, T2>) {
-        return 786433 * hash1.hash(v._1) + 24593 * hash2.hash(v._2);
-      }
-    });
+
+  public static function HasherF<T1, T2>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>): HasherFunction<Tuple2<T1, T2>> {
+    return function (v: Tuple2<T1, T2>) {
+      return 786433 * hash1(v._1) + 24593 * hash2(v._2);
+    };
   }
   
   public var _1 (default, null): A;
@@ -441,43 +435,36 @@ class Tuple2<A, B> extends AbstractProduct {
   }
 }
 
-class Tuple3<A, B, C> extends AbstractProduct {
-  public static function OrderT<T1, T2, T3>(order1: Order<T1>, order2: Order<T2>, order3: Order<T3>): Order<Tuple3<T1, T2, T3>> {
-    return OrderTypeclass.create({
-      compare: function (v1: Tuple3<T1, T2, T3>, v2: Tuple3<T1, T2, T3>) {
-        var c = order1.compare(v1._1, v2._1);
-        if (c != 0) return c;
-      
-        c = order2.compare(v1._2, v2._2);
-        if (c != 0) return c;
-      
-        c = order3.compare(v1._3, v2._3);
-        if (c != 0) return c;
-      
-        return 0;
-      }
-    });
+class Tuple3<A, B, C> extends AbstractProduct { 
+  public static function OrderF<T1, T2, T3>(order1: OrderFunction<T1>, order2: OrderFunction<T2>, order3: OrderFunction<T3>): OrderFunction<Tuple3<T1, T2, T3>> {
+    return function (v1: Tuple3<T1, T2, T3>, v2: Tuple3<T1, T2, T3>) {
+      var c = order1(v1._1, v2._1);
+      if (c != 0) return c;
+    
+      c = order2(v1._2, v2._2);
+      if (c != 0) return c;
+    
+      c = order3(v1._3, v2._3);
+      if (c != 0) return c;
+    
+      return 0;
+    };
+  }  
+
+  public static function EqualF<T1, T2, T3>(equal1: EqualFunction<T1>, equal2: EqualFunction<T2>, equal3: EqualFunction<T3>): EqualFunction<Tuple3<T1, T2, T3>> {
+    return function (v1: Tuple3<T1, T2, T3>, v2: Tuple3<T1, T2, T3>) {
+      return equal1(v1._1, v2._1) && equal2(v1._2, v2._2) && equal3(v1._3, v2._3);
+    };
   }
-  public static function EqualT<T1, T2, T3>(equal1: Equal<T1>, equal2: Equal<T2>, equal3: Equal<T3>): Equal<Tuple3<T1, T2, T3>> {
-    return EqualTypeclass.create({
-      equal: function (v1: Tuple3<T1, T2, T3>, v2: Tuple3<T1, T2, T3>) {
-        return equal1.equal(v1._1, v2._1) && equal2.equal(v1._2, v2._2) && equal3.equal(v1._3, v2._3);
-      }
-    });
+  public static function ShowF<T1, T2, T3>(show1: ShowFunction<T1>, show2: ShowFunction<T2>, show3: ShowFunction<T3>): ShowFunction<Tuple3<T1, T2, T3>> {
+    return function (v1: Tuple3<T1, T2, T3>) {
+      return "Tuple3(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ")";
+    };
   }
-  public static function ShowT<T1, T2, T3>(show1: Show<T1>, show2: Show<T2>, show3: Show<T3>): Show<Tuple3<T1, T2, T3>> {
-    return ShowTypeclass.create({
-      show: function (v1: Tuple3<T1, T2, T3>) {
-        return "Tuple3(" + show1.show(v1._1) + ", " + show2.show(v1._2) + ", " + show3.show(v1._3) + ")";
-      }
-    });
-  }
-  public static function HasherT<T1, T2, T3>(hash1: Hasher<T1>, hash2: Hasher<T2>, hash3: Hasher<T3>): Hasher<Tuple3<T1, T2, T3>> {
-    return HasherTypeclass.create({
-      hash: function (v: Tuple3<T1, T2, T3>) {
-        return 196613 * hash1.hash(v._1) + 3079 * hash2.hash(v._2) + 389 * hash3.hash(v._3);
-      }
-    });
+  public static function HasherF<T1, T2, T3>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>): HasherFunction<Tuple3<T1, T2, T3>> {
+    return function (v: Tuple3<T1, T2, T3>) {
+      return 196613 * hash1(v._1) + 3079 * hash2(v._2) + 389 * hash3(v._3);
+    };
   }
   
   public var _1 (default, null): A;
@@ -507,46 +494,39 @@ class Tuple3<A, B, C> extends AbstractProduct {
   }
 }
 
-class Tuple4<A, B, C, D> extends AbstractProduct {
-  public static function OrderT<T1, T2, T3, T4>(order1: Order<T1>, order2: Order<T2>, order3: Order<T3>, order4: Order<T4>): Order<Tuple4<T1, T2, T3, T4>> {
-    return OrderTypeclass.create({
-      compare: function (v1: Tuple4<T1, T2, T3, T4>, v2: Tuple4<T1, T2, T3, T4>) {
-        var c = order1.compare(v1._1, v2._1);
-        if (c != 0) return c;
-      
-        c = order2.compare(v1._2, v2._2);
-        if (c != 0) return c;
-      
-        c = order3.compare(v1._3, v2._3);
-        if (c != 0) return c;
-      
-        c = order4.compare(v1._4, v2._4);
-        if (c != 0) return c;
-      
-        return 0;
-      }
-    });
+class Tuple4<A, B, C, D> extends AbstractProduct {     
+  public static function OrderF<T1, T2, T3, T4>(order1: OrderFunction<T1>, order2: OrderFunction<T2>, order3: OrderFunction<T3>, order4: OrderFunction<T4>): OrderFunction<Tuple4<T1, T2, T3, T4>> {
+    return function (v1: Tuple4<T1, T2, T3, T4>, v2: Tuple4<T1, T2, T3, T4>) {
+      var c = order1(v1._1, v2._1);
+      if (c != 0) return c;
+    
+      c = order2(v1._2, v2._2);
+      if (c != 0) return c;
+    
+      c = order3(v1._3, v2._3);
+      if (c != 0) return c;
+    
+      c = order4(v1._4, v2._4);
+      if (c != 0) return c;
+    
+      return 0;
+    };
   }
-  public static function EqualT<T1, T2, T3, T4>(equal1: Equal<T1>, equal2: Equal<T2>, equal3: Equal<T3>, equal4: Equal<T4>): Equal<Tuple4<T1, T2, T3, T4>> {
-    return EqualTypeclass.create({
-      equal: function (v1: Tuple4<T1, T2, T3, T4>, v2: Tuple4<T1, T2, T3, T4>) {
-        return equal1.equal(v1._1, v2._1) && equal2.equal(v1._2, v2._2) && equal3.equal(v1._3, v2._3) && equal4.equal(v1._4, v2._4);
-      }
-    });
+
+  public static function EqualF<T1, T2, T3, T4>(equal1: EqualFunction<T1>, equal2: EqualFunction<T2>, equal3: EqualFunction<T3>, equal4: EqualFunction<T4>): EqualFunction<Tuple4<T1, T2, T3, T4>> {
+    return function (v1: Tuple4<T1, T2, T3, T4>, v2: Tuple4<T1, T2, T3, T4>) {
+      return equal1(v1._1, v2._1) && equal2(v1._2, v2._2) && equal3(v1._3, v2._3) && equal4(v1._4, v2._4);
+    };
   }
-  public static function ShowT<T1, T2, T3, T4>(show1: Show<T1>, show2: Show<T2>, show3: Show<T3>, show4: Show<T4>): Show<Tuple4<T1, T2, T3, T4>> {
-    return ShowTypeclass.create({
-      show: function (v1: Tuple4<T1, T2, T3, T4>) {
-        return "Tuple4(" + show1.show(v1._1) + ", " + show2.show(v1._2) + ", " + show3.show(v1._3) + ", " + show4.show(v1._4) + ")";
-      }
-    });
-  }
-  public static function HasherT<T1, T2, T3, T4>(hash1: Hasher<T1>, hash2: Hasher<T2>, hash3: Hasher<T3>, hash4: Hasher<T4>): Hasher<Tuple4<T1, T2, T3, T4>> {
-    return HasherTypeclass.create({
-      hash: function (v: Tuple4<T1, T2, T3, T4>) {
-        return 1543 * hash1.hash(v._1) + 49157 * hash2.hash(v._2) + 196613 * hash3.hash(v._3) + 97 * hash4.hash(v._4);
-      }
-    });
+  public static function ShowF<T1, T2, T3, T4>(show1: ShowFunction<T1>, show2: ShowFunction<T2>, show3: ShowFunction<T3>, show4: ShowFunction<T4>): ShowFunction<Tuple4<T1, T2, T3, T4>> {
+    return function (v1: Tuple4<T1, T2, T3, T4>) {
+      return "Tuple4(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ", " + show4(v1._4) + ")";
+    };
+  }    
+  public static function HasherF<T1, T2, T3, T4>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>, hash4: HasherFunction<T4>): HasherFunction<Tuple4<T1, T2, T3, T4>> {
+    return function (v: Tuple4<T1, T2, T3, T4>) {
+      return 1543 * hash1(v._1) + 49157 * hash2(v._2) + 196613 * hash3(v._3) + 97 * hash4(v._4);
+    };
   }
   
   public var _1 (default, null): A;
@@ -577,49 +557,42 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   }
 }
 
-class Tuple5<A, B, C, D, E> extends AbstractProduct {
-  public static function OrderT<T1, T2, T3, T4, T5>(order1: Order<T1>, order2: Order<T2>, order3: Order<T3>, order4: Order<T4>, order5: Order<T5>): Order<Tuple5<T1, T2, T3, T4, T5>> {
-    return OrderTypeclass.create({
-      compare: function (v1: Tuple5<T1, T2, T3, T4, T5>, v2: Tuple5<T1, T2, T3, T4, T5>) {
-        var c = order1.compare(v1._1, v2._1);
-        if (c != 0) return c;
-      
-        c = order2.compare(v1._2, v2._2);
-        if (c != 0) return c;
-      
-        c = order3.compare(v1._3, v2._3);
-        if (c != 0) return c;
-      
-        c = order4.compare(v1._4, v2._4);
-        if (c != 0) return c;
-      
-        c = order5.compare(v1._5, v2._5);
-        if (c != 0) return c;
-      
-        return 0;
-      }
-    });
+class Tuple5<A, B, C, D, E> extends AbstractProduct {     
+  public static function OrderF<T1, T2, T3, T4, T5>(order1: OrderFunction<T1>, order2: OrderFunction<T2>, order3: OrderFunction<T3>, order4: OrderFunction<T4>, order5: OrderFunction<T5>): OrderFunction<Tuple5<T1, T2, T3, T4, T5>> {
+    return function (v1: Tuple5<T1, T2, T3, T4, T5>, v2: Tuple5<T1, T2, T3, T4, T5>) {
+      var c = order1(v1._1, v2._1);
+      if (c != 0) return c;
+    
+      c = order2(v1._2, v2._2);
+      if (c != 0) return c;
+    
+      c = order3(v1._3, v2._3);
+      if (c != 0) return c;
+    
+      c = order4(v1._4, v2._4);
+      if (c != 0) return c;
+    
+      c = order5(v1._5, v2._5);
+      if (c != 0) return c;
+    
+      return 0;
+    };
   }
-  public static function EqualT<T1, T2, T3, T4, T5>(equal1: Equal<T1>, equal2: Equal<T2>, equal3: Equal<T3>, equal4: Equal<T4>, equal5: Equal<T5>): Equal<Tuple5<T1, T2, T3, T4, T5>> {
-    return EqualTypeclass.create({
-      equal: function (v1: Tuple5<T1, T2, T3, T4, T5>, v2: Tuple5<T1, T2, T3, T4, T5>) {
-        return equal1.equal(v1._1, v2._1) && equal2.equal(v1._2, v2._2) && equal3.equal(v1._3, v2._3) && equal4.equal(v1._4, v2._4) && equal5.equal(v1._5, v2._5);
-      }
-    });
+
+  public static function EqualF<T1, T2, T3, T4, T5>(equal1: EqualFunction<T1>, equal2: EqualFunction<T2>, equal3: EqualFunction<T3>, equal4: EqualFunction<T4>, equal5: EqualFunction<T5>): EqualFunction<Tuple5<T1, T2, T3, T4, T5>> {
+    return function (v1: Tuple5<T1, T2, T3, T4, T5>, v2: Tuple5<T1, T2, T3, T4, T5>) {
+      return equal1(v1._1, v2._1) && equal2(v1._2, v2._2) && equal3(v1._3, v2._3) && equal4(v1._4, v2._4) && equal5(v1._5, v2._5);
+    };
   }
-  public static function ShowT<T1, T2, T3, T4, T5>(show1: Show<T1>, show2: Show<T2>, show3: Show<T3>, show4: Show<T4>, show5: Show<T5>): Show<Tuple5<T1, T2, T3, T4, T5>> {
-    return ShowTypeclass.create({
-      show: function (v1: Tuple5<T1, T2, T3, T4, T5>) {
-        return "Tuple5(" + show1.show(v1._1) + ", " + show2.show(v1._2) + ", " + show3.show(v1._3) + ", " + show4.show(v1._4) + ", " + show5.show(v1._5) + ")";
-      }
-    });
+  public static function ShowF<T1, T2, T3, T4, T5>(show1: ShowFunction<T1>, show2: ShowFunction<T2>, show3: ShowFunction<T3>, show4: ShowFunction<T4>, show5: ShowFunction<T5>): ShowFunction<Tuple5<T1, T2, T3, T4, T5>> {
+    return function (v1: Tuple5<T1, T2, T3, T4, T5>) {
+      return "Tuple5(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ", " + show4(v1._4) + ", " + show5(v1._5) + ")";
+    };
   }
-  public static function HasherT<T1, T2, T3, T4, T5>(hash1: Hasher<T1>, hash2: Hasher<T2>, hash3: Hasher<T3>, hash4: Hasher<T4>, hash5: Hasher<T5>): Hasher<Tuple5<T1, T2, T3, T4, T5>> {
-    return HasherTypeclass.create({
-      hash: function (v: Tuple5<T1, T2, T3, T4, T5>) {
-        return 12289 * hash1.hash(v._1) + 769 * hash2.hash(v._2) + 393241 * hash3.hash(v._3) + 193 * hash4.hash(v._4) + 53 * hash5.hash(v._5);
-      }
-    });
+  public static function HasherF<T1, T2, T3, T4, T5>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>, hash4: HasherFunction<T4>, hash5: HasherFunction<T5>): HasherFunction<Tuple5<T1, T2, T3, T4, T5>> {
+    return function (v: Tuple5<T1, T2, T3, T4, T5>) {
+      return 12289 * hash1(v._1) + 769 * hash2(v._2) + 393241 * hash3(v._3) + 193 * hash4(v._4) + 53 * hash5(v._5);
+    };
   }
   
   public var _1 (default, null): A;
@@ -647,43 +620,259 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   }
 }
 
-class OrderTypeclass {
-  public static function create<T>(cmp: { compare: Function2<T, T, Int> }): Order<T> {
-    return {
-      compare:            cmp.compare,
-      equal:              function(t1, t2) { return cmp.compare(t1, t2) == 0; },
-      notEqual:           function(t1, t2) { return cmp.compare(t1, t2) != 0; },
-      greaterThan:        function(t1, t2) { return cmp.compare(t1, t2) > 0; },
-      greaterThanOrEqual: function(t1, t2) { return cmp.compare(t1, t2) >= 0; },
-      lessThan:           function(t1, t2) { return cmp.compare(t1, t2) < 0; },
-      lessThanOrEqual:    function(t1, t2) { return cmp.compare(t1, t2) <= 0; }
-    }
-  }
-}
-class EqualTypeclass {
-  public static function create<T>(equal: { equal: Function2<T, T, Bool> }): Equal<T> {
-    return {
-      equal:    equal.equal,
-      notEqual: function(v1, v2) { return !equal.equal(v1, v2); }
-    }
-  }
-}
-class ShowTypeclass {
-  public static function create<T>(show: { show: Function<T, String> }): Show<T> {
-    return {
-      show:     show.show
-    }
-  }
-}
-class HasherTypeclass {
-  public static function create<T>(hasher: { hash: Function<T, Int> }): Hasher<T> {
-    return {
-      hash:     hasher.hash
-    }
-  }
-}
+typedef OrderFunction<T>  = Function2<T, T, Int>;
+typedef EqualFunction<T>  = Function2<T, T, Bool>;  
+typedef ShowFunction<T>   = Function<T, String>;  
+typedef HasherFunction<T> = Function<T, Int>;  
 
-class Stax {
+class Stax {                           
+  static function _createOrderImpl<T>(impl : OrderFunction<Dynamic>) : OrderFunction<T> {
+  	return function(a, b) {
+	  return if(a == b || (a == null && b == null)) 0;
+	    else if(a == null) -1;
+	    else if(b == null) 1;
+	    else impl(a, b);
+    };
+  }
+  /** Returns a OrderFunction (T -> T -> Int). It works for any type expect TFunction.
+   *  Custom Classes must provide a compare(other : T) : Int method or an exception will be thrown.
+   */
+  public static function getOrderFor<T>(v : T) : OrderFunction<T> {             
+    return switch(Type.typeof(v)) {
+	  case TBool:
+	    _createOrderImpl(Bool.OrderF());
+	  case TInt:
+	    _createOrderImpl(Int.OrderF());
+	  case TFloat:
+	    _createOrderImpl(Float.OrderF());
+	  case TUnknown:
+		function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
+	  case TObject:  
+	    _createOrderImpl(function(a, b){
+	   	  for(key in Reflect.fields(a)) {
+		    var va = Reflect.field(a, key);
+		    var v = getOrderFor(va)(va, Reflect.field(b, key));
+		    if(0 != v)
+		      return v;
+		  } 
+		  return 0;
+	    });
+	  case TClass(c):
+	    switch(Type.getClassName(c)) {                                                                               
+		  case "String":   
+		    _createOrderImpl(String.OrderF());
+		  case "Date":
+		    _createOrderImpl(Date.OrderF());      
+		  case "Array":
+			_createOrderImpl(Array.OrderF());
+	      default:
+			if(Type.getInstanceFields(c).remove("compare")) {
+			  _createOrderImpl(function(a, b) return (cast a).compare(b));
+			} else {
+			  error("class "+Type.getClassName(c)+" is not comparable");
+			}
+	    }
+	  case TEnum(e):
+        _createOrderImpl(function(a, b) {  
+		  var v = Type.enumIndex(a) - Type.enumIndex(b);
+		  if(0 != v)
+		    return v;                                
+		  var pa = Type.enumParameters(a);
+		  var pb = Type.enumParameters(b);
+		  for(i in 0...pa.length) {
+		    var v = Stax.getOrderFor(pa[i])(pa[i], pb[i]);
+		    if(v != 0)
+		      return v;
+		  }                
+		  return 0;
+		});
+	  case TNull:
+	    _createOrderImpl(function(a, b) return error("at least one of the arguments should be null"));
+	  case TFunction:
+		error("unable to compare on a function");
+	      
+	}
+  }
+
+  static function _createEqualImpl<T>(impl : EqualFunction<Dynamic>) {
+  	return function(a, b) {
+	  return if(a == b || (a == null && b == null)) true;
+	    else if(a == null || b == null) false;
+	    else impl(a, b);
+    };
+  }
+  /** Returns an EqualFunction (T -> T -> Bool). It works for any type. Custom Classes must provide 
+   * an "equals(other : T) : Bool" method or a "compare(other : T) : Int" method otherwise an exception will be thrown.
+   */
+  public static function getEqualFor<T>(v : T) : EqualFunction<T> {             
+    return switch(Type.typeof(v)) {
+	  case TBool:
+	    _createEqualImpl(Bool.EqualF());
+	  case TInt:
+	    _createEqualImpl(Int.EqualF());
+	  case TFloat:
+	    _createEqualImpl(Float.EqualF());
+	  case TUnknown:
+		function(a : T, b : T) return a == b;
+	  case TObject:
+	    _createEqualImpl(function(a, b) {
+			for(key in Reflect.fields(a)) {
+		  	  var va = Reflect.field(a, key);
+		  	  if(!getEqualFor(va)(va, Reflect.field(b, key)))
+		  	  	return false;
+		  	} 
+		  	return true;
+	    });
+	  case TClass(c):
+	    switch(Type.getClassName(c)) {                                                                               
+		  case "String":
+		    _createEqualImpl(String.EqualF());
+		  case "Date":
+		    _createEqualImpl(Date.EqualF());   
+		  case "Array":
+			_createEqualImpl(Array.EqualF());
+	      default: 
+			var fields = Type.getInstanceFields(c);
+			if(fields.remove("equals")) {
+			  _createEqualImpl(function(a, b) return (cast a).equals(b));
+			} else if(fields.remove("compare")) {
+			  _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
+			} else {
+			  error("class "+Type.getClassName(c)+" has not equals method");
+			}
+	    }
+	  case TEnum(e):  
+	    _createEqualImpl(function(a, b) {
+		  if(0 != Type.enumIndex(a) - Type.enumIndex(b))
+		    return false;                                
+		  var pa = Type.enumParameters(a);
+		  var pb = Type.enumParameters(b);
+		  for(i in 0...pa.length) {
+		    if(!Stax.getEqualFor(pa[i])(pa[i], pb[i]))
+		      return false;
+		  }                
+		  return true;
+	    });
+	  case TNull:  
+	    _createEqualImpl(function(a, b) return error("at least one of the arguments should be null"));
+	  case TFunction:   
+	    _createEqualImpl(Reflect.compareMethods);
+	}
+  }      
+ 
+  static function _createShowImpl<T>(impl : ShowFunction<Dynamic>) : ShowFunction<T> {
+    return function(v) return null == v ? 'null' : impl(v);
+  } 
+                         
+  /** Returns a ShowFunction (T -> String). It works for any type. For Custom Classes you must provide a toString()
+   * method, otherwise the full class name is returned.
+   */
+  public static function getShowFor<T>(t : T) : ShowFunction<T> {
+    return switch(Type.typeof(t)) {                           
+	  case TBool:
+	    _createShowImpl(Bool.ShowF());   
+	  case TInt:
+	    _createShowImpl(Int.ShowF());
+	  case TFloat: 
+	    _createShowImpl(Float.ShowF());
+	  case TUnknown:  
+		_createShowImpl(function(v) return '<unknown>');   
+	  case TObject:
+	    _createShowImpl(function(v)
+	    {
+		  var buf = [];
+		  for(k in Reflect.fields(v)) {
+		    var i = Reflect.field(v, k); 
+		    buf.push(k + ":" + getShowFor(i)(i));
+		  }
+		  return "{" + buf.join(",") + "}";
+	    }); 
+	  case TClass(c):
+	    switch(Type.getClassName(c)) {
+		  case "String":
+            _createShowImpl(String.ShowF());                                                                    
+		  case "Array":  
+            _createShowImpl(Array.ShowF());        
+	      default: 
+            _createShowImpl(function(v : T) {
+			  return if(Type.getInstanceFields(Type.getClass(v)).remove("toString"))
+			    Reflect.callMethod(v, Reflect.field(v, "toString"), []);
+			  else
+	            Type.getClassName(Type.getClass(v));
+			});
+	    }      
+	  case TEnum(e):  
+	    _createShowImpl(function(v) {
+		  var buf = Type.enumConstructor(v);
+		  var params = Type.enumParameters(v);
+		  if(params.length == 0)
+		    return buf;
+		  else {            
+			buf +="(";
+			for(p in params)
+			  buf += getShowFor(p)(p);
+			return buf + ")";
+		  }
+	    });        
+	  case TNull:  
+	    function(v) return "null";
+	  case TFunction:   
+	    _createShowImpl(function(v) return '<function>');
+	}
+  }         
+     
+  static function _createHasherImpl<T>(impl : HasherFunction<Dynamic>) return function(v : T) if(null == v) return 0 else return impl(v)
+  
+  /** Returns a HasherFunction (T -> Int). It works for any type. For Custom Classes you must provide a hashCode()
+   * method, otherwise the full class name is returned.
+   */
+  public static function getHasherFor<T>(t : T) : HasherFunction<T> {
+    return switch(Type.typeof(t)) {                           
+	  case TBool:        
+	    _createHasherImpl(Bool.HasherF());               
+	  case TInt:
+	    _createHasherImpl(Int.HasherF());   
+	  case TFloat: 
+	    _createHasherImpl(Float.HasherF());                      
+	  case TUnknown:  
+		_createHasherImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));   
+	  case TObject:
+	    _createHasherImpl(function(v){
+		  var s = getShowFor(v)(v);
+		  return getHasherFor(s)(s);
+	    });    
+	  case TClass(c):
+	    switch(Type.getClassName(c)) {
+		  case "String":
+		    _createHasherImpl(String.HasherF());
+          case "Date":                                                                  
+            _createHasherImpl(Date.HasherF());                                                                           
+		  case "Array":  
+            _createHasherImpl(Array.HasherF());        
+	      default: 
+            _createHasherImpl(function(v : T) {
+			  return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode")) 
+			    Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
+			  else
+	            error("class does not have a hashCode method");
+			});
+	    }      
+	  case TEnum(e):  
+	    _createHasherImpl(function(v : T) {
+		  var hash = String.HasherF()(Type.enumConstructor(v)) * 6151; 
+		  for(i in Type.enumParameters(v))
+		    hash += Stax.getHasherFor(i)(i) * 6151;
+		  return hash;    
+		});   
+	  case TFunction:   
+	    _createHasherImpl(function(v : T) return error("function can't provide a hash code"));             
+	  case TNull:  
+	    function(v) return 0;
+	  default:
+		function(v : T) return -1;
+	}
+  } 
+
   public static function noop1<A>() {
     return function(a: A) { }
   }

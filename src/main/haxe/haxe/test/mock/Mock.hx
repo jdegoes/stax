@@ -28,7 +28,7 @@ class Mock<T> implements Dynamic<T>{
   var _expects: Map<String, Array<Dynamic>>;
   
     private function new() {
-      _expects = Map.create(String.HasherT(), String.EqualT(), Array.HasherT(DynamicExtensions.HasherT()), Array.EqualT(DynamicExtensions.EqualT()));
+      _expects = Map.create(String.HasherF(), String.EqualF(), Array.HasherF(DynamicExtensions.HasherF()), Array.EqualF(DynamicExtensions.EqualF()));
     }
     
     public function expect1<P1, R>(name: String, f: Function<P1, R>, times: Int = 1): Void {

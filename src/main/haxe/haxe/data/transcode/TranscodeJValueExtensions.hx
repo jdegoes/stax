@@ -261,7 +261,7 @@ class ListExtensions {
         decompose: function(v: List<T>): JValue { return JArray(v.toArray().map(d.decompose)); }
       });
     }
-    public static function ExtractorT<T>(c: Class<List<Dynamic>>, e: JExtractor<T>, ?eq: Equal<T>): JExtractor<List<T>> {
+    public static function ExtractorT<T>(c: Class<List<Dynamic>>, e: JExtractor<T>, ?eq: EqualFunction<T>): JExtractor<List<T>> {
       return ExtractorTypeclass.create({
         extract: function(v: JValue) { 
           return switch(v) {
@@ -279,7 +279,7 @@ class SetExtensions {
         decompose: function(v: Set<T>): JValue { return JArray(v.toArray().map(d.decompose)); }
       });
     }
-    public static function ExtractorT<T>(c: Class<Set<Dynamic>>, e: JExtractor<T>, ?h: Hasher<T>, ?eq: Equal<T>): JExtractor<Set<T>> {
+    public static function ExtractorT<T>(c: Class<Set<Dynamic>>, e: JExtractor<T>, ?h: HasherFunction<T>, ?eq: EqualFunction<T>): JExtractor<Set<T>> {
       return ExtractorTypeclass.create({
         extract: function(v: JValue) { 
           return switch(v) {
@@ -301,7 +301,7 @@ class MapExtensions {
         }
       });
     }
-    public static function ExtractorT<K, V>(c: Class<Map<Dynamic, Dynamic>>, ke: JExtractor<K>, ve: JExtractor<V>, ?kh: Hasher<K>, ?keq: Equal<K>, ?vh: Hasher<V>, ?veq: Equal<V>): JExtractor<Map<K, V>> {
+    public static function ExtractorT<K, V>(c: Class<Map<Dynamic, Dynamic>>, ke: JExtractor<K>, ve: JExtractor<V>, ?kh: HasherFunction<K>, ?keq: EqualFunction<K>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractor<Map<K, V>> {
       var te = Tuple2.ExtractorT(ke, ve);
       
       return ExtractorTypeclass.create({
@@ -324,13 +324,13 @@ class MapExtensions {
         }
       });
     }
-    public static function StringKeyExtractorT<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractor<V>, ?vh: Hasher<V>, ?veq: Equal<V>): JExtractor<Map<String, V>> {
+    public static function StringKeyExtractorT<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractor<V>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractor<Map<String, V>> {
       var te = Tuple2.ExtractorT(StringExtensions.ExtractorT(String), ve);
       
       return ExtractorTypeclass.create({
         extract: function(v: JValue) { 
           return switch(v) {
-            case JObject(v): Map.create(String.HasherT(), String.EqualT(), vh, veq).addAll(v.map(function(j) {
+            case JObject(v): Map.create(String.HasherF(), String.EqualF(), vh, veq).addAll(v.map(function(j) {
               return switch(j) {
                 case JField(k, v): Tuple2.create(k, ve.extract(v));
                 

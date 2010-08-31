@@ -37,7 +37,7 @@ class Stream<T> implements Collection<Stream<T>, T> {
     }
     
     public static function cons<T>(head: T, tail: Thunk<Stream<T>>, ?equal: Equal<T>): Stream<T> {
-      equal = if (equal == null) DynamicExtensions.EqualT(); else equal;
+      equal = if (equal == null) DynamicExtensions.EqualF(); else equal;
       
       return new Stream(head, tail, equal);
     }
@@ -89,7 +89,7 @@ class Stream<T> implements Collection<Stream<T>, T> {
     }
     
     public function toString(): String {
-      return Stream.ShowT(DynamicExtensions.ShowT()).show(this);
+      return Stream.ShowF(DynamicExtensions.ShowF()).show(this);
     }
 }
 */

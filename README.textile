@@ -25,7 +25,7 @@ This brings a slew of functionality into your application:
  * *Conversions*, which enable you to convert between primitives. <code>var float = 12.toFloat();</code>
  * *Array enhancements*, which allow you to write functional code with arrays. <code>[123, 24].map(function(i) return i * 2;);</code>
  * *Function enhancements*, which allow you to manipulate functions like first-class values. <code>var h = f.compose(g); h.curry()(2)(3);</code>
- * *Basic typeclasses*, which allow you to hash, order, and show all built-in HaXe primitives. <code>var hasher = Int.HasherT(); var hash = hasher.hash(3243);</code>
+ * *Basic typeclasses*, which allow you to hash, order, and show all built-in HaXe primitives. <code>var hasher = Int.HasherF(); var hash = hasher.hash(3243);</code>
  
 The major abstractions introduced in the Prelude are covered in more depth in section 3.
 

@@ -28,66 +28,58 @@ using haxe.functional.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
-  public static function OrderT<T>(order: Order<T>): Order<Set<T>> {
-    return OrderTypeclass.create({
-      compare: function(v1: Set<T>, v2: Set<T>) {
-        var a1 = v1.toArray();
-        var a2 = v2.toArray();
-        
-        a1.sort(order.compare);
-        a2.sort(order.compare);
-        
-        return Array.OrderT(order).compare(a1, a2);
-      }
-    });
+  public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<Set<T>> {
+    return function(v1: Set<T>, v2: Set<T>) {
+      var a1 = v1.toArray();
+      var a2 = v2.toArray();
+    
+      a1.sort(order);
+      a2.sort(order);
+
+      return Array.OrderF(order)(a1, a2);
+    };
   }
-  public static function EqualT<T>(equal: Equal<T>): Equal<Set<T>> {
-    return EqualTypeclass.create({
-      equal: function(v1: Set<T>, v2: Set<T>) {
-        var all = v1.concat(v2);
-        
-        return all.size == v1.size && all.size == v2.size;
-      }
-    });
+  public static function EqualF<T>(equal: EqualFunction<T>): EqualFunction<Set<T>> {
+    return function(v1: Set<T>, v2: Set<T>) {
+      var all = v1.concat(v2);
+      
+      return all.size == v1.size && all.size == v2.size;
+    };
   }
-  public static function ShowT<T>(show: Show<T>): Show<Set<T>> {
-    return ShowTypeclass.create({
-      show: function(v: Set<T>) {
-        return "Set" + v.elements().toString(show.show);
-      }
-    });
+  public static function ShowF<T>(show: ShowFunction<T>): ShowFunction<Set<T>> {
+    return function(v: Set<T>) {
+      return "Set" + v.elements().toString(show);
+    };
   }
-  public static function HasherT<T>(hasher: Hasher<T>): Hasher<Set<T>> {
-    return HasherTypeclass.create({
-      hash: function(v: Set<T>) {
-        return v.foldl(393241, function(a, b) {
-          return a + (hasher.hash(b) * 6151);
-        });
-      }
-    });
+  public static function HasherF<T>(hasher: HasherFunction<T>): HasherFunction<Set<T>> {
+    return function(v: Set<T>) {
+      return v.foldl(393241, function(a, b) {
+        return a + (hasher(b) * 6151);
+      });
+    };
   }
   
   public var size (getSize, null): Int;
-  public var hasher (default, null): Hasher<T>;
-  public var equal (default, null): Equal<T>;
+  public var hasher (default, null): HasherFunction<T>;
+  public var equal (default, null): EqualFunction<T>;
   
   var _map: Map<T, T>;
   
-  public static function create<T>(?hasher: Hasher<T>, ?equal: Equal<T>): Set<T> {
-    hasher = if (hasher == null) DynamicExtensions.HasherT(); else hasher;
-    equal  = if (equal == null) DynamicExtensions.EqualT(); else equal;
+  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>): Set<T> {
+    hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher;
+    equal  = if (equal == null) DynamicExtensions.EqualF(); else equal;
     
     return new Set<T>(hasher, equal, Map.create(hasher, equal, hasher, equal));
   }
   
   /** Creates a factory for sets of the specified type. */
-  public static function factory<T>(?hasher: Hasher<T>, ?equal: Equal<T>): Factory<Set<T>> {
+  public static function factory<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>): Factory<Set<T>> {
     return function() {
       return Set.create(hasher, equal);
     }
   }
 
-    private function new(hasher: Hasher<T>, equal: Equal<T>, map: Map<T, T>) {
+    private function new(hasher: HasherFunction<T>, equal: EqualFunction<T>, map: Map<T, T>) {
       this.hasher = hasher; this.equal = equal; _map = map;
     }
     
@@ -142,7 +134,7 @@ class Set<T> implements Collection<Set<T>, T> {
     }
     
     public function toString(): String {
-      return Set.ShowT(DynamicExtensions.ShowT()).show(this);
+      return Set.ShowF(DynamicExtensions.ShowF())(this);
     }
     
     private function copyWithMod(newMap: Map<T, T>): Set<T> {

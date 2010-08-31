@@ -96,7 +96,7 @@ class ListTestCase extends TestCase {
       var ul = newList().addAll([9, 2, 1, 100]);
       var ol = newList().addAll([1, 2, 9, 100]);
       
-      assertListEquals(ol, ul.sort(Int.OrderT()));
+      assertListEquals(ol, ul.sort(Int.OrderF()));
     }
     
     public function testReverse(): Void {
@@ -141,10 +141,10 @@ class ListTestCase extends TestCase {
       
       var i1 = 0, i2 = 1;
       
-      var equal = Tuple2.EqualT(Int.EqualT(), Int.EqualT());
+      var equal = Tuple2.EqualF(Int.EqualF(), Int.EqualF());
       
       for (z in l) {
-        assertEquals(z, i1.entuple(i2), equal.equal);
+        assertEquals(z, i1.entuple(i2), equal);
         
         ++i1; ++i2;
       }
@@ -153,11 +153,11 @@ class ListTestCase extends TestCase {
     }
     
     function assertListEquals(l1: List<Int>, l2: List<Int>) {
-      assertTrue(List.EqualT(Int.EqualT()).equal(l1, l2));
+      assertTrue(List.EqualF(Int.EqualF())(l1, l2));
     }
     
     function newList(): List<Int> {
-      return List.create(Int.EqualT());
+      return List.create(Int.EqualF());
     }
     
     function defaultList(): List<Int> {

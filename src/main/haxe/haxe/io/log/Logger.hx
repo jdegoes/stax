@@ -116,9 +116,10 @@ class LogHandlers {
       }
     })(format(text, p), untyped __js__('console'));
   }
-  #elseif flash
+  #elseif flash  
+
   public static var Console = function(level: LogLevel, text: String, p: PosInfos): Void {
-    (function(text, console: Dynamic) {
+    (function(text) {
       if (flash.external.ExternalInterface.available) {
         switch (level) {
           case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (console.debug) console.debug(text);})', text);

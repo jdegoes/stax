@@ -114,6 +114,6 @@ class SetTestCase extends TestCase {
     }
     
     function set(): Set<Int> {
-      return Set.create(Int.HasherT(), Int.EqualT());
+      return Set.create(Int.HasherF(), Int.EqualF());
     }
 }

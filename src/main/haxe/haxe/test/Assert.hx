@@ -148,11 +148,11 @@ class Assert {
 	* @param pos: Code position where the Assert call has been executed. Don't fill it
 	* unless you know what you are doing.
 	*/
-	public static function equals<T>(expected: T, value: T, ?equal: Equal<T>, ?msg : String , ?pos : PosInfos) {
-	  if (equal == null) equal = DynamicExtensions.EqualT();
+	public static function equals<T>(expected: T, value: T, ?equal: EqualFunction<T>, ?msg : String , ?pos : PosInfos) {
+	  if (equal == null) equal = DynamicExtensions.EqualF();
 	  
 		if(msg == null) msg = "expected " + q(expected) + " but was " + q(value);
-		isTrue(equal.equal(expected, value), msg, pos);
+		isTrue(equal(expected, value), msg, pos);
 	}
 	
 	/**
@@ -708,9 +708,11 @@ class Assert {
 	      Assert.isTrue(true);
 	    }
 	  }, timeout + 10);
-	  
+#if (php || neko || cpp)
+      f();
+#else	  
 	  haxe.Timer.delay(f, timeout);
-	  
+#end	  
 	  future.deliverTo(function(value) { f(); });
 	}
 	

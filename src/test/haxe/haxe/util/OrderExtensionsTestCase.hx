@@ -16,47 +16,33 @@
 package haxe.util;
 
 import Prelude;
-import haxe.data.collections.List;
+
+import haxe.test.TestCase;
 
 using PreludeExtensions;
-using haxe.functional.FoldableExtensions;
+using haxe.util.OrderExtension;
 
-class StringExtensions {
-  static var SepAlphaPattern        = ~/(-|_)([a-z])/g;
-  static var AlphaUpperAlphaPattern = ~/-([a-z])([A-Z])/g;
-  
-	public static function chunk(str: String, len: Int): List<String> {
-	  var start = 0;
-	  var end   = (start + len).min(str.length);
-	  
-	  return if (end == 0) List.nil(String.EqualF());
-     else {
-       var prefix = str.substr(start, end);
-       var rest   = str.substr(end);
+class OrderExtensionsTestCase extends TestCase {
+  public function testGreaterThan() {
+    assertTrue (Int.OrderF().greaterThan()(2, 1));
+    assertFalse(Int.OrderF().greaterThan()(1, 1));
 
-       chunk(rest, len).prepend(prefix);
-     }
-	}
-	
-	public static function chars(str: String): List<String> {
-	  var a = [];
-	  
-	  for (i in 0...str.length) {
-	    a.push(str.charAt(i));
-	  }
-	  
-	  return a.toList(String.EqualF());
-	}
-	
-	public static function string(l: List<String>): String {
-	  return l.foldr('', function(b, a) return b + a);
-	}
-	
-	public static function toCamelCase(str: String): String {
-	  return SepAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
-	}
-	
-	public static function fromCamelCase(str: String, sep: String): String {
-	  return AlphaUpperAlphaPattern.customReplace(str, function(e) { return e.matched(1) + sep + e.matched(2).toLowerCase(); });
-	}
+	assertTrue (Int.OrderF().greaterThanOrEqual()(2, 1));
+    assertTrue (Int.OrderF().greaterThanOrEqual()(1, 1));
+    assertFalse(Int.OrderF().greaterThanOrEqual()(1, 2));
+       
+    assertTrue (Int.OrderF().lessThan()(1, 2));
+    assertFalse(Int.OrderF().lessThan()(1, 1));
+                             
+	assertTrue (Int.OrderF().lessThanOrEqual()(1, 2));
+    assertTrue (Int.OrderF().lessThanOrEqual()(1, 1));
+    assertFalse(Int.OrderF().lessThanOrEqual()(2, 1));
+
+    assertTrue (Int.OrderF().notEqual()(2, 1));
+    assertTrue (Int.OrderF().notEqual()(1, 2));
+    assertFalse(Int.OrderF().notEqual()(1, 1));
+
+    assertTrue (Int.OrderF().equal()(1, 1));
+    assertFalse(Int.OrderF().equal()(1, 2));
+  }
 }

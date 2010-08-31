@@ -151,6 +151,6 @@ class MapTestCase extends TestCase {
     }
     
     function map(): Map<Int, String> {
-      return Map.create(Int.HasherT(), Int.EqualT(), String.HasherT(), String.EqualT());
+      return Map.create(Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF());
     }
 }

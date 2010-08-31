@@ -20,29 +20,22 @@ import haxe.data.collections.Map;
 
 using PreludeExtensions;
 
-class DynamicExtensions {
-  public static function ShowT(): Show<Dynamic> {
-    return ShowTypeclass.create({
-      show: function(d: Dynamic): String {
-        return Std.string(d);
-      }
-    });
+class DynamicExtensions {  
+  public static function ShowF(): ShowFunction<Dynamic> {
+    return function(d: Dynamic): String {
+      return Std.string(d);
+    };
   }
-  public static function HasherT(): Hasher<Dynamic> {
-    return HasherTypeclass.create({
-      hash: function(d: Dynamic): Int {
-        return StringExtensions.HasherT(String).hash(ShowT().show(d));
-      }
-    });
+  public static function HasherF(): HasherFunction<Dynamic> {
+    return function(d: Dynamic): Int {
+      return StringExtensions.HasherF(String)(ShowF()(d));
+    };
   }
-  public static function EqualT(): Equal<Dynamic> {
-    return EqualTypeclass.create({
-      equal: function(d1: Dynamic, d2: Dynamic): Bool {
-        return d1 == d2;
-      }
-    });
+  public static function EqualF(): EqualFunction<Dynamic> {
+    return function(d1: Dynamic, d2: Dynamic): Bool {
+      return d1 == d2;
+    };
   }
-  
   public static function withEffect<T>(t: T, f: Function<T, Void>): T {
     f(t);
     
@@ -83,7 +76,7 @@ class DynamicExtensions {
     }
   }
   public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
-    var map: Map<String, T> = Map.create(String.HasherT(), String.EqualT());
+    var map: Map<String, T> = Map.create(String.HasherF(), String.EqualF());
     
     for (field in Reflect.fields(d)) {
       var value = Reflect.field(d, field);
@@ -109,35 +102,26 @@ class BoolExtensions {
   
   public static function ifElse<T>(v: Bool, f1: Thunk<T>, f2: Thunk<T>): T {
     return if (v) f1() else f2();
+  } 
+  public static function OrderF(c : Enum<Bool>): OrderFunction<Bool> {
+    return function(v1: Bool, v2: Bool) {
+      return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;
+    };    
   }
-  
-  public static function OrderT(c: Enum<Bool>): Order<Bool> {
-    return OrderTypeclass.create({
-      compare: function(v1: Bool, v2: Bool) {
-        return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;
-      }
-    });
-  }
-  public static function EqualT(c: Enum<Bool>): Equal<Bool> {
-    return EqualTypeclass.create({
-      equal: function(v1: Bool, v2: Bool) {
-        return OrderT(c).compare(v1, v2) == 0;
-      }
-    });
-  }
-  public static function ShowT(c: Enum<Bool>): Show<Bool> {
-    return ShowTypeclass.create({
-      show: function(v: Bool) {
-        return if (v) "true" else "false";
-      }
-    });
-  }
-  public static function HasherT(c: Enum<Bool>): Hasher<Bool> {
-    return HasherTypeclass.create({
-      hash: function(v: Bool) {
-        return if (v) 786433 else 393241;
-      }
-    });
+  public static function EqualF(c: Enum<Bool>): EqualFunction<Bool> {
+    return function(v1: Bool, v2: Bool) {
+      return v1 == v2;
+    };
+  } 
+  public static function ShowF(c: Enum<Bool>): ShowFunction<Bool> {
+    return function(v: Bool) {
+      return if (v) "true" else "false";
+    };
+  } 
+  public static function HasherF(c: Enum<Bool>): HasherFunction<Bool> {
+    return function(v: Bool) {
+      return if (v) 786433 else 393241;
+    };
   }
 }
 class IntExtensions {
@@ -163,34 +147,25 @@ class IntExtensions {
   public static function until(start: Int, end: Int): Iterable<Int> {
     return to(start, end - 1);
   }
-  
-  public static function OrderT(c: Class<Int>): Order<Int> {
-    return OrderTypeclass.create({
-      compare: function(v1: Int, v2: Int) {
-        return v1 - v2;
-      }
-    });
+  public static function OrderF(c: Class<Int>): OrderFunction<Int> {
+    return function(v1: Int, v2: Int) {
+      return v1 - v2;
+    };
   }
-  public static function EqualT(c: Class<Int>): Equal<Int> {
-    return EqualTypeclass.create({
-      equal: function(v1: Int, v2: Int) {
-        return OrderT(c).compare(v1, v2) == 0;
-      }
-    });
+  public static function EqualF(c: Class<Int>): EqualFunction<Int> {
+    return function(v1: Int, v2: Int) {
+      return v1 == v2;
+    };
   }
-  public static function ShowT(c: Class<Int>): Show<Int> {
-    return ShowTypeclass.create({
-      show: function(v: Int): String {
-        return Std.string(v);
-      }
-    });
+  public static function ShowF(c: Class<Int>): ShowFunction<Int> {
+    return function(v: Int): String {
+      return "" + v;
+    };
   }
-  public static function HasherT(c: Class<Int>): Hasher<Int> {
-    return HasherTypeclass.create({
-      hash: function(v: Int) {
-        return v * 196613;
-      }
-    });
+  public static function HasherF(c: Class<Int>): HasherFunction<Int> {
+    return function(v: Int) {
+      return v * 196613;
+    };
   }
 }
 class FloatExtensions {
@@ -199,34 +174,25 @@ class FloatExtensions {
   public static function min(v1: Float, v2: Float): Float { return if (v2 < v1) v2; else v1; }
   public static function toInt(v: Float): Int { return Std.int(v); }
   public static function toString(v: Float): String { return Std.string(v); }
-  
-  public static function OrderT(c: Class<Float>): Order<Float> {
-    return OrderTypeclass.create({
-      compare: function(v1: Float, v2: Float) {
-        return if (v1 < v2) -1 else if (v2 > v1) 1 else 0;
-      }
-    });
+  public static function OrderF(c: Class<Float>): OrderFunction<Float> {
+    return function(v1: Float, v2: Float) {
+      return if (v1 < v2) -1 else if (v2 > v1) 1 else 0;
+    };
   }
-  public static function EqualT(c: Class<Float>): Equal<Float>  {
-    return EqualTypeclass.create({
-      equal: function(v1: Float, v2: Float) {
-        return OrderT(c).compare(v1, v2) == 0;
-      }
-    });
+  public static function EqualF(c: Class<Float>): EqualFunction<Float> {
+    return function(v1: Float, v2: Float) {
+      return v1 == v2;
+    };
   }
-  public static function ShowT(c: Class<Float>): Show<Float> {
-    return ShowTypeclass.create({
-      show: function(v: Float): String {
-        return Std.string(v);
-      }
-    });
+  public static function ShowF(c: Class<Float>): ShowFunction<Float> {
+    return function(v: Float): String {
+      return "" + v;
+    };
   }
-  public static function HasherT(c: Class<Float>): Hasher<Float> {
-    return HasherTypeclass.create({
-      hash: function(v: Float) {
-        return Std.int(v * 98317);
-      }
-    });
+  public static function HasherF(c: Class<Float>): HasherFunction<Float> {
+    return function(v: Float) {
+      return Std.int(v * 98317); 
+    };
   }
 }
 class StringExtensions {
@@ -274,128 +240,107 @@ class StringExtensions {
   public static function replace( s : String, sub : String, by : String ) : String {
     return StringTools.replace(s, sub, by);
   }
-  
-  public static function OrderT(c: Class<String>): Order<String> {
-    return OrderTypeclass.create({
-      compare: function(v1: String, v2: String) {
-        for (i in 0...Std.int(Math.min(v1.length, v2.length))) {
-          var c: Int = v1.charCodeAt(i) - v2.charCodeAt(i);
+  public static function OrderF(c: Class<String>): OrderFunction<String> {  
+    return function(v1: String, v2: String) { 
+	  return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
+    };
+  }
+  public static function EqualF(c: Class<String>): EqualFunction<String> {
+    return function(v1: String, v2: String) {
+      return v1 == v2;
+    };
+  }
+  public static function ShowF(c: Class<String>): ShowFunction<String> {
+    return function(v: String): String {
+      return v;
+    };
+  }
+  public static function HasherF(c: Class<String>): HasherFunction<String> {
+    return function(v: String) {
+      var hash = 49157;
       
-          if (c != 0) return c;
-        }
-    
-        return v1.length - v2.length;
+      for (i in 0...v.length) {
+        hash += (v.charCodeAt(i) + 24593) * 49157;
       }
-    });
-  }
-  public static function EqualT(c: Class<String>): Equal<String> {
-    return EqualTypeclass.create({
-      equal: function(v1: String, v2: String) {
-        return v1 == v2;
-      }
-    });
-  }
-  public static function ShowT(c: Class<String>): Show<String> {
-    return ShowTypeclass.create({
-      show: function(v: String) {
-        return v;
-      }
-    });
-  }
-  public static function HasherT(c: Class<String>): Hasher<String> {
-    return HasherTypeclass.create({
-      hash: function(v: String) {
-        var hash = 0;
-    
-        for (i in 0...v.length) {
-          hash += (v.charCodeAt(i) + 24593) * 49157;
-        }
-    
-        return hash;
-      }
-    });
+      
+      return hash;
+    };
   }
 }
 class DateExtensions {
   public static function toString(v: Date): String { return Std.string(v); }
-
-  public static function OrderT(c: Class<Date>): Order<Date> {
-    return OrderTypeclass.create({
-      compare: function(v1: Date, v2: Date) {
-        var diff = v1.getTime() - v2.getTime();
-        
-        return if (diff < 0) -1; else if (diff > 0) 1; else 0;
-      }
-    });
+  public static function OrderF(c: Class<Date>): OrderFunction<Date> {  
+    return function(v1: Date, v2: Date) {  
+	  var diff = v1.getTime() - v2.getTime();
+      
+      return if (diff < 0) -1; else if (diff > 0) 1; else 0;
+    };
   }
-  public static function EqualT(c: Class<Date>): Equal<Date> {
-    return EqualTypeclass.create({
-      equal: function(v1: Date, v2: Date) {
-        return v1.getTime() == v2.getTime();
-      }
-    });
+  public static function EqualF(c: Class<Date>): EqualFunction<Date> {
+    return function(v1: Date, v2: Date) {
+      return v1.getTime() == v2.getTime();
+    };
   }
-  public static function ShowT(c: Class<Date>): Show<Date> {
-    return ShowTypeclass.create({
-      show: function(v: Date) {
-        return v.toString();
-      }
-    });
+  public static function ShowF(c: Class<Date>): ShowFunction<Date> {
+    return function(v: Date): String {
+      return v.toString();
+    };
   }
-  public static function HasherT(c: Class<Date>): Hasher<Date> {
-    return HasherTypeclass.create({
-      hash: function(v: Date) {
-        return Math.round(v.getTime() * 49157);
-      }
-    });
+  public static function HasherF(c: Class<Date>): HasherFunction<Date> {
+    return function(v: Date) {
+      return Math.round(v.getTime() * 49157);
+    };
   }
 }
-class ArrayExtensions {
-  public static function OrderT<T>(c: Class<Array<Dynamic>>, order: Order<T>): Order<Array<T>> {
-    return OrderTypeclass.create({
-      compare: function(v1: Array<T>, v2: Array<T>) {
-        for (i in 0...Std.int(Math.min(v1.length, v2.length))) {
-          var c = order.compare(v1[i], v2[i]);
-          if (c != 0) return c;
-        }
-
-        return v1.length - v2.length;
+class ArrayExtensions { 
+  public static function OrderF<T>(c: Class<Array<Dynamic>>, ?order: OrderFunction<T>): OrderFunction<Array<T>> {
+    return function(v1: Array<T>, v2: Array<T>) {  
+	  var c = v1.length - v2.length;
+	  if(c != 0)
+	    return c;
+      for (i in 0...v1.length) {
+	    if(null == order)
+	      order = Stax.getOrderFor(v1[i]);
+        var c = order(v1[i], v2[i]);
+        if (c != 0) return c;
       }
-    });
+      return 0;
+    };
   }
-  public static function EqualT<T>(c: Class<Array<Dynamic>>, equal: Equal<T>): Equal<Array<T>> {
-    return EqualTypeclass.create({
-      equal: function(v1: Array<T>, v2: Array<T>) {
-        if (v1.length != v2.length) return false;
-      
-        for (i in 0...Std.int(Math.min(v1.length, v2.length))) {
-          if (!equal.equal(v1[i], v2[i])) return false;
-        }
-
-        return true;
+  public static function EqualF<T>(c: Class<Array<Dynamic>>, ?equal: EqualFunction<T>): EqualFunction<Array<T>> {
+    return function(v1: Array<T>, v2: Array<T>) {
+      if (v1.length != v2.length) return false;
+      for (i in 0...v1.length) {
+	    if(null == equal)
+	      equal = Stax.getEqualFor(v1[i]);
+        if (!equal(v1[i], v2[i])) return false;
       }
-    });
+    
+      return true;
+    };
   }
-  public static function ShowT<T>(c: Class<Array<Dynamic>>, show: Show<T>): Show<Array<T>> {
-    return ShowTypeclass.create({
-      show: function(v: Array<T>) {
-        return "[" + v.map(function(e) return show.show(e)).join(", ") + "]";
-      }
-    });
+  public static function ShowF<T>(c: Class<Array<Dynamic>>, ?show: ShowFunction<T>): ShowFunction<Array<T>> {
+    return function(v: Array<T>) {
+	  if(v.length == 0)
+	    return "[]";
+	  else {  
+		if(null == show)
+		  show = Stax.getShowFor(v[0]);
+	    return "[" + v.map(show).join(", ") + "]";  
+	  }
+    };
   }
-  public static function HasherT<T>(c: Class<Array<Dynamic>>, hasher: Hasher<T>): Hasher<Array<T>> {
-    return HasherTypeclass.create({
-      hash: function(v: Array<T>) {
-        var hash = 0;
-      
-        for (i in 0...v.length) {
-          var e: T = v[i];
-          hash += hasher.hash(e) * 12289;
-        }
-      
-        return hash;
+  public static function HasherF<T>(c: Class<Array<Dynamic>>, ?hasher: HasherFunction<T>): HasherFunction<Array<T>> {
+    return function(v: Array<T>) {
+      var hash = 12289;
+      for (i in 0...v.length) {
+	    if(null == hasher) 
+	      hasher = Stax.getHasherFor(v[i]);
+        hash += hasher(v[i]) * 12289;
       }
-    });
+    
+      return hash;
+    };
   }
   
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
@@ -716,61 +661,6 @@ class Function5Extensions {
 }
 
 class OptionExtensions {
-  public static function OrderT<T>(c: Enum<Option<Dynamic>>, order: Order<T>): Order<Option<T>> {
-    return OrderTypeclass.create({
-      compare: function(v1: Option<T>, v2: Option<T>) {
-        return switch(v1) {
-          case None: switch(v2) {
-            case None: 0;
-            case Some(_): -1;
-          }
-        
-          case Some(t1): switch(v2) {
-            case None: 1;
-            case Some(t2): order.compare(t1, t2);
-          }
-        }
-      }
-    });
-  }
-  public static function EqualT<T>(c: Enum<Option<Dynamic>>, equal: Equal<T>): Equal<Option<T>> {
-    return EqualTypeclass.create({
-      equal: function(v1: Option<T>, v2: Option<T>) {
-        return switch(v1) {
-          case None: switch(v2) {
-            case None: true;
-            case Some(_): false;
-          }
-        
-          case Some(t1): switch(v2) {
-            case None: false;
-            case Some(t2): equal.equal(t1, t2);
-          }
-        }
-      }
-    });
-  }
-  public static function ShowT<T>(c: Enum<Option<Dynamic>>, show: Show<T>): Show<Option<T>> {
-    return ShowTypeclass.create({
-      show: function(v: Option<T>) {
-        return switch(v) {
-          case None: "None";
-          case Some(t): "Some(" + show.show(t) + ")";
-        }
-      }
-    });
-  }
-  public static function HasherT<T>(c: Enum<Option<Dynamic>>, hasher: Hasher<T>): Hasher<Option<T>> {
-    return HasherTypeclass.create({
-      hash: function(v: Option<T>) {
-        return switch(v) {
-          case None:    3079;
-          case Some(t): hasher.hash(t);
-        }
-      }
-    });
-  }
-  
   public static function toOption<T>(t: T): Option<T> {
     return if (t == null) None; else Some(t);
   }
@@ -873,61 +763,6 @@ class OptionExtensions {
 }
 
 class EitherExtensions {
-  public static function OrderT<A, B>(c: Enum<Either<Dynamic, Dynamic>>, order1: Order<A>, order2: Order<B>): Order<Either<A, B>> {
-    return OrderTypeclass.create({
-      compare: function(e1: Either<A, B>, e2: Either<A, B>) {
-        return switch (e1) {
-          case Left(v1): switch (e2) {
-            case Left(v2): order1.compare(v1, v2);
-            case Right(v2): -1;
-          }
-        
-          case Right(v1): switch (e2) {
-            case Left(v2): 1;
-            case Right(v2): order2.compare(v1, v2);
-          } 
-        }
-      }
-    });
-  }
-  public static function EqualT<A, B>(c: Enum<Either<Dynamic, Dynamic>>, equal1: Equal<A>, equal2: Equal<B>): Equal<Either<A, B>> {
-    return EqualTypeclass.create({
-      equal: function(e1: Either<A, B>, e2: Either<A, B>) {
-        return switch (e1) {
-          case Left(v1): switch (e2) {
-            case Left(v2): equal1.equal(v1, v2);
-            case Right(v2): false;
-          }
-        
-          case Right(v1): switch (e2) {
-            case Left(v2): false;
-            case Right(v2): equal2.equal(v1, v2);
-          } 
-        }
-      }
-    });
-  }
-  public static function ShowT<A, B>(c: Enum<Either<Dynamic, Dynamic>>, show1: Show<A>, show2: Show<B>): Show<Either<A, B>> {
-    return ShowTypeclass.create({
-      show: function(e: Either<A, B>) {
-        return switch(e) {
-          case Left(v): "Left(" + show1.show(v) + ")";
-          case Right(v): "Right(" + show2.show(v) + ")";
-        }
-      }
-    });
-  }
-  public static function HasherT<A, B>(c: Enum<Either<Dynamic, Dynamic>>, hash1: Hasher<A>, hash2: Hasher<B>): Hasher<Either<A, B>> {
-    return HasherTypeclass.create({
-      hash: function(e: Either<A, B>) {
-        return switch(e) {
-          case Left(v): hash1.hash(v);
-          case Right(v): hash2.hash(v);
-        }
-      }
-    });
-  }
-  
   public static function toLeft<A, B>(v: A): Either<A, B> {
     return Left(v);
   }
@@ -1067,15 +902,15 @@ class IterableExtensions {
     return s + suffix;
   }
   
-  public static function toList<T>(i: Iterable<T>, ?equal: Equal<T>) {
+  public static function toList<T>(i: Iterable<T>, ?equal: EqualFunction<T>) {
     return haxe.data.collections.List.create(equal).addAll(i);
   }
   
-  public static function toSet<T>(i: Iterable<T>, ?hash: Hasher<T>, ?equal: Equal<T>) {
+  public static function toSet<T>(i: Iterable<T>, ?hash: HasherFunction<T>, ?equal: EqualFunction<T>) {
     return haxe.data.collections.Set.create(hash, equal).addAll(i);
   }
   
-  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>, ?khash: Hasher<K>, ?kequal: Equal<K>, ?vhash: Hasher<V>, ?vequal: Equal<V>) {
+  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>, ?khash: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhash: HasherFunction<V>, ?vequal: EqualFunction<V>) {
     return haxe.data.collections.Map.create(khash, kequal, vhash, vequal).addAll(i);
   }
   

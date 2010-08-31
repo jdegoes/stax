@@ -66,11 +66,11 @@ class P {
     }
   }
   
-  public static function isEqualTo<T>(ref: T, ?equal: Equal<T>): Predicate<T> {
-    if (equal == null) equal = DynamicExtensions.EqualT();
+  public static function isEqualTo<T>(ref: T, ?equal: EqualFunction<T>): Predicate<T> {
+    if (equal == null) equal = DynamicExtensions.EqualF();
     
     return function(value) {
-      return equal.equal(ref, value);
+      return equal(ref, value);
     }
   }
   
