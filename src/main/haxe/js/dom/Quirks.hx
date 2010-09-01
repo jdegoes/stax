@@ -514,9 +514,6 @@ class Quirks {
     return getWidthOrHeight(elem, "offsetHeight", cssHeight, if (includeMargin) Some("margin") else Some("border"));
   }
 
-  public static function getWidth(elem: HTMLElement): Option<Int>{
-    return getWidthOrHeight(elem, "offsetWidth", cssWidth, None);
-  }
   /**
   * Get the current computed width for the element, including padding but not border.
   */
