@@ -434,6 +434,27 @@ class Quirks {
     }
   }
 
+  /**
+   * Adds the specified class the element.
+   */
+  public static function addClass(element: HTMLElement, value: String){
+    if (!hasClass(element, value))
+			element.className += (if (element.className != null && element.className != "") ' ' else '') + value;
+  }
+  /**
+   * Remove a single the element.
+   */
+  public static function removeClass(element: HTMLElement, value: String){
+    element.className = untyped __js__ ("element.className.replace(new RegExp('(^|\\s)' + value + '(\\s|$)', 'g'), '$2').replace(/^\\s|\\s$/, '')");
+  }
+
+  /**
+   * Determine whether the element is assigned the given class.
+   */
+  public static function hasClass(element: HTMLElement, value: String){
+    return untyped __js__ ("(new RegExp('(^|\\s)' + value + '(\\s|$)')).test(element.className || '');");
+  }
+
   public static function setWidth(elem: HTMLElement, width: Int): HTMLElement{
     return setStyle(elem, "width", width.toString() + "px");
   }
@@ -448,6 +469,36 @@ class Quirks {
       return elem;
     }
   }
+
+   /**
+ * Get the current computed height for the  element , including padding but not border.
+ */
+  public static function getInnerHeight(elem: HTMLElement): Option<Int>{
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, Some("padding"));
+  }
+ /**
+ * Get the current computed height for the element, including padding, border, and optionally margin.
+ */
+  public static function getOuterHeight(elem: HTMLElement, includeMargin: Bool): Option<Int>{
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, if (includeMargin) Some("margin") else Some("border"));
+  }
+
+  public static function getWidth(elem: HTMLElement): Option<Int>{
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, None);
+  }
+  /**
+  * Get the current computed width for the element, including padding but not border.
+  */
+  public static function getInnerWidth(elem: HTMLElement): Option<Int>{
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, Some("padding"));
+  }
+  /**
+  * Get the current computed width for the element, including padding and border.
+  */
+  public static function getOuterWidth(elem: HTMLElement, includeMargin: Bool): Option<Int>{
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, if (includeMargin) Some("margin") else Some("border"));
+  }
+
 
   public static function getHeight(elem: HTMLElement): Option<Int>{
     return getWidthOrHeight(elem, "offsetHeight", cssHeight, None);

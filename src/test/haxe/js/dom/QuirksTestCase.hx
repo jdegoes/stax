@@ -44,4 +44,30 @@ class QuirksTestCase extends TestCase {
 
     assertEquals(width, Quirks.getWidth(element).get());
   }
+
+  public function testAddClass(): Void {
+    var className = "test-class";
+
+    element.addClass(className);
+
+    assertEquals(className, element.className);
+  }
+  public function testRemoveClass(): Void {
+    var className = "test-class";
+
+    element.addClass(className);
+    element.removeClass(className);
+
+    assertEquals(false, element.hasClass(className));
+  }
+  public function testHasClass(): Void {
+    var className = "test-class";
+
+    element.addClass(className);
+
+    assertEquals(true, element.hasClass(className));
+  }
+  public function testHasNoClass(): Void {
+    assertEquals(false, element.hasClass("wrong-class-name"));
+  }  
 }
