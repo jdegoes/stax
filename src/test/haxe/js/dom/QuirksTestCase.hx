@@ -69,5 +69,13 @@ class QuirksTestCase extends TestCase {
   }
   public function testHasNoClass(): Void {
     assertEquals(false, element.hasClass("wrong-class-name"));
-  }  
+  }
+
+  public function testSetOpacityProperty(): Void {
+    var value = "0.5";
+
+    element.setCssProperty("opacity",value);
+
+    assertEquals(value, element.getComputedCssProperty("opacity").get());
+  }
 }
