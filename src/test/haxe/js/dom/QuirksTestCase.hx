@@ -78,4 +78,32 @@ class QuirksTestCase extends TestCase {
 
     assertEquals(value, element.getComputedCssProperty("opacity").get());
   }
+
+  public function testPosition(): Void {
+    var offset = {x: 50, y: 40};
+
+    element.setOffset(offset);
+
+    var position = element.getPosition().get();
+
+    assertEquals(offset.x, position.x);
+    assertEquals(offset.y, position.y);
+  }
+  
+  public function testNestedPosition(): Void {
+    var offset = {x: 10, y: 20};
+    element.setOffset(offset);
+
+    var d           = Env.document;
+    var subElement  = d.createElement('div');
+    element.appendChild(subElement);
+
+    var subOffset = {x: 20, y: 40};
+    subElement.setOffset(subOffset);
+
+    var position = subElement.getPosition().get();
+
+    assertEquals(10, position.x);
+    assertEquals(20, position.y);
+  }
 }

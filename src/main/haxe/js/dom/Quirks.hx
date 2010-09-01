@@ -326,6 +326,9 @@ class Quirks {
 		});
 	}
 
+  public static function getCssPropertyIfSet(elem: HTMLElement, name: String): Option<String> {
+    return getCssProperty(elem, name).filter(function(style) return style != '');
+  }
 	/** Retrieves the dimensions of the viewport (inner window of the browser,
 	 * for top-level windows).
 	 */
@@ -659,5 +662,37 @@ class Quirks {
 
   		return Some({ x: left, y: top });
     }
+  }
+
+  public static function getPosition(elem: HTMLElement): Option<{ x: Int, y: Int }> {
+		if (elem == null || elem.ownerDocument == null) return None;
+
+    var offsetParent = offsetParent(elem);
+		var offset       = getOffset(elem).getOrElseC({ x: 0, y: 0 });
+
+		var parentOffset = if (RootPattern.match(offsetParent.nodeName)) { x: 0, y: 0 } else getOffset(offsetParent).getOrElseC({ x: 0, y: 0 });
+
+		offset.x -= getCssPropertyIfSet(elem, "marginTop").getOrElseC("0").toInt();
+		offset.y -= getCssPropertyIfSet(elem, "marginLeft").getOrElseC("0").toInt();
+
+
+		// Add offsetParent borders
+		parentOffset.x += getCssPropertyIfSet(offsetParent, "borderTopWidth").getOrElseC("0").toInt();
+		parentOffset.y += getCssPropertyIfSet(offsetParent, "borderLeftWidth").getOrElseC("0").toInt();
+
+		// Subtract the two offsets
+		return Some({
+			x: offset.x  - parentOffset.x,
+			y: offset.y - parentOffset.y
+		});
+	}
+
+  public static function offsetParent(elem: HTMLElement) {
+    var offsetParent = if (elem.offsetParent != null) elem.offsetParent; else Env.document.body;
+
+    while ( offsetParent != null && (!RootPattern.match(offsetParent.nodeName) && getCssProperty(offsetParent, "position").getOrElseC("") == "static") ) {
+      offsetParent = offsetParent.offsetParent;
+    }
+    return offsetParent;
   }
 }
