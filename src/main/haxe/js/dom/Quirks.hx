@@ -43,6 +43,7 @@ class Quirks {
   static var UpperCasePattern   = ~/([A-Z])/g;
   static var NumberPixelPattern = ~/^-?\d+(?:px)?$/i;
   static var NumberPattern      = ~/^-?\d/;
+  static var RootPattern        = ~/^body|html$/i;
 
   static var cssWidth = [ "left", "right" ];
   static var cssHeight = [ "top", "bottom" ];
