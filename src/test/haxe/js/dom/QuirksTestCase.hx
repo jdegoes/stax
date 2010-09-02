@@ -121,23 +121,31 @@ class QuirksTestCase extends TestCase {
   public function testPosition(): Void {
     var offset = {x: 50, y: 40};
 
-    element.setCssProperty("margin-left", "5px");
-    element.setCssProperty("margin-top", "6px");
-    element.setOffset(offset);
+    var d = Env.document;
+    var body = d.getElementsByTagName('body')[0];
+    var element2  = d.createElement('div');
 
-    var position = element.getPosition().get();
+    body.appendChild(element2);
+    element2.setOffset(offset);
 
-    assertEquals(offset.x - 6, position.x);
-    assertEquals(offset.y - 5, position.y);
+    var position = element2.getPosition().get();
+    assertEquals(offset.x, position.x);
+    assertEquals(offset.y, position.y);
   }
 
   public function testNestedPosition(): Void {
     var offset = {x: 10, y: 20};
-    element.setOffset(offset);
+
+    var d = Env.document;
+    var body = d.getElementsByTagName('body')[0];
+    var element2  = d.createElement('div');
+
+    body.appendChild(element2);
+    element2.setOffset(offset);
 
     var d           = Env.document;
     var subElement  = d.createElement('div');
-    element.appendChild(subElement);
+    element2.appendChild(subElement);
 
     var subOffset = {x: 20, y: 40};
     subElement.setOffset(subOffset);
