@@ -55,7 +55,7 @@ class List<T> implements Collection<List<T>, T> {
         return a * (hasher(b) + 12289);
       });
     };
-  }
+  } 
   
   public var size (getSize, null): Int;
   
@@ -70,24 +70,30 @@ class List<T> implements Collection<List<T>, T> {
   public var lastOption  (getLastOption, null): Option<T>;
   
   public var equal (default, null): EqualFunction<T>;
-  
-  public static function nil<T>(?equal: EqualFunction<T>): List<T> {
-    return new Nil(if (equal == null) DynamicExtensions.EqualF(); else equal);
+  public var order (default, null) : OrderFunction<T>;
+  public var hasher (default, null) : HasherFunction<T>;
+  public var show (default, null) : ShowFunction<T>;
+
+  public static function nil<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
+    return new Nil(equal, order, hasher, show);
   }
   
-  public static function create<T>(?equal: EqualFunction<T>): List<T> {
-    return nil(equal);
+  public static function create<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
+    return nil(equal, order, hasher, show);
   }
   
   /** Creates a factory for lists of the specified type. */
-  public static function factory<T>(?equal: EqualFunction<T>): Factory<List<T>> {
+  public static function factory<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): Factory<List<T>> {
     return function() {
-      return List.create(equal);
+      return List.create(equal, order, hasher, show);
     }
   }
 
-  private function new(equal: EqualFunction<T>) {
-    this.equal = if (equal == null) DynamicExtensions.EqualF(); else equal;
+  private function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
+    this.equal  = if (equal  == null) DynamicExtensions.EqualF();  else equal; 
+    this.order  = if (order  == null) DynamicExtensions.OrderF();  else order; 
+    this.hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher; 
+    this.show   = if (show   == null) DynamicExtensions.ShowF();   else show; 
   }
   
   public function empty(): List<T> {
@@ -100,7 +106,7 @@ class List<T> implements Collection<List<T>, T> {
    * construct lists by prepending, and then reverse at the end if necessary.
    */
   public function cons(head: T): List<T> {
-    return new Cons(equal, head, this);
+    return new Cons(equal, order, hasher, show, head, this);
   }
   
   /** Synonym for cons. */
@@ -332,14 +338,55 @@ class List<T> implements Collection<List<T>, T> {
     }
     
     return result;
-  }
+  } 
   
   public function iterator(): Iterator<T> {
     return FoldableExtensions.iterator(this);
+  } 
+
+  public function equals(other : List<T>) {
+    var a1 = toArray();
+    var a2 = other.toArray();
+    var eq = if(null == equal) {
+	  if(a1.length == 0)
+	    Stax.getEqualFor(null);
+	  else
+	    equal = Stax.getEqualFor(a1[0]);
+    } else equal;
+    return Array.EqualF(eq)(a1, a2);
   }
-  
-  public function toString(): String {
-    return List.ShowF(DynamicExtensions.ShowF())(this);
+
+  public function compare(other : List<T>) {
+    var a1 = toArray();
+    var a2 = other.toArray();
+    var or = if(null == equal) {
+	  if(a1.length == 0)
+	    Stax.getOrderFor(null);
+	  else
+	    order = Stax.getOrderFor(a1[0]);
+    } else order;
+    return Array.OrderF(or)(a1, a2);
+  } 
+   
+  public function hashCode() : Int {
+	var ha = if(null == hasher) {
+	  if(size == 0)
+		Stax.getHasherFor(null);
+	  else
+	    hasher = Stax.getHasherFor(first);   
+	} else hasher;
+	return foldl(12289, function(a, b) return a * (ha(b) + 12289));
+  }
+
+  public function toString(): String { 
+	var a = toArray();
+	var sh = if(null == show) {
+	  if(a.length == 0)
+	    Stax.getShowFor(null);
+	  else
+	    show = Stax.getShowFor(a[0]);	
+	} else show;
+    return "List " + Array.ShowF(sh)(a);
   }
   
   private function getSize(): Int {
@@ -372,8 +419,8 @@ private class Cons<T> extends List<T> {
   var _tail: List<T>;
   var _size: Int;
   
-  public function new(equal: EqualFunction<T>, head: T, tail: List<T>) {
-    super(equal);
+  public function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>, head: T, tail: List<T>) {
+    super(equal, order, hasher, show);
     
     _head = head;
     _tail = tail;
@@ -412,7 +459,7 @@ private class Cons<T> extends List<T> {
 }
 
 private class Nil<T> extends List<T> {
-  public function new(equal: EqualFunction<T>) {
-    super(equal);
+  public function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
+    super(equal, order, hasher, show);
   }
 }

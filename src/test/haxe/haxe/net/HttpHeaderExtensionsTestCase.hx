@@ -27,38 +27,38 @@ using haxe.net.HttpHeaderExtensions;
 class HttpHeaderExtensionsTestCase extends TestCase {
   static var headerEq = Tuple2.EqualF(String.EqualF(), String.EqualF());
   
-	public function new() {
-	  super();
-	}
-	
-	public function testThatValidHeaderCanBeParsed() {
-	  var header  = " Mime-type : text/html ";
-	  var headerP = "Mime-type".entuple("text/html");
-	  
-	  Assert.equals(headerP, header.toHttpHeader().get(), headerEq);
-	}
-	
-	public function testThatValidHeaderCanBeIdentified() {
-	  var header = " Mime-type text/html ";
-	  
-	  Assert.isTrue(header.toHttpHeader().isEmpty());
-	}
-	
-	public function testThatHeadersCanBeParsedWithCrLf() {
-	  var headers = " mime-type: text/html\r\n cache-expire : 0 \r\n";
-	  
-	  var headersP = headers.toHttpHeaders();
-	  
-	  Assert.equals('text/html', headersP.get('mime-type').get());
-	  Assert.equals('0', headersP.get('cache-expire').get());
-	}
-	
-	public function testThatHeadersCanBeParsedWithLf() {
-	  var headers = " mime-type: text/html\n cache-expire : 0 \n";
-	  
-	  var headersP = headers.toHttpHeaders();
-	  
-	  Assert.equals('text/html', headersP.get('mime-type').get());
-	  Assert.equals('0', headersP.get('cache-expire').get());
-	}
+  public function new() {
+    super();
+  }
+  
+  public function testThatValidHeaderCanBeParsed() {
+    var header  = " Mime-type : text/html ";
+    var headerP = "Mime-type".entuple("text/html");
+    
+    Assert.equals(headerP, header.toHttpHeader().get(), headerEq);
+  }
+  
+  public function testThatValidHeaderCanBeIdentified() {
+    var header = " Mime-type text/html ";
+    
+    Assert.isTrue(header.toHttpHeader().isEmpty());
+  }
+  
+  public function testThatHeadersCanBeParsedWithCrLf() {
+    var headers = " mime-type: text/html\r\n cache-expire : 0 \r\n";
+    
+    var headersP = headers.toHttpHeaders();
+    
+    Assert.equals('text/html', headersP.get('mime-type').get());
+    Assert.equals('0', headersP.get('cache-expire').get());
+  }
+  
+  public function testThatHeadersCanBeParsedWithLf() {
+    var headers = " mime-type: text/html\n cache-expire : 0 \n";
+    
+    var headersP = headers.toHttpHeaders();
+    
+    Assert.equals('text/html', headersP.get('mime-type').get());
+    Assert.equals('0', headersP.get('cache-expire').get());
+  }
 }

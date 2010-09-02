@@ -60,88 +60,133 @@ class Set<T> implements Collection<Set<T>, T> {
   }
   
   public var size (getSize, null): Int;
-  public var hasher (default, null): HasherFunction<T>;
   public var equal (default, null): EqualFunction<T>;
+  public var order (default, null) : OrderFunction<T>;
+  public var hasher (default, null) : HasherFunction<T>;
+  public var show (default, null) : ShowFunction<T>;
   
   var _map: Map<T, T>;
   
-  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>): Set<T> {
+  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {
     hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher;
-    equal  = if (equal == null) DynamicExtensions.EqualF(); else equal;
+    equal  = if (equal == null)  DynamicExtensions.EqualF(); else equal;
+	order  = if (order == null)  DynamicExtensions.OrderF(); else order;
+    show   = if (show == null)   DynamicExtensions.ShowF(); else show;
     
-    return new Set<T>(hasher, equal, Map.create(hasher, equal, hasher, equal));
+    return new Set<T>(order, equal, hasher, show, Map.create(hasher, equal, order, show, hasher, equal, order, show));
   }
   
   /** Creates a factory for sets of the specified type. */
-  public static function factory<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>): Factory<Set<T>> {
+  public static function factory<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Factory<Set<T>> {
     return function() {
-      return Set.create(hasher, equal);
+      return Set.create(hasher, equal, order, show);
     }
   }
 
-    private function new(hasher: HasherFunction<T>, equal: EqualFunction<T>, map: Map<T, T>) {
-      this.hasher = hasher; this.equal = equal; _map = map;
+  private function new(order : OrderFunction<T>, equal: EqualFunction<T>, hasher: HasherFunction<T>, show : ShowFunction<T>, map: Map<T, T>) {
+    this.order = order; this.equal = equal; this.hasher = hasher; this.show = show; _map = map;
+  }
+  
+  public function contains(e: T): Bool {
+    return _map.containsKey(e);
+  }
+  
+  public function empty(): Set<T> {
+    return if (size == 0) this; else Set.create(hasher, equal);
+  }
+  
+  public function append(s: Set<T>, t: T): Set<T> {
+    return s.copyWithMod(s._map.set(t, t));
+  }
+  
+  public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
+    var acc = z;
+    
+    for (e in _map) {
+      acc = f(acc, e._1);
     }
     
-    public function contains(e: T): Bool {
-      return _map.containsKey(e);
-    }
+    return acc;
+  }
+  
+  public function add(t: T): Set<T> {
+    return if (contains(t)) this; else copyWithMod(_map.set(t, t));
+  }
+  
+  public function addAll(it: Iterable<T>): Set<T> {
+    var set = this;
     
-    public function empty(): Set<T> {
-      return if (size == 0) this; else Set.create(hasher, equal);
-    }
+    for (e in it) set = set.add(e);
     
-    public function append(s: Set<T>, t: T): Set<T> {
-      return s.copyWithMod(s._map.set(t, t));
-    }
+    return set;
+  }
+  
+  public function remove(t: T): Set<T> {
+    return copyWithMod(_map.removeByKey(t));
+  }
+  
+  public function removeAll(it: Iterable<T>): Set<T> {
+    var set = this;
     
-    public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
-      var acc = z;
-      
-      for (e in _map) {
-        acc = f(acc, e._1);
-      }
-      
-      return acc;
-    }
+    for (e in it) set = set.remove(e);
     
-    public function add(t: T): Set<T> {
-      return if (contains(t)) this; else copyWithMod(_map.set(t, t));
-    }
-    
-    public function addAll(it: Iterable<T>): Set<T> {
-      var set = this;
-      
-      for (e in it) set = set.add(e);
-      
-      return set;
-    }
-    
-    public function remove(t: T): Set<T> {
-      return copyWithMod(_map.removeByKey(t));
-    }
-    
-    public function removeAll(it: Iterable<T>): Set<T> {
-      var set = this;
-      
-      for (e in it) set = set.remove(e);
-      
-      return set;
-    }
-    
-    public function iterator(): Iterator<T> {
-      return FoldableExtensions.iterator(this);
-    }
-    
-    public function toString(): String {
-      return Set.ShowF(DynamicExtensions.ShowF())(this);
-    }
-    
-    private function copyWithMod(newMap: Map<T, T>): Set<T> {
-      return new Set<T>(hasher, equal, newMap);
-    }
-    
-    private function getSize(): Int {
-      return _map.size;
-    }
+    return set;
+  }
+  
+  public function iterator(): Iterator<T> {
+    return FoldableExtensions.iterator(this);
+  } 
+          
+  /**
+  *  @todo this method doesn't use equal at all
+  */
+  public function equals(other : Set<T>) {
+      var all = other.concat(this);
+      return all.size == size && all.size == other.size;
+  }
+
+  public function compare(other : Set<T>) {
+    var a1 = toArray();
+    var a2 = other.toArray();
+    var or = if(null == equal) {
+	  if(a1.length == 0)
+	    Stax.getOrderFor(null);
+	  else
+	    order = Stax.getOrderFor(a1[0]);
+    } else order;
+    return Array.OrderF(or)(a1, a2);
+  } 
+
+  public function hashCode() : Int {
+	var ha = if(null == hasher) {
+	  if(size == 0)
+		Stax.getHasherFor(null);
+	  else
+	    hasher = Stax.getHasherFor(iterator().next());   
+	} else hasher;
+	return foldl(393241, function(a, b) return a * (ha(b) + 6151));
+  }
+
+  public function toString(): String { 
+	var a = toArray();
+	var sh = if(null == show) {
+	  if(a.length == 0)
+	    Stax.getShowFor(null);
+	  else
+	    show = Stax.getShowFor(a[0]);	
+	} else show;
+    return "Set " + Array.ShowF(sh)(a);
+  }
+/*F    
+  public function toString(): String {
+    return Set.ShowF(DynamicExtensions.ShowF())(this);
+  }
+*/    
+  private function copyWithMod(newMap: Map<T, T>): Set<T> {
+    return new Set<T>(order, equal, hasher, show, newMap);
+  }
+  
+  private function getSize(): Int {
+    return _map.size;
+  }
 }

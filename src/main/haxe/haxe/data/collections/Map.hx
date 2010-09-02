@@ -81,37 +81,52 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public var size (getSize, null): Int;
-  
+/*  
   public var keyHasher:   HasherFunction<K>;
   public var keyEqual:    EqualFunction<K>;
   public var valueHasher: HasherFunction<V>;
-  public var valueEqual:  EqualFunction<V>;
+  public var valueEqual:  EqualFunction<V>;  
+*/
+  public var keyEqual (default, null): EqualFunction<K>;
+  public var keyOrder (default, null) : OrderFunction<K>;
+  public var keyHasher (default, null) : HasherFunction<K>;
+  public var keyShow (default, null) : ShowFunction<K>;
+  public var valueEqual (default, null): EqualFunction<V>;
+  public var valueOrder (default, null) : OrderFunction<V>;
+  public var valueHasher (default, null) : HasherFunction<V>;
+  public var valueShow (default, null) : ShowFunction<V>;
   
   var _buckets: Array<Array<Tuple2<K, V>>>;
   
   var _size: Int;
   var _pf: PartialFunction1<K, V>;
   
-  public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>) {
-    var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherF(); else khasher;
+  public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>) {
+    var keyOrder    = if (korder  == null) cast DynamicExtensions.OrderF();  else korder; 
     var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualF();  else kequal;
+    var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherF(); else khasher;
+    var keyShow     = if (kshow   == null) cast DynamicExtensions.ShowF();   else kshow;  
+    var valueOrder  = if (vorder  == null) cast DynamicExtensions.OrderF();  else vorder;   
+    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualF();  else vequal; 
     var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherF(); else vhasher;
-    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualF();  else vequal;
+    var valueShow   = if (vshow   == null) cast DynamicExtensions.ShowF();   else vshow;                                                                                           
+
     
-    return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, [[]], 0);
+    return new Map<K, V>(keyOrder, keyEqual, keyHasher, keyShow, valueOrder, valueEqual, valueHasher, valueShow, [[]], 0);
   }
   
   /** Creates a factory for maps of the specified types. */
-  public static function factory<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>): Factory<Map<K, V>> {
+  public static function factory<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>): Factory<Map<K, V>> {
     return function() {
-      return Map.create(khasher, kequal, vhasher, vequal);
+      return Map.create(khasher, kequal, korder, kshow, vhasher, vequal, vorder, vshow);
     }
   }
   
-  private function new(khasher: HasherFunction<K>, kequal: EqualFunction<K>, vhasher: HasherFunction<V>, vequal: EqualFunction<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
+  private function new(korder : OrderFunction<K>, kequal: EqualFunction<K>, khasher: HasherFunction<K>, kshow: ShowFunction<K>, vorder: OrderFunction<V>, vequal: EqualFunction<V>, vhasher: HasherFunction<V>, vshow: ShowFunction<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
     var self = this;
     
-    this.keyHasher = khasher; this.keyEqual = kequal; this.valueHasher = vhasher; this.valueEqual = vequal;
+    this.keyOrder = korder; this.keyEqual = kequal; this.keyHasher = khasher; this.keyShow = kshow; 
+    this.valueOrder = vorder;  this.valueEqual = vequal; this.valueHasher = vhasher; this.valueShow = vshow;
     
     this._size    = size;
     this._buckets = buckets;
@@ -325,9 +340,91 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   public function iterator(): Iterator<Tuple2<K, V>> {
     return FoldableExtensions.iterator(this);
   }
+
+  public function compare(other : Map<K, V>) {
+	var a1 = toArray();
+	var a2 = other.toArray(); 
+	
+	var ko = if(null == keyOrder) {
+	  if(a1.length == 0) 
+	    Stax.getOrderFor(null);
+	  else
+	    keyOrder = Stax.getOrderFor(a1[0]._1);	
+	} else keyOrder;
+	
+	var vo = if(null == valueOrder) {
+	  if(a1.length == 0) 
+	    Stax.getOrderFor(null);
+	  else
+	    valueOrder = Stax.getOrderFor(a1[0]._2);	
+	} else valueOrder;        
+	
+	var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
+      return ko(t1._1, t2._1);
+    }
+    
+    a1.sort(keySorter);
+    a2.sort(keySorter);
+    
+    return Array.OrderF(Tuple2.OrderF(ko, vo))(a1, a2);
+  }
   
-  public function toString(): String {
-    return Map.ShowF(DynamicExtensions.ShowF(), DynamicExtensions.ShowF())(this);
+/**
+* @todo keyEquals is not used at all 
+*/
+  public function equals(other : Map<K, V>) {
+	var keys1 = this.keySet();
+    var keys2 = other.keySet();
+    if(!keys1.equals(keys2)) return false;
+
+    for(key in keys1) {
+      var v1 = this.get(key).get();
+      var v2 = other.get(key).get();
+      
+      if(null == valueEqual)
+        valueEqual = Stax.getEqualFor(v1);
+
+      if (!valueEqual(v1, v2)) return false;
+    }
+    return true;
+  }  
+
+  public function toString() { 
+	var ksh = if(null == keyShow) {
+	  var it = iterator();
+	  if(!it.hasNext())
+	    Stax.getShowFor(null);
+	  else
+	    keyShow = Stax.getShowFor(it.next()._1);	
+	} else keyShow;
+	
+	var vsh = if(null == valueShow) {
+	  var it = iterator();
+	  if(!it.hasNext())
+	    Stax.getShowFor(null);
+	  else
+	    valueShow = Stax.getShowFor(it.next()._2);	
+	} else valueShow;
+    return "Map " + elements().toString(function(t) { return ksh(t._1) + " -> " + vsh(t._2); });  
+  }    
+
+  public function hashCode() {
+	var kha = if(null == keyHasher) {
+	  var it = iterator();
+	  if(!it.hasNext())
+	    Stax.getHasherFor(null);
+	  else
+	    keyHasher = Stax.getHasherFor(it.next()._1);	
+	} else keyHasher;
+
+	var vha = if(null == valueHasher) {
+	  var it = iterator();
+	  if(!it.hasNext())
+	    Stax.getHasherFor(null);
+	  else
+	    valueHasher = Stax.getHasherFor(it.next()._2);	
+	} else valueHasher; 
+	return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
   }
   
   public function load(): Int {
@@ -420,7 +517,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
       newTable.push(_buckets[i]);
     }
     
-    return new Map<K, V>(keyHasher, keyEqual, valueHasher, valueEqual, newTable, size);      
+    return new Map<K, V>(keyOrder, keyEqual, keyHasher, keyShow, valueOrder, valueEqual, valueHasher, valueShow, newTable, size);      
   }
   
   private function rebalance(): Void {
