@@ -41,8 +41,47 @@ class QuirksTestCase extends TestCase {
     var width = 221;
 
     element.setWidth(width);
+    element.setCssProperty("padding-left", "2px");
+    element.setCssProperty("padding-right", "3px");
+    element.setCssProperty("margin-left", "5px");
+    element.setCssProperty("margin-right", "6px");
 
-    assertEquals(width, Quirks.getWidth(element).get());
+    assertEquals(width + 5, Quirks.getWidth(element).get());
+  }
+  public function testGetInnerWidth(): Void {
+    var width = 221;
+
+    element.setWidth(width);
+    element.setCssProperty("padding-left", "2px");
+    element.setCssProperty("padding-right", "3px");
+    element.setCssProperty("margin-left", "5px");
+    element.setCssProperty("margin-right", "6px");
+
+    assertEquals(width, Quirks.getInnerWidth(element).get());
+  }
+
+  public function testGetOuterWidth(): Void {
+    var width = 221;
+
+    element.setWidth(width);
+    element.setCssProperty("padding-left", "2px");
+    element.setCssProperty("padding-right", "3px");
+    element.setCssProperty("margin-left", "5px");
+    element.setCssProperty("margin-right", "6px");
+
+    assertEquals(width + 5, Quirks.getOuterWidth(element, false).get());
+  }
+
+  public function testGetOuterWidthWithMargin(): Void {
+    var width = 221;
+
+    element.setWidth(width);
+    element.setCssProperty("padding-left", "2px");
+    element.setCssProperty("padding-right", "3px");
+    element.setCssProperty("margin-left", "5px");
+    element.setCssProperty("margin-right", "6px");
+
+    assertEquals(width + 11, Quirks.getOuterWidth(element, true).get());
   }
 
   public function testAddClass(): Void {
@@ -82,14 +121,16 @@ class QuirksTestCase extends TestCase {
   public function testPosition(): Void {
     var offset = {x: 50, y: 40};
 
+    element.setCssProperty("margin-left", "5px");
+    element.setCssProperty("margin-top", "6px");
     element.setOffset(offset);
 
     var position = element.getPosition().get();
 
-    assertEquals(offset.x, position.x);
-    assertEquals(offset.y, position.y);
+    assertEquals(offset.x - 6, position.x);
+    assertEquals(offset.y - 5, position.y);
   }
-  
+
   public function testNestedPosition(): Void {
     var offset = {x: 10, y: 20};
     element.setOffset(offset);

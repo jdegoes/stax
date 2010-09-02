@@ -117,7 +117,7 @@ class Quirks {
       target.detachEvent('on' + type, listener);
     }
   }
-  
+
   public static function getOverrideStyle(doc: HTMLDocument, el: HTMLElement, pseudo: DOMString): CSSStyleDeclaration {
     if (doc.getOverrideStyle != null && doc.getOverrideStyle(el, pseudo) != null) {
       return doc.getOverrideStyle(el, pseudo);
@@ -129,64 +129,64 @@ class Quirks {
       return cast {};
     }
   }
-  
+
   /** Deletes the specified css rule.
    */
   public static function deleteCssRule(doc: HTMLDocument, rule: CSSRule): CSSRule {
     var deleteFromSheet = function(sheet: CSSStyleSheet): Bool {
       var index = getCssRules(sheet).toArray().indexOf(rule);
-      
+
       if (index > 0) {
         if (sheet.deleteRule != null) {
           sheet.deleteRule(index);
-          
+
           return true;
         }
         else if (untyped sheet.removeRule != null) {
           untyped sheet.removeRule(index);
-          
+
           return true;
         }
       }
-      
+
       return false;
     }
-    
+
     if (rule.parentStyleSheet != null) {
       deleteFromSheet(rule.parentStyleSheet);
     }
     else {
       var stylesheets = doc.styleSheets;
-    
+
       for (i in 0...stylesheets.length) {
         if (deleteFromSheet(cast stylesheets[i])) break;
       }
     }
-    
+
     return rule;
   }
-  
-  /** Adds an overriding style to the specified element. These styles will not 
+
+  /** Adds an overriding style to the specified element. These styles will not
    * override inline styles unless "!important" is specified.
    */
   public static function addOverridingCssRule(el: HTMLElement, style: String = ''): CSSStyleRule {
     var doc: HTMLDocument = cast el.ownerDocument;
-    
+
     var id = el.getAttribute('id').toOption().filter(function(id) return id != '').getOrElse(function() {
       return Guid.generate().withEffect(function(guid) {
         el.setAttribute('id', guid);
       });
     });
-    
+
     if (doc.styleSheets.length < 0) {
       addCssStylesheet(doc, '');
     }
-    
+
     var lastStyleSheet: CSSStyleSheet = cast doc.styleSheets[doc.styleSheets.length - 1];
-    
+
     return cast insertCssRule(lastStyleSheet, '#' + id + ' {' + style + '}');
   }
-     
+
   /** Adds a new style sheet to the document with the specified content.
    */
   public static function addCssStylesheet(doc: HTMLDocument, content: String): CSSStyleSheet {
@@ -195,11 +195,11 @@ class Quirks {
         doc.documentElement.appendChild(newHead);
       });
     });
-    
+
     var style = doc.createElement('STYLE');
-    
+
     style.setAttribute('type', 'text/css');
-    
+
     try {
       if (untyped style.innerText != null) {
         untyped style.innerText = content;
@@ -207,55 +207,55 @@ class Quirks {
       else if (untyped style.innerHTML != null) {
         untyped style.innerHTML = content;
       }
-      
+
       head.appendChild(style);
     }
     catch (e: Dynamic) {
       head.appendChild(style);
-      
+
       untyped doc.styleSheets[doc.styleSheets.length - 1].cssText = content;
     }
-    
+
     return cast doc.styleSheets[doc.styleSheets.length - 1];
   }
-  
+
   /** Retrieves the rules comprising the specified CSS sheet.
    */
   public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
     return if (untyped sheet.cssRules != null) sheet.cssRules;
            else untyped sheet.rules;
   }
-  
+
   /** Inserts the specified rule into the specified CSS sheet.
    */
   public static function insertCssRule(sheet: CSSStyleSheet, rule: String, ?index_: Int): CSSRule {
     if (sheet.insertRule != null) {
       var rules = getCssRules(sheet);
-      
+
       var index = if (index_ == null) rules.length else index_;
-      
+
       sheet.insertRule(rule, index);
-      
+
       return rules[index];
     }
     else if (untyped sheet.addRule != null) {
       var addRule: String -> String -> Int -> Int = untyped sheet.addRule;
-      
+
       var Pattern = ~/^([^{]+)\{([^}]*)\}$/;
-      
+
       if (Pattern.match(rule)) {
         var index = if (index_ == null) -1 else index_;
-        
+
         addRule(Pattern.matched(1).trim(), Pattern.matched(2).trim(), index);
-        
+
         var rules = getCssRules(sheet);
-        
+
         var newIndex = if (index == -1) rules.length - 1 else index;
 
         return rules[newIndex];
       }
     }
-    
+
     return Stax.error('Invalid rule: ' + rule);
   }
 
@@ -385,7 +385,7 @@ class Quirks {
 
     return windowHeight;
   }
-  
+
   /** Determines if the specified element has the specified attribute.
    */
   public static function hasAttribute(e: HTMLElement, attr: String): Bool {
@@ -394,7 +394,7 @@ class Quirks {
     }
     else {
       var value = e.getAttribute(attr);
-      
+
       return if (Env.eq(value, null) || Env.eq(value, '')) false else true;
     }
   }
@@ -509,38 +509,38 @@ class Quirks {
  * Get the current computed height for the  element , including padding but not border.
  */
   public static function getInnerHeight(elem: HTMLElement): Option<Int>{
-    return getWidthOrHeight(elem, "offsetHeight", cssHeight, Some("padding"));
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, "padding");
   }
  /**
  * Get the current computed height for the element, including padding, border, and optionally margin.
  */
   public static function getOuterHeight(elem: HTMLElement, includeMargin: Bool): Option<Int>{
-    return getWidthOrHeight(elem, "offsetHeight", cssHeight, if (includeMargin) Some("margin") else Some("border"));
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, if (includeMargin) "margin" else "border");
   }
 
   /**
   * Get the current computed width for the element, including padding but not border.
   */
   public static function getInnerWidth(elem: HTMLElement): Option<Int>{
-    return getWidthOrHeight(elem, "offsetWidth", cssWidth, Some("padding"));
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, "padding");
   }
   /**
   * Get the current computed width for the element, including padding and border.
   */
   public static function getOuterWidth(elem: HTMLElement, includeMargin: Bool): Option<Int>{
-    return getWidthOrHeight(elem, "offsetWidth", cssWidth, if (includeMargin) Some("margin") else Some("border"));
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, if (includeMargin) "margin" else "border");
   }
 
 
   public static function getHeight(elem: HTMLElement): Option<Int>{
-    return getWidthOrHeight(elem, "offsetHeight", cssHeight, None);
+    return getWidthOrHeight(elem, "offsetHeight", cssHeight, "");
   }
 
   public static function getWidth(elem: HTMLElement): Option<Int>{
-    return getWidthOrHeight(elem, "offsetWidth", cssWidth, None);
+    return getWidthOrHeight(elem, "offsetWidth", cssWidth, "");
   }
 
-  private static function getWidthOrHeight(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: Option<String>): Option<Int>{
+  private static function getWidthOrHeight(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: String): Option<Int>{
     if (elem == null || elem.ownerDocument == null) return None;
     else{
       var val = 0;
@@ -569,19 +569,21 @@ class Quirks {
     return values;
   }
 
-  private static function getWH(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: Option<String>): Int{
+  private static function getWH(elem: HTMLElement, offsetValueExtract: String, which: Array<String>, extra: String): Int{
     var val: Int = untyped elem[offsetValueExtract];
 
-    switch(extra){
-      case Some(border):
-      default:
-        which.foreach(function(v) {
-          switch(extra){
-            case None:    val -= getComputedCssProperty( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
-            case Some(margin): val += getComputedCssProperty( elem, 'margin-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
-          }
-          val -= getComputedCssProperty( elem, 'border-' + v + '-width').map(function(s) return s.toInt(0)).getOrElseC(0);
-        });
+    if (extra != "border"){
+      which.foreach(function(v) {
+        if (extra != ""){
+           val -= getCssPropertyIfSet( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
+        }
+        if (extra == "margin"){
+          val += getCssPropertyIfSet( elem, 'margin-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
+        }
+        else{
+          val -= getCssPropertyIfSet( elem, 'border-' + v + '-width').map(function(s) return s.toInt(0)).getOrElseC(0);
+        }
+      });
     }
     return val;
   }
