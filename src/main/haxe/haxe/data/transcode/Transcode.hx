@@ -16,38 +16,7 @@
 */
 package haxe.data.transcode;
 
-typedef Extractor<I, O> = {
-  extract: I -> O
-}
+import Prelude;
 
-typedef Decomposer<I, O> = {
-  decompose: I -> O
-}
-
-typedef Transcoder<A, B> = {
-  extract:   B -> A,  
-  decompose: A -> B
-}
-
-class ExtractorTypeclass {
-  public static function create<I, O>(e: { extract: I -> O }): Extractor<I, O> {
-    return {
-      extract:  e.extract
-    }
-  }
-}
-class DecomposerTypeclass {
-  public static function create<I, O>(e: { decompose: I -> O }): Decomposer<I, O> {
-    return {
-      decompose:  e.decompose
-    }
-  }
-}
-class TranscoderTypeclass {
-  public static function create<A, B>(d: Decomposer<A, B>, e: Extractor<B, A>): Transcoder<A, B> {
-    return {
-      decompose:  d.decompose,
-      extract:    e.extract
-    }
-  }
-}
+typedef ExtractorFunction<I, O>  = Function<I, O>;
+typedef DecomposerFunction<I, O> = Function<I, O>;
