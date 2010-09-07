@@ -26,12 +26,18 @@ using haxe.framework.Injector;
 class TweenerExtensions {
   static var DefaultFrequency = (1000.0 / 24.0).round();
   
+  /** Starts the tween with the specified easment.
+   */
   public static function startWith(tweener: Tweener, easing: Easing): Tweener {
-    return null;
+    return function(t) {
+      return tweener(easing(t));
+    };
   }
   
+  /** Ends the tween with the specified easment.
+   */
   public static function endWith(tweener: Tweener, easing: Easing): Tweener {
-    return null;
+    return startWith(function(t) return tweener(1.0 - t), easing);
   }
   
   /**

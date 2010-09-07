@@ -18,6 +18,10 @@ package haxe.math.tween;
 typedef Easing = Float -> Float
 
 class Easings {
-  public static var Linear: Easing = function(t) return t;
+  public static var Linear:     Easing = function(t: Float) return t;
+  public static var Quadratic:  Easing = function(t: Float) return t * t;
+  public static var Cubic:      Easing = function(t: Float) return t * t * t;
+  public static var Quartic:    Easing = function(t: Float) { var squared = t * t; return squared * squared; }
+  public static var Quintic:    Easing = function(t: Float) { var squared = t * t; return squared * squared * t; }
   
 }
