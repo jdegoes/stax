@@ -49,7 +49,7 @@ class ExtractorHelpers {
         var value     = hash.get(className);
         if (null != nameEncodeFunction) className = nameEncodeFunction(className);
 
-        var clazz = Type.resolveClass(namespace + "." +className);
+        var clazz = Type.resolveClass(namespace + "." + className);
         return cast Reflect.callMethod(clazz, Reflect.field(clazz, "deserialize"), [value]);
       }
       else Stax.error("Implementation cannot be deserialized."); return null;
@@ -316,17 +316,22 @@ class MapExtensions {
     public static function StringKeyExtractorF<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractorFunction<V>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<String, V>> {
       var te = Tuple2.ExtractorF(StringExtensions.ExtractorF(String), ve);
 
+      var extract0 = function(v: Array<JValue>){
+        return Map.create(String.HasherF(), String.EqualF(), vh, veq).addAll(v.map(function(j) {
+          return switch(j) {
+            case JField(k, v): Tuple2.create(k, ve(v));
+
+            default: Stax.error("Expected field but was: " + v);
+          }
+        }));
+      }
+
       return function(v: JValue) {
         return switch(v) {
-          case JObject(v): Map.create(String.HasherF(), String.EqualF(), vh, veq).addAll(v.map(function(j) {
-            return switch(j) {
-              case JField(k, v): Tuple2.create(k, ve(v));
+          case JObject(v): extract0(v);
+          case JArray(v) : extract0(v);
 
-              default: Stax.error("Expected field but was: " + v);
-            }
-          }));
-
-          default: Stax.error("Expected Array but was: " + v);
+          default: Stax.error("Expected either Array or Object but was: " + v);
         }
       }
     }
