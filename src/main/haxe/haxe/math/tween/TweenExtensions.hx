@@ -44,7 +44,7 @@ class TweenerExtensions {
 	  
 	  var frequency = if (frequency_ > 0) frequency_ else DefaultFrequency;
 	  
-	  return executor.repeat(0, function(millis) {
+	  return executor.repeat(frequency, function(millis) {
 	    var t = millis / duration;
 	    
 	    cb(tweener(t));
