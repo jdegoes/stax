@@ -26,79 +26,79 @@ using haxe.net.UrlExtensions;
 using PreludeExtensions;
 
 class UrlExtensionsTestCase extends TestCase {
-	public function testParseUrl1() {
-	  var p = 'ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
+  public function testParseUrl1() {
+    var p = 'ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
 
-	  assertEquals('#top', p.hash);
-	  assertEquals('eau.ww.eesd.gov.calgary', p.host);
-	  assertEquals('eau.ww.eesd.gov.calgary', p.hostname);
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top', p.href);
-	  assertEquals('/home/smith/budget.wk1', p.pathname);
-	  assertEquals('', p.port);
-	  assertEquals('ftp:', p.protocol);
-	  assertEquals('?foo=bar', p.search);
-	}
-	
-	public function testParseUrl2() {
-	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
+    assertEquals('#top', p.hash);
+    assertEquals('eau.ww.eesd.gov.calgary', p.host);
+    assertEquals('eau.ww.eesd.gov.calgary', p.hostname);
+    assertEquals('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top', p.href);
+    assertEquals('/home/smith/budget.wk1', p.pathname);
+    assertEquals('', p.port);
+    assertEquals('ftp:', p.protocol);
+    assertEquals('?foo=bar', p.search);
+  }
+  
+  public function testParseUrl2() {
+    var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
 
-	  assertEquals('#top', p.hash);
-	  assertEquals('eau.ww.eesd.gov.calgary:923', p.host);
-	  assertEquals('eau.ww.eesd.gov.calgary', p.hostname);
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.href);
-	  assertEquals('/home/smith/budget.wk1', p.pathname);
-	  assertEquals('923', p.port);
-	  assertEquals('ftp:', p.protocol);
-	  assertEquals('?foo=bar', p.search);
-	}
-	
-	public function testExtractSearchForLocalFile() {
-	  assertEquals('?foo', 'ad-display.js?foo'.extractSearch());
-	}
-	
-	public function testNoProtocolIsPreserved() {
-	  assertEquals('client.html', 'client.html?foo'.toParsedUrl().get().withoutSearch().toUrl());
-	}
-	
-	public function testWithout() {
-	  var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
-	  
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top', p.withoutPort().toUrl());
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1#top', p.withoutSearch().toUrl());
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar', p.withoutHash().toUrl());
-	  assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
-	  assertEquals('eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/?foo=bar#top', p.withoutFile().toUrl());
-	  
-	  assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
-	}
-	
-	public function testCanParseFileProtocol() {
-	  var p = 'file:///Users/John/Documents/github/stax/test.html'.toParsedUrl().get();
-	  
-	  assertEquals('file:', p.protocol);
-	  assertEquals('/Users/John/Documents/github/stax/test.html', p.pathname);
-	}
-	
-	public function testQueryStringBijection() {
-	  var self = this;
-	  
-	  var identity = UrlExtensions.toQueryString.compose(UrlExtensions.toQueryParameters);
-	  var test = function(s) self.assertEquals(s, identity(s));
-	  
-	  test('?foo=bar');
+    assertEquals('#top', p.hash);
+    assertEquals('eau.ww.eesd.gov.calgary:923', p.host);
+    assertEquals('eau.ww.eesd.gov.calgary', p.hostname);
+    assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.href);
+    assertEquals('/home/smith/budget.wk1', p.pathname);
+    assertEquals('923', p.port);
+    assertEquals('ftp:', p.protocol);
+    assertEquals('?foo=bar', p.search);
+  }
+  
+  public function testExtractSearchForLocalFile() {
+    assertEquals('?foo', 'ad-display.js?foo'.extractSearch());
+  }
+  
+  public function testNoProtocolIsPreserved() {
+    assertEquals('client.html', 'client.html?foo'.toParsedUrl().get().withoutSearch().toUrl());
+  }
+  
+  public function testWithout() {
+    var p = 'ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top'.toParsedUrl().get();
+    
+    assertEquals('ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top', p.withoutPort().toUrl());
+    assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1#top', p.withoutSearch().toUrl());
+    assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar', p.withoutHash().toUrl());
+    assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
+    assertEquals('eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
+    assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/?foo=bar#top', p.withoutFile().toUrl());
+    
+    assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
+  }
+  
+  public function testCanParseFileProtocol() {
+    var p = 'file:///Users/John/Documents/github/stax/test.html'.toParsedUrl().get();
+    
+    assertEquals('file:', p.protocol);
+    assertEquals('/Users/John/Documents/github/stax/test.html', p.pathname);
+  }
+  
+  public function testQueryStringBijection() {
+    var self = this;
+    
+    var identity = UrlExtensions.toQueryString.compose(UrlExtensions.toQueryParameters);
+    var test = function(s) self.assertEquals(s, identity(s));
+    
+    test('?foo=bar');
     test('?foo=');
-	}
-	
-	public function testAddQueryParametersWhenNoneExist() {
-	  assertEquals('http://foo.com?foo=bar', 'http://foo.com'.addQueryParameters({foo: 'bar'}.toMap()));
-	}
-	
-	public function testAddQueryParametersWhenJustQuestionMarkExists() {
-	  assertEquals('http://foo.com?foo=bar', 'http://foo.com?'.addQueryParameters({foo: 'bar'}.toMap()));
-	}
-	
-	public function testAddQueryParametersWhenQueryParametersAlreadyExists() {
-	  assertEquals('http://foo.com?doo=dar&foo=bar', 'http://foo.com?doo=dar'.addQueryParameters({foo: 'bar'}.toMap()));
-	}
+  }
+  
+  public function testAddQueryParametersWhenNoneExist() {
+    assertEquals('http://foo.com?foo=bar', 'http://foo.com'.addQueryParameters({foo: 'bar'}.toMap()));
+  }
+  
+  public function testAddQueryParametersWhenJustQuestionMarkExists() {
+    assertEquals('http://foo.com?foo=bar', 'http://foo.com?'.addQueryParameters({foo: 'bar'}.toMap()));
+  }
+  
+  public function testAddQueryParametersWhenQueryParametersAlreadyExists() {
+    assertEquals('http://foo.com?doo=dar&foo=bar', 'http://foo.com?doo=dar'.addQueryParameters({foo: 'bar'}.toMap()));
+  }
 }

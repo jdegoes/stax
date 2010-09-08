@@ -22,6 +22,7 @@ import haxe.functional.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.List;
 
+import PreludeExtensions;  
 using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
@@ -96,7 +97,7 @@ class ListTestCase extends TestCase {
     var ul = newList().addAll([9, 2, 1, 100]);
     var ol = newList().addAll([1, 2, 9, 100]);
     
-    assertListEquals(ol, ul.sort(Int.OrderF()));
+    assertListEquals(ol, ul.sort(IntExtensions.compare));
   }
   
   public function testReverse(): Void {
@@ -141,7 +142,7 @@ class ListTestCase extends TestCase {
     
     var i1 = 0, i2 = 1;
     
-    var equal = Tuple2.EqualF(Int.EqualF(), Int.EqualF());
+    var equal = Tuple2.EqualF(IntExtensions.equals, IntExtensions.equals);
     
     for (z in l) {
       assertEquals(z, i1.entuple(i2), equal);
@@ -153,7 +154,7 @@ class ListTestCase extends TestCase {
   }    
 
   public function testEquals() { 
-	assertTrue (newList().equals(newList())); 
+  assertTrue (newList().equals(newList())); 
     assertTrue (newList([1,2,3]).equals(newList([1,2,3])));
     assertFalse(newList([1,2,3]).equals(newList([2,2,3])));
     assertFalse(newList([1,2,3]).equals(newList([1])));  
@@ -161,13 +162,13 @@ class ListTestCase extends TestCase {
     var list = List.create(function(a : Float, b : Float) return Math.abs(a-b) < 0.25).addAll([1.0, 2.1]);
 
     assertTrue (list.equals(newList([0.9, 2.0])));
-	assertFalse(list.equals(newList([0.9, 2.4]))); 
-	assertFalse(list.equals(newList([0.7, 2.0]))); 
+  assertFalse(list.equals(newList([0.9, 2.4]))); 
+  assertFalse(list.equals(newList([0.7, 2.0]))); 
   }
 
   public function testCompare() {  
     assertTrue(newList().compare(newList()) == 0);
-	assertTrue(newList([1,2,3]).compare(newList([1,2,3])) == 0);  
+  assertTrue(newList([1,2,3]).compare(newList([1,2,3])) == 0);  
 
     assertTrue(newList([1,2,3]).compare(newList([2,2,3])) < 0);
     assertTrue(newList([1,2,3]).compare(newList([1])) > 0);  
@@ -175,12 +176,12 @@ class ListTestCase extends TestCase {
     var list = List.create(function(a : Float, b : Float) return Math.abs(a-b) < 0.25 ? 0 : (a > b ? 1 : -1)).addAll([1.0, 2.1]);
 
     assertTrue(list.compare(newList([0.9, 2.0])) == 0);
-	assertTrue(list.compare(newList([0.9, 2.4])) < 0); 
-	assertTrue(list.compare(newList([0.7, 2.0])) > 0); 
+  assertTrue(list.compare(newList([0.9, 2.4])) < 0); 
+  assertTrue(list.compare(newList([0.7, 2.0])) > 0); 
   }
 
   public function testToString() { 
-	assertEquals("List []", newList().toString()); 
+  assertEquals("List []", newList().toString()); 
     assertEquals("List [a, b]", newList(["a", "b"]).toString());
 
     var list = List.create(function(a : String) return '"' + a +'"').addAll(["a", "b"]);
@@ -189,8 +190,8 @@ class ListTestCase extends TestCase {
   }     
 
   public function testHashCode() {
-	assertNotEquals(0, newList().hashCode());
-	assertNotEquals(0, newList([1,2]).hashCode());
+  assertNotEquals(0, newList().hashCode());
+  assertNotEquals(0, newList([1,2]).hashCode());
   }
      
 

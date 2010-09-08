@@ -21,11 +21,12 @@ import haxe.test.TestCase;
 import haxe.test.Assert;
 import haxe.net.HttpHeader;
 
-using PreludeExtensions;
+import PreludeExtensions; 
+using PreludeExtensions; 
 using haxe.net.HttpHeaderExtensions;
 
 class HttpHeaderExtensionsTestCase extends TestCase {
-  static var headerEq = Tuple2.EqualF(String.EqualF(), String.EqualF());
+  static var headerEq = Tuple2.EqualF(StringExtensions.equals, StringExtensions.equals);
   
   public function new() {
     super();

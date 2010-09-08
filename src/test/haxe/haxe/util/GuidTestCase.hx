@@ -23,15 +23,15 @@ import haxe.util.Guid;
 using PreludeExtensions;
 
 class GuidTestCase extends TestCase {
-	public function new() {
-	  super();
-	}
-	
-	public function testNonNull() {
-	  assertNotNull(Guid.generate());
-	}
-	
-	public function testUnique() {
-	  assertFalse(Guid.generate() == Guid.generate());
-	}
+  public function new() {
+    super();
+  }
+  
+  public function testNonNull() {
+    assertNotNull(Guid.generate());
+  }
+  
+  public function testUnique() {
+    assertFalse(Guid.generate() == Guid.generate());
+  }
 }

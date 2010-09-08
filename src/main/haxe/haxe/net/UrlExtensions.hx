@@ -136,69 +136,69 @@ class UrlExtensions {
     }
   }
   
-	public static function extractQueryParameters(url: Url): QueryParameters {
-	  return toQueryParameters(extractSearch(url));
-	}
-	
-	public static function extractSearch(url: Url): String {
-	  return extractField(url, 'search');
-	}
-	
-	public static function extractProtocol(url: Url): String {
-	  return extractField(url, 'protocol');
-	}
-	
-	public static function extractHash(url: Url): String {
-	  return extractField(url, 'hash');
-	}
-	
-	public static function extractPathname(url: Url): String {
-	  return extractField(url, 'pathname');
-	}
-	
+  public static function extractQueryParameters(url: Url): QueryParameters {
+    return toQueryParameters(extractSearch(url));
+  }
+  
+  public static function extractSearch(url: Url): String {
+    return extractField(url, 'search');
+  }
+  
+  public static function extractProtocol(url: Url): String {
+    return extractField(url, 'protocol');
+  }
+  
+  public static function extractHash(url: Url): String {
+    return extractField(url, 'hash');
+  }
+  
+  public static function extractPathname(url: Url): String {
+    return extractField(url, 'pathname');
+  }
+  
   public static function extractHostname(url: Url): String {
-	  return extractField(url, 'hostname');
-	}
-	
-	public static function extractHost(url: Url): String {
-	  return extractField(url, 'host');
-	}
-	
-	public static function extractPort(url: Url): Int {
-	  return extractField(url, 'port').toInt();
-	}
-	
-	/** Converts a query string, which must begin with '?', into an anonymous 
+    return extractField(url, 'hostname');
+  }
+  
+  public static function extractHost(url: Url): String {
+    return extractField(url, 'host');
+  }
+  
+  public static function extractPort(url: Url): Int {
+    return extractField(url, 'port').toInt();
+  }
+  
+  /** Converts a query string, which must begin with '?', into an anonymous 
    * object, whose fields all have string values.
    */
   public static function toQueryParameters(query: String): QueryParameters {
-	  return if (!query.startsWith('?')) Maps.StringString;
-	         else query.substr(1).split('&').flatMap(function(kv) {
+    return if (!query.startsWith('?')) Maps.StringString;
+           else query.substr(1).split('&').flatMap(function(kv) {
              var a = kv.split('=').map(function(s) return s.urlDecode());
-	    
-	            return if (a.length == 0) [];
-	                   else if (a.length == 1) [a[0].entuple('')];
-	                   else [a[0].entuple(a[1])];
-      	   }).foldl(Maps.StringString, function(m, t) {
-      	     return m.add(t);
-      	   });
-	}
-	
-	/** Converts an anonymous object, whose fields all have string values, into a
-	 * query string, beginning with the character '?'.
-	 */
-	public static function toQueryString(query: QueryParameters): String {
-	  return query.foldl('?', function(url, tuple) {
-	    var fieldName = tuple._1;
-	    var fieldValue = tuple._2;
-	    
-	    var rest = StringTools.urlEncode(fieldName) + '=' + StringTools.urlEncode(fieldValue);
-	    
-	    return url + (if (url == '?') rest else '&' + rest);
-	  });
-	}
-	
-	private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {
+      
+              return if (a.length == 0) [];
+                     else if (a.length == 1) [a[0].entuple('')];
+                     else [a[0].entuple(a[1])];
+           }).foldl(Maps.StringString, function(m, t) {
+             return m.add(t);
+           });
+  }
+  
+  /** Converts an anonymous object, whose fields all have string values, into a
+   * query string, beginning with the character '?'.
+   */
+  public static function toQueryString(query: QueryParameters): String {
+    return query.foldl('?', function(url, tuple) {
+      var fieldName = tuple._1;
+      var fieldValue = tuple._2;
+      
+      var rest = StringTools.urlEncode(fieldName) + '=' + StringTools.urlEncode(fieldValue);
+      
+      return url + (if (url == '?') rest else '&' + rest);
+    });
+  }
+  
+  private static function formUrl(protocol: String, hostname: String, port: String, pathname: String, search: String, hash: String): ParsedUrl {
     var host  = hostname + (if (port == '') '' else ':' + port);
     var final = host + pathname + search + hash;
     
@@ -213,8 +213,8 @@ class UrlExtensions {
       search:   search
     }
   }
-	
-	private static function extractField(url: Url, field): String {
-	  return toParsedUrl(url).map(function(parsed) return Reflect.field(parsed, field)).getOrElseC('');
-	}
+  
+  private static function extractField(url: Url, field): String {
+    return toParsedUrl(url).map(function(parsed) return Reflect.field(parsed, field)).getOrElseC('');
+  }
 }

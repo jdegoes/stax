@@ -25,29 +25,29 @@ using haxe.functional.FoldableExtensions;
 typedef Tweener = Float -> Dynamic<Float>
 
 class Tween {
-	public static function linear(state1: Dynamic<Float>, state2: Dynamic<Float>, ?def = 0.0): Tweener {
-	  var combinedFields = Reflect.fields(state1).toSet().addAll(Reflect.fields(state2));
-	  
-	  var data = combinedFields.mapTo(Set.create(), function(name: String): Tuple2<String, {start: Float, delta: Float}> {
-	    var start: Float = OptionExtensions.toOption(Reflect.field(state1, name)).getOrElseC(def);
-	    var end:   Float = OptionExtensions.toOption(Reflect.field(state2, name)).getOrElseC(def);
-	    
-	    return name.entuple({
-	      start:  start,
-	      delta:  end - start
-	    });
-	  }).toMap();
-	  
-	  return function(t: Float): Dynamic<Float> {
-	    return data.foldl({}, function(r, tuple) {
-	      var name  = tuple._1;
-	      var start = tuple._2.start;
-	      var delta = tuple._2.delta;
-	      
-	      Reflect.setField(r, name, start + t * delta);
-	      
-	      return r;
-	    });
-	  }
-	}
+  public static function linear(state1: Dynamic<Float>, state2: Dynamic<Float>, ?def = 0.0): Tweener {
+    var combinedFields = Reflect.fields(state1).toSet().addAll(Reflect.fields(state2));
+    
+    var data = combinedFields.mapTo(Set.create(), function(name: String): Tuple2<String, {start: Float, delta: Float}> {
+      var start: Float = OptionExtensions.toOption(Reflect.field(state1, name)).getOrElseC(def);
+      var end:   Float = OptionExtensions.toOption(Reflect.field(state2, name)).getOrElseC(def);
+      
+      return name.entuple({
+        start:  start,
+        delta:  end - start
+      });
+    }).toMap();
+    
+    return function(t: Float): Dynamic<Float> {
+      return data.foldl({}, function(r, tuple) {
+        var name  = tuple._1;
+        var start = tuple._2.start;
+        var delta = tuple._2.delta;
+        
+        Reflect.setField(r, name, start + t * delta);
+        
+        return r;
+      });
+    }
+  }
 }

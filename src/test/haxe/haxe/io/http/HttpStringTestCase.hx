@@ -27,20 +27,20 @@ using PreludeExtensions;
 class HttpStringTestCase extends TestCase {
   var h: HttpString;
   
-	public function new() {
-	  super();
-	}
-	
-	override public function before() {
-	  h = new HttpStringAsync();
-	}
-	
-	public function testGet() {
-	  Assert.delivered(h.get('http://www.google.com'),
-	    function(page) {
-	      Assert.notNull(page);
-	    },
-	    4000
-	  );
-	}
+  public function new() {
+    super();
+  }
+  
+  override public function before() {
+    h = new HttpStringAsync();
+  }
+  
+  public function testGet() {
+    Assert.delivered(h.get('http://www.google.com'),
+      function(page) {
+        Assert.notNull(page);
+      },
+      4000
+    );
+  }
 }

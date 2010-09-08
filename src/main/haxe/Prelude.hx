@@ -16,6 +16,7 @@
 */
 import Type;
 
+import PreludeExtensions;
 using PreludeExtensions;
 
 enum Unit {
@@ -384,26 +385,26 @@ class Tuple2<A, B> extends AbstractProduct {
   }
 
   public function compare(other : Tuple2<A, B>): Int {
-	var c = Stax.getOrderFor(_1)(_1, other._1);
-	return if (c != 0)
-	  c;
-	else
-	  Stax.getOrderFor(_2)(_2, other._2);
+  var c = Stax.getOrderFor(_1)(_1, other._1);
+  return if (c != 0)
+    c;
+  else
+    Stax.getOrderFor(_2)(_2, other._2);
   }
 
   public function equals(other : Tuple2<A, B>): Bool {
-	return if (!Stax.getEqualFor(_1)(_1, other._1))
-	  false;
+  return if (!Stax.getEqualFor(_1)(_1, other._1))
+    false;
     else
-	  Stax.getEqualFor(_2)(_2, other._2);
+    Stax.getEqualFor(_2)(_2, other._2);
   }
 
   override public function toString(): String {
-	return "Tuple2(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ")";
+  return "Tuple2(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ")";
   }
 
   public function  hashCode() : Int {
-	return 786433 * Stax.getHasherFor(_1)(_1) + 24593 * Stax.getHasherFor(_2)(_2);
+  return 786433 * Stax.getHasherFor(_1)(_1) + 24593 * Stax.getHasherFor(_2)(_2);
   }
 
   public static function OrderF<T1, T2>(order1: OrderFunction<T1>, order2: OrderFunction<T2>): OrderFunction<Tuple2<T1, T2>> {
@@ -491,30 +492,30 @@ class Tuple3<A, B, C> extends AbstractProduct {
   }
 
   public function compare(other : Tuple3<A, B, C>): Int {
-	var c = Stax.getOrderFor(_1)(_1, other._1);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_2)(_2, other._2);
-	if (c != 0)
-	  return c;
-	return Stax.getOrderFor(_3)(_3, other._3);
+  var c = Stax.getOrderFor(_1)(_1, other._1);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_2)(_2, other._2);
+  if (c != 0)
+    return c;
+  return Stax.getOrderFor(_3)(_3, other._3);
   }
 
   public function equals(other : Tuple3<A, B, C>): Bool {
-	return if (!Stax.getEqualFor(_1)(_1, other._1))
-	  false;
+  return if (!Stax.getEqualFor(_1)(_1, other._1))
+    false;
     else if (!Stax.getEqualFor(_2)(_2, other._2))
- 	  false
-	else
-	  Stax.getEqualFor(_3)(_3, other._3);
+     false
+  else
+    Stax.getEqualFor(_3)(_3, other._3);
   }
 
   override public function toString(): String {
-	return "Tuple3(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ")";
+  return "Tuple3(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ")";
   }
 
   public function  hashCode() : Int {
-	return 196613 * Stax.getHasherFor(_1)(_1) + 3079 * Stax.getHasherFor(_2)(_2) + 389 * Stax.getHasherFor(_3)(_3);
+  return 196613 * Stax.getHasherFor(_1)(_1) + 3079 * Stax.getHasherFor(_2)(_2) + 389 * Stax.getHasherFor(_3)(_3);
   }
 
   public static function create<A, B, C>(a: A, b: B, c: C): Tuple3<A, B, C> {
@@ -581,35 +582,35 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   }
 
   public function compare(other : Tuple4<A, B, C, D>): Int {
-	var c = Stax.getOrderFor(_1)(_1, other._1);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_2)(_2, other._2);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_3)(_3, other._3);
-	if (c != 0)
-	  return c;
-	return Stax.getOrderFor(_4)(_4, other._4);
+  var c = Stax.getOrderFor(_1)(_1, other._1);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_2)(_2, other._2);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_3)(_3, other._3);
+  if (c != 0)
+    return c;
+  return Stax.getOrderFor(_4)(_4, other._4);
   }
 
   public function equals(other : Tuple4<A, B, C, D>): Bool {
-	return if (!Stax.getEqualFor(_1)(_1, other._1))
-	  false;
+  return if (!Stax.getEqualFor(_1)(_1, other._1))
+    false;
     else if (!Stax.getEqualFor(_2)(_2, other._2))
- 	  false
+     false
     else if (!Stax.getEqualFor(_3)(_3, other._3))
- 	  false
-	else
-	  Stax.getEqualFor(_4)(_4, other._4);
+     false
+  else
+    Stax.getEqualFor(_4)(_4, other._4);
   }
 
   override public function toString(): String {
-	return "Tuple4(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ")";
+  return "Tuple4(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ")";
   }
 
   public function  hashCode() : Int {
-	return 1543 * Stax.getHasherFor(_1)(_1) + 49157 * Stax.getHasherFor(_2)(_2) + 196613 * Stax.getHasherFor(_3)(_3) + 97 * Stax.getHasherFor(_4)(_4);
+  return 1543 * Stax.getHasherFor(_1)(_1) + 49157 * Stax.getHasherFor(_2)(_2) + 196613 * Stax.getHasherFor(_3)(_3) + 97 * Stax.getHasherFor(_4)(_4);
   }
 
   public static function create<A, B, C, D>(a: A, b: B, c: C, d: D): Tuple4<A, B, C, D> {
@@ -676,40 +677,40 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   }
 
   public function compare(other : Tuple5<A, B, C, D, E>): Int {
-	var c = Stax.getOrderFor(_1)(_1, other._1);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_2)(_2, other._2);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_3)(_3, other._3);
-	if (c != 0)
-	  return c;
-	c = Stax.getOrderFor(_4)(_4, other._4);
-	if (c != 0)
-	  return c;
-	return Stax.getOrderFor(_5)(_5, other._5);
+  var c = Stax.getOrderFor(_1)(_1, other._1);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_2)(_2, other._2);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_3)(_3, other._3);
+  if (c != 0)
+    return c;
+  c = Stax.getOrderFor(_4)(_4, other._4);
+  if (c != 0)
+    return c;
+  return Stax.getOrderFor(_5)(_5, other._5);
   }
 
   public function equals(other : Tuple5<A, B, C, D, E>): Bool {
-	return if (!Stax.getEqualFor(_1)(_1, other._1))
-	  false;
+  return if (!Stax.getEqualFor(_1)(_1, other._1))
+    false;
     else if (!Stax.getEqualFor(_2)(_2, other._2))
- 	  false
+     false
     else if (!Stax.getEqualFor(_3)(_3, other._3))
- 	  false
+     false
     else if (!Stax.getEqualFor(_4)(_4, other._4))
- 	  false
-	else
-	  Stax.getEqualFor(_5)(_5, other._5);
+     false
+  else
+    Stax.getEqualFor(_5)(_5, other._5);
   }
 
   override public function toString(): String {
-	return "Tuple5(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ", " + Stax.getShowFor(_5)(_5) + ")";
+  return "Tuple5(" + Stax.getShowFor(_1)(_1) + ", " + Stax.getShowFor(_2)(_2) + ", " + Stax.getShowFor(_3)(_3) + ", " + Stax.getShowFor(_4)(_4) + ", " + Stax.getShowFor(_5)(_5) + ")";
   }
 
   public function  hashCode() : Int {
-	return 12289 * Stax.getHasherFor(_1)(_1) + 769 * Stax.getHasherFor(_2)(_2) + 393241 * Stax.getHasherFor(_3)(_3) + 193 * Stax.getHasherFor(_4)(_4) + 53 * Stax.getHasherFor(_5)(_5);
+  return 12289 * Stax.getHasherFor(_1)(_1) + 769 * Stax.getHasherFor(_2)(_2) + 393241 * Stax.getHasherFor(_3)(_3) + 193 * Stax.getHasherFor(_4)(_4) + 53 * Stax.getHasherFor(_5)(_5);
   }
 
   public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): Tuple5<A, B, C, D, E> {
@@ -724,11 +725,11 @@ typedef HasherFunction<T> = Function<T, Int>;
 
 class Stax {
   static function _createOrderImpl<T>(impl : OrderFunction<Dynamic>) : OrderFunction<T> {
-  	return function(a, b) {
-	  return if(a == b || (a == null && b == null)) 0;
-	    else if(a == null) -1;
-	    else if(b == null) 1;
-	    else impl(a, b);
+    return function(a, b) {
+    return if(a == b || (a == null && b == null)) 0;
+      else if(a == null) -1;
+      else if(b == null) 1;
+      else impl(a, b);
     };
   }
   /** Returns a OrderFunction (T -> T -> Int). It works for any type expect TFunction.
@@ -739,66 +740,66 @@ class Stax {
   }
   public static function getOrderForType<T>(v: ValueType) : OrderFunction<T> {
     return switch(v) {
-	  case TBool:
-	    _createOrderImpl(Bool.OrderF());
-	  case TInt:
-	    _createOrderImpl(Int.OrderF());
-	  case TFloat:
-	    _createOrderImpl(Float.OrderF());
-	  case TUnknown:
-		function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
-	  case TObject:
-	    _createOrderImpl(function(a, b){
-	   	  for(key in Reflect.fields(a)) {
-		    var va = Reflect.field(a, key);
-		    var v = getOrderFor(va)(va, Reflect.field(b, key));
-		    if(0 != v)
-		      return v;
-		  }
-		  return 0;
-	    });
-	  case TClass(c):
-	    switch(Type.getClassName(c)) {
-		  case "String":
-		    _createOrderImpl(String.OrderF());
-		  case "Date":
-		    _createOrderImpl(Date.OrderF());
-		  case "Array":
-			_createOrderImpl(Array.OrderF());
-	      default:
-			if(Type.getInstanceFields(c).remove("compare")) {
-			  _createOrderImpl(function(a, b) return (cast a).compare(b));
-			} else {
-			  error("class "+Type.getClassName(c)+" is not comparable");
-			}
-	    }
-	  case TEnum(e):
+    case TBool:
+      _createOrderImpl(BoolExtensions.compare);
+    case TInt:
+      _createOrderImpl(IntExtensions.compare);
+    case TFloat:
+      _createOrderImpl(FloatExtensions.compare);
+    case TUnknown:
+    function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
+    case TObject:
+      _createOrderImpl(function(a, b){
+         for(key in Reflect.fields(a)) {
+        var va = Reflect.field(a, key);
+        var v = getOrderFor(va)(va, Reflect.field(b, key));
+        if(0 != v)
+          return v;
+      }
+      return 0;
+      });
+    case TClass(c):
+      switch(Type.getClassName(c)) {
+      case "String":
+        _createOrderImpl(StringExtensions.compare);
+      case "Date":
+        _createOrderImpl(DateExtensions.compare);
+      case "Array":
+      _createOrderImpl(ArrayExtensions.compare);
+        default:
+      if(Type.getInstanceFields(c).remove("compare")) {
+        _createOrderImpl(function(a, b) return (cast a).compare(b));
+      } else {
+        error("class "+Type.getClassName(c)+" is not comparable");
+      }
+      }
+    case TEnum(e):
         _createOrderImpl(function(a, b) {
-		  var v = Type.enumIndex(a) - Type.enumIndex(b);
-		  if(0 != v)
-		    return v;
-		  var pa = Type.enumParameters(a);
-		  var pb = Type.enumParameters(b);
-		  for(i in 0...pa.length) {
-		    var v = Stax.getOrderFor(pa[i])(pa[i], pb[i]);
-		    if(v != 0)
-		      return v;
-		  }
-		  return 0;
-		});
-	  case TNull:
-	    _createOrderImpl(function(a, b) return error("at least one of the arguments should be null"));
-	  case TFunction:
-		error("unable to compare on a function");
+      var v = Type.enumIndex(a) - Type.enumIndex(b);
+      if(0 != v)
+        return v;
+      var pa = Type.enumParameters(a);
+      var pb = Type.enumParameters(b);
+      for(i in 0...pa.length) {
+        var v = Stax.getOrderFor(pa[i])(pa[i], pb[i]);
+        if(v != 0)
+          return v;
+      }
+      return 0;
+    });
+    case TNull:
+      _createOrderImpl(function(a, b) return error("at least one of the arguments should be null"));
+    case TFunction:
+    error("unable to compare on a function");
 
-	}
+  }
   }
 
   static function _createEqualImpl<T>(impl : EqualFunction<Dynamic>) {
-  	return function(a, b) {
-	  return if(a == b || (a == null && b == null)) true;
-	    else if(a == null || b == null) false;
-	    else impl(a, b);
+    return function(a, b) {
+    return if(a == b || (a == null && b == null)) true;
+      else if(a == null || b == null) false;
+      else impl(a, b);
     };
   }
   /** Returns an EqualFunction (T -> T -> Bool). It works for any type. Custom Classes must provide
@@ -809,58 +810,58 @@ class Stax {
   }
   public static function getEqualForType<T>(v: ValueType) : EqualFunction<T> {
     return switch(v) {
-	  case TBool:
-	    _createEqualImpl(Bool.EqualF());
-	  case TInt:
-	    _createEqualImpl(Int.EqualF());
-	  case TFloat:
-	    _createEqualImpl(Float.EqualF());
-	  case TUnknown:
-		function(a : T, b : T) return a == b;
-	  case TObject:
-	    _createEqualImpl(function(a, b) {
-			for(key in Reflect.fields(a)) {
-		  	  var va = Reflect.field(a, key);
-		  	  if(!getEqualFor(va)(va, Reflect.field(b, key)))
-		  	  	return false;
-		  	}
-		  	return true;
-	    });
-	  case TClass(c):
-	    switch(Type.getClassName(c)) {
-		  case "String":
-		    _createEqualImpl(String.EqualF());
-		  case "Date":
-		    _createEqualImpl(Date.EqualF());
-		  case "Array":
-			_createEqualImpl(Array.EqualF());
-	      default:
-			var fields = Type.getInstanceFields(c);
-			if(fields.remove("equals")) {
-			  _createEqualImpl(function(a, b) return (cast a).equals(b));
-			} else if(fields.remove("compare")) {
-			  _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
-			} else {
-			  error("class "+Type.getClassName(c)+" has not equals method");
-			}
-	    }
-	  case TEnum(e):
-	    _createEqualImpl(function(a, b) {
-		  if(0 != Type.enumIndex(a) - Type.enumIndex(b))
-		    return false;
-		  var pa = Type.enumParameters(a);
-		  var pb = Type.enumParameters(b);
-		  for(i in 0...pa.length) {
-		    if(!Stax.getEqualFor(pa[i])(pa[i], pb[i]))
-		      return false;
-		  }
-		  return true;
-	    });
-	  case TNull:
-	    _createEqualImpl(function(a, b) return error("at least one of the arguments should be null"));
-	  case TFunction:
-	    _createEqualImpl(Reflect.compareMethods);
-	}
+      case TBool:
+        _createEqualImpl(BoolExtensions.equals);
+      case TInt:
+        _createEqualImpl(IntExtensions.equals);
+      case TFloat:
+        _createEqualImpl(FloatExtensions.equals);
+      case TUnknown:
+      function(a : T, b : T) return a == b;
+      case TObject:
+        _createEqualImpl(function(a, b) {
+        for(key in Reflect.fields(a)) {
+          var va = Reflect.field(a, key);
+          if(!getEqualFor(va)(va, Reflect.field(b, key)))
+            return false;
+        }
+        return true;
+      });
+    case TClass(c):
+      switch(Type.getClassName(c)) {
+        case "String":
+          _createEqualImpl(StringExtensions.equals);
+        case "Date":
+          _createEqualImpl(DateExtensions.equals);
+        case "Array":
+          _createEqualImpl(ArrayExtensions.equals);
+        default:
+          var fields = Type.getInstanceFields(c);
+          if(fields.remove("equals")) {
+            _createEqualImpl(function(a, b) return (cast a).equals(b));
+          } else if(fields.remove("compare")) {
+            _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
+          } else {
+            error("class "+Type.getClassName(c)+" has not equals method");
+          }
+      }
+    case TEnum(e):
+      _createEqualImpl(function(a, b) {
+        if(0 != Type.enumIndex(a) - Type.enumIndex(b))
+          return false;
+        var pa = Type.enumParameters(a);
+        var pb = Type.enumParameters(b);
+        for(i in 0...pa.length) {
+          if(!Stax.getEqualFor(pa[i])(pa[i], pb[i]))
+            return false;
+        }
+        return true;
+      });
+    case TNull:
+      _createEqualImpl(function(a, b) return error("at least one of the arguments should be null"));
+    case TFunction:
+      _createEqualImpl(Reflect.compareMethods);
+  }
   }
 
   static function _createShowImpl<T>(impl : ShowFunction<Dynamic>) : ShowFunction<T> {
@@ -875,56 +876,56 @@ class Stax {
   }
   public static function getShowForType<T>(v : ValueType) : ShowFunction<T> {
     return switch(v) {
-	  case TBool:
-	    _createShowImpl(Bool.ShowF());
-	  case TInt:
-	    _createShowImpl(Int.ShowF());
-	  case TFloat:
-	    _createShowImpl(Float.ShowF());
-	  case TUnknown:
-		_createShowImpl(function(v) return '<unknown>');
-	  case TObject:
-	    _createShowImpl(function(v)
-	    {
-		  var buf = [];
-		  for(k in Reflect.fields(v)) {
-		    var i = Reflect.field(v, k);
-		    buf.push(k + ":" + getShowFor(i)(i));
-		  }
-		  return "{" + buf.join(",") + "}";
-	    });
-	  case TClass(c):
-	    switch(Type.getClassName(c)) {
-		  case "String":
-            _createShowImpl(String.ShowF());
-		  case "Array":
-            _createShowImpl(Array.ShowF());
-	      default:
+    case TBool:
+      _createShowImpl(BoolExtensions.toString);
+    case TInt:
+      _createShowImpl(IntExtensions.toString);
+    case TFloat:
+      _createShowImpl(FloatExtensions.toString);
+    case TUnknown:
+    _createShowImpl(function(v) return '<unknown>');
+    case TObject:
+      _createShowImpl(function(v)
+      {
+      var buf = [];
+      for(k in Reflect.fields(v)) {
+        var i = Reflect.field(v, k);
+        buf.push(k + ":" + getShowFor(i)(i));
+      }
+      return "{" + buf.join(",") + "}";
+      });
+    case TClass(c):
+      switch(Type.getClassName(c)) {
+      case "String":
+            _createShowImpl(StringExtensions.toString);
+      case "Array":
+            _createShowImpl(ArrayExtensions.toString);
+        default:
             _createShowImpl(function(v : T) {
-			  return if(Type.getInstanceFields(Type.getClass(v)).remove("toString"))
-			    Reflect.callMethod(v, Reflect.field(v, "toString"), []);
-			  else
-	            Type.getClassName(Type.getClass(v));
-			});
-	    }
-	  case TEnum(e):
-	    _createShowImpl(function(v) {
-		  var buf = Type.enumConstructor(v);
-		  var params = Type.enumParameters(v);
-		  if(params.length == 0)
-		    return buf;
-		  else {
-			buf +="(";
-			for(p in params)
-			  buf += getShowFor(p)(p);
-			return buf + ")";
-		  }
-	    });
-	  case TNull:
-	    function(v) return "null";
-	  case TFunction:
-	    _createShowImpl(function(v) return '<function>');
-	}
+        return if(Type.getInstanceFields(Type.getClass(v)).remove("toString"))
+          Reflect.callMethod(v, Reflect.field(v, "toString"), []);
+        else
+              Type.getClassName(Type.getClass(v));
+      });
+      }
+    case TEnum(e):
+      _createShowImpl(function(v) {
+      var buf = Type.enumConstructor(v);
+      var params = Type.enumParameters(v);
+      if(params.length == 0)
+        return buf;
+      else {
+      buf +="(";
+      for(p in params)
+        buf += getShowFor(p)(p);
+      return buf + ")";
+      }
+      });
+    case TNull:
+      function(v) return "null";
+    case TFunction:
+      _createShowImpl(function(v) return '<function>');
+  }
   }
 
   static function _createHasherImpl<T>(impl : HasherFunction<Dynamic>) return function(v : T) if(null == v) return 0 else return impl(v)
@@ -937,49 +938,49 @@ class Stax {
   }
   public static function getHasherForType<T>(v: ValueType) : HasherFunction<T> {
     return switch(v) {
-	  case TBool:
-	    _createHasherImpl(Bool.HasherF());
-	  case TInt:
-	    _createHasherImpl(Int.HasherF());
-	  case TFloat:
-	    _createHasherImpl(Float.HasherF());
-	  case TUnknown:
-		_createHasherImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
-	  case TObject:
-	    _createHasherImpl(function(v){
-		  var s = getShowFor(v)(v);
-		  return getHasherFor(s)(s);
-	    });
-	  case TClass(c):
-	    switch(Type.getClassName(c)) {
-		  case "String":
-		    _createHasherImpl(String.HasherF());
+    case TBool:
+      _createHasherImpl(BoolExtensions.hashCode);
+    case TInt:
+      _createHasherImpl(IntExtensions.hashCode);
+    case TFloat:
+      _createHasherImpl(FloatExtensions.hashCode);
+    case TUnknown:
+    _createHasherImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
+    case TObject:
+      _createHasherImpl(function(v){
+      var s = getShowFor(v)(v);
+      return getHasherFor(s)(s);
+      });
+    case TClass(c):
+      switch(Type.getClassName(c)) {
+      case "String":
+        _createHasherImpl(StringExtensions.hashCode);
           case "Date":
-            _createHasherImpl(Date.HasherF());
-		  case "Array":
-            _createHasherImpl(Array.HasherF());
-	      default:
+            _createHasherImpl(DateExtensions.hashCode);
+      case "Array":
+            _createHasherImpl(ArrayExtensions.hashCode);
+        default:
             _createHasherImpl(function(v : T) {
-			  return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode"))
-			    Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
-			  else
-	            error("class does not have a hashCode method");
-			});
-	    }
-	  case TEnum(e):
-	    _createHasherImpl(function(v : T) {
-		  var hash = String.HasherF()(Type.enumConstructor(v)) * 6151;
-		  for(i in Type.enumParameters(v))
-		    hash += Stax.getHasherFor(i)(i) * 6151;
-		  return hash;
-		});
-	  case TFunction:
-	    _createHasherImpl(function(v : T) return error("function can't provide a hash code"));
-	  case TNull:
-	    function(v) return 0;
-	  default:
-		function(v : T) return -1;
-	}
+        return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode"))
+          Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
+        else
+              error("class does not have a hashCode method");
+      });
+      }
+    case TEnum(e):
+      _createHasherImpl(function(v : T) {
+      var hash = Type.enumConstructor(v).hashCode() * 6151;
+      for(i in Type.enumParameters(v))
+        hash += Stax.getHasherFor(i)(i) * 6151;
+      return hash;
+    });
+    case TFunction:
+      _createHasherImpl(function(v : T) return error("function can't provide a hash code"));
+    case TNull:
+      function(v) return 0;
+    default:
+    function(v : T) return -1;
+  }
   }
 
   public static function noop1<A>() {

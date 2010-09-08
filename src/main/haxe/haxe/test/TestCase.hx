@@ -49,90 +49,90 @@ class TestCase {
   
   public function assertTrue(cond : Bool, ?msg : String, ?pos : PosInfos) {
     Assert.isTrue(cond, msg, pos);
-	}
-	
-	public function assertFalse(value : Bool, ?msg : String, ?pos : PosInfos) {
-		Assert.isFalse(value, msg, pos);
-	}
+  }
+  
+  public function assertFalse(value : Bool, ?msg : String, ?pos : PosInfos) {
+    Assert.isFalse(value, msg, pos);
+  }
 
-	public function assertNull(value : Dynamic, ?msg : String, ?pos : PosInfos) {
-		Assert.isNull(value, msg, pos);
-	}
+  public function assertNull(value : Dynamic, ?msg : String, ?pos : PosInfos) {
+    Assert.isNull(value, msg, pos);
+  }
 
-	public function assertNotNull(value : Dynamic, ?msg : String, ?pos : PosInfos) {
-	  Assert.notNull(value, msg, pos);
-	}
+  public function assertNotNull(value : Dynamic, ?msg : String, ?pos : PosInfos) {
+    Assert.notNull(value, msg, pos);
+  }
 
-	public function assertIs(value : Dynamic, type : Dynamic, ?msg : String , ?pos : PosInfos) {
-		Assert.is(value, type, msg, pos);
-	}
-	
-	public function assertNotEquals(expected : Dynamic, value : Dynamic, ?msg : String , ?pos : PosInfos) {
-		Assert.notEquals(expected, value, msg, pos);
-	}
-	
-	public function assertEquals<T>(expected : T, value : T, ?equal: T -> T -> Bool, ?msg : String , ?pos : PosInfos) {
-	  if (equal != null) {
-	    Assert.isTrue(equal(expected, value), (if (msg != null) msg else 'expected ' + expected + ' but found ' + value), pos);
-	  }
-	  else {
-	    Assert.equals(expected, value, msg, pos);
-	  }
-	}
-	
-	public function assertMatches(pattern : EReg, value : Dynamic, ?msg : String , ?pos : PosInfos) {
-	  Assert.matches(pattern, value, msg, pos);
-	}
+  public function assertIs(value : Dynamic, type : Dynamic, ?msg : String , ?pos : PosInfos) {
+    Assert.is(value, type, msg, pos);
+  }
+  
+  public function assertNotEquals(expected : Dynamic, value : Dynamic, ?msg : String , ?pos : PosInfos) {
+    Assert.notEquals(expected, value, msg, pos);
+  }
+  
+  public function assertEquals<T>(expected : T, value : T, ?equal: T -> T -> Bool, ?msg : String , ?pos : PosInfos) {
+    if (equal != null) {
+      Assert.isTrue(equal(expected, value), (if (msg != null) msg else 'expected ' + expected + ' but found ' + value), pos);
+    }
+    else {
+      Assert.equals(expected, value, msg, pos);
+    }
+  }
+  
+  public function assertMatches(pattern : EReg, value : Dynamic, ?msg : String , ?pos : PosInfos) {
+    Assert.matches(pattern, value, msg, pos);
+  }
 
-	public function assertFloatEquals(expected : Float, value : Float, ?approx : Float, ?msg : String , ?pos : PosInfos) : Void {
-	  Assert.floatEquals(expected, value, approx, msg, pos);
-	}
-	
-	public function assertLooksLike(expected : {}, value : {}, ?recursive : Bool, ?msg : String, ?pos : PosInfos) {
-	  Assert.looksLike(expected, value, recursive, msg, pos);
-	}
+  public function assertFloatEquals(expected : Float, value : Float, ?approx : Float, ?msg : String , ?pos : PosInfos) : Void {
+    Assert.floatEquals(expected, value, approx, msg, pos);
+  }
+  
+  public function assertLooksLike(expected : {}, value : {}, ?recursive : Bool, ?msg : String, ?pos : PosInfos) {
+    Assert.looksLike(expected, value, recursive, msg, pos);
+  }
 
-	public function assertThrowsException(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
-	  Assert.throwsException(method, type, msg, pos);
-	}
+  public function assertThrowsException(method:Void -> Void, ?type:Class<Dynamic>, ?msg : String , ?pos : PosInfos) {
+    Assert.throwsException(method, type, msg, pos);
+  }
 
-	public function assertEqualsOneOf<T>(value : T, possibilities : Array<T>, ?msg : String , ?pos : PosInfos) {
-	  Assert.equalsOneOf(value, possibilities, msg, pos);
-	}
+  public function assertEqualsOneOf<T>(value : T, possibilities : Array<T>, ?msg : String , ?pos : PosInfos) {
+    Assert.equalsOneOf(value, possibilities, msg, pos);
+  }
 
-	public function assertContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
-	  Assert.contains(values, match, msg, pos);
-	}
-	
-	public function assertNotContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
-	  Assert.notContains(values, match, msg, pos);
-	}
-	
-	public function assertStringContains(match : String, value : String, ?msg : String , ?pos : PosInfos) {
-	  Assert.stringContains(match, value, msg, pos);
-	}
-	
-	public function assertStringSequence(sequence : Array<String>, value : String, ?msg : String , ?pos : PosInfos) {
-		Assert.stringSequence(sequence, value, msg, pos);
-	}
-	
-	public function assertDelivered<T>(future: Future<T>, assertions: T -> Void, ?timeout : Int) {
-		return Assert.delivered(future, assertions, timeout);
-	}
-	
-	public function assertCanceled<T>(future: Future<T>, assertions: Void -> Void, ?timeout : Int) {
-		return Assert.canceled(future, assertions, timeout);
-	}
-	
-	public function assertNotDelivered<T>(future: Future<T>, ?timeout : Int, ?pos : PosInfos) {
-		return Assert.notDelivered(future, timeout, pos);
-	}
-	
-	public function fail(msg = "failure expected", ?pos : PosInfos) {
-		Assert.fail(msg, pos);
-	}
+  public function assertContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
+    Assert.contains(values, match, msg, pos);
+  }
+  
+  public function assertNotContains<T>(values : Iterable<T>, match : T, ?msg : String , ?pos : PosInfos) {
+    Assert.notContains(values, match, msg, pos);
+  }
+  
+  public function assertStringContains(match : String, value : String, ?msg : String , ?pos : PosInfos) {
+    Assert.stringContains(match, value, msg, pos);
+  }
+  
+  public function assertStringSequence(sequence : Array<String>, value : String, ?msg : String , ?pos : PosInfos) {
+    Assert.stringSequence(sequence, value, msg, pos);
+  }
+  
+  public function assertDelivered<T>(future: Future<T>, assertions: T -> Void, ?timeout : Int) {
+    return Assert.delivered(future, assertions, timeout);
+  }
+  
+  public function assertCanceled<T>(future: Future<T>, assertions: Void -> Void, ?timeout : Int) {
+    return Assert.canceled(future, assertions, timeout);
+  }
+  
+  public function assertNotDelivered<T>(future: Future<T>, ?timeout : Int, ?pos : PosInfos) {
+    return Assert.notDelivered(future, timeout, pos);
+  }
+  
+  public function fail(msg = "failure expected", ?pos : PosInfos) {
+    Assert.fail(msg, pos);
+  }
 
-	public function warn(msg) {
-		Assert.warn(msg);
-	}
+  public function warn(msg) {
+    Assert.warn(msg);
+  }
 }

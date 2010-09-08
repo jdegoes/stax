@@ -27,13 +27,13 @@ class HttpHeaderExtensions {
   static var HeaderPattern = ~/^([^:]+): *(.+)$/;
   static var HeaderLinesPattern = ~/[\r\n]+/;
   
-	public static function toHttpHeader(str: String): Option<HttpHeader> {
-	  return if (HeaderPattern.match(str)) Some(HeaderPattern.matched(1).trim().entuple(HeaderPattern.matched(2).trim())); else None;
-	}
-	
-	public static function toHttpHeaders(str: String): HttpHeaders {
-	  return Maps.StringString.addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
-	    return toHttpHeader(line.trim()).toArray();
-	  }));
-	}
+  public static function toHttpHeader(str: String): Option<HttpHeader> {
+    return if (HeaderPattern.match(str)) Some(HeaderPattern.matched(1).trim().entuple(HeaderPattern.matched(2).trim())); else None;
+  }
+  
+  public static function toHttpHeaders(str: String): HttpHeaders {
+    return Maps.StringString.addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
+      return toHttpHeader(line.trim()).toArray();
+    }));
+  }
 }

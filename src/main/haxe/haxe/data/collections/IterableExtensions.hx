@@ -22,21 +22,21 @@ import Prelude;
 using PreludeExtensions;
 
 class IterableExtensions {
-	public static function size<T>(iterable: Iterable<T>): Int {
-	  var size = 0;
-	  
-	  for (e in iterable) ++size;
-	  
-	  return size;
-	}
-	
-	public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
-	  return foldl(iter, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
-	    return if (f(b)) append(a, b); else a;
-	  });
-	}
-	
-	public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
+  public static function size<T>(iterable: Iterable<T>): Int {
+    var size = 0;
+    
+    for (e in iterable) ++size;
+    
+    return size;
+  }
+  
+  public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
+    return foldl(iter, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+      return if (f(b)) append(a, b); else a;
+    });
+  }
+  
+  public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
     var folded = seed;
     
     for (e in iter) { folded = mapper(folded, e); }
@@ -223,57 +223,57 @@ class IterableExtensions {
     
     return a;
   }
-	
-	public static function reversed<T>(iter: Iterable<T>): Iterable<T> {
-	  return foldl(iter, [], function(a, b) {
+  
+  public static function reversed<T>(iter: Iterable<T>): Iterable<T> {
+    return foldl(iter, [], function(a, b) {
       a.unshift(b);
       
       return a;
-	  });
-	}
-	
-	public static function and<T>(iter: Iterable<Bool>): Bool {
-	  var iterator = iter.iterator();
-	  
-	  while (iterator.hasNext()) {
-	    var element = iterator.next();
-	    if (element == false) { return false; }; 
-	  }
-	  return true;
-	}
-	
-	public static function or<T>(iter: Iterable<Bool>): Bool {
-	  var iterator = iter.iterator();
-	  
-	  while (iterator.hasNext()) {
-	    if (iterator.next() == true) { return true; }; 
-	  }
-	  return false;
-	}
-	
-	public static function scanl<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
-	  var accum = init;
-	  var result = [init];
-	  
-	  for (e in iter) {
-	    result.push(f(e, accum));
-	  }
-	  
-	  return result;
-	}
-	
-	public static function scanr<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
-	  var accum = init;
-	  var result = [init];
-	  
-	  for (e in reversed(iter)) {
-	    result.push(f(e, accum));
-	  }
-	  
-	  return result;
-	}
-	
-	public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
+    });
+  }
+  
+  public static function and<T>(iter: Iterable<Bool>): Bool {
+    var iterator = iter.iterator();
+    
+    while (iterator.hasNext()) {
+      var element = iterator.next();
+      if (element == false) { return false; }; 
+    }
+    return true;
+  }
+  
+  public static function or<T>(iter: Iterable<Bool>): Bool {
+    var iterator = iter.iterator();
+    
+    while (iterator.hasNext()) {
+      if (iterator.next() == true) { return true; }; 
+    }
+    return false;
+  }
+  
+  public static function scanl<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
+    var accum = init;
+    var result = [init];
+    
+    for (e in iter) {
+      result.push(f(e, accum));
+    }
+    
+    return result;
+  }
+  
+  public static function scanr<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
+    var accum = init;
+    var result = [init];
+    
+    for (e in reversed(iter)) {
+      result.push(f(e, accum));
+    }
+    
+    return result;
+  }
+  
+  public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
     var iterator = iter.iterator();
     var accum = null;
     var result = [];
@@ -288,78 +288,78 @@ class IterableExtensions {
       else result.push(f(iterator.next(), accum));
     }
     
-	  return cast result;
-	}
-	
-	public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
-	  var iterator = reversed(iter).iterator();
-	  var init = iterator.next(); 
-	  
-	  var accum = init;
-	  var result = [init];
-	  
-	  while (iterator.hasNext()) {
-	    result.push(f(iterator.next(), accum));
-	  }
-	  
-	  return result;
-	}
-	
-	public static function existsP<T>(iter:Iterable<T>, ref: T, f: T -> T -> Bool): Bool {
-	  var result:Bool = false;
-	  
-	  for (e in iter) {
-	    if (f(ref, e)) result = true;
-	  }
-	  
-	  return result;
-	}
+    return cast result;
+  }
+  
+  public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
+    var iterator = reversed(iter).iterator();
+    var init = iterator.next(); 
+    
+    var accum = init;
+    var result = [init];
+    
+    while (iterator.hasNext()) {
+      result.push(f(iterator.next(), accum));
+    }
+    
+    return result;
+  }
+  
+  public static function existsP<T>(iter:Iterable<T>, ref: T, f: T -> T -> Bool): Bool {
+    var result:Bool = false;
+    
+    for (e in iter) {
+      if (f(ref, e)) result = true;
+    }
+    
+    return result;
+  }
 
-	public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-	  return foldl(iter, [], function(a, b) {
-	    return if(existsP(a, b, f)) {
-	      a;
-	    }
-	    else {
-	      a.push(b);
-	      a;
-	    }
-	  });
-	}
-	
-	public static function intersectBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-	  return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
-	    return if (existsP(iter2, b, f)) append(a, b); else a;
-	  });
-	}
-	
-	public static function intersect<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
-	  return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
-	    return if (existsP(iter2, b, function(a, b) { return a == b; })) append(a, b); else a;
-	  });
-	}
-	
-	public static function unionBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-	  var result = iter1;
-	  
-	  for (e in iter2) {
-	    var exists = false;
-	    
-	    for (i in iter1) {
-	      if (f(i, e)) {
-	        exists = true;
-	      }
-	    }
-	    if (!exists) {
-	      result = append(result, e);
-	    }
-	  }
-	  
-	  return result;
-	}
-	
-	public static function union<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
-	  return unionBy(iter1, iter2, function(a, b) { return a == b; });
-	}
+  public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+    return foldl(iter, [], function(a, b) {
+      return if(existsP(a, b, f)) {
+        a;
+      }
+      else {
+        a.push(b);
+        a;
+      }
+    });
+  }
+  
+  public static function intersectBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+    return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+      return if (existsP(iter2, b, f)) append(a, b); else a;
+    });
+  }
+  
+  public static function intersect<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
+    return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+      return if (existsP(iter2, b, function(a, b) { return a == b; })) append(a, b); else a;
+    });
+  }
+  
+  public static function unionBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
+    var result = iter1;
+    
+    for (e in iter2) {
+      var exists = false;
+      
+      for (i in iter1) {
+        if (f(i, e)) {
+          exists = true;
+        }
+      }
+      if (!exists) {
+        result = append(result, e);
+      }
+    }
+    
+    return result;
+  }
+  
+  public static function union<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
+    return unionBy(iter1, iter2, function(a, b) { return a == b; });
+  }
 
 }

@@ -29,22 +29,22 @@ using haxe.text.json.JValueExtensions;
 class HttpJValueJsonpTestCase extends TestCase {
   var h: HttpJValue;
   
-	public function new() {
-	  super();
-	}
-	
-	override public function before() {
-	  h = new HttpJValueJsonp();
-	}
-	
-	public function testGet() {
-	  Assert.delivered(h.get('http://search.twitter.com/search.json', { q: 'santa' }.toMap()),
-	    function(data) {
-	      var results = data.body.get().get('results');
-	      
-	      Assert.notNull(results);
-	    },
-	    4000
-	  );
-	}
+  public function new() {
+    super();
+  }
+  
+  override public function before() {
+    h = new HttpJValueJsonp();
+  }
+  
+  public function testGet() {
+    Assert.delivered(h.get('http://search.twitter.com/search.json', { q: 'santa' }.toMap()),
+      function(data) {
+        var results = data.body.get().get('results');
+        
+        Assert.notNull(results);
+      },
+      4000
+    );
+  }
 }

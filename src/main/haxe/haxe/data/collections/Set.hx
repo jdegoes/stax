@@ -113,33 +113,33 @@ class Set<T> implements Collection<Set<T>, T> {
     var a1 = this.toArray();
     var a2 = other.toArray();
     var or = if(null == equal) {
-	  if(a1.length == 0)
-	    Stax.getOrderFor(null);
-	  else
-	    order = Stax.getOrderFor(a1[0]);
+    if(a1.length == 0)
+      Stax.getOrderFor(null);
+    else
+      order = Stax.getOrderFor(a1[0]);
     } else order;
-    return Array.OrderF(or)(a1, a2);
+    return a1.compareWith(a2, or);
   } 
 
   public function hashCode() : Int {
-	var ha = if(null == hasher) {
-	  if(size == 0)
-		Stax.getHasherFor(null);
-	  else
-	    hasher = Stax.getHasherFor(iterator().next());   
-	} else hasher;
-	return foldl(393241, function(a, b) return a * (ha(b) + 6151));
+    var ha = if(null == hasher) {
+    if(size == 0)
+      Stax.getHasherFor(null);
+    else
+      hasher = Stax.getHasherFor(iterator().next());   
+    } else hasher;
+    return foldl(393241, function(a, b) return a * (ha(b) + 6151));
   }
 
   public function toString(): String { 
-	var a = this.toArray();
-	var sh = if(null == show) {
-	  if(a.length == 0)
-	    Stax.getShowFor(null);
-	  else
-	    show = Stax.getShowFor(a[0]);	
-	} else show;
-    return "Set " + Array.ShowF(sh)(a);
+    var a = this.toArray();
+    var sh = if(null == show) {
+    if(a.length == 0)
+      Stax.getShowFor(null);
+    else
+      show = Stax.getShowFor(a[0]);  
+    } else show;
+    return "Set " + a.toStringWith(sh);
   }
    
   private function copyWithMod(newMap: Map<T, T>): Set<T> {

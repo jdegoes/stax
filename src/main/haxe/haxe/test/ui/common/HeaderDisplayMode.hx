@@ -16,13 +16,13 @@
 package haxe.test.ui.common;
 
 enum HeaderDisplayMode {
-	AlwaysShowHeader;
-	NeverShowHeader;
-	ShowHeaderWithResults;
+  AlwaysShowHeader;
+  NeverShowHeader;
+  ShowHeaderWithResults;
 }
 
 enum SuccessResultsDisplayMode {
-	AlwaysShowSuccessResults;
-	NeverShowSuccessResults;
-	ShowSuccessResultsWithNoErrors;
+  AlwaysShowSuccessResults;
+  NeverShowSuccessResults;
+  ShowSuccessResultsWithNoErrors;
 }

@@ -29,19 +29,19 @@ class PointTestCase extends TestCase {
     return p1.x == p2.x && p1.y == p2.y;
   }
   
-	public function new() {
-		super();
-	}
-	
-	public function testMinusPlusLeavesUnchanged() {
-	  var p1 = { x: 23, y: 92 };
-	  var p2 = { x: -85, y: -39 };
-	  
-	  assertEquals(p2, p1.plus(p2.minus(p1)), cmpInt);
-	}
-	
-	public function testMap() {
-	  assertEquals({x: 2, y: 9}, {x: 1, y: 3}.map(function(x) return x * 2, function(y) return y * 3), cmpInt);
-	}
-	
+  public function new() {
+    super();
+  }
+  
+  public function testMinusPlusLeavesUnchanged() {
+    var p1 = { x: 23, y: 92 };
+    var p2 = { x: -85, y: -39 };
+    
+    assertEquals(p2, p1.plus(p2.minus(p1)), cmpInt);
+  }
+  
+  public function testMap() {
+    assertEquals({x: 2, y: 9}, {x: 1, y: 3}.map(function(x) return x * 2, function(y) return y * 3), cmpInt);
+  }
+  
 }

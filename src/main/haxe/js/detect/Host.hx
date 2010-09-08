@@ -50,11 +50,11 @@ class Host {
   private static var AndroidPattern     = ~/Android/;
   private static var LinuxPattern       = ~/Linux/;
   
-	private static function detectEnvironment(): EnvironmentType {
-	  if (Env.navigator == null) return UnknownServer;
-	  else if (untyped __js__('process') != null) return NodeJs;
-	  
-	  var userAgent = Env.navigator.userAgent;
+  private static function detectEnvironment(): EnvironmentType {
+    if (Env.navigator == null) return UnknownServer;
+    else if (untyped __js__('process') != null) return NodeJs;
+    
+    var userAgent = Env.navigator.userAgent;
 
     return if (OperaPattern.matches(userAgent)) Opera(OperaPattern.matched(1));
     else if (ChromePattern.matches(userAgent)) Chrome(ChromePattern.matched(1));
@@ -75,5 +75,5 @@ class Host {
     else if (MacPattern.matches(userAgent)) Mac;
     else if (LinuxPattern.matches(userAgent)) Linux;
     else Unknown(userAgent);
-	}
+  }
 }

@@ -29,10 +29,10 @@ interface ScheduledExecutor {
   /** Executes the function a single time the specified number of milliseconds 
    * into the future, returning a future of the return value of the function.
    */
-	public function once<T>(f: Void -> T, ms: Int): Future<T>;
-	
-	/** Executes the reducer a fixed number of times, each separated by the specified
-	 * number of milliseconds, returning a future of the completed reduction.
+  public function once<T>(f: Void -> T, ms: Int): Future<T>;
+  
+  /** Executes the reducer a fixed number of times, each separated by the specified
+   * number of milliseconds, returning a future of the completed reduction.
    */
   public function repeat<T>(seed: T, f: T -> T, ms: Int, times: Int): Future<T>;
   
@@ -82,7 +82,7 @@ class ScheduledExecutorSystem implements ScheduledExecutor {
     
     return future;
   }
-	
+  
   public function repeat<T>(seed: T, f: T -> T, ms: Int, times: Int): Future<T> {
     var future = new Future();
 

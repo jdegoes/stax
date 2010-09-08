@@ -28,7 +28,7 @@ typedef Object = Dynamic // Object
 typedef DOMUserData = Dynamic //any
 
 extern class DomCollection<T> implements ArrayAccess<T> {
-	var length (default, null) : Int;
+  var length (default, null) : Int;
 }
 
 // [\t]*readonly attribute long (\w+)
@@ -2477,7 +2477,7 @@ typedef HTMLMediaElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -2995,7 +2995,7 @@ typedef HTMLUnknownElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -3215,7 +3215,7 @@ typedef HTMLElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -3458,7 +3458,7 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -3681,7 +3681,7 @@ typedef HTMLHtmlElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -3904,7 +3904,7 @@ typedef HTMLHeadElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -4134,7 +4134,7 @@ typedef HTMLLinkElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -4357,7 +4357,7 @@ typedef HTMLTitleElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -4584,7 +4584,7 @@ typedef HTMLMetaElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -4808,7 +4808,7 @@ typedef HTMLBaseElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -5032,7 +5032,7 @@ typedef HTMLIsIndexElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -5257,7 +5257,7 @@ typedef HTMLStyleElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -5485,7 +5485,7 @@ typedef HTMLBodyElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -5722,7 +5722,7 @@ typedef HTMLFormElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -5962,7 +5962,7 @@ typedef HTMLSelectElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -6186,7 +6186,7 @@ typedef HTMLCanvasElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -6502,7 +6502,7 @@ typedef HTMLOptGroupElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -6731,7 +6731,7 @@ typedef HTMLOptionElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -6976,7 +6976,7 @@ typedef HTMLInputElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -7207,7 +7207,7 @@ typedef HTMLTextAreaElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -7431,7 +7431,7 @@ typedef HTMLButtonElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -7656,7 +7656,7 @@ typedef HTMLLabelElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -7880,7 +7880,7 @@ typedef HTMLFieldSetElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -8104,7 +8104,7 @@ typedef HTMLLegendElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -8328,7 +8328,7 @@ typedef HTMLUListElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -8553,7 +8553,7 @@ typedef HTMLOListElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -8776,7 +8776,7 @@ typedef HTMLDListElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -8999,7 +8999,7 @@ typedef HTMLDirectoryElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -9222,7 +9222,7 @@ typedef HTMLMenuElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -9445,7 +9445,7 @@ typedef HTMLLIElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -9667,7 +9667,7 @@ typedef HTMLDivElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -9889,7 +9889,7 @@ typedef HTMLParagraphElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -10111,7 +10111,7 @@ typedef HTMLHeadingElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -10333,7 +10333,7 @@ typedef HTMLQuoteElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -10555,7 +10555,7 @@ typedef HTMLPreElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -10777,7 +10777,7 @@ typedef HTMLBRElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -11001,7 +11001,7 @@ typedef HTMLBaseFontElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -11225,7 +11225,7 @@ typedef HTMLFontElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -11450,7 +11450,7 @@ typedef HTMLHRElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -11673,7 +11673,7 @@ typedef HTMLModElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -11910,7 +11910,7 @@ typedef HTMLAnchorElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -12139,7 +12139,7 @@ typedef HTMLImageElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -12380,7 +12380,7 @@ typedef HTMLObjectElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -12605,7 +12605,7 @@ typedef HTMLParamElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -12837,7 +12837,7 @@ typedef HTMLAppletElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -13061,7 +13061,7 @@ typedef HTMLMapElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -13290,7 +13290,7 @@ typedef HTMLAreaElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -13518,7 +13518,7 @@ typedef HTMLScriptElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -13770,7 +13770,7 @@ typedef HTMLTableElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -13992,7 +13992,7 @@ typedef HTMLTableCaptionElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -14219,7 +14219,7 @@ typedef HTMLTableColElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -14450,7 +14450,7 @@ typedef HTMLTableSectionElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -14684,7 +14684,7 @@ typedef HTMLTableRowElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -14921,7 +14921,7 @@ typedef HTMLTableCellElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -15144,7 +15144,7 @@ typedef HTMLFrameSetElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -15376,7 +15376,7 @@ typedef HTMLFrameElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -15610,7 +15610,7 @@ typedef HTMLIFrameElement = {
     public function insertAdjacentHTML(position: DOMString, text: DOMString): Void;
         
     
-	  public var offsetLeft       (default,null): Int;
+    public var offsetLeft       (default,null): Int;
     public var offsetTop        (default,null): Int;
     public var offsetWidth      (default,null): Int;
     public var offsetHeight     (default,null): Int;
@@ -17762,16 +17762,16 @@ typedef Location = {
 
 //Tested
 typedef Screen = {
-    public var availHeight  (default, null): String;	
+    public var availHeight  (default, null): String;  
     public var availWidth   (default, null): String;
     public var availTop     (default, null): String;
-    public var availLeft    (default, null): String;		
-    public var colorDepth   (default, null): String;	
-    public var height       (default, null): String;	
-    public var pixelDepth   (default, null): String;	
+    public var availLeft    (default, null): String;    
+    public var colorDepth   (default, null): String;  
+    public var height       (default, null): String;  
+    public var pixelDepth   (default, null): String;  
     public var width        (default, null): String;
     public var left         (default, null): String;
-    public var top          (default, null): String;		
+    public var top          (default, null): String;    
 }
 
 typedef ScreenView = {

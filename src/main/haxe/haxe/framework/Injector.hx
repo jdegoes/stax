@@ -182,12 +182,12 @@ private class InjectorImpl {
   public static function globally<T>() {
     var internalBind = function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
       switch (bindingTypeDef(bindingType)) {
-  	    case OneToOne:
-  	      addGlobalBinding(interf, f);
+        case OneToOne:
+          addGlobalBinding(interf, f);
 
-  	    case OneToMany:
-  	      addGlobalBinding(interf, f.memoize());
-  	  }
+        case OneToMany:
+          addGlobalBinding(interf, f.memoize());
+      }
     }
   
     return {

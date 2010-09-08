@@ -33,75 +33,75 @@ class IFrameIOTestCase extends TestCase {
   var iframeIO1: IFrameIO;
   var iframeIO2: IFrameIO;
   
-	override public function beforeAll(): Void {
-	  var d = Env.document;
-	  
-	  var body = d.getElementsByTagName('body')[0];
-	  
-	  var iframe1: HTMLIFrameElement = Env.document.newIframeInvisible();
-	  var iframe2: HTMLIFrameElement = Env.document.newIframeInvisible();
-	  
-	  body.appendChild(iframe1);
-	  body.appendChild(iframe2);
-	  
-	  var doc1: HTMLDocument = cast Quirks.getIframeDocument(iframe1);
-	  var doc2: HTMLDocument = cast Quirks.getIframeDocument(iframe2);
-	  
-	  window1 = Quirks.getIframeWindow(iframe1);
-	  window2 = Quirks.getIframeWindow(iframe2);
-	  
-	  iframeIO1 = new IFrameIOAutoDetect(window1);
-	  iframeIO2 = new IFrameIOAutoDetect(window2);
-	}
-	
-	override public function afterAll(): Void {
-	}
-	
-	public function testSendOfTinyStringPacketIsReceived(): Void {
-	  var self = this;
-	  
-	  var count = 0;
-	  
-	  iframeIO1.receiveWhile(
-	    function(data) {
-	      self.assertEquals('foo', data);
-	      
-	      trace('Successfully tested send of tiny packet');
-	      
-	      self.XtestSendOfLargeStringPacketIsReceived();
-	      
-	      return false;
-	    },
-	    window2.location.href,
-	    window2
-	  );
-	  
-	  iframeIO2.send('foo', window1.location.href, window1);
-	  
-	  assertTrue(true);
-	}
-	
-	public function XtestSendOfLargeStringPacketIsReceived(): Void {
-	  var string = "";
-	  
-	  for (i in 0...1000) string += "91234";
-	  
-	  var self = this;
-	  
-	  iframeIO1.receiveWhile(
-	    function(data) {
-	      self.assertEquals(string, data);
-	      
-	      trace('Successfully tested send of large packet');
-	      
-	      return false;
-	    },
-	    window2.location.href,
-	    window2
-	  );
-	  
-	  iframeIO2.send(string, window1.location.href, window1);
-	  
-	  assertTrue(true);
-	}
+  override public function beforeAll(): Void {
+    var d = Env.document;
+    
+    var body = d.getElementsByTagName('body')[0];
+    
+    var iframe1: HTMLIFrameElement = Env.document.newIframeInvisible();
+    var iframe2: HTMLIFrameElement = Env.document.newIframeInvisible();
+    
+    body.appendChild(iframe1);
+    body.appendChild(iframe2);
+    
+    var doc1: HTMLDocument = cast Quirks.getIframeDocument(iframe1);
+    var doc2: HTMLDocument = cast Quirks.getIframeDocument(iframe2);
+    
+    window1 = Quirks.getIframeWindow(iframe1);
+    window2 = Quirks.getIframeWindow(iframe2);
+    
+    iframeIO1 = new IFrameIOAutoDetect(window1);
+    iframeIO2 = new IFrameIOAutoDetect(window2);
+  }
+  
+  override public function afterAll(): Void {
+  }
+  
+  public function testSendOfTinyStringPacketIsReceived(): Void {
+    var self = this;
+    
+    var count = 0;
+    
+    iframeIO1.receiveWhile(
+      function(data) {
+        self.assertEquals('foo', data);
+        
+        trace('Successfully tested send of tiny packet');
+        
+        self.XtestSendOfLargeStringPacketIsReceived();
+        
+        return false;
+      },
+      window2.location.href,
+      window2
+    );
+    
+    iframeIO2.send('foo', window1.location.href, window1);
+    
+    assertTrue(true);
+  }
+  
+  public function XtestSendOfLargeStringPacketIsReceived(): Void {
+    var string = "";
+    
+    for (i in 0...1000) string += "91234";
+    
+    var self = this;
+    
+    iframeIO1.receiveWhile(
+      function(data) {
+        self.assertEquals(string, data);
+        
+        trace('Successfully tested send of large packet');
+        
+        return false;
+      },
+      window2.location.href,
+      window2
+    );
+    
+    iframeIO2.send(string, window1.location.href, window1);
+    
+    assertTrue(true);
+  }
 }
