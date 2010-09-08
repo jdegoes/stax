@@ -75,7 +75,6 @@ class DynamicExtensions {
 
 class BoolExtensions {
   public static function toInt(v: Bool): Float { return if (v) 1 else 0; }
-//*F  public static function toString(v: Bool): String { return Std.string(v); }
   
   public static function ifTrue<T>(v: Bool, f: Thunk<T>): Option<T> {
     return if (v) Some(f()) else None;
@@ -88,28 +87,7 @@ class BoolExtensions {
   public static function ifElse<T>(v: Bool, f1: Thunk<T>, f2: Thunk<T>): T {
     return if (v) f1() else f2();
   }  
-/*F
-  public static function OrderF(c : Enum<Bool>): OrderFunction<Bool> {
-    return function(v1: Bool, v2: Bool) {
-      return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;
-    };    
-  }
-  public static function EqualF(c: Enum<Bool>): EqualFunction<Bool> {
-    return function(v1: Bool, v2: Bool) {
-      return v1 == v2;
-    };
-  }  
-  public static function ShowF(c: Enum<Bool>): ShowFunction<Bool> {
-    return function(v: Bool) {
-      return if (v) "true" else "false";
-    };
-  }
-  public static function HasherF(c: Enum<Bool>): HasherFunction<Bool> {
-    return function(v: Bool) {
-      return if (v) 786433 else 393241;
-    };
-  }
-*/
+
   public static function compare(v1 : Bool, v2 : Bool) : Int {
     return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;   
   }
@@ -131,7 +109,6 @@ class IntExtensions {
   public static function min(v1: Int, v2: Int): Int { return if (v2 < v1) v2; else v1; }
   public static function toBool(v: Int): Bool { return if (v == 0) false else true; }
   public static function toFloat(v: Int): Float { return v; }
-//*F  public static function toString(v: Int): String { return Std.string(v); }
   
   public static function to(start: Int, end: Int): Iterable<Int> {
     return {
@@ -148,30 +125,7 @@ class IntExtensions {
   
   public static function until(start: Int, end: Int): Iterable<Int> {
     return to(start, end - 1);
-  }
-/*F
-  public static function OrderF(c: Class<Int>): OrderFunction<Int> {
-    return function(v1: Int, v2: Int) {
-      return v1 - v2;
-    };
-  }
-  public static function EqualF(c: Class<Int>): EqualFunction<Int> {
-    return function(v1: Int, v2: Int) {
-      return v1 == v2;
-    };
-  }
-
-  public static function ShowF(c: Class<Int>): ShowFunction<Int> {
-    return function(v: Int): String {
-      return "" + v;
-    };
-  }
-  public static function HasherF(c: Class<Int>): HasherFunction<Int> {
-    return function(v: Int) {
-      return v * 196613;
-    };
-  } 
-*/   
+  }  
   public static function compare(v1: Int, v2: Int) : Int {
     return v1 - v2;
   }
@@ -191,30 +145,7 @@ class FloatExtensions {
   public static function floor(v: Float): Int { return Math.floor(v); }
   public static function max(v1: Float, v2: Float): Float { return if (v2 > v1) v2; else v1; }
   public static function min(v1: Float, v2: Float): Float { return if (v2 < v1) v2; else v1; }
-  public static function toInt(v: Float): Int { return Std.int(v); }
-//*F  public static function toString(v: Float): String { return Std.string(v); } 
-/*F
-  public static function OrderF(c: Class<Float>): OrderFunction<Float> {
-    return function(v1: Float, v2: Float) {   
-      return if (v1 < v2) -1 else if (v1 > v2) 1 else 0;
-    };
-  }
-  public static function EqualF(c: Class<Float>): EqualFunction<Float> {
-    return function(v1: Float, v2: Float) {
-      return v1 == v2;
-    };
-  }
-  public static function ShowF(c: Class<Float>): ShowFunction<Float> {
-    return function(v: Float): String {
-      return "" + v;
-    };
-  }
-  public static function HasherF(c: Class<Float>): HasherFunction<Float> {
-    return function(v: Float) {
-      return Std.int(v * 98317); 
-    };
-  }
-*/  
+  public static function toInt(v: Float): Int { return Std.int(v); } 
   public static function compare(v1: Float, v2: Float) {   
     return if (v1 < v2) -1 else if (v1 > v2) 1 else 0;
   }
@@ -273,34 +204,6 @@ class StringExtensions {
   public static function replace( s : String, sub : String, by : String ) : String {
     return StringTools.replace(s, sub, by);
   }    
-/*F
-  public static function OrderF(c: Class<String>): OrderFunction<String> {  
-    return function(v1: String, v2: String) { 
-	  return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
-    };
-  }
-  public static function EqualF(c: Class<String>): EqualFunction<String> {
-    return function(v1: String, v2: String) {
-      return v1 == v2;
-    };
-  }
-  public static function ShowF(c: Class<String>): ShowFunction<String> {
-    return function(v: String): String {
-      return v;
-    };
-  }
-  public static function HasherF(c: Class<String>): HasherFunction<String> {
-    return function(v: String) {
-      var hash = 49157;
-      
-      for (i in 0...v.length) {
-        hash += (v.charCodeAt(i) + 24593) * 49157;
-      }
-      
-      return hash;
-    };
-  }
-*/
   public static function compare(v1: String, v2: String) { 
 	return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
   }
@@ -321,31 +224,6 @@ class StringExtensions {
   }
 }
 class DateExtensions {
-//  public static function toString(v: Date): String { return Std.string(v); }   
-/*F
-  public static function OrderF(c: Class<Date>): OrderFunction<Date> {  
-    return function(v1: Date, v2: Date) {  
-	  var diff = v1.getTime() - v2.getTime();
-      
-      return if (diff < 0) -1; else if (diff > 0) 1; else 0;
-    };
-  }
-  public static function EqualF(c: Class<Date>): EqualFunction<Date> {
-    return function(v1: Date, v2: Date) {
-      return v1.getTime() == v2.getTime();
-    };
-  }
-  public static function ShowF(c: Class<Date>): ShowFunction<Date> {
-    return function(v: Date): String {
-      return v.toString();
-    };
-  }
-  public static function HasherF(c: Class<Date>): HasherFunction<Date> {
-    return function(v: Date) {
-      return Math.round(v.getTime() * 49157);
-    };
-  }
-*/
   public static function compare(v1: Date, v2: Date) {  
     var diff = v1.getTime() - v2.getTime();
       
@@ -362,61 +240,6 @@ class DateExtensions {
   }
 }
 class ArrayExtensions {
-/*F 
-  public static function OrderF<T>(c: Class<Array<Dynamic>>, ?order: OrderFunction<T>): OrderFunction<Array<T>> {
-    return function(v1: Array<T>, v2: Array<T>) {  
-	  var c = v1.length - v2.length;
-	  if(c != 0)
-	    return c; 
-	  if(v1.length == 0)
-	    return 0;                       
-      if(null == order)
-        order = Stax.getOrderFor(v1[0]);
-      for (i in 0...v1.length) {
-        var c = order(v1[i], v2[i]);   
-        if (c != 0) return c;
-      }
-      return 0;
-    };
-  }
-  public static function EqualF<T>(c: Class<Array<Dynamic>>, ?equal: EqualFunction<T>): EqualFunction<Array<T>> {
-    return function(v1: Array<T>, v2: Array<T>) { 
-      if (v1.length != v2.length) return false;
-      if (v1.length == 0) return true;
-	  if(null == equal)
-	    equal = Stax.getEqualFor(v1[0]);
-      for (i in 0...v1.length) {
-        if (!equal(v1[i], v2[i])) return false;
-      }
-    
-      return true;
-    };
-  }
-  public static function ShowF<T>(c: Class<Array<Dynamic>>, ?show: ShowFunction<T>): ShowFunction<Array<T>> {
-    return function(v: Array<T>) {
-	  if(v.length == 0)
-	    return "[]";
-	  else {  
-		if(null == show)
-		  show = Stax.getShowFor(v[0]);
-	    return "[" + v.map(show).join(", ") + "]";  
-	  }
-    };
-  }
-  public static function HasherF<T>(c: Class<Array<Dynamic>>, ?hasher: HasherFunction<T>): HasherFunction<Array<T>> {
-    return function(v: Array<T>) {
-      var hash = 12289;
-      if(v.length == 0) return hash;
-      if(null == hasher) 
-	      hasher = Stax.getHasherFor(v[0]);
-      for (i in 0...v.length) {
-        hash += hasher(v[i]) * 12289;
-      }
-    
-      return hash;
-    };
-  } 
-*/
   public static function compare<T>(v1: Array<T>, v2: Array<T>) {
       return compareWith(v1, v2, Stax.getOrderFor(v1[0]));
   } 
