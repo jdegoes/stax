@@ -306,180 +306,180 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   
   static var log = Logger.debug();
   
-	public function new(w: Window) {
-	  super();
-	  
-	  this.bindTarget         = w;
-		this.executor           = ScheduledExecutor.inject();
-		this.fragmentsToSend    = newFragmentsList();
-		this.fragmentsReceived  = Map.create(MessageKey.HasherF(), MessageKey.EqualF());
-		this.receivers          = new Hash();
-		this.originUrlToWindow  = new Hash();
-		
-		senderFuture   = None;
-		receiverFuture = None;
-	}
-	
-	override public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
-	  return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
-	}
-	
-	override public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
-	  var self = this;
-	  
-	  var domain = extractDomain(originUrl);
-	  
-	  var r = if (receivers.exists(domain)) receivers.get(domain) else [].withEffect(function(r){ self.receivers.set(domain, r); });
-	  
-	  var wrapper: Dynamic -> Void = null;
-	  
-	  wrapper = function(d: Dynamic): Void { if (!f(d)) r.remove(wrapper); }
-	  
-	  r.push(wrapper);
-	  
-	  // We need to keep track of which window is associated with this url, so in
-	  // case we lose some fragments from this url, we know how to request them:
-	  originUrlToWindow.set(originUrl, originWindow);
-	  
-	  startReceiver();
-	  
-	  return this;
-	}
-	
-	override public function send(data: Dynamic, to_: String, iframe: Window): IFrameIO {
-	  var from = normalize(bindTarget.location.href);
-	  var to   = normalize(to_);
-	  
-	  var maxFragSize = 1500 - to.length;
-	  var fragmentId  = 1;
-	  var fragments   = Json.encodeObject(data).chunk(maxFragSize);
-	  
-	  var encoded = fragments.mapTo(newFragmentsList(), function(chunk): Tuple2<Window, AddressableFragment> return iframe.entuple(cast {
-	    type:           'delivery',
+  public function new(w: Window) {
+    super();
+    
+    this.bindTarget         = w;
+    this.executor           = ScheduledExecutor.inject();
+    this.fragmentsToSend    = newFragmentsList();
+    this.fragmentsReceived  = Map.create(MessageKey.HasherF(), MessageKey.EqualF());
+    this.receivers          = new Hash();
+    this.originUrlToWindow  = new Hash();
+    
+    senderFuture   = None;
+    receiverFuture = None;
+  }
+  
+  override public function receive(f: Dynamic -> Void, originUrl: String, ?originWindow: Window): IFrameIO {
+    return receiveWhile(function(d) return true.withEffect(function(_) { f(d); }), originUrl, originWindow);
+  }
+  
+  override public function receiveWhile(f: Dynamic -> Bool, originUrl: String, ?originWindow: Window): IFrameIO {
+    var self = this;
+    
+    var domain = extractDomain(originUrl);
+    
+    var r = if (receivers.exists(domain)) receivers.get(domain) else [].withEffect(function(r){ self.receivers.set(domain, r); });
+    
+    var wrapper: Dynamic -> Void = null;
+    
+    wrapper = function(d: Dynamic): Void { if (!f(d)) r.remove(wrapper); }
+    
+    r.push(wrapper);
+    
+    // We need to keep track of which window is associated with this url, so in
+    // case we lose some fragments from this url, we know how to request them:
+    originUrlToWindow.set(originUrl, originWindow);
+    
+    startReceiver();
+    
+    return this;
+  }
+  
+  override public function send(data: Dynamic, to_: String, iframe: Window): IFrameIO {
+    var from = normalize(bindTarget.location.href);
+    var to   = normalize(to_);
+    
+    var maxFragSize = 1500 - to.length;
+    var fragmentId  = 1;
+    var fragments   = Json.encodeObject(data).chunk(maxFragSize);
+    
+    var encoded = fragments.mapTo(newFragmentsList(), function(chunk): Tuple2<Window, AddressableFragment> return iframe.entuple(cast {
+      type:           'delivery',
       from:           from,
       to:             to,
       messageId:      lastMessageId.toString(),
       fragmentId:     (fragmentId++).toString(),
       fragmentCount:  fragments.size.toString(),
       data:           chunk
-	  }));
-	  
-	  fragmentsToSend = fragmentsToSend.concat(encoded);
-	  
-	  ++lastMessageId;
-	  
-	  startSender();
-	  
-	  return this;
-	}
-	
-	/** Stops the IO.
-	 */
-	public function stop(): IFrameIO {
-	  stopSender();
-	  stopReceiver();
-	  
-	  return this;
-	}
-	
-	private static function normalizeOpt(url: Url): Option<Url> {
+    }));
+    
+    fragmentsToSend = fragmentsToSend.concat(encoded);
+    
+    ++lastMessageId;
+    
+    startSender();
+    
+    return this;
+  }
+  
+  /** Stops the IO.
+   */
+  public function stop(): IFrameIO {
+    stopSender();
+    stopReceiver();
+    
+    return this;
+  }
+  
+  private static function normalizeOpt(url: Url): Option<Url> {
     return url.toParsedUrl().map(function(p) return p.withoutHash().toUrl());
   }
   
   private static function normalize(url: Url): Url {
     return normalizeOpt(url).getOrElseC(url);
   }
-	
-	private function sender(): Void {
-	  switch (fragmentsToSend.headOption) {
-	    case None:
-	      stopSender();
-	    
-	    case Some(tuple): 
-	      fragmentsToSend = fragmentsToSend.drop(1);
-	      
-	      var window   = tuple._1;
-	      var fragment = tuple._2;
-	      	      
-	      // Send this chunk via the hash tag:	      
-	      window.location.href = fragment.to + '#' + fragment.toMap().toQueryString().substr(1);
-	  }
-	}
-	
-	private function receiver(): Void {
-	  var hash = bindTarget.location.hash;
-	  
-	  if (hash.length > 1) {
-	    var query = '?' + hash.substr(1);
-	    
-	    var unknown: Dynamic = query.toQueryParameters().toObject();
-	    
-	    if (unknown.type == 'delivery') {
-	      var packet: FragmentDelivery = cast unknown;
-	      
-	      var messageKey = messageKeyFrom(packet);
-	      
-	      var fragments = fragmentsReceivedFor(messageKey);
-	      
-	      var alreadyReceived = fragments.foldl(false, function(b, f) return b || f.fragmentId == packet.fragmentId);
-	      
-	      if (!alreadyReceived) {
-	        fragments.push(packet);
-	      
-  	      analyzeReceivedFragments(messageKey, fragments);
-  	    }
-	    }
-	    else if (unknown.type == 'request') {
-	      var packet: FragmentRequest = cast unknown;
-	      
-	      var messageKey = messageKeyFrom(packet);
-	      
-	      
-	    }
-	    else if (unknown.type == 'receipt') {
-	      var packet: FragmentReceipt = cast unknown;
-	      
-	      var messageKey = messageKeyFrom(packet);
-	      
-	      
-	    }
-	    
-	    // Don't want to receive this chunk again:
-	    bindTarget.location.hash = '#';
-	  }
-	  else {
-	    var self = this;
-	    
-	    // We did not receive a chunk, so let's look for missing fragments:
-	    var fragmentRequests = findMissingFragments();
-	    
-	    if (fragmentRequests.size > 0) {
-	      var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
-  	      var window = self.originUrlToWindow.get(request.to);
-	      
-  	      return if (window != null) {
-  	        List.nil().cons(window.entuple(request));
-  	      }
-  	      else {
-  	        List.nil();
-  	      }
-  	    });
-	    
-  	    fragmentsToSend = fragmentsToSend.concat(encoded);
-  	  }
-	  }
-	}
-	
-	private function extractDomain(url: Url): String {
-	  return switch (url.toParsedUrl()) {
-	    case Some(parsed): parsed.hostname + parsed.pathname;
-	    
-	    case None: url;
-	  }
-	}
-	
-	private function analyzeReceivedFragments(messageKey: MessageKey, fragments: Array<FragmentDelivery>): Void {
-	  if (fragments.length >= messageKey.fragmentCount) {
+  
+  private function sender(): Void {
+    switch (fragmentsToSend.headOption) {
+      case None:
+        stopSender();
+      
+      case Some(tuple): 
+        fragmentsToSend = fragmentsToSend.drop(1);
+        
+        var window   = tuple._1;
+        var fragment = tuple._2;
+                
+        // Send this chunk via the hash tag:        
+        window.location.href = fragment.to + '#' + fragment.toMap().toQueryString().substr(1);
+    }
+  }
+  
+  private function receiver(): Void {
+    var hash = bindTarget.location.hash;
+    
+    if (hash.length > 1) {
+      var query = '?' + hash.substr(1);
+      
+      var unknown: Dynamic = query.toQueryParameters().toObject();
+      
+      if (unknown.type == 'delivery') {
+        var packet: FragmentDelivery = cast unknown;
+        
+        var messageKey = messageKeyFrom(packet);
+        
+        var fragments = fragmentsReceivedFor(messageKey);
+        
+        var alreadyReceived = fragments.foldl(false, function(b, f) return b || f.fragmentId == packet.fragmentId);
+        
+        if (!alreadyReceived) {
+          fragments.push(packet);
+        
+          analyzeReceivedFragments(messageKey, fragments);
+        }
+      }
+      else if (unknown.type == 'request') {
+        var packet: FragmentRequest = cast unknown;
+        
+        var messageKey = messageKeyFrom(packet);
+        
+        
+      }
+      else if (unknown.type == 'receipt') {
+        var packet: FragmentReceipt = cast unknown;
+        
+        var messageKey = messageKeyFrom(packet);
+        
+        
+      }
+      
+      // Don't want to receive this chunk again:
+      bindTarget.location.hash = '#';
+    }
+    else {
+      var self = this;
+      
+      // We did not receive a chunk, so let's look for missing fragments:
+      var fragmentRequests = findMissingFragments();
+      
+      if (fragmentRequests.size > 0) {
+        var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
+          var window = self.originUrlToWindow.get(request.to);
+        
+          return if (window != null) {
+            List.nil().cons(window.entuple(request));
+          }
+          else {
+            List.nil();
+          }
+        });
+      
+        fragmentsToSend = fragmentsToSend.concat(encoded);
+      }
+    }
+  }
+  
+  private function extractDomain(url: Url): String {
+    return switch (url.toParsedUrl()) {
+      case Some(parsed): parsed.hostname + parsed.pathname;
+      
+      case None: url;
+    }
+  }
+  
+  private function analyzeReceivedFragments(messageKey: MessageKey, fragments: Array<FragmentDelivery>): Void {
+    if (fragments.length >= messageKey.fragmentCount) {
       // All fragments received -- we can send data to listeners:
       fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
       
@@ -495,75 +495,75 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
     
       fragmentsReceived.removeByKey(messageKey);
     }
-	}
-	
-	private function findMissingFragments(): List<AddressableFragment> {
-	  return fragmentsReceived.values().foldl(List.nil(), function(allMissing, fragments) {
-	    var firstFrag = fragments[0];
-	    
-	    fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
-	    
-	    //trace('length = ' + fragments.length);
-	    
-	    return fragments.toList().gaps(
-	      function(a, b) {
-	        var lastId = a.fragmentId.toInt();
-	        var curId  = b.fragmentId.toInt();
-	        
-	        //trace('lastId = ' + lastId + ', curId = ' + curId);
-	        
-	        return (lastId + 1).until(curId).map(function(missingId): AddressableFragment {
-	          var request: FragmentRequest = {
-    	        type:           'request',
+  }
+  
+  private function findMissingFragments(): List<AddressableFragment> {
+    return fragmentsReceived.values().foldl(List.nil(), function(allMissing, fragments) {
+      var firstFrag = fragments[0];
+      
+      fragments.sort(function(a, b) return a.fragmentId.toInt() - b.fragmentId.toInt());
+      
+      //trace('length = ' + fragments.length);
+      
+      return fragments.toList().gaps(
+        function(a, b) {
+          var lastId = a.fragmentId.toInt();
+          var curId  = b.fragmentId.toInt();
+          
+          //trace('lastId = ' + lastId + ', curId = ' + curId);
+          
+          return (lastId + 1).until(curId).map(function(missingId): AddressableFragment {
+            var request: FragmentRequest = {
+              type:           'request',
               from:           firstFrag.to,
               to:             firstFrag.from,
               messageId:      firstFrag.messageId,
               fragmentCount:  firstFrag.fragmentCount,
               fragmentId:     missingId.toString()
-    	      }
-    	      
-	          return request;
-    	    }).toList();
-	      }
-	    );
-	  });
-	}
-	
-	private function fragmentsReceivedFor(messageKey: MessageKey): Array<FragmentDelivery> {
-	  if (!fragmentsReceived.containsKey(messageKey)) {
+            }
+            
+            return request;
+          }).toList();
+        }
+      );
+    });
+  }
+  
+  private function fragmentsReceivedFor(messageKey: MessageKey): Array<FragmentDelivery> {
+    if (!fragmentsReceived.containsKey(messageKey)) {
       fragmentsReceived = fragmentsReceived.set(messageKey, []);
     }
         
     return fragmentsReceived.get(messageKey).get();
-	}
-	
-	private static function messageKeyFrom(o: {messageId: String, from: String, to: String, fragmentCount: String}): MessageKey {
-	  return new MessageKey(o.messageId.toInt(), o.from, o.to, o.fragmentCount.toInt());
-	}
-	
-	private function startSender(): Void {
-	  if (senderFuture.isEmpty()) {	  
-	    senderFuture = Some(executor.forever(sender, 20));
-	  }
-	}
-	
-	private function stopSender(): Void {
-	  senderFuture.map(function(s) { s.cancel(); return Unit; });
-	  
-	  senderFuture = None;
-	}
-	
-	private function startReceiver(): Void {
-	  if (receiverFuture.isEmpty()) {	  
-	    receiverFuture = Some(executor.forever(receiver, 10));
-	  }
-	}
-	
-	private function stopReceiver(): Void {
-	  receiverFuture.map(function(r) { r.cancel(); return Unit; });
-	  
-	  receiverFuture = None;
-	}
+  }
+  
+  private static function messageKeyFrom(o: {messageId: String, from: String, to: String, fragmentCount: String}): MessageKey {
+    return new MessageKey(o.messageId.toInt(), o.from, o.to, o.fragmentCount.toInt());
+  }
+  
+  private function startSender(): Void {
+    if (senderFuture.isEmpty()) {    
+      senderFuture = Some(executor.forever(sender, 20));
+    }
+  }
+  
+  private function stopSender(): Void {
+    senderFuture.map(function(s) { s.cancel(); return Unit; });
+    
+    senderFuture = None;
+  }
+  
+  private function startReceiver(): Void {
+    if (receiverFuture.isEmpty()) {    
+      receiverFuture = Some(executor.forever(receiver, 10));
+    }
+  }
+  
+  private function stopReceiver(): Void {
+    receiverFuture.map(function(r) { r.cancel(); return Unit; });
+    
+    receiverFuture = None;
+  }
 }
 
 private class MessageKey {

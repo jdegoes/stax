@@ -29,41 +29,41 @@ class StringExtensions {
    *  @todo the List.nil() below used to pass StringExtensions.equals, but due to a bug in haXe (issue 204)
    *  it is not possible to reference that method.
    */
-	public static function chunk(str: String, len: Int): List<String> {
-	  var start = 0;
-	  var end   = (start + len).min(str.length);
-	  
-	  return if (end == 0) List.nil();
+  public static function chunk(str: String, len: Int): List<String> {
+    var start = 0;
+    var end   = (start + len).min(str.length);
+    
+    return if (end == 0) List.nil();
      else {
        var prefix = str.substr(start, end);
        var rest   = str.substr(end);
 
        chunk(rest, len).prepend(prefix);
      }
-	}
+  }
   /**
    *  @todo the a.toList() below used to pass StringExtensions.equals, but due to a bug in haXe (issue 204)
    *  it is not possible to reference that method.
    */
-	public static function chars(str: String): List<String> {
-	  var a = [];
-	  
-	  for (i in 0...str.length) {
-	    a.push(str.charAt(i));
-	  }
-	  
-	  return a.toList();
-	}
-	
-	public static function string(l: List<String>): String {
-	  return l.foldr('', function(b, a) return b + a);
-	}
-	
-	public static function toCamelCase(str: String): String {
-	  return SepAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
-	}
-	
-	public static function fromCamelCase(str: String, sep: String): String {
-	  return AlphaUpperAlphaPattern.customReplace(str, function(e) { return e.matched(1) + sep + e.matched(2).toLowerCase(); });
-	}
+  public static function chars(str: String): List<String> {
+    var a = [];
+    
+    for (i in 0...str.length) {
+      a.push(str.charAt(i));
+    }
+    
+    return a.toList();
+  }
+  
+  public static function string(l: List<String>): String {
+    return l.foldr('', function(b, a) return b + a);
+  }
+  
+  public static function toCamelCase(str: String): String {
+    return SepAlphaPattern.customReplace(str, function(e) { return e.matched(2).toUpperCase(); });
+  }
+  
+  public static function fromCamelCase(str: String, sep: String): String {
+    return AlphaUpperAlphaPattern.customReplace(str, function(e) { return e.matched(1) + sep + e.matched(2).toLowerCase(); });
+  }
 }

@@ -48,16 +48,16 @@ class TweenerExtensions {
    * });
    */
   public static function animate(tweener: Tweener, duration: Int, ?frequency_ = 0, cb: Dynamic<Float> -> Void): Future<Int> {
-	  var executor = ScheduledExecutor.inject();
-	  
-	  var frequency = if (frequency_ > 0) frequency_ else DefaultFrequency;
-	  
-	  return executor.repeat(frequency, function(millis) {
-	    var t = millis / duration;
-	    
-	    cb(tweener(t));
-	    
-	    return millis + frequency;
-	  }, frequency, (duration / frequency).ceil());
-	}
+    var executor = ScheduledExecutor.inject();
+    
+    var frequency = if (frequency_ > 0) frequency_ else DefaultFrequency;
+    
+    return executor.repeat(frequency, function(millis) {
+      var t = millis / duration;
+      
+      cb(tweener(t));
+      
+      return millis + frequency;
+    }, frequency, (duration / frequency).ceil());
+  }
 }

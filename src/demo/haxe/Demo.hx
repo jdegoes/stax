@@ -29,61 +29,61 @@ class Demo {
     var iframeIO1: IFrameIO;
     var iframeIO2: IFrameIO;
 
-	  var d = Env.document;
+    var d = Env.document;
 
-	  var body = d.getElementsByTagName('body')[0];
+    var body = d.getElementsByTagName('body')[0];
 
-	  var iframe1: HTMLIFrameElement = Env.document.newIframe(300, 250);
-	  var iframe2: HTMLIFrameElement = Env.document.newIframe(300, 250);
+    var iframe1: HTMLIFrameElement = Env.document.newIframe(300, 250);
+    var iframe2: HTMLIFrameElement = Env.document.newIframe(300, 250);
 
     body.appendChild(iframe1);
     body.appendChild(iframe2);
 
-	  var doc1: HTMLDocument = Quirks.getIframeDocument(iframe1);
-	  var doc2: HTMLDocument = Quirks.getIframeDocument(iframe2);
-	  
-	  doc1.open();
-	  doc1.write(IframeTemplate);
-	  doc1.close();
-	  
-	  doc2.open();
-	  doc2.write(IframeTemplate);
-	  doc2.close();
+    var doc1: HTMLDocument = Quirks.getIframeDocument(iframe1);
+    var doc2: HTMLDocument = Quirks.getIframeDocument(iframe2);
+    
+    doc1.open();
+    doc1.write(IframeTemplate);
+    doc1.close();
+    
+    doc2.open();
+    doc2.write(IframeTemplate);
+    doc2.close();
 
-	  window1 = Quirks.getIframeWindow(iframe1);
-	  window2 = Quirks.getIframeWindow(iframe2);
-	  
-	  iframeIO1 = new IFrameIOAutoDetect(window1);
-	  iframeIO2 = new IFrameIOAutoDetect(window2);
-	  
-	  var div1 = doc1.getElementById('div');
-	  var div2 = doc2.getElementById('div');
-	  
-	  var textarea1: HTMLTextAreaElement = cast doc1.getElementById('textarea');
-	  var textarea2: HTMLTextAreaElement = cast doc2.getElementById('textarea');
-	  
-	  var button1 = doc1.getElementById('button');
-	  var button2 = doc2.getElementById('button');
-	  
-	  iframeIO1.receive(function(data) {
-	    div1.innerHTML += data;
-	  }, window2.location.href, window2);
-	  
-	  iframeIO2.receive(function(data) {
-	    div2.innerHTML += data;
-	  }, window1.location.href, window1);
-	  
-	  button1.onclick = function(e) {
-	    iframeIO1.send(textarea1.value, window2.location.href, window2);
-	    
-	    textarea1.value = '';
-	  };
-	  
-	  button2.onclick = function(e) {
-	    iframeIO2.send(textarea2.value, window1.location.href, window1);
-	    
-	    textarea2.value = '';
-	  };
+    window1 = Quirks.getIframeWindow(iframe1);
+    window2 = Quirks.getIframeWindow(iframe2);
+    
+    iframeIO1 = new IFrameIOAutoDetect(window1);
+    iframeIO2 = new IFrameIOAutoDetect(window2);
+    
+    var div1 = doc1.getElementById('div');
+    var div2 = doc2.getElementById('div');
+    
+    var textarea1: HTMLTextAreaElement = cast doc1.getElementById('textarea');
+    var textarea2: HTMLTextAreaElement = cast doc2.getElementById('textarea');
+    
+    var button1 = doc1.getElementById('button');
+    var button2 = doc2.getElementById('button');
+    
+    iframeIO1.receive(function(data) {
+      div1.innerHTML += data;
+    }, window2.location.href, window2);
+    
+    iframeIO2.receive(function(data) {
+      div2.innerHTML += data;
+    }, window1.location.href, window1);
+    
+    button1.onclick = function(e) {
+      iframeIO1.send(textarea1.value, window2.location.href, window2);
+      
+      textarea1.value = '';
+    };
+    
+    button2.onclick = function(e) {
+      iframeIO2.send(textarea2.value, window1.location.href, window1);
+      
+      textarea2.value = '';
+    };
   }
   
   public static function browserSupportDemo() {
@@ -198,13 +198,13 @@ class Demo {
     });
   }
 
-	public static function main() {
-	  Injector.forever(function(c) {
-	    c.bind(ScheduledExecutor, ScheduledExecutorSystem);
-	  });
-	    
+  public static function main() {
+    Injector.forever(function(c) {
+      c.bind(ScheduledExecutor, ScheduledExecutorSystem);
+    });
+      
     iframeDemo();
-	    
-	  //browserSupportDemo();
-	}
+      
+    //browserSupportDemo();
+  }
 }

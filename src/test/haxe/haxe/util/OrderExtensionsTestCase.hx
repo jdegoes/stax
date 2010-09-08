@@ -27,14 +27,14 @@ class OrderExtensionsTestCase extends TestCase {
     assertTrue (IntExtensions.compare.greaterThan()(2, 1));
     assertFalse(IntExtensions.compare.greaterThan()(1, 1));
 
-	  assertTrue (IntExtensions.compare.greaterThanOrEqual()(2, 1));
+    assertTrue (IntExtensions.compare.greaterThanOrEqual()(2, 1));
     assertTrue (IntExtensions.compare.greaterThanOrEqual()(1, 1));
     assertFalse(IntExtensions.compare.greaterThanOrEqual()(1, 2));
 
     assertTrue (IntExtensions.compare.lessThan()(1, 2));
     assertFalse(IntExtensions.compare.lessThan()(1, 1));
 
-	  assertTrue (IntExtensions.compare.lessThanOrEqual()(1, 2));
+    assertTrue (IntExtensions.compare.lessThanOrEqual()(1, 2));
     assertTrue (IntExtensions.compare.lessThanOrEqual()(1, 1));
     assertFalse(IntExtensions.compare.lessThanOrEqual()(2, 1));
 

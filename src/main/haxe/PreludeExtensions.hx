@@ -205,7 +205,7 @@ class StringExtensions {
     return StringTools.replace(s, sub, by);
   }    
   public static function compare(v1: String, v2: String) { 
-	return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
+  return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
   }
   public static function equals(v1: String, v2: String) {
     return v1 == v2;
@@ -245,11 +245,11 @@ class ArrayExtensions {
   } 
   
   public static function compareWith<T>(v1: Array<T>, v2: Array<T>, order : OrderFunction<T>) {  
-	  var c = v1.length - v2.length;
-	  if(c != 0)
-	    return c; 
-	  if(v1.length == 0)
-	    return 0;                       
+    var c = v1.length - v2.length;
+    if(c != 0)
+      return c; 
+    if(v1.length == 0)
+      return 0;                       
       for (i in 0...v1.length) {
         var c = order(v1[i], v2[i]);   
         if (c != 0) return c;
@@ -272,7 +272,7 @@ class ArrayExtensions {
   }
   
   public static function toString<T>(v: Array<T>) {
-	  return toStringWith(v, Stax.getShowFor(v[0]));
+    return toStringWith(v, Stax.getShowFor(v[0]));
   }
   public static function toStringWith<T>(v: Array<T>, show : ShowFunction<T>) {
     return "[" + v.map(show).join(", ") + "]";  

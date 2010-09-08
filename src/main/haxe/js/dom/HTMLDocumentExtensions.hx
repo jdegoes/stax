@@ -37,7 +37,7 @@ class HTMLDocumentExtensions {
     
     width.toOption().zip(height.toOption()).map(function(t) {
       iframe.setAttribute('width',   width.toString());
-  	  iframe.setAttribute('height',  height.toString());
+      iframe.setAttribute('height',  height.toString());
     });
     
     return iframe;
@@ -49,25 +49,25 @@ class HTMLDocumentExtensions {
    */
   public static function newIframeWindow(doc: HTMLDocument, width: Int, height: Int): HTMLIFrameElement {
     var iframe = newIframe(doc, width, height);
-	  
-	  iframe.setAttribute('frameborder',   '0');
-	  iframe.setAttribute('marginwidth',   '0');
-	  iframe.setAttribute('marginheight',  '0');
-	  iframe.setAttribute('vspace',        '0');
-	  iframe.setAttribute('hspace',        '0');
-	  iframe.setAttribute('scrolling',     'no');
-	  iframe.setAttribute('noresize',      'noresize');
-	  iframe.setAttribute('allowtransparency', 'true');
-	  
-	  iframe.style.margin  = '0';
-	  iframe.style.padding = '0';
-	  iframe.style.border  = 'none';
-	  iframe.style.backgroundColor = 'transparent';
-	  
-	  return iframe;
+    
+    iframe.setAttribute('frameborder',   '0');
+    iframe.setAttribute('marginwidth',   '0');
+    iframe.setAttribute('marginheight',  '0');
+    iframe.setAttribute('vspace',        '0');
+    iframe.setAttribute('hspace',        '0');
+    iframe.setAttribute('scrolling',     'no');
+    iframe.setAttribute('noresize',      'noresize');
+    iframe.setAttribute('allowtransparency', 'true');
+    
+    iframe.style.margin  = '0';
+    iframe.style.padding = '0';
+    iframe.style.border  = 'none';
+    iframe.style.backgroundColor = 'transparent';
+    
+    return iframe;
   }
   
-	public static function newIframeInvisible(doc: HTMLDocument): HTMLIFrameElement {
-	  return newIframeWindow(doc, 0, 0);
-	}
+  public static function newIframeInvisible(doc: HTMLDocument): HTMLIFrameElement {
+    return newIframeWindow(doc, 0, 0);
+  }
 }

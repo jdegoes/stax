@@ -36,22 +36,22 @@ class TweenTestCase extends TestCase {
   }
   static var Linear = Tween.linear(Start, End);
   
-	public function new() {
-	  super();
-	}
-	
-	public function testLinearTweenAt0() {
-	  assertFloatEquals(0.0, Linear(0).x);
-	  assertFloatEquals(2.0, Linear(0).y);
-	}
-	
-	public function testLinearTweenAt1() {
-	  assertFloatEquals(6.0, Linear(1).x);
-	  assertFloatEquals(12.0, Linear(1).y);
-	}
-	
-	public function testLinearTweenAt0_5() {
-	  assertFloatEquals(3.0, Linear(0.5).x);
-	  assertFloatEquals(7.0, Linear(0.5).y);
-	}
+  public function new() {
+    super();
+  }
+  
+  public function testLinearTweenAt0() {
+    assertFloatEquals(0.0, Linear(0).x);
+    assertFloatEquals(2.0, Linear(0).y);
+  }
+  
+  public function testLinearTweenAt1() {
+    assertFloatEquals(6.0, Linear(1).x);
+    assertFloatEquals(12.0, Linear(1).y);
+  }
+  
+  public function testLinearTweenAt0_5() {
+    assertFloatEquals(3.0, Linear(0.5).x);
+    assertFloatEquals(7.0, Linear(0.5).y);
+  }
 }

@@ -106,29 +106,29 @@ class SetTestCase extends TestCase {
   } 
 
   public function testEquals() {  
-	assertTrue (set().equals(set()));
-	assertTrue (set([1,2,3]).equals(set([1,2,3])));
-	assertFalse(set().equals(set([1])));
-	assertFalse(set([2]).equals(set([1])));
-	assertFalse(set([1,2]).equals(set([1,3])));
+  assertTrue (set().equals(set()));
+  assertTrue (set([1,2,3]).equals(set([1,2,3])));
+  assertFalse(set().equals(set([1])));
+  assertFalse(set([2]).equals(set([1])));
+  assertFalse(set([1,2]).equals(set([1,3])));
   }
 
   public function testCompare() {                
-	assertTrue(set().compare(set()) == 0);
-	assertTrue(set([1,2,3]).compare(set([1,2,3])) == 0);
-	assertTrue(set().compare(set([1])) < 0);
-	assertTrue(set([2]).compare(set([1])) > 0);
-	assertTrue(set([1,2]).compare(set([1,3])) < 0);          
+  assertTrue(set().compare(set()) == 0);
+  assertTrue(set([1,2,3]).compare(set([1,2,3])) == 0);
+  assertTrue(set().compare(set([1])) < 0);
+  assertTrue(set([2]).compare(set([1])) > 0);
+  assertTrue(set([1,2]).compare(set([1,3])) < 0);          
   }
 
   public function testToString() {           
-	assertEquals("Set []", set().toString());
-	assertEquals("Set [1, 2, 3]", set([1,2,3]).toString()); 
+  assertEquals("Set []", set().toString());
+  assertEquals("Set [1, 2, 3]", set([1,2,3]).toString()); 
   }     
 
   public function testHashCode() {       
-	assertNotEquals(0, set().hashCode());
-	assertNotEquals(0, set([1,2]).hashCode());            
+  assertNotEquals(0, set().hashCode());
+  assertNotEquals(0, set([1,2]).hashCode());            
   }
     
   function defaultSet(): Set<Int> {

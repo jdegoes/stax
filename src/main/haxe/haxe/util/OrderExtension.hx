@@ -20,26 +20,26 @@ import Prelude;
 class OrderExtension
 {
   public static function greaterThan<T>(order : OrderFunction<T>) : EqualFunction<T> {
-  	return function(v1, v2) return order(v1, v2) > 0;
-  }	
+    return function(v1, v2) return order(v1, v2) > 0;
+  }  
    
   public static function greaterThanOrEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
-   	return function(v1, v2) return order(v1, v2) >= 0;
+     return function(v1, v2) return order(v1, v2) >= 0;
   }  
 
   public static function lessThan<T>(order : OrderFunction<T>) : EqualFunction<T> {
-  	return function(v1, v2) return order(v1, v2) < 0;
-  }	
+    return function(v1, v2) return order(v1, v2) < 0;
+  }  
 
   public static function lessThanOrEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
-   	return function(v1, v2) return order(v1, v2) <= 0;
+     return function(v1, v2) return order(v1, v2) <= 0;
   }
 
   public static function equal<T>(order : OrderFunction<T>) : EqualFunction<T> {
-   	return function(v1, v2) return order(v1, v2) == 0;
+     return function(v1, v2) return order(v1, v2) == 0;
   }
 
   public static function notEqual<T>(order : OrderFunction<T>) : EqualFunction<T> {
-   	return function(v1, v2) return order(v1, v2) != 0;
+     return function(v1, v2) return order(v1, v2) != 0;
   }
 }     

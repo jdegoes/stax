@@ -35,7 +35,7 @@ class BrowserSupport {
   /**
    * Determines if the browser supports "css transformation".
    */
-	public static function cssTransformationSupported(): Bool {
+  public static function cssTransformationSupported(): Bool {
     return testFeatureAndMemorize("cssTransformationSupported", function(v){
       var isSupported = None;
       var docEl = Env.document.documentElement;
@@ -50,8 +50,8 @@ class BrowserSupport {
    * Determines if the browser supports "element tagname" is uppercased. The document must
    * have a body for the detection to be accurate.
    */
-	public static function elementTagnameUppercased(): Bool {
-	  return testFeatureAndMemorize("elementTagnameUppercased", function(v) {
+  public static function elementTagnameUppercased(): Bool {
+    return testFeatureAndMemorize("elementTagnameUppercased", function(v) {
       var isUppercased = None;
       var docEl = Env.document.documentElement;
       if (docEl != null) {
@@ -59,13 +59,13 @@ class BrowserSupport {
       }
 
       return isUppercased;
-	  });
+    });
   }
   /**
    * Determines if the browser supports "element tagname" is uppercased. The document must
    * have a body for the detection to be accurate.
    */
-	public static function querySelectorIgnoresCapitalizedValuesBug(): Bool {
+  public static function querySelectorIgnoresCapitalizedValuesBug(): Bool {
     return testBugAndMemorize("querySelectorIgnoresCapitalizedValuesBug", function(v){
       var result = None;
       if (Env.document.createElement != null && (Env.document.compatMode == 'BackCompat')) {
@@ -85,7 +85,7 @@ class BrowserSupport {
    * Determines if the event has property  "srcElement". The document must
    * have a body for the detection to be accurate.
    */
-	public static function isEventSrcelementPresent(): Bool {
+  public static function isEventSrcelementPresent(): Bool {
     return testFeatureAndMemorize("isEventSrcelementPresent", function(v) {
         var isSupported = None;
         if (Env.document.createElement != null) {
@@ -96,11 +96,11 @@ class BrowserSupport {
           i.style.display = 'none';
           i.onclick = function(e) {
             if (Env.typeOf(e) == 'object') {
-						  isSupported = Some(Env.isDefined(untyped e.srcElement));
-					  }
-					  else{
-						  isSupported = Some(false);
-					  }
+              isSupported = Some(Env.isDefined(untyped e.srcElement));
+            }
+            else{
+              isSupported = Some(false);
+            }
           };
           root.appendChild(i);
           i.click();
@@ -116,7 +116,7 @@ class BrowserSupport {
    * Determines if the document element has property "hasAttribute". The document must
    * have a body for the detection to be accurate.
    */
-	public static function isNativeHasAttributePresent(): Bool {
+  public static function isNativeHasAttributePresent(): Bool {
     return testFeatureAndMemorize("isNativeHasAttributePresent", function(v) {
       var isSupported = None;
       if (Env.document.createElement != null) {
@@ -155,7 +155,7 @@ class BrowserSupport {
    * Determines if the document element supports "context menu". The document must
    * have a body for the detection to be accurate.
    */
-	public static function isContextMenuEventSupported(): Bool {
+  public static function isContextMenuEventSupported(): Bool {
     return testFeatureAndMemorize("isContextMenuEventSupported", function(v) {
       var isPresent = None;
       if (Env.document.createElement != null) {
@@ -173,7 +173,7 @@ class BrowserSupport {
    * Determines if the computed style returns values for staticly positioned elements. The document must
    * have a body for the detection to be accurate.
    */
-	public static function computedStyleReturnsValuesForStaticlyPositionedElements(): Bool {
+  public static function computedStyleReturnsValuesForStaticlyPositionedElements(): Bool {
     return testFeatureAndMemorize("computedStyleReturnsValuesForStaticlyPositionedElements", function(v) {
       var result = None;
       var view = Env.document.defaultView;
@@ -200,7 +200,7 @@ class BrowserSupport {
     });
   }
 
-	public static function isRgbaSupported(): Bool {
+  public static function isRgbaSupported(): Bool {
     return testFeatureAndMemorize("isRgbaSupported", function(v) {
       var result = None;
       if (Env.document.createElement != null) {
@@ -220,7 +220,7 @@ class BrowserSupport {
       return result;
     });
   }
-	public static function isCssBorderRadiusSupported(): Bool {
+  public static function isCssBorderRadiusSupported(): Bool {
     return testFeatureAndMemorize("isCssBorderRadiusSupported", function(v) {
       var result = None;
       var docEl = Env.document.documentElement;
@@ -235,7 +235,7 @@ class BrowserSupport {
     });
   }
 
-	public static function elemenChildrenReturnsElementNodes(): Bool {
+  public static function elemenChildrenReturnsElementNodes(): Bool {
     return testFeatureAndMemorize("elemenChildrenReturnsElementNodes", function(v) {
       var isSupported = None;
       var docEl = Env.document.documentElement;
@@ -254,7 +254,7 @@ class BrowserSupport {
     });
   }
 
-	public static function isCanvasSupported(): Bool {
+  public static function isCanvasSupported(): Bool {
     return testFeatureAndMemorize("isCanvasSupported", function(v) {
       var result = None;
       if (Env.document.createElement != null) {
@@ -269,9 +269,9 @@ class BrowserSupport {
    * Determines if the browser supports "position: fixed". The document must
    * have a body for the detection to be accurate.
    */
-	public static function positionFixed(): Bool {
-	  return testFeatureAndMemorize("positionFixed", function(v) {
-  	    var isSupported = None;
+  public static function positionFixed(): Bool {
+    return testFeatureAndMemorize("positionFixed", function(v) {
+        var isSupported = None;
 
         if (Env.document.createElement != null) {
           var el = Env.document.createElement('div');
@@ -293,7 +293,7 @@ class BrowserSupport {
         }
 
         return isSupported;
-	  });
+    });
   }
 
   public static function isCssEnabled(): Bool {
@@ -1100,21 +1100,21 @@ class BrowserSupport {
     });
   }
 
-	/**
-	 * Determines if a node added and removed has a parentNode equal to null.
-	 */
-	public static function removedNodeHasNullParentNode(): Bool {
-	  return testSupport('<div></div>', 'div', function(e) {
-	    return e.removeChild(e.appendChild(Env.document.createElement("div"))).parentNode == null;
-	  });
-	}
+  /**
+   * Determines if a node added and removed has a parentNode equal to null.
+   */
+  public static function removedNodeHasNullParentNode(): Bool {
+    return testSupport('<div></div>', 'div', function(e) {
+      return e.removeChild(e.appendChild(Env.document.createElement("div"))).parentNode == null;
+    });
+  }
 
-	/**
-	 * Determines if the getComputedStyle() function is supported.
-	 */
-	public static function getComputedStyle(): Bool {
-	  return Env.document.defaultView != null && Env.document.defaultView.getComputedStyle != null;
-	}
+  /**
+   * Determines if the getComputedStyle() function is supported.
+   */
+  public static function getComputedStyle(): Bool {
+    return Env.document.defaultView != null && Env.document.defaultView.getComputedStyle != null;
+  }
 
   /** Determines if offset calculations fail to include the margin of the body.
    * It's not clear from W3 if this is a bug or not.
@@ -1133,10 +1133,10 @@ class BrowserSupport {
     });
   }
 
-	/**
-	 * Determines if adding an empty table element also results in the addition
-	 * of spurious <tbody> elements.
-	 */
+  /**
+   * Determines if adding an empty table element also results in the addition
+   * of spurious <tbody> elements.
+   */
   public static function spuriousTbodyInsertedBug(): Bool {
     return testBug('<table></table>', 'tbody', function(e) return true, false);
   }
@@ -1262,22 +1262,22 @@ class BrowserSupport {
   }
 
   private static function testSupport(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = false): Bool {
-	  return test(contents, tagName, f, true, def);
-	}
+    return test(contents, tagName, f, true, def);
+  }
 
-	private static function testSupportInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = false): Bool {
-	  return testInBody(contents, tagName, f, true, def);
-	}
+  private static function testSupportInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = false): Bool {
+    return testInBody(contents, tagName, f, true, def);
+  }
 
-	private static function testBug(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = true): Bool {
-	  return test(contents, tagName, f, false, def);
-	}
+  private static function testBug(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = true): Bool {
+    return test(contents, tagName, f, false, def);
+  }
 
-	private static function testBugInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = true): Bool {
-	  return testInBody(contents, tagName, f, false, def);
-	}
+  private static function testBugInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def: Bool = true): Bool {
+    return testInBody(contents, tagName, f, false, def);
+  }
 
-	private static function test(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
+  private static function test(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
   return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null) None;
       else {
@@ -1289,9 +1289,9 @@ class BrowserSupport {
         Some(div.getElementsByTagName(tagName).toArray().firstOption().map(f).getOrElseC(def2));
       }
     });
-	}
+  }
 
-	private static function testInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
+  private static function testInBody(contents: String, tagName: String, f: HTMLElement -> Bool, def1: Bool, def2: Bool): Bool {
     return testAndMemorize("testInBody" + contents + tagName, def1, function(v) {
       return if (Env.document == null || Env.document.body == null) None;
       else {
@@ -1309,7 +1309,7 @@ class BrowserSupport {
         }));
       }
     });
-	}
+  }
   private static function testFeatureAndMemorize(key: String, testFunction: Function<Void, Option<Bool>>): Bool{
     return testAndMemorize(key, true, testFunction);
   }

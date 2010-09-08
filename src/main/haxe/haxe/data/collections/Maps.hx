@@ -21,5 +21,5 @@ import haxe.data.collections.Map;
 import PreludeExtensions;
 
 class Maps {
-	public static var StringString = Map.create(StringExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.equals);	
+  public static var StringString = Map.create(StringExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.equals);  
 }

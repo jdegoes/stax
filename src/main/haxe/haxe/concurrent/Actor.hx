@@ -37,7 +37,7 @@ interface Actor<T, S> {
   public function load(): Float;
   
   /** Sends data to the actor, and returns a future of the response. */
-	public function send(data: T): Future<S>;
+  public function send(data: T): Future<S>;
 }
 
 interface ActorFactory<T, S> {

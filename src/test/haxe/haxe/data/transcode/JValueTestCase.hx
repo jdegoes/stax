@@ -122,7 +122,7 @@ class JValueTestCase extends TestCase {
     doTest(
       JValue.DecomposerF(),
       JValue.ExtractorF(),
-  	[JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])]);
+    [JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])]);
   }
 
   private function doTest<T>(decomposer: JDecomposerFunction<T>, extractor: JExtractorFunction<T>, values: Array<T>): Void {

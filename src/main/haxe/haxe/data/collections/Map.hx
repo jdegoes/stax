@@ -200,7 +200,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
 
   public function get(k: K): Option<V> {  
-	var ke = getKeyEqual();
+  var ke = getKeyEqual();
     for (e in listFor(k)) {
       if (ke(e._1, k)) {
         return Some(e._2);
@@ -286,24 +286,24 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
 
   public function compare(other : Map<K, V>) {
-	var a1 = this.toArray();
-	var a2 = other.toArray(); 
-	
-	var ko = if(null == keyOrder) {
-	  if(a1.length == 0) 
-	    Stax.getOrderFor(null);
-	  else
-	    keyOrder = Stax.getOrderFor(a1[0]._1);	
-	} else keyOrder;
-	
-	var vo = if(null == valueOrder) {
-	  if(a1.length == 0) 
-	    Stax.getOrderFor(null);
-	  else
-	    valueOrder = Stax.getOrderFor(a1[0]._2);	
-	} else valueOrder;        
-	
-	var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
+  var a1 = this.toArray();
+  var a2 = other.toArray(); 
+  
+  var ko = if(null == keyOrder) {
+    if(a1.length == 0) 
+      Stax.getOrderFor(null);
+    else
+      keyOrder = Stax.getOrderFor(a1[0]._1);  
+  } else keyOrder;
+  
+  var vo = if(null == valueOrder) {
+    if(a1.length == 0) 
+      Stax.getOrderFor(null);
+    else
+      valueOrder = Stax.getOrderFor(a1[0]._2);  
+  } else valueOrder;        
+  
+  var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
       return ko(t1._1, t2._1);
     }
     
@@ -315,26 +315,26 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
      
   function getKeyEqual() {
     return if(null == keyEqual) {
-	  var it = iterator();
-	  if(!it.hasNext())
-		Stax.getEqualFor(null);
-	  else
-	    keyEqual = Stax.getEqualFor(it.next()._1); 
+    var it = iterator();
+    if(!it.hasNext())
+    Stax.getEqualFor(null);
+    else
+      keyEqual = Stax.getEqualFor(it.next()._1); 
     } else keyEqual;
   }
 
   function getValueEqual() {
     return if(null == valueEqual) {
-	  var it = iterator();
-	  if(!it.hasNext())
-		Stax.getEqualFor(null);
-	  else
-	    valueEqual = Stax.getEqualFor(it.next()._2); 
+    var it = iterator();
+    if(!it.hasNext())
+    Stax.getEqualFor(null);
+    else
+      valueEqual = Stax.getEqualFor(it.next()._2); 
     } else valueEqual;
   }
 
   public function equals(other : Map<K, V>) {
-	var keys1 = this.keySet();
+  var keys1 = this.keySet();
     var keys2 = other.keySet();
     if(!keys1.equals(keys2)) return false;
     
@@ -349,48 +349,48 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }  
 
   public function toString() { 
-	var ksh = if(null == keyShow) {
-	  var it = iterator();
-	  if(!it.hasNext())
-	    Stax.getShowFor(null);
-	  else
-	    keyShow = Stax.getShowFor(it.next()._1);	
-	} else keyShow;
-	
-	var vsh = if(null == valueShow) {
-	  var it = iterator();
-	  if(!it.hasNext())
-	    Stax.getShowFor(null);
-	  else
-	    valueShow = Stax.getShowFor(it.next()._2);	
-	} else valueShow;
+  var ksh = if(null == keyShow) {
+    var it = iterator();
+    if(!it.hasNext())
+      Stax.getShowFor(null);
+    else
+      keyShow = Stax.getShowFor(it.next()._1);  
+  } else keyShow;
+  
+  var vsh = if(null == valueShow) {
+    var it = iterator();
+    if(!it.hasNext())
+      Stax.getShowFor(null);
+    else
+      valueShow = Stax.getShowFor(it.next()._2);  
+  } else valueShow;
     return "Map " + elements().toString(function(t) { return ksh(t._1) + " -> " + vsh(t._2); });  
   }    
        
   function getKeyHasher() {
-	return if(null == keyHasher) {
-	  var it = iterator();
-	  if(!it.hasNext())
-	    Stax.getHasherFor(null);
-	  else
-	    keyHasher = Stax.getHasherFor(it.next()._1);	
-	} else keyHasher;
+  return if(null == keyHasher) {
+    var it = iterator();
+    if(!it.hasNext())
+      Stax.getHasherFor(null);
+    else
+      keyHasher = Stax.getHasherFor(it.next()._1);  
+  } else keyHasher;
   }   
 
   function getValueHasher() {
-	return if(null == valueHasher) {
-	  var it = iterator();
-	  if(!it.hasNext())
-	    Stax.getHasherFor(null);
-	  else
-	    valueHasher = Stax.getHasherFor(it.next()._2);	
-	} else valueHasher;
+  return if(null == valueHasher) {
+    var it = iterator();
+    if(!it.hasNext())
+      Stax.getHasherFor(null);
+    else
+      valueHasher = Stax.getHasherFor(it.next()._2);  
+  } else valueHasher;
   }
 
   public function hashCode() {
-	var kha = getKeyHasher();  
-	var vha = getValueHasher(); 
-	return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
+  var kha = getKeyHasher();  
+  var vha = getValueHasher(); 
+  return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
   }
   
   public function load(): Int {
@@ -446,7 +446,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var list = _buckets[bucket];  
     
     var ke = getKeyEqual();
-	var ve = getValueEqual();
+  var ve = getValueEqual();
     
     for (i in 0...list.length) {
       var entry = list[i];

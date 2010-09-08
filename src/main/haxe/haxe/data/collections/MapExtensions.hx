@@ -26,11 +26,11 @@ using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 class MapExtensions {
-	public static function toObject<V>(map: Map<String, V>): Dynamic<V> {
-	  return map.foldl({}, function(object, tuple) {
+  public static function toObject<V>(map: Map<String, V>): Dynamic<V> {
+    return map.foldl({}, function(object, tuple) {
       Reflect.setField(object, tuple._1, tuple._2);
       
       return object;
     });
-	}
+  }
 }

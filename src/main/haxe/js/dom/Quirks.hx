@@ -53,7 +53,7 @@ class Quirks {
   static var margin = "margin";
 
 
-	public static function createXMLHttpRequest(): XMLHttpRequest {
+  public static function createXMLHttpRequest(): XMLHttpRequest {
       return untyped if (window.XMLHttpRequest) {
           __new__("XMLHttpRequest");
       }
@@ -274,71 +274,71 @@ class Quirks {
    */
   public static function getComputedCssProperty(elem: HTMLElement, name: String): Option<String> {
     return (if (BrowserSupport.getComputedStyle()) {
-  		elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
-  		  return defaultView.getComputedStyle(elem, null).toOption();
-  		}).flatMap(function(computedStyle: CSSStyleDeclaration): Option<String> {
-  		  return computedStyle.getPropertyValue(name).toOption().filter(function(style) return style != '');
-  		}).orElse(function() {
-  		  return if (name == 'opacity') Some('1'); else None;
-  		}).getOrElseC('');
-  	}
-  	else if (untyped elem.currentStyle != null) {
-  		if (name == 'opacity' && !BrowserSupport.opacity()) {
-  		  if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
-  		    (OpacityPattern.matched(1).toFloat() / 100.0).toString();
-  		  }
-  		  else "1";
-  		}
-  		else {
-  			var style = untyped elem.currentStyle[name];
+      elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
+        return defaultView.getComputedStyle(elem, null).toOption();
+      }).flatMap(function(computedStyle: CSSStyleDeclaration): Option<String> {
+        return computedStyle.getPropertyValue(name).toOption().filter(function(style) return style != '');
+      }).orElse(function() {
+        return if (name == 'opacity') Some('1'); else None;
+      }).getOrElseC('');
+    }
+    else if (untyped elem.currentStyle != null) {
+      if (name == 'opacity' && !BrowserSupport.opacity()) {
+        if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
+          (OpacityPattern.matched(1).toFloat() / 100.0).toString();
+        }
+        else "1";
+      }
+      else {
+        var style = untyped elem.currentStyle[name];
 
-  			// From the awesome hack by Dean Edwards
-  			// http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-  			if (NumberPattern.match(style) && !NumberPixelPattern.match(style)) {
-  				// Remember the original values
-  				var oldLeft   = elem.style.left;
-  				var oldRtLeft = untyped elem.runtimeStyle.left;
+        // From the awesome hack by Dean Edwards
+        // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
+        if (NumberPattern.match(style) && !NumberPixelPattern.match(style)) {
+          // Remember the original values
+          var oldLeft   = elem.style.left;
+          var oldRtLeft = untyped elem.runtimeStyle.left;
 
-  				// Put in the new values to get a computed value out
-  				untyped elem.runtimeStyle.left = elem.currentStyle.left;
+          // Put in the new values to get a computed value out
+          untyped elem.runtimeStyle.left = elem.currentStyle.left;
 
-  				elem.style.left = (name == "font-size") ? "1em" : style;
+          elem.style.left = (name == "font-size") ? "1em" : style;
 
-  				(untyped elem.style.pixelLeft + "px").withEffect(function() untyped {
-    				// Revert the changed values
-    				elem.style.left        = oldLeft;
-    				elem.runtimeStyle.left = oldRtLeft;
-    			});
-  			}
-  			else style;
-  		}
-  	}
-		else '').into(function(computedStyle) {
-		  return if (computedStyle == '') None; else computedStyle.toOption();
-		});
+          (untyped elem.style.pixelLeft + "px").withEffect(function() untyped {
+            // Revert the changed values
+            elem.style.left        = oldLeft;
+            elem.runtimeStyle.left = oldRtLeft;
+          });
+        }
+        else style;
+      }
+    }
+    else '').into(function(computedStyle) {
+      return if (computedStyle == '') None; else computedStyle.toOption();
+    });
   }
 
   /** Retrieves a particular CSS property.
    */
   public static function getCssProperty(elem: HTMLElement, name: String): Option<String> {
-		return elem.style.toOption().flatMap(function(style) {
-		  return style.getAny(getActualCssPropertyName(name));
-		}).orElse(function() {
-		  return getComputedCssProperty(elem, name);
-		});
-	}
+    return elem.style.toOption().flatMap(function(style) {
+      return style.getAny(getActualCssPropertyName(name));
+    }).orElse(function() {
+      return getComputedCssProperty(elem, name);
+    });
+  }
 
   public static function getCssPropertyIfSet(elem: HTMLElement, name: String): Option<String> {
     return getCssProperty(elem, name).filter(function(style) return style != '');
   }
-	/** Retrieves the dimensions of the viewport (inner window of the browser,
-	 * for top-level windows).
-	 */
-	public static function getViewportSize(): { dx: Int, dy: Int } {
-	  return if (Env.window.innerWidth != null) {
-	    dx: Env.window.innerWidth,
-	    dy: Env.window.innerHeight
-	  }
+  /** Retrieves the dimensions of the viewport (inner window of the browser,
+   * for top-level windows).
+   */
+  public static function getViewportSize(): { dx: Int, dy: Int } {
+    return if (Env.window.innerWidth != null) {
+      dx: Env.window.innerWidth,
+      dy: Env.window.innerHeight
+    }
     else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientWidth != null && untyped Env.document.documentElement.clientWidth != 0) {
       dx: untyped Env.document.documentElement.clientWidth,
       dy: untyped Env.document.documentElement.clientHeight
@@ -347,10 +347,10 @@ class Quirks {
       dx: untyped Env.document.body.clientWidth,
       dy: untyped Env.document.body.clientHeight
     }
-	}
+  }
 
-	/** Retrieves the scroll of the page, in pixels. */
-	public static function getPageScroll(): { x: Int, y: Int } {
+  /** Retrieves the scroll of the page, in pixels. */
+  public static function getPageScroll(): { x: Int, y: Int } {
     var xScroll: Int = 0;
     var yScroll: Int = 0;
 
@@ -400,25 +400,25 @@ class Quirks {
     }
   }
 
-	/** Retrieves the offset of the document's body, relative to the window origin.
-	 */
-	public static function getBodyOffset(doc: HTMLDocument): Option<{ x: Int, y: Int }> {
-	  return Env.document.toOption().flatMap(function(document) {
-	    return document.body.toOption();
-	  }).map(function(body) {
-	    var top  = body.offsetTop;
-	    var left = body.offsetLeft;
+  /** Retrieves the offset of the document's body, relative to the window origin.
+   */
+  public static function getBodyOffset(doc: HTMLDocument): Option<{ x: Int, y: Int }> {
+    return Env.document.toOption().flatMap(function(document) {
+      return document.body.toOption();
+    }).map(function(body) {
+      var top  = body.offsetTop;
+      var left = body.offsetLeft;
 
-  		if (BrowserSupport.offsetDoesNotIncludeMarginInBodyOffset()) {
-  			top  += getComputedCssProperty(body, 'margin-top').map(function(s) return s.toInt(0)).getOrElseC(0);
-  			left += getComputedCssProperty(body, 'margin-left').map(function(s) return s.toInt(0)).getOrElseC(0);
-  		}
+      if (BrowserSupport.offsetDoesNotIncludeMarginInBodyOffset()) {
+        top  += getComputedCssProperty(body, 'margin-top').map(function(s) return s.toInt(0)).getOrElseC(0);
+        left += getComputedCssProperty(body, 'margin-left').map(function(s) return s.toInt(0)).getOrElseC(0);
+      }
 
-  		return { x: left, y: top };
-	  });
-	}
+      return { x: left, y: top };
+    });
+  }
   /**
-  * 	Set the current coordinates of the element, relative to the document.
+  *   Set the current coordinates of the element, relative to the document.
   */
   public static function setOffset(elem: HTMLElement, offset: { x: Int, y: Int }): HTMLElement{
     if (elem == null || elem.ownerDocument == null) return elem;
@@ -429,8 +429,8 @@ class Quirks {
       });
 
       var curOffset = getOffset(elem).getOrElseC({ x: 0, y: 0});
-			var curTop    = getComputedCssProperty( elem, 'top' ).map(function(s) return s.toInt(0)).getOrElseC(0);
-			var curLeft   = getComputedCssProperty( elem, 'left').map(function(s) return s.toInt(0)).getOrElseC(0);
+      var curTop    = getComputedCssProperty( elem, 'top' ).map(function(s) return s.toInt(0)).getOrElseC(0);
+      var curLeft   = getComputedCssProperty( elem, 'left').map(function(s) return s.toInt(0)).getOrElseC(0);
 
       elem.style.top  = ((offset.y - curOffset.y) + curTop).toString() + "px";
       elem.style.left = ((offset.x - curOffset.x) + curLeft).toString() + "px";
@@ -444,7 +444,7 @@ class Quirks {
    */
   public static function addClass(element: HTMLElement, value: String){
     if (!hasClass(element, value))
-			element.className += (if (element.className != null && element.className != "") ' ' else '') + value;
+      element.className += (if (element.className != null && element.className != "") ' ' else '') + value;
   }
   /**
    * Remove a single the element.
@@ -595,101 +595,101 @@ class Quirks {
     if (elem == null || elem.ownerDocument == null) return None;
     else if (elem == untyped elem.ownerDocument.body) return getBodyOffset(cast elem.ownerDocument);
     else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.getBoundingClientRect != null) {
-  		var box = untyped elem.getBoundingClientRect();
-  		var doc = elem.ownerDocument;
-  		var body: HTMLBodyElement = untyped doc.body;
-  		var docElem = untyped doc.documentElement;
-  		var clientTop  = [docElem.clientTop,  body.clientTop,  0].filter(P.isNotNull()).first();
-  		var clientLeft = [docElem.clientLeft, body.clientLeft, 0].filter(P.isNotNull()).first();
-  	  var top: Int  = box.top  + [Env.window.pageYOffset, if (BrowserSupport.boxModel()) docElem.scrollTop  else null, body.scrollTop ].filter(P.isNotNull()).first() - clientTop;
-  		var left: Int = box.left + [Env.window.pageXOffset, if (BrowserSupport.boxModel()) docElem.scrollLeft else null, body.scrollLeft].filter(P.isNotNull()).first() - clientLeft;
+      var box = untyped elem.getBoundingClientRect();
+      var doc = elem.ownerDocument;
+      var body: HTMLBodyElement = untyped doc.body;
+      var docElem = untyped doc.documentElement;
+      var clientTop  = [docElem.clientTop,  body.clientTop,  0].filter(P.isNotNull()).first();
+      var clientLeft = [docElem.clientLeft, body.clientLeft, 0].filter(P.isNotNull()).first();
+      var top: Int  = box.top  + [Env.window.pageYOffset, if (BrowserSupport.boxModel()) docElem.scrollTop  else null, body.scrollTop ].filter(P.isNotNull()).first() - clientTop;
+      var left: Int = box.left + [Env.window.pageXOffset, if (BrowserSupport.boxModel()) docElem.scrollLeft else null, body.scrollLeft].filter(P.isNotNull()).first() - clientLeft;
 
-  		return Some({ x: left, y: top });
+      return Some({ x: left, y: top });
     }
     else {
-  		var getStyle = function(elem: HTMLElement): Dynamic {
-  		  var defaultView = elem.ownerDocument.defaultView;
+      var getStyle = function(elem: HTMLElement): Dynamic {
+        var defaultView = elem.ownerDocument.defaultView;
 
-  		  return if (defaultView != null) defaultView.getComputedStyle(elem, null); else untyped elem.currentStyle;
-  		}
+        return if (defaultView != null) defaultView.getComputedStyle(elem, null); else untyped elem.currentStyle;
+      }
 
-  		var offsetParent = elem.offsetParent;
-  		var prevOffsetParent = elem;
-  		var doc = elem.ownerDocument;
-  		var docElem: HTMLElement = cast doc.documentElement;
-  		var body: HTMLBodyElement = untyped doc.body;
-  		var defaultView = doc.defaultView;
-  		var prevComputedStyle = getStyle(elem);
-  		var top: Int  = elem.offsetTop;
-  		var left: Int = elem.offsetLeft;
+      var offsetParent = elem.offsetParent;
+      var prevOffsetParent = elem;
+      var doc = elem.ownerDocument;
+      var docElem: HTMLElement = cast doc.documentElement;
+      var body: HTMLBodyElement = untyped doc.body;
+      var defaultView = doc.defaultView;
+      var prevComputedStyle = getStyle(elem);
+      var top: Int  = elem.offsetTop;
+      var left: Int = elem.offsetLeft;
 
-  		while (((elem = cast elem.parentNode) != null) && elem != body && elem != docElem) {
-  			if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
-  				break;
-  			}
+      while (((elem = cast elem.parentNode) != null) && elem != body && elem != docElem) {
+        if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
+          break;
+        }
 
-  			var computedStyle = getStyle(elem);
+        var computedStyle = getStyle(elem);
 
-  			top  -= elem.scrollTop;
-  			left -= elem.scrollLeft;
+        top  -= elem.scrollTop;
+        left -= elem.scrollLeft;
 
-  			if (elem == offsetParent) {
-  				top  += elem.offsetTop;
-  				left += elem.offsetLeft;
+        if (elem == offsetParent) {
+          top  += elem.offsetTop;
+          left += elem.offsetLeft;
 
-  				if (BrowserSupport.offsetDoesNotAddBorder() && !(BrowserSupport.offsetAddsBorderForTableAndCells() && ~/^t(able|d|h)$/i.match(elem.nodeName))) {
-  					top  += computedStyle.borderTopWidth.toInt(0);
-  					left += computedStyle.borderLeftWidth.toInt(0);
-  				}
+          if (BrowserSupport.offsetDoesNotAddBorder() && !(BrowserSupport.offsetAddsBorderForTableAndCells() && ~/^t(able|d|h)$/i.match(elem.nodeName))) {
+            top  += computedStyle.borderTopWidth.toInt(0);
+            left += computedStyle.borderLeftWidth.toInt(0);
+          }
 
-  				prevOffsetParent = offsetParent;
-  				offsetParent     = elem.offsetParent;
-  			}
+          prevOffsetParent = offsetParent;
+          offsetParent     = elem.offsetParent;
+        }
 
-  			if (BrowserSupport.offsetSubtractsBorderForOverflowNotVisible() && computedStyle.overflow != "visible") {
-  				top  += computedStyle.borderTopWidth.toInt(0);
-  				left += computedStyle.borderLeftWidth.toInt(0);
-  			}
+        if (BrowserSupport.offsetSubtractsBorderForOverflowNotVisible() && computedStyle.overflow != "visible") {
+          top  += computedStyle.borderTopWidth.toInt(0);
+          left += computedStyle.borderLeftWidth.toInt(0);
+        }
 
-  			prevComputedStyle = computedStyle;
-  		}
+        prevComputedStyle = computedStyle;
+      }
 
-  		if (prevComputedStyle.position == "relative" || prevComputedStyle.position == "static") {
-  			top  += body.offsetTop;
-  			left += body.offsetLeft;
-  		}
+      if (prevComputedStyle.position == "relative" || prevComputedStyle.position == "static") {
+        top  += body.offsetTop;
+        left += body.offsetLeft;
+      }
 
-  		if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
-  			top  += Math.max(docElem.scrollTop,  body.scrollTop).toInt();
-  			left += Math.max(docElem.scrollLeft, body.scrollLeft).toInt();
-  		}
+      if (BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
+        top  += Math.max(docElem.scrollTop,  body.scrollTop).toInt();
+        left += Math.max(docElem.scrollLeft, body.scrollLeft).toInt();
+      }
 
-  		return Some({ x: left, y: top });
+      return Some({ x: left, y: top });
     }
   }
 
   public static function getPosition(elem: HTMLElement): Option<{ x: Int, y: Int }> {
-		if (elem == null || elem.ownerDocument == null) return None;
+    if (elem == null || elem.ownerDocument == null) return None;
 
     var offsetParent = offsetParent(elem);
-		var offset       = getOffset(elem).getOrElseC({ x: 0, y: 0 });
+    var offset       = getOffset(elem).getOrElseC({ x: 0, y: 0 });
 
-		var parentOffset = if (RootPattern.match(offsetParent.nodeName)) { x: 0, y: 0 } else getOffset(offsetParent).getOrElseC({ x: 0, y: 0 });
+    var parentOffset = if (RootPattern.match(offsetParent.nodeName)) { x: 0, y: 0 } else getOffset(offsetParent).getOrElseC({ x: 0, y: 0 });
 
-		offset.x -= getCssPropertyIfSet(elem, "marginTop").getOrElseC("0").toInt();
-		offset.y -= getCssPropertyIfSet(elem, "marginLeft").getOrElseC("0").toInt();
+    offset.x -= getCssPropertyIfSet(elem, "marginTop").getOrElseC("0").toInt();
+    offset.y -= getCssPropertyIfSet(elem, "marginLeft").getOrElseC("0").toInt();
 
 
-		// Add offsetParent borders
-		parentOffset.x += getCssPropertyIfSet(offsetParent, "borderTopWidth").getOrElseC("0").toInt();
-		parentOffset.y += getCssPropertyIfSet(offsetParent, "borderLeftWidth").getOrElseC("0").toInt();
+    // Add offsetParent borders
+    parentOffset.x += getCssPropertyIfSet(offsetParent, "borderTopWidth").getOrElseC("0").toInt();
+    parentOffset.y += getCssPropertyIfSet(offsetParent, "borderLeftWidth").getOrElseC("0").toInt();
 
-		// Subtract the two offsets
-		return Some({
-			x: offset.x  - parentOffset.x,
-			y: offset.y - parentOffset.y
-		});
-	}
+    // Subtract the two offsets
+    return Some({
+      x: offset.x  - parentOffset.x,
+      y: offset.y - parentOffset.y
+    });
+  }
 
   public static function offsetParent(elem: HTMLElement) {
     var offsetParent = if (elem.offsetParent != null) elem.offsetParent; else Env.document.body;

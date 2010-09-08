@@ -152,32 +152,32 @@ class FoldableExtensions {
   public static function scanl<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
     var a = toArray(foldable);
     
-	  var accum = init;
-	  var result = [init];
-	  
-	  for (e in a) {
-	    result.push(f(e, accum));
-	  }
-	  
-	  return cast result;
-	}
-	
-	public static function scanr<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
-    var a = toArray(foldable);
+    var accum = init;
+    var result = [init];
     
-    a.reverse();
+    for (e in a) {
+      result.push(f(e, accum));
+    }
     
-	  var accum = init;
-	  var result = [init];
-	  
-	  for (e in a) {
-	    result.push(f(e, accum));
-	  }
-	  
-	  return cast result;
-	}
+    return cast result;
+  }
   
-	public static function scanl1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+  public static function scanr<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
+    var a = toArray(foldable);
+    
+    a.reverse();
+    
+    var accum = init;
+    var result = [init];
+    
+    for (e in a) {
+      result.push(f(e, accum));
+    }
+    
+    return cast result;
+  }
+  
+  public static function scanl1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
     var a = toArray(foldable);
     var iterator = a.iterator();
     var accum = null;
@@ -193,10 +193,10 @@ class FoldableExtensions {
       else result.push(f(iterator.next(), accum));
     }
     
-	  return cast result;
-	}
-	
-	public static function scanr1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
+    return cast result;
+  }
+  
+  public static function scanr1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
     var a = toArray(foldable);
     
     a.reverse();
@@ -215,9 +215,9 @@ class FoldableExtensions {
       else result.push(f(iterator.next(), accum));
     }
     
-	  return cast result;
-	}
-	
+    return cast result;
+  }
+  
   public static function elements<A, B>(foldable: Foldable<A, B>): Iterable<B> {
     return toArray(foldable);
   }
@@ -298,47 +298,47 @@ class FoldableExtensions {
   }
   
   public static function existsP<A, B>(foldable:Foldable<A, B>, ref: B, f: B -> B -> Bool): Bool {
-	  var result:Bool = false;
-	  
-	  var a = toArray(foldable);
-	  
-	  for (e in a) {
-	    if (f(e, ref)) result = true;
-	  }
-	  
-	  return result;
-	}
+    var result:Bool = false;
+    
+    var a = toArray(foldable);
+    
+    for (e in a) {
+      if (f(e, ref)) result = true;
+    }
+    
+    return result;
+  }
   
   public static function contains<A, B>(foldable: Foldable<A, B>, member: B): Bool {
     return exists(foldable, function(e) { return e == member; });
   }
   
   public static function nubBy<A, B>(foldable:Foldable<A, B>, f: B -> B -> Bool): A {
-	  return foldable.foldl(foldable.empty(), function(a: A, b: B): A {
-	    return if (existsP(cast a, b, f)) {
-	      a;
-	    }
-	    else {
-	      foldable.append(a, b);
-	    }
-	  });
-	}
-	
-	public static function nub<A, B>(foldable:Foldable<A, B>): A {
-	  return nubBy(foldable, function (a, b) { return a == b; });
-	}
+    return foldable.foldl(foldable.empty(), function(a: A, b: B): A {
+      return if (existsP(cast a, b, f)) {
+        a;
+      }
+      else {
+        foldable.append(a, b);
+      }
+    });
+  }
+  
+  public static function nub<A, B>(foldable:Foldable<A, B>): A {
+    return nubBy(foldable, function (a, b) { return a == b; });
+  }
   
   public static function intersectBy<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>, f: B -> B -> Bool): A {
-	  return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
-	    return if (existsP(foldable2, b, f)) append(cast a, b); else a;
-	  });
-	}
-	
-	public static function intersect<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>): A {
-	  return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
-	    return if (existsP(foldable2, b, function(a, b) { return a == b; })) append(cast a, b); else a;
-	  });
-	}
+    return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
+      return if (existsP(foldable2, b, f)) append(cast a, b); else a;
+    });
+  }
+  
+  public static function intersect<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>): A {
+    return foldable1.foldl(foldable1.empty(), function(a: A, b: B): A {
+      return if (existsP(foldable2, b, function(a, b) { return a == b; })) append(cast a, b); else a;
+    });
+  }
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
     var isFirst = true;
@@ -346,7 +346,7 @@ class FoldableExtensions {
     return foldable.foldl('', function(a, b) {
       var prefix = if (isFirst) { isFirst = false; ''; } else sep;    
       if(null == show)
-	    show = Stax.getShowFor(b);
+      show = Stax.getShowFor(b);
       return a + prefix + show(b);
     });
   }
