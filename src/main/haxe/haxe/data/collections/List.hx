@@ -312,58 +312,58 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   function getEqual() { 
-	return if(null == equal) {
-	  if(size == 0)
-	    Stax.getEqualFor(null);
-	  else
-	    equal = Stax.getEqualFor(first);
-    } else equal;
+	  return if(null == equal) {
+	    if(size == 0)
+	      Stax.getEqualFor(null);
+	    else
+	      equal = Stax.getEqualFor(first);
+      } else equal;
   }  
 
   function getOrder() {
-	return if(null == order) {
-	  if(size == 0)
-	    Stax.getOrderFor(null);
-	  else
-	    order = Stax.getOrderFor(first);
-    } else order;
+	  return if(null == order) {
+	    if(size == 0)
+	      Stax.getOrderFor(null);
+	    else
+	      order = Stax.getOrderFor(first);
+      } else order;
   }
 
   function getHasher() {
-	return if(null == hasher) {
-	  if(size == 0)
-		Stax.getHasherFor(null);
-	  else
-	    hasher = Stax.getHasherFor(first);   
-	} else hasher;
+	  return if(null == hasher) {
+	    if(size == 0)
+	  	Stax.getHasherFor(null);
+	    else
+	      hasher = Stax.getHasherFor(first);   
+	  } else hasher;
   }
-
+  
   public function equals(other : List<T>) {
     var a1 = this.toArray();
     var a2 = other.toArray();                   
-    return Array.EqualF(getEqual())(a1, a2);
+    return a1.equalsWith(a2, getEqual());
   }
 
   public function compare(other : List<T>) {
     var a1 = this.toArray();
-    var a2 = other.toArray();   
-    return Array.OrderF(getOrder())(a1, a2);
+    var a2 = other.toArray();  
+    return a1.compareWith(a2, getOrder());   
   } 
    
   public function hashCode() : Int { 
-	var ha = getHasher();
-	return foldl(12289, function(a, b) return a * (ha(b) + 12289));
+	  var ha = getHasher();
+	  return foldl(12289, function(a, b) return a * (ha(b) + 12289));
   }
 
   public function toString(): String { 
-	var a = this.toArray();
-	var sh = if(null == show) {
-	  if(a.length == 0)
-	    Stax.getShowFor(null);
-	  else
-	    show = Stax.getShowFor(a[0]);	
-	} else show;
-    return "List " + Array.ShowF(sh)(a);
+	  var a = this.toArray();
+	  var sh = if(null == show) {
+	    if(a.length == 0)
+	      Stax.getShowFor(null);
+	    else
+	      show = Stax.getShowFor(a[0]);	
+	  } else show;
+    return "List " + a.toStringWith(sh);
   }
 
   private function getSize(): Int {

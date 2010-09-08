@@ -18,9 +18,8 @@ package haxe.data.collections;
 import Prelude;
 import haxe.data.collections.Map;
 
-using PreludeExtensions;
+import PreludeExtensions;
 
 class Maps {
-	public static var StringString = Map.create(String.HasherF(), String.EqualF(), String.HasherF(), String.EqualF());
-	
+	public static var StringString = Map.create(StringExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.equals);	
 }

@@ -61,7 +61,7 @@ class DynamicExtensions {
     }
   }
   public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
-    var map: Map<String, T> = Map.create(String.HasherF(), String.EqualF());
+    var map: Map<String, T> = Map.create(StringExtensions.hashCode, StringExtensions.equals);
     
     for (field in Reflect.fields(d)) {
       var value = Reflect.field(d, field);
@@ -75,7 +75,7 @@ class DynamicExtensions {
 
 class BoolExtensions {
   public static function toInt(v: Bool): Float { return if (v) 1 else 0; }
-  public static function toString(v: Bool): String { return Std.string(v); }
+//*F  public static function toString(v: Bool): String { return Std.string(v); }
   
   public static function ifTrue<T>(v: Bool, f: Thunk<T>): Option<T> {
     return if (v) Some(f()) else None;
@@ -87,7 +87,8 @@ class BoolExtensions {
   
   public static function ifElse<T>(v: Bool, f1: Thunk<T>, f2: Thunk<T>): T {
     return if (v) f1() else f2();
-  } 
+  }  
+/*F
   public static function OrderF(c : Enum<Bool>): OrderFunction<Bool> {
     return function(v1: Bool, v2: Bool) {
       return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;
@@ -97,24 +98,40 @@ class BoolExtensions {
     return function(v1: Bool, v2: Bool) {
       return v1 == v2;
     };
-  } 
+  }  
   public static function ShowF(c: Enum<Bool>): ShowFunction<Bool> {
     return function(v: Bool) {
       return if (v) "true" else "false";
     };
-  } 
+  }
   public static function HasherF(c: Enum<Bool>): HasherFunction<Bool> {
     return function(v: Bool) {
       return if (v) 786433 else 393241;
     };
   }
+*/
+  public static function compare(v1 : Bool, v2 : Bool) : Int {
+    return if (!v1 && v2) -1 else if (v1 && !v2) 1 else 0;   
+  }
+
+  public static function equals(v1 : Bool, v2 : Bool) : Bool {
+    return v1 == v2;   
+  }
+  
+  public static function hashCode(v : Bool) : Int {
+    return if (v) 786433 else 393241;  
+  }
+
+  public static function toString(v : Bool) : String {
+    return if (v) "true" else "false";  
+  } 
 }
 class IntExtensions {
   public static function max(v1: Int, v2: Int): Int { return if (v2 > v1) v2; else v1; }
   public static function min(v1: Int, v2: Int): Int { return if (v2 < v1) v2; else v1; }
   public static function toBool(v: Int): Bool { return if (v == 0) false else true; }
   public static function toFloat(v: Int): Float { return v; }
-  public static function toString(v: Int): String { return Std.string(v); }
+//*F  public static function toString(v: Int): String { return Std.string(v); }
   
   public static function to(start: Int, end: Int): Iterable<Int> {
     return {
@@ -132,6 +149,7 @@ class IntExtensions {
   public static function until(start: Int, end: Int): Iterable<Int> {
     return to(start, end - 1);
   }
+/*F
   public static function OrderF(c: Class<Int>): OrderFunction<Int> {
     return function(v1: Int, v2: Int) {
       return v1 - v2;
@@ -142,6 +160,7 @@ class IntExtensions {
       return v1 == v2;
     };
   }
+
   public static function ShowF(c: Class<Int>): ShowFunction<Int> {
     return function(v: Int): String {
       return "" + v;
@@ -151,6 +170,19 @@ class IntExtensions {
     return function(v: Int) {
       return v * 196613;
     };
+  } 
+*/   
+  public static function compare(v1: Int, v2: Int) : Int {
+    return v1 - v2;
+  }
+  public static function equals(v1: Int, v2: Int) : Bool {
+    return v1 == v2;
+  }
+  public static function toString(v: Int) : String {
+    return "" + v;
+  }
+  public static function hashCode(v: Int) : Int {
+    return v * 196613;
   }
 }
 class FloatExtensions {
@@ -160,7 +192,8 @@ class FloatExtensions {
   public static function max(v1: Float, v2: Float): Float { return if (v2 > v1) v2; else v1; }
   public static function min(v1: Float, v2: Float): Float { return if (v2 < v1) v2; else v1; }
   public static function toInt(v: Float): Int { return Std.int(v); }
-  public static function toString(v: Float): String { return Std.string(v); }
+//*F  public static function toString(v: Float): String { return Std.string(v); } 
+/*F
   public static function OrderF(c: Class<Float>): OrderFunction<Float> {
     return function(v1: Float, v2: Float) {   
       return if (v1 < v2) -1 else if (v1 > v2) 1 else 0;
@@ -180,6 +213,19 @@ class FloatExtensions {
     return function(v: Float) {
       return Std.int(v * 98317); 
     };
+  }
+*/  
+  public static function compare(v1: Float, v2: Float) {   
+    return if (v1 < v2) -1 else if (v1 > v2) 1 else 0;
+  }
+  public static function equals(v1: Float, v2: Float) {
+    return v1 == v2;
+  }
+  public static function toString(v: Float): String {
+    return "" + v;
+  }
+  public static function hashCode(v: Float) {
+    return Std.int(v * 98317); 
   }
 }
 class StringExtensions {
@@ -226,7 +272,8 @@ class StringExtensions {
   }
   public static function replace( s : String, sub : String, by : String ) : String {
     return StringTools.replace(s, sub, by);
-  }
+  }    
+/*F
   public static function OrderF(c: Class<String>): OrderFunction<String> {  
     return function(v1: String, v2: String) { 
 	  return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
@@ -253,9 +300,29 @@ class StringExtensions {
       return hash;
     };
   }
+*/
+  public static function compare(v1: String, v2: String) { 
+	return (v1 == v2) ? 0 : (v1 > v2 ? 1 : -1);
+  }
+  public static function equals(v1: String, v2: String) {
+    return v1 == v2;
+  }
+  public static function toString(v: String): String {
+    return v;
+  }
+  public static function hashCode(v: String) {
+    var hash = 49157;
+    
+    for (i in 0...v.length) {
+      hash += (v.charCodeAt(i) + 24593) * 49157;
+    }
+    
+    return hash;
+  }
 }
 class DateExtensions {
-  public static function toString(v: Date): String { return Std.string(v); }
+//  public static function toString(v: Date): String { return Std.string(v); }   
+/*F
   public static function OrderF(c: Class<Date>): OrderFunction<Date> {  
     return function(v1: Date, v2: Date) {  
 	  var diff = v1.getTime() - v2.getTime();
@@ -278,8 +345,24 @@ class DateExtensions {
       return Math.round(v.getTime() * 49157);
     };
   }
+*/
+  public static function compare(v1: Date, v2: Date) {  
+    var diff = v1.getTime() - v2.getTime();
+      
+    return if (diff < 0) -1; else if (diff > 0) 1; else 0;
+  }
+  public static function equals(v1: Date, v2: Date) {
+    return v1.getTime() == v2.getTime();
+  }
+  public static function toString(v: Date): String {
+    return v.toString();
+  }
+  public static function hashCode(v: Date) {
+    return Math.round(v.getTime() * 49157);
+  }
 }
-class ArrayExtensions { 
+class ArrayExtensions {
+/*F 
   public static function OrderF<T>(c: Class<Array<Dynamic>>, ?order: OrderFunction<T>): OrderFunction<Array<T>> {
     return function(v1: Array<T>, v2: Array<T>) {  
 	  var c = v1.length - v2.length;
@@ -332,6 +415,56 @@ class ArrayExtensions {
     
       return hash;
     };
+  } 
+*/
+  public static function compare<T>(v1: Array<T>, v2: Array<T>) {
+      return compareWith(v1, v2, Stax.getOrderFor(v1[0]));
+  } 
+  
+  public static function compareWith<T>(v1: Array<T>, v2: Array<T>, order : OrderFunction<T>) {  
+	  var c = v1.length - v2.length;
+	  if(c != 0)
+	    return c; 
+	  if(v1.length == 0)
+	    return 0;                       
+      for (i in 0...v1.length) {
+        var c = order(v1[i], v2[i]);   
+        if (c != 0) return c;
+      }
+      return 0;
+  }
+
+  public static function equals<T>(v1: Array<T>, v2: Array<T>) {
+    return equalsWith(v1, v2, Stax.getEqualFor(v1[0]));
+  }
+  
+  public static function equalsWith<T>(v1: Array<T>, v2: Array<T>, equal : EqualFunction<T>) { 
+    if (v1.length != v2.length) return false;
+    if (v1.length == 0) return true;
+    for (i in 0...v1.length) {
+      if (!equal(v1[i], v2[i])) return false;
+    }
+    
+    return true;
+  }
+  
+  public static function toString<T>(v: Array<T>) {
+	  return toStringWith(v, Stax.getShowFor(v[0]));
+  }
+  public static function toStringWith<T>(v: Array<T>, show : ShowFunction<T>) {
+    return "[" + v.map(show).join(", ") + "]";  
+  }
+  public static function hashCode<T>(v: Array<T>) {
+    return hashCodeWith(v, Stax.getHasherFor(v[0]));
+  }
+  public static function hashCodeWith<T>(v: Array<T>, hasher : HasherFunction<T>) {
+    var hash = 12289;
+    if(v.length == 0) return hash;
+    for (i in 0...v.length) {
+      hash += hasher(v[i]) * 12289;
+    }
+    
+    return hash;
   }
   
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {

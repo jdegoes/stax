@@ -568,14 +568,11 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
 
 private class MessageKey {
   public static function HasherF(): HasherFunction<MessageKey> {
-    var intHasher = Int.HasherF();
-    var stringHasher = String.HasherF();
-    
     return function(v: MessageKey) {
-      return intHasher(v.messageId) * 
-             stringHasher(v.from) * 
-             stringHasher(v.to) *
-             intHasher(v.fragmentCount);
+      return v.messageId.hashCode() * 
+             v.from.hashCode() * 
+             v.to.hashCode() *
+             v.fragmentCount.hashCode();
     };
   }
   public static function EqualF(): EqualFunction<MessageKey> {

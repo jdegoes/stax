@@ -24,12 +24,16 @@ using haxe.functional.FoldableExtensions;
 class StringExtensions {
   static var SepAlphaPattern        = ~/(-|_)([a-z])/g;
   static var AlphaUpperAlphaPattern = ~/-([a-z])([A-Z])/g;
-  
+   
+  /**
+   *  @todo the List.nil() below used to pass StringExtensions.equals, but due to a bug in haXe (issue 204)
+   *  it is not possible to reference that method.
+   */
 	public static function chunk(str: String, len: Int): List<String> {
 	  var start = 0;
 	  var end   = (start + len).min(str.length);
 	  
-	  return if (end == 0) List.nil(String.EqualF());
+	  return if (end == 0) List.nil();
      else {
        var prefix = str.substr(start, end);
        var rest   = str.substr(end);
@@ -37,7 +41,10 @@ class StringExtensions {
        chunk(rest, len).prepend(prefix);
      }
 	}
-	
+  /**
+   *  @todo the a.toList() below used to pass StringExtensions.equals, but due to a bug in haXe (issue 204)
+   *  it is not possible to reference that method.
+   */
 	public static function chars(str: String): List<String> {
 	  var a = [];
 	  
@@ -45,7 +52,7 @@ class StringExtensions {
 	    a.push(str.charAt(i));
 	  }
 	  
-	  return a.toList(String.EqualF());
+	  return a.toList();
 	}
 	
 	public static function string(l: List<String>): String {

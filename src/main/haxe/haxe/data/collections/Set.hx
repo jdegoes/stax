@@ -118,7 +118,7 @@ class Set<T> implements Collection<Set<T>, T> {
 	  else
 	    order = Stax.getOrderFor(a1[0]);
     } else order;
-    return Array.OrderF(or)(a1, a2);
+    return a1.compareWith(a2, or);
   } 
 
   public function hashCode() : Int {
@@ -139,7 +139,7 @@ class Set<T> implements Collection<Set<T>, T> {
 	  else
 	    show = Stax.getShowFor(a[0]);	
 	} else show;
-    return "Set " + Array.ShowF(sh)(a);
+    return "Set " + a.toStringWith(sh);
   }
    
   private function copyWithMod(newMap: Map<T, T>): Set<T> {

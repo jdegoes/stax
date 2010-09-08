@@ -22,6 +22,7 @@ import haxe.functional.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.List;
 
+import PreludeExtensions;  
 using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
@@ -96,7 +97,7 @@ class ListTestCase extends TestCase {
     var ul = newList().addAll([9, 2, 1, 100]);
     var ol = newList().addAll([1, 2, 9, 100]);
     
-    assertListEquals(ol, ul.sort(Int.OrderF()));
+    assertListEquals(ol, ul.sort(IntExtensions.compare));
   }
   
   public function testReverse(): Void {
@@ -141,7 +142,7 @@ class ListTestCase extends TestCase {
     
     var i1 = 0, i2 = 1;
     
-    var equal = Tuple2.EqualF(Int.EqualF(), Int.EqualF());
+    var equal = Tuple2.EqualF(IntExtensions.equals, IntExtensions.equals);
     
     for (z in l) {
       assertEquals(z, i1.entuple(i2), equal);

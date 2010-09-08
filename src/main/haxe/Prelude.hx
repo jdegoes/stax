@@ -16,6 +16,7 @@
 */
 import Type;
 
+import PreludeExtensions;
 using PreludeExtensions;
 
 enum Unit {
@@ -739,11 +740,11 @@ class Stax {
   public static function getOrderForType<T>(v: ValueType) : OrderFunction<T> {
     return switch(v) {
 	  case TBool:
-	    _createOrderImpl(Bool.OrderF());
+	    _createOrderImpl(BoolExtensions.compare);
 	  case TInt:
-	    _createOrderImpl(Int.OrderF());
+	    _createOrderImpl(IntExtensions.compare);
 	  case TFloat:
-	    _createOrderImpl(Float.OrderF());
+	    _createOrderImpl(FloatExtensions.compare);
 	  case TUnknown:
 		function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
 	  case TObject:
@@ -759,11 +760,11 @@ class Stax {
 	  case TClass(c):
 	    switch(Type.getClassName(c)) {
 		  case "String":
-		    _createOrderImpl(String.OrderF());
+		    _createOrderImpl(StringExtensions.compare);
 		  case "Date":
-		    _createOrderImpl(Date.OrderF());
+		    _createOrderImpl(DateExtensions.compare);
 		  case "Array":
-			_createOrderImpl(Array.OrderF());
+			_createOrderImpl(ArrayExtensions.compare);
 	      default:
 			if(Type.getInstanceFields(c).remove("compare")) {
 			  _createOrderImpl(function(a, b) return (cast a).compare(b));
@@ -808,52 +809,52 @@ class Stax {
   }
   public static function getEqualForType<T>(v: ValueType) : EqualFunction<T> {
     return switch(v) {
-	  case TBool:
-	    _createEqualImpl(Bool.EqualF());
-	  case TInt:
-	    _createEqualImpl(Int.EqualF());
-	  case TFloat:
-	    _createEqualImpl(Float.EqualF());
-	  case TUnknown:
-		function(a : T, b : T) return a == b;
-	  case TObject:
-	    _createEqualImpl(function(a, b) {
-			for(key in Reflect.fields(a)) {
-		  	  var va = Reflect.field(a, key);
-		  	  if(!getEqualFor(va)(va, Reflect.field(b, key)))
-		  	  	return false;
-		  	}
-		  	return true;
+	    case TBool:
+	      _createEqualImpl(BoolExtensions.equals);
+	    case TInt:
+	      _createEqualImpl(IntExtensions.equals);
+	    case TFloat:
+	      _createEqualImpl(FloatExtensions.equals);
+	    case TUnknown:
+		  function(a : T, b : T) return a == b;
+	    case TObject:
+	      _createEqualImpl(function(a, b) {
+		  	for(key in Reflect.fields(a)) {
+		    	var va = Reflect.field(a, key);
+		    	if(!getEqualFor(va)(va, Reflect.field(b, key)))
+		    	  return false;
+		    }
+		    return true;
 	    });
 	  case TClass(c):
 	    switch(Type.getClassName(c)) {
-		  case "String":
-		    _createEqualImpl(String.EqualF());
-		  case "Date":
-		    _createEqualImpl(Date.EqualF());
-		  case "Array":
-			_createEqualImpl(Array.EqualF());
+		    case "String":
+		      _createEqualImpl(StringExtensions.equals);
+		    case "Date":
+		      _createEqualImpl(DateExtensions.equals);
+		    case "Array":
+			    _createEqualImpl(ArrayExtensions.equals);
 	      default:
-			var fields = Type.getInstanceFields(c);
-			if(fields.remove("equals")) {
-			  _createEqualImpl(function(a, b) return (cast a).equals(b));
-			} else if(fields.remove("compare")) {
-			  _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
-			} else {
-			  error("class "+Type.getClassName(c)+" has not equals method");
-			}
+			    var fields = Type.getInstanceFields(c);
+			    if(fields.remove("equals")) {
+			      _createEqualImpl(function(a, b) return (cast a).equals(b));
+			    } else if(fields.remove("compare")) {
+			      _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
+			    } else {
+			      error("class "+Type.getClassName(c)+" has not equals method");
+			    }
 	    }
 	  case TEnum(e):
 	    _createEqualImpl(function(a, b) {
-		  if(0 != Type.enumIndex(a) - Type.enumIndex(b))
-		    return false;
-		  var pa = Type.enumParameters(a);
-		  var pb = Type.enumParameters(b);
-		  for(i in 0...pa.length) {
-		    if(!Stax.getEqualFor(pa[i])(pa[i], pb[i]))
+		    if(0 != Type.enumIndex(a) - Type.enumIndex(b))
 		      return false;
-		  }
-		  return true;
+		    var pa = Type.enumParameters(a);
+		    var pb = Type.enumParameters(b);
+		    for(i in 0...pa.length) {
+		      if(!Stax.getEqualFor(pa[i])(pa[i], pb[i]))
+		        return false;
+		    }
+		    return true;
 	    });
 	  case TNull:
 	    _createEqualImpl(function(a, b) return error("at least one of the arguments should be null"));
@@ -875,11 +876,11 @@ class Stax {
   public static function getShowForType<T>(v : ValueType) : ShowFunction<T> {
     return switch(v) {
 	  case TBool:
-	    _createShowImpl(Bool.ShowF());
+	    _createShowImpl(BoolExtensions.toString);
 	  case TInt:
-	    _createShowImpl(Int.ShowF());
+	    _createShowImpl(IntExtensions.toString);
 	  case TFloat:
-	    _createShowImpl(Float.ShowF());
+	    _createShowImpl(FloatExtensions.toString);
 	  case TUnknown:
 		_createShowImpl(function(v) return '<unknown>');
 	  case TObject:
@@ -895,9 +896,9 @@ class Stax {
 	  case TClass(c):
 	    switch(Type.getClassName(c)) {
 		  case "String":
-            _createShowImpl(String.ShowF());
+            _createShowImpl(StringExtensions.toString);
 		  case "Array":
-            _createShowImpl(Array.ShowF());
+            _createShowImpl(ArrayExtensions.toString);
 	      default:
             _createShowImpl(function(v : T) {
 			  return if(Type.getInstanceFields(Type.getClass(v)).remove("toString"))
@@ -937,11 +938,11 @@ class Stax {
   public static function getHasherForType<T>(v: ValueType) : HasherFunction<T> {
     return switch(v) {
 	  case TBool:
-	    _createHasherImpl(Bool.HasherF());
+	    _createHasherImpl(BoolExtensions.hashCode);
 	  case TInt:
-	    _createHasherImpl(Int.HasherF());
+	    _createHasherImpl(IntExtensions.hashCode);
 	  case TFloat:
-	    _createHasherImpl(Float.HasherF());
+	    _createHasherImpl(FloatExtensions.hashCode);
 	  case TUnknown:
 		_createHasherImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
 	  case TObject:
@@ -952,11 +953,11 @@ class Stax {
 	  case TClass(c):
 	    switch(Type.getClassName(c)) {
 		  case "String":
-		    _createHasherImpl(String.HasherF());
+		    _createHasherImpl(StringExtensions.hashCode);
           case "Date":
-            _createHasherImpl(Date.HasherF());
+            _createHasherImpl(DateExtensions.hashCode);
 		  case "Array":
-            _createHasherImpl(Array.HasherF());
+            _createHasherImpl(ArrayExtensions.hashCode);
 	      default:
             _createHasherImpl(function(v : T) {
 			  return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode"))
@@ -967,7 +968,7 @@ class Stax {
 	    }
 	  case TEnum(e):
 	    _createHasherImpl(function(v : T) {
-		  var hash = String.HasherF()(Type.enumConstructor(v)) * 6151;
+		  var hash = Type.enumConstructor(v).hashCode() * 6151;
 		  for(i in Type.enumParameters(v))
 		    hash += Stax.getHasherFor(i)(i) * 6151;
 		  return hash;

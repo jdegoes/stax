@@ -25,6 +25,7 @@ import haxe.functional.Predicate;
 import haxe.data.collections.Map;
 import haxe.util.Guid;
 
+import PreludeExtensions;
 using PreludeExtensions;
 using js.dom.DomExtensions;
 using haxe.util.StringExtensions;
@@ -47,7 +48,7 @@ class Quirks {
 
   static var cssWidth = [ "left", "right" ];
   static var cssHeight = [ "top", "bottom" ];
-  static var cssShow = Map.create(String.HasherF(), String.EqualF(), String.HasherF(), String.EqualF()).set('position', 'absolute').set('visibility', 'hidden').set('display', 'block');
+  static var cssShow = Map.create(StringExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.equals).set('position', 'absolute').set('visibility', 'hidden').set('display', 'block');
   static var border = "border";
   static var margin = "margin";
 
@@ -561,7 +562,7 @@ class Quirks {
     return result;
   }
   private static function setAndStore(elem: HTMLElement, styles: Map<String, String>){
-    var values = Map.create(String.HasherF(), String.EqualF(), String.HasherF(), String.EqualF());
+    var values = Map.create(StringExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.equals);
     for (k in styles.iterator()) {
       values = values.set(k._1, untyped elem.style[ k._1 ]);
       untyped elem.style[ k._1 ] = k._2;

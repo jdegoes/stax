@@ -310,7 +310,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     a1.sort(keySorter);
     a2.sort(keySorter);
     
-    return Array.OrderF(Tuple2.OrderF(ko, vo))(a1, a2);
+    return a1.compareWith(a2, Tuple2.OrderF(ko, vo));
   }
      
   function getKeyEqual() {

@@ -30,7 +30,7 @@ using haxe.util.ObjectExtensions;
 /** Feature detection library */
 // windowEvalEvaluatesInGlobalScope
 class BrowserSupport {
-  static var memorized = Map.create(String.HasherF(), String.EqualF(), Bool.HasherF(), Bool.EqualF());
+  static var memorized = Map.create(StringExtensions.hashCode, StringExtensions.equals, BoolExtensions.hashCode, BoolExtensions.equals);
 
   /**
    * Determines if the browser supports "css transformation".
