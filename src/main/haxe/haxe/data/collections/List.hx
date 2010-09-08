@@ -345,26 +345,27 @@ class List<T> implements Collection<List<T>, T> {
   } 
 
   public function equals(other : List<T>) {
-    var a1 = toArray();
+    var a1 = this.toArray();
     var a2 = other.toArray();
     var eq = if(null == equal) {
 	  if(a1.length == 0)
 	    Stax.getEqualFor(null);
 	  else
 	    equal = Stax.getEqualFor(a1[0]);
-    } else equal;
+    } else equal;                    
     return Array.EqualF(eq)(a1, a2);
   }
 
   public function compare(other : List<T>) {
-    var a1 = toArray();
-    var a2 = other.toArray();
-    var or = if(null == equal) {
+    var a1 = this.toArray();
+    var a2 = other.toArray(); 
+
+    var or = if(null == order) {
 	  if(a1.length == 0)
 	    Stax.getOrderFor(null);
 	  else
 	    order = Stax.getOrderFor(a1[0]);
-    } else order;
+    } else order;   
     return Array.OrderF(or)(a1, a2);
   } 
    
@@ -379,7 +380,7 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   public function toString(): String { 
-	var a = toArray();
+	var a = this.toArray();
 	var sh = if(null == show) {
 	  if(a.length == 0)
 	    Stax.getShowFor(null);

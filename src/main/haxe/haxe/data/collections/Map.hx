@@ -87,14 +87,14 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   public var valueHasher: HasherFunction<V>;
   public var valueEqual:  EqualFunction<V>;  
 */
-  public var keyEqual (default, null): EqualFunction<K>;
-  public var keyOrder (default, null) : OrderFunction<K>;
-  public var keyHasher (default, null) : HasherFunction<K>;
-  public var keyShow (default, null) : ShowFunction<K>;
-  public var valueEqual (default, null): EqualFunction<V>;
-  public var valueOrder (default, null) : OrderFunction<V>;
-  public var valueHasher (default, null) : HasherFunction<V>;
-  public var valueShow (default, null) : ShowFunction<V>;
+  public var keyEqual(default, null): EqualFunction<K>;
+  public var keyOrder(default, null) : OrderFunction<K>;
+  public var keyHasher(default, null) : HasherFunction<K>;
+  public var keyShow(default, null) : ShowFunction<K>;
+  public var valueEqual(default, null): EqualFunction<V>;
+  public var valueOrder(default, null) : OrderFunction<V>;
+  public var valueHasher(default, null) : HasherFunction<V>;
+  public var valueShow(default, null) : ShowFunction<V>;
   
   var _buckets: Array<Array<Tuple2<K, V>>>;
   
@@ -342,7 +342,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
 
   public function compare(other : Map<K, V>) {
-	var a1 = toArray();
+	var a1 = this.toArray();
 	var a2 = other.toArray(); 
 	
 	var ko = if(null == keyOrder) {

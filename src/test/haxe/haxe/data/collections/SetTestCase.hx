@@ -26,94 +26,123 @@ using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 class SetTestCase extends TestCase {
-    public function testSizeGrowsWhenAddingUniqueElements(): Void {
-      var s = set();
+  public function testSizeGrowsWhenAddingUniqueElements(): Void {
+    var s = set();
+    
+    for (i in 0...100) {
+      assertEquals(i, s.size);
       
-      for (i in 0...100) {
-        assertEquals(i, s.size);
-        
-        s = s.add(i);
-      }
+      s = s.add(i);
+    }
+    
+    assertEquals(100, s.size);
+  }
+  
+  public function testSizeDoesNotGrowWhenAddingDuplicateElements(): Void {
+    var s = set().add(0);
+    
+    for (i in 0...100) s = s.add(0);
+    
+    assertEquals(1, s.size);
+  }
+  
+  public function testSizeShrinksWhenRemovingElements(): Void {
+    var s = defaultSet();
+    
+    for (i in 0...100) {
+      assertEquals(100 - i, s.size);
       
+      s = s.remove(i);
+    }
+    
+    assertEquals(0, s.size);
+  }
+  
+  public function testContainsElements(): Void {
+    var s = set();
+    
+    for (i in 0...100) {
+      assertFalse(s.contains(i));
+      
+      s = s.add(i);
+      
+      assertTrue(s.contains(i));
+    }
+  }
+  
+  public function testAddingSameElementDoesNotChangeSet(): Void {
+    var s = defaultSet();
+    
+    for (i in 0...100) {
+      var oldM = s;
+      
+      s = s.add(i);
+      
+      assertEquals(oldM, s);
       assertEquals(100, s.size);
     }
+  }
+  
+  public function testCanIterateThroughElements(): Void {
+    var s = defaultSet();
     
-    public function testSizeDoesNotGrowWhenAddingDuplicateElements(): Void {
-      var s = set().add(0);
+    var count = 4950;
+    var iterated = 0;
+    
+    for (k in s) {
+      count -= k;
       
-      for (i in 0...100) s = s.add(0);
-      
-      assertEquals(1, s.size);
+      ++iterated;
     }
-    
-    public function testSizeShrinksWhenRemovingElements(): Void {
-      var s = defaultSet();
-      
-      for (i in 0...100) {
-        assertEquals(100 - i, s.size);
-        
-        s = s.remove(i);
-      }
-      
-      assertEquals(0, s.size);
-    }
-    
-    public function testContainsElements(): Void {
-      var s = set();
-      
-      for (i in 0...100) {
-        assertFalse(s.contains(i));
-        
-        s = s.add(i);
-        
-        assertTrue(s.contains(i));
-      }
-    }
-    
-    public function testAddingSameElementDoesNotChangeSet(): Void {
-      var s = defaultSet();
-      
-      for (i in 0...100) {
-        var oldM = s;
-        
-        s = s.add(i);
-        
-        assertEquals(oldM, s);
-        assertEquals(100, s.size);
-      }
-    }
-    
-    public function testCanIterateThroughElements(): Void {
-      var s = defaultSet();
-      
-      var count = 4950;
-      var iterated = 0;
-      
-      for (k in s) {
-        count -= k;
-        
-        ++iterated;
-      }
 
-      assertEquals(100, iterated);
-      assertEquals(0,   count);
-    }
+    assertEquals(100, iterated);
+    assertEquals(0,   count);
+  }
+  
+  public function testFilter(): Void {
+    var s = defaultSet().filter(function(e) { return e < 50; });
     
-    public function testFilter(): Void {
-      var s = defaultSet().filter(function(e) { return e < 50; });
-      
-      assertEquals(50, s.size);
-    }
+    assertEquals(50, s.size);
+  } 
+
+  public function testEquals() {  
+	assertTrue (set().equals(set()));
+	assertTrue (set([1,2,3]).equals(set([1,2,3])));
+	assertFalse(set().equals(set([1])));
+	assertFalse(set([2]).equals(set([1])));
+	assertFalse(set([1,2]).equals(set([1,3])));
+  }
+
+  public function testCompare() {                
+	assertTrue(set().compare(set()) == 0);
+	assertTrue(set([1,2,3]).compare(set([1,2,3])) == 0);
+	assertTrue(set().compare(set([1])) < 0);
+	assertTrue(set([2]).compare(set([1])) > 0);
+	assertTrue(set([1,2]).compare(set([1,3])) < 0);          
+  }
+
+  public function testToString() {           
+	assertEquals("Set []", set().toString());
+	assertEquals("Set [1, 2, 3]", set([1,2,3]).toString()); 
+  }     
+
+  public function testHashCode() {       
+	assertNotEquals(0, set().hashCode());
+	assertNotEquals(0, set([1,2]).hashCode());            
+  }
     
-    function defaultSet(): Set<Int> {
-      var s = set();
-      
-      for (i in 0...100) s = s.add(i);
-      
-      return s;
-    }
+  function defaultSet(): Set<Int> {
+    var s = set();
     
-    function set(): Set<Int> {
-      return Set.create(Int.HasherF(), Int.EqualF());
-    }
+    for (i in 0...100) s = s.add(i);
+    
+    return s;
+  }
+  
+  function set<T>(?values : Array<T>): Set<T> {
+    var s = Set.create();
+    if(null != values)
+      s = s.addAll(values);
+    return s;
+  }
 }

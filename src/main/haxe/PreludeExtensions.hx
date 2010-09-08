@@ -38,7 +38,7 @@ class DynamicExtensions {
     };
   }  
   public static function OrderF() : OrderFunction<Dynamic> {
-    return cast Stax.getOrderFor;  
+    return function(d1 : Dynamic, d2 : Dynamic) return Stax.getOrderFor(d1)(d1, d2);  
   }
   public static function withEffect<T>(t: T, f: Function<T, Void>): T {
     f(t);
@@ -301,22 +301,25 @@ class ArrayExtensions {
     return function(v1: Array<T>, v2: Array<T>) {  
 	  var c = v1.length - v2.length;
 	  if(c != 0)
-	    return c;
+	    return c; 
+	  if(v1.length == 0)
+	    return 0;                       
+      if(null == order)
+        order = Stax.getOrderFor(v1[0]);
       for (i in 0...v1.length) {
-	    if(null == order)
-	      order = Stax.getOrderFor(v1[i]);
-        var c = order(v1[i], v2[i]);
+        var c = order(v1[i], v2[i]);   
         if (c != 0) return c;
       }
       return 0;
     };
   }
   public static function EqualF<T>(c: Class<Array<Dynamic>>, ?equal: EqualFunction<T>): EqualFunction<Array<T>> {
-    return function(v1: Array<T>, v2: Array<T>) {
+    return function(v1: Array<T>, v2: Array<T>) { 
       if (v1.length != v2.length) return false;
+      if (v1.length == 0) return true;
+	  if(null == equal)
+	    equal = Stax.getEqualFor(v1[0]);
       for (i in 0...v1.length) {
-	    if(null == equal)
-	      equal = Stax.getEqualFor(v1[i]);
         if (!equal(v1[i], v2[i])) return false;
       }
     
@@ -337,9 +340,10 @@ class ArrayExtensions {
   public static function HasherF<T>(c: Class<Array<Dynamic>>, ?hasher: HasherFunction<T>): HasherFunction<Array<T>> {
     return function(v: Array<T>) {
       var hash = 12289;
+      if(v.length == 0) return hash;
+      if(null == hasher) 
+	      hasher = Stax.getHasherFor(v[0]);
       for (i in 0...v.length) {
-	    if(null == hasher) 
-	      hasher = Stax.getHasherFor(v[i]);
         hash += hasher(v[i]) * 12289;
       }
     
@@ -934,7 +938,7 @@ class IterableExtensions {
     var a = [];
     
     for (e in i) a.push(e);
-    
+
     return a;
   }
 }

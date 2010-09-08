@@ -226,7 +226,7 @@ class FoldableExtensions {
     var es: Array<B> = [];
     
     foldable.foldl(foldable.empty(), function(a, b) { es.push(b); return a; });
-    
+
     return es;
   }
   

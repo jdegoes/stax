@@ -146,7 +146,7 @@ class Set<T> implements Collection<Set<T>, T> {
   }
 
   public function compare(other : Set<T>) {
-    var a1 = toArray();
+    var a1 = this.toArray();
     var a2 = other.toArray();
     var or = if(null == equal) {
 	  if(a1.length == 0)
@@ -168,7 +168,7 @@ class Set<T> implements Collection<Set<T>, T> {
   }
 
   public function toString(): String { 
-	var a = toArray();
+	var a = this.toArray();
 	var sh = if(null == show) {
 	  if(a.length == 0)
 	    Stax.getShowFor(null);

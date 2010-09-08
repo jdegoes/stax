@@ -361,17 +361,34 @@ class PreludeTestCase extends TestCase {
     assertEquals("Some(Some(value))", getShow(Some(Some("value"))));
   } 
 
-  public function testHasher() { 
-	var zerocodes : Array<Dynamic> = [null, 0];
-	for(z in zerocodes)
-	  assertEquals(0, Stax.getHasherFor(z)(z)); 
-	       
-	var nonzerocodes : Array<Dynamic> = [true, false, "", "a", 1, 0.1, [],[1], {}, {n:"a"}, new HasHasher(1), Date.fromString("2000-01-01"), None, Some("a")]; 
-	for(n in nonzerocodes) 
-	  this.assertNotEquals(0, Stax.getHasherFor(n)(n));
+  public function testHasher() {
+	assertHashCodeForIsZero(null);
+	assertHashCodeForIsZero(0);
+	   
+	assertHashCodeForIsNotZero(true);
+	assertHashCodeForIsNotZero(false);
+	assertHashCodeForIsNotZero("");
+	assertHashCodeForIsNotZero("a");
+	assertHashCodeForIsNotZero(1);
+	assertHashCodeForIsNotZero(0.1);
+	assertHashCodeForIsNotZero([]);
+	assertHashCodeForIsNotZero([1]);
+	assertHashCodeForIsNotZero({});
+	assertHashCodeForIsNotZero({n:"a"});
+	assertHashCodeForIsNotZero(new HasHasher(1));
+	assertHashCodeForIsNotZero(Date.fromString("2000-01-01"));       
+	assertHashCodeForIsNotZero(None);
+	assertHashCodeForIsNotZero(Some("a"));
   }
-  
-  
+
+  public function assertHashCodeForIsZero<T>(v : T) {
+	assertEquals(0, Stax.getHasherFor(v)(v));
+  }
+
+  public function assertHashCodeForIsNotZero<T>(v : T) {
+	assertNotEquals(0, Stax.getHasherFor(v)(v));
+  }
+
   public function toString() return "PreludeTest"
 }
    
