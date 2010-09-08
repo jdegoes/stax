@@ -28,6 +28,7 @@ using haxe.functional.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
+/*F
   public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<Set<T>> {
     return function(v1: Set<T>, v2: Set<T>) {
       var a1 = v1.toArray();
@@ -58,7 +59,7 @@ class Set<T> implements Collection<Set<T>, T> {
       });
     };
   }
-  
+*/
   public var size (getSize, null): Int;
   public var equal (default, null): EqualFunction<T>;
   public var order (default, null) : OrderFunction<T>;
@@ -68,11 +69,12 @@ class Set<T> implements Collection<Set<T>, T> {
   var _map: Map<T, T>;
   
   public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {
+/*F
     hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher;
     equal  = if (equal == null)  DynamicExtensions.EqualF(); else equal;
 	order  = if (order == null)  DynamicExtensions.OrderF(); else order;
     show   = if (show == null)   DynamicExtensions.ShowF(); else show;
-    
+*/    
     return new Set<T>(order, equal, hasher, show, Map.create(hasher, equal, order, show, hasher, equal, order, show));
   }
   
@@ -92,7 +94,7 @@ class Set<T> implements Collection<Set<T>, T> {
   }
   
   public function empty(): Set<T> {
-    return if (size == 0) this; else Set.create(hasher, equal);
+    return if (size == 0) this; else Set.create(hasher, equal, order, show);
   }
   
   public function append(s: Set<T>, t: T): Set<T> {

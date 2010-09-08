@@ -28,6 +28,7 @@ using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
+/*F
   public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<List<T>> {
     return function(v1: List<T>, v2: List<T>) {
       var a1 = v1.toArray();
@@ -56,7 +57,7 @@ class List<T> implements Collection<List<T>, T> {
       });
     };
   } 
-  
+*/
   public var size (getSize, null): Int;
   
   public var head (getHead, null): T;
@@ -90,15 +91,15 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   private function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
-    this.equal  = if (equal  == null) DynamicExtensions.EqualF();  else equal; 
-    this.order  = if (order  == null) DynamicExtensions.OrderF();  else order; 
-    this.hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher; 
-    this.show   = if (show   == null) DynamicExtensions.ShowF();   else show; 
+    this.equal  = /*Fif (equal  == null) DynamicExtensions.EqualF();  else*/ equal; 
+    this.order  = /*Fif (order  == null) DynamicExtensions.OrderF();  else*/ order; 
+    this.hasher = /*Fif (hasher == null) DynamicExtensions.HasherF(); else*/ hasher; 
+    this.show   = /*Fif (show   == null) DynamicExtensions.ShowF();   else*/ show; 
   }
   
   public function empty(): List<T> {
     return if (size == 0) this;
-           else nil(equal);
+           else nil(equal, order, hasher, show);
   }
     
   /** Prepends an element to the list. This method is dramatically faster than
@@ -170,9 +171,9 @@ class List<T> implements Collection<List<T>, T> {
   
   public function contains(t: T): Bool {
     var cur = this;
-    
+    var eq = getEqual();
     for (i in 0...size) {
-      if (equal(t, cur.head)) return true;
+      if (eq(t, cur.head)) return true;
       
       cur = cur.tail;
     }
@@ -210,9 +211,10 @@ class List<T> implements Collection<List<T>, T> {
     var post: List<T> = nil(equal);
       
     var cur = this;
-      
+            
+	var eq = getEqual();
     for (i in 0...size) {
-      if (equal(t, cur.head)) {
+      if (eq(t, cur.head)) {
         post = cur.tail;
         
         break;
@@ -329,7 +331,7 @@ class List<T> implements Collection<List<T>, T> {
   public function sort(order: OrderFunction<T>): List<T> {
     var a = this.toArray();
     
-    a.sort(order);
+    a.sort(getOrder());
     
     var result = empty();
     
@@ -342,40 +344,49 @@ class List<T> implements Collection<List<T>, T> {
   
   public function iterator(): Iterator<T> {
     return FoldableExtensions.iterator(this);
-  } 
-
-  public function equals(other : List<T>) {
-    var a1 = this.toArray();
-    var a2 = other.toArray();
-    var eq = if(null == equal) {
-	  if(a1.length == 0)
-	    Stax.getEqualFor(null);
-	  else
-	    equal = Stax.getEqualFor(a1[0]);
-    } else equal;                    
-    return Array.EqualF(eq)(a1, a2);
   }
 
-  public function compare(other : List<T>) {
-    var a1 = this.toArray();
-    var a2 = other.toArray(); 
+  function getEqual() { 
+	return if(null == equal) {
+	  if(size == 0)
+	    Stax.getEqualFor(null);
+	  else
+	    equal = Stax.getEqualFor(first);
+    } else equal;
+  }  
 
-    var or = if(null == order) {
-	  if(a1.length == 0)
+  function getOrder() {
+	return if(null == order) {
+	  if(size == 0)
 	    Stax.getOrderFor(null);
 	  else
-	    order = Stax.getOrderFor(a1[0]);
-    } else order;   
-    return Array.OrderF(or)(a1, a2);
-  } 
-   
-  public function hashCode() : Int {
-	var ha = if(null == hasher) {
+	    order = Stax.getOrderFor(first);
+    } else order;
+  }
+
+  function getHasher() {
+	return if(null == hasher) {
 	  if(size == 0)
 		Stax.getHasherFor(null);
 	  else
 	    hasher = Stax.getHasherFor(first);   
 	} else hasher;
+  }
+
+  public function equals(other : List<T>) {
+    var a1 = this.toArray();
+    var a2 = other.toArray();                   
+    return Array.EqualF(getEqual())(a1, a2);
+  }
+
+  public function compare(other : List<T>) {
+    var a1 = this.toArray();
+    var a2 = other.toArray();   
+    return Array.OrderF(getOrder())(a1, a2);
+  } 
+   
+  public function hashCode() : Int { 
+	var ha = getHasher();
 	return foldl(12289, function(a, b) return a * (ha(b) + 12289));
   }
 

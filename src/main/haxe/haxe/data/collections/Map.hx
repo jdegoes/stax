@@ -34,7 +34,7 @@ using haxe.functional.PartialFunctionExtensions;
 class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements PartialFunction<K, V> {
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
-  
+/*F  
   public static function OrderF<K, V>(korder: OrderFunction<K>, vorder: OrderFunction<V>): OrderFunction<Map<K, V>> {
     var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
       return korder(t1._1, t2._1);
@@ -79,9 +79,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
       });
     };
   }
-  
+*/  
   public var size (getSize, null): Int;
-/*  
+/*F  
   public var keyHasher:   HasherFunction<K>;
   public var keyEqual:    EqualFunction<K>;
   public var valueHasher: HasherFunction<V>;
@@ -102,6 +102,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   var _pf: PartialFunction1<K, V>;
   
   public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>) {
+/*F
     var keyOrder    = if (korder  == null) cast DynamicExtensions.OrderF();  else korder; 
     var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualF();  else kequal;
     var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherF(); else khasher;
@@ -110,9 +111,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualF();  else vequal; 
     var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherF(); else vhasher;
     var valueShow   = if (vshow   == null) cast DynamicExtensions.ShowF();   else vshow;                                                                                           
-
-    
-    return new Map<K, V>(keyOrder, keyEqual, keyHasher, keyShow, valueOrder, valueEqual, valueHasher, valueShow, [[]], 0);
+*/
+    return new Map<K, V>(korder, kequal, khasher, kshow, vorder, vequal, vhasher, vshow, [[]], 0);
   }
   
   /** Creates a factory for maps of the specified types. */
@@ -166,7 +166,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function empty(): Map<K, V> {
-    return if (size == 0) this; else Map.create(keyHasher, keyEqual, valueHasher, valueEqual);
+    return if (size == 0) this; else Map.create(keyHasher, keyEqual, keyOrder, keyShow, valueHasher, valueEqual, valueOrder, valueShow);
   }
   
   public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
@@ -192,7 +192,10 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var v = t._2;
     var bucket = bucketFor(k);
     
-    var list = _buckets[bucket];
+    var list = _buckets[bucket];  
+
+    if(null == keyEqual)   keyEqual = Stax.getEqualFor(t._1);
+    if(null == valueEqual) valueEqual = Stax.getEqualFor(t._2);
     
     for (i in 0...list.length) {
       var entry = list[i];
@@ -256,9 +259,10 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return map;
   }
 
-  public function get(k: K): Option<V> {
+  public function get(k: K): Option<V> {  
+	var ke = getKeyEqual();
     for (e in listFor(k)) {
-      if (keyEqual(e._1, k)) {
+      if (ke(e._1, k)) {
         return Some(e._2);
       }
     }
@@ -316,7 +320,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function keySet(): Set<K> {
-    return Set.create(keyHasher, keyEqual).addAll(keys());
+    return Set.create(keyHasher, keyEqual, keyOrder, keyShow).addAll(keys());
   }
   
   public function values(): Iterable<V> {
@@ -368,23 +372,38 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     
     return Array.OrderF(Tuple2.OrderF(ko, vo))(a1, a2);
   }
-  
-/**
-* @todo keyEquals is not used at all 
-*/
+     
+  function getKeyEqual() {
+    return if(null == keyEqual) {
+	  var it = iterator();
+	  if(!it.hasNext())
+		Stax.getEqualFor(null);
+	  else
+	    keyEqual = Stax.getEqualFor(it.next()._1); 
+    } else keyEqual;
+  }
+
+  function getValueEqual() {
+    return if(null == valueEqual) {
+	  var it = iterator();
+	  if(!it.hasNext())
+		Stax.getEqualFor(null);
+	  else
+	    valueEqual = Stax.getEqualFor(it.next()._2); 
+    } else valueEqual;
+  }
+
   public function equals(other : Map<K, V>) {
 	var keys1 = this.keySet();
     var keys2 = other.keySet();
     if(!keys1.equals(keys2)) return false;
+    
+    var ve = getValueEqual();
 
     for(key in keys1) {
       var v1 = this.get(key).get();
       var v2 = other.get(key).get();
-      
-      if(null == valueEqual)
-        valueEqual = Stax.getEqualFor(v1);
-
-      if (!valueEqual(v1, v2)) return false;
+      if (!ve(v1, v2)) return false;
     }
     return true;
   }  
@@ -407,23 +426,30 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
 	} else valueShow;
     return "Map " + elements().toString(function(t) { return ksh(t._1) + " -> " + vsh(t._2); });  
   }    
-
-  public function hashCode() {
-	var kha = if(null == keyHasher) {
+       
+  function getKeyHasher() {
+	return if(null == keyHasher) {
 	  var it = iterator();
 	  if(!it.hasNext())
 	    Stax.getHasherFor(null);
 	  else
 	    keyHasher = Stax.getHasherFor(it.next()._1);	
 	} else keyHasher;
+  }   
 
-	var vha = if(null == valueHasher) {
+  function getValueHasher() {
+	return if(null == valueHasher) {
 	  var it = iterator();
 	  if(!it.hasNext())
 	    Stax.getHasherFor(null);
 	  else
 	    valueHasher = Stax.getHasherFor(it.next()._2);	
-	} else valueHasher; 
+	} else valueHasher;
+  }
+
+  public function hashCode() {
+	var kha = getKeyHasher();  
+	var vha = getValueHasher(); 
 	return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
   }
   
@@ -477,13 +503,16 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   private function removeInternal(k: K, v: V, ignoreValue: Bool): Map<K, V> {
     var bucket = bucketFor(k);
     
-    var list = _buckets[bucket];
+    var list = _buckets[bucket];  
+    
+    var ke = getKeyEqual();
+	var ve = getValueEqual();
     
     for (i in 0...list.length) {
       var entry = list[i];
       
-      if (keyEqual(entry._1, k)) {
-        if (ignoreValue || valueEqual(entry._2, v)) {
+      if (ke(entry._1, k)) {
+        if (ignoreValue || ve(entry._2, v)) {
           var newMap = copyWithMod(bucket);
         
           newMap._buckets[bucket] = list.slice(0, i).concat(list.slice(i + 1, list.length));
@@ -541,7 +570,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   private function bucketFor(k: K): Int {
-    return keyHasher(k) % _buckets.length;
+    return getKeyHasher()(k) % _buckets.length;
   }
   
   private function listFor(k: K): Array<Tuple2<K, V>> {
