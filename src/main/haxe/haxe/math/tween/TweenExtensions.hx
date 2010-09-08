@@ -37,7 +37,9 @@ class TweenerExtensions {
   /** Ends the tween with the specified easment.
    */
   public static function endWith(tweener: Tweener, easing: Easing): Tweener {
-    return startWith(function(t) return tweener(1.0 - t), easing);
+    return startWith(tweener, function(t) {
+      return 1.0 - easing(1.0 - t);
+    });
   }
   
   /**

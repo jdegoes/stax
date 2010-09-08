@@ -829,12 +829,13 @@ class OptionExtensions {
   }
   
   public static function flatMap<T, S>(o: Option<T>, f: T -> Option<S>): Option<S> {
-    return switch (o) {
+    return flatten(map(o, f));
+  }
+  
+  public static function flatten<T>(o1: Option<Option<T>>): Option<T> {
+    return switch (o1) {
       case None: None;
-      case Some(v1): switch (f(v1)) {
-        case None: None;
-        case Some(v2): Some(v2);
-      }
+      case Some(o2): o2;
     }
   }
   
