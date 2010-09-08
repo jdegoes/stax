@@ -1,6 +1,5 @@
 /*
  HaXe library written by John A. De Goes <john@socialmedia.com>
- Contributed by Social Media Networks
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -14,9 +13,15 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.data.transcode;
+package haxe.math.tween;
 
-import Prelude;
+typedef Easing = Float -> Float
 
-typedef ExtractorFunction<I, O>  = Function<I, O>;
-typedef DecomposerFunction<I, O> = Function<I, O>;
+class Easings {
+  public static var Linear:     Easing = function(t: Float) return t;
+  public static var Quadratic:  Easing = function(t: Float) return t * t;
+  public static var Cubic:      Easing = function(t: Float) return t * t * t;
+  public static var Quartic:    Easing = function(t: Float) { var squared = t * t; return squared * squared; }
+  public static var Quintic:    Easing = function(t: Float) { var squared = t * t; return squared * squared * t; }
+  
+}

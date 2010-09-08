@@ -16,17 +16,46 @@
 package haxe.concurrent;
 
 enum ActorStatus {
-  Running;
-  Stopped;
-  Failed;
+  Running; // The actor is currently running and processing messages
+  Stopped; // The actor is not running
+  Failed;  // The actor has failed
 }
 
+/** An actor.
+ */
 interface Actor<T, S> {
+  /** The status of the actor. */
   public function status(): ActorStatus;
   
+  /** Starts the actor, if it is not already running. */
   public function start(): Future<Actor<T, S>>;
   
+  /** Stops the actor, if it is not already running. */
   public function stop(): Future<Actor<T, S>>;
   
+  /** Returns a number from 0 to 1 indicating load on the actor. */
+  public function load(): Float;
+  
+  /** Sends data to the actor, and returns a future of the response. */
 	public function send(data: T): Future<S>;
+}
+
+interface ActorFactory<T, S> {
+  /** Creates an actor using a function that will be called to handle every 
+   * message the actor receives. The function should not enclose any variables
+   * and should maintain state exclusively through its parameter and return value.
+   *
+   * @param handler   The message handler. This function will be passed the 
+   *                  current state and the current message, and should return
+   *                  the next state and a future of the response.
+   *
+   * @param coalescer An optional function to coalesce adjacent messages in 
+   *                  the actor's queue.
+   */
+  public function create<X>(handler: X -> T -> Tuple2<X, Future<S>>, ?coalescer: T -> T -> T): Actor<T, S>;
+  
+  /** Creates a stateless actor (an actor that requires no initial state, and 
+   * does not produce any state.
+   */
+  public function createStateless(loop: T -> Future<S>, ?coalescer: T -> T -> T): Actor<T, S>;
 }

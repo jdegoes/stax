@@ -16,7 +16,7 @@
 */
 
 /**
- * The extractors and decomposers in this file have been created to comply with 
+ * The extractors and decomposers in this file have been created to comply with
  * the serialization requirements of XSchema.
  */
 package haxe.data.transcode;
@@ -26,7 +26,6 @@ import Prelude;
 import haxe.data.transcode.Transcode;
 import haxe.text.json.JValue;
 
-typedef JDecomposer<T> = Decomposer<T, JValue>
-typedef JExtractor<T>  = Extractor<JValue, T>
-typedef JTranscoder<T> = Transcoder<T, JValue>
+typedef JExtractorFunction<T>  = Function<JValue, T>;
+typedef JDecomposerFunction<T> = Function<T, JValue>;
 

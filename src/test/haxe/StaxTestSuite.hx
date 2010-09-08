@@ -37,6 +37,7 @@ import haxe.util.ObjectExtensionsTestCase;
 import haxe.util.OrderExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 import haxe.math.geom.PointTestCase;
+import haxe.math.tween.TweenTestCase;
 
 import haxe.time.ScheduledExecutor;
 import haxe.framework.Injector;
@@ -66,6 +67,7 @@ class StaxTestSuite {
           new LoggerTestCase(),
           new JsonTestCase(),
           new PartialFunctionTestCase(),   
+          new TweenTestCase(),
 #if !(neko || php || cpp)  
           new ScheduledExecutorTestCase(),
 #end

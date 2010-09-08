@@ -14,9 +14,44 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.data.transcode;
+package haxe.math.tween;
 
 import Prelude;
+import haxe.test.TestCase;
+import haxe.test.Assert;
+import haxe.math.tween.Tween;
+import haxe.math.tween.Easing;
 
-typedef ExtractorFunction<I, O>  = Function<I, O>;
-typedef DecomposerFunction<I, O> = Function<I, O>;
+using PreludeExtensions;
+using haxe.math.tween.TweenExtensions;
+
+class TweenTestCase extends TestCase {
+  static var Start = {
+    x: 0.0,
+    y: 2.0
+  }
+  static var End = {
+    x: 6.0,
+    y: 12.0
+  }
+  static var Linear = Tween.linear(Start, End);
+  
+	public function new() {
+	  super();
+	}
+	
+	public function testLinearTweenAt0() {
+	  assertFloatEquals(0.0, Linear(0).x);
+	  assertFloatEquals(2.0, Linear(0).y);
+	}
+	
+	public function testLinearTweenAt1() {
+	  assertFloatEquals(6.0, Linear(1).x);
+	  assertFloatEquals(12.0, Linear(1).y);
+	}
+	
+	public function testLinearTweenAt0_5() {
+	  assertFloatEquals(3.0, Linear(0.5).x);
+	  assertFloatEquals(7.0, Linear(0.5).y);
+	}
+}

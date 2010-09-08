@@ -66,6 +66,10 @@ class Env {
       return typeOf(d) != 'undefined';
     }
     
+    public static function isDefinedGlobal(s: String): Bool {
+      return untyped __js__('(function(s){return typeof window[s] != "undefined";})')(s);
+    }
+    
     public static function typeOf(d: Dynamic): String {
       return untyped __js__('typeof d');
     }

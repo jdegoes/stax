@@ -30,117 +30,117 @@ using haxe.data.transcode.TranscodeJValueExtensions;
 using haxe.text.json.JValueExtensions;
 
 class JValueTestCase extends TestCase {
-    public function testBool() {
-      doTest(Bool.DecomposerT(), Bool.ExtractorT(), [true, false], Bool.EqualF());
-    }
-    
-    public function testInt() {
-      doTest(Int.DecomposerT(), Int.ExtractorT(), [-1234, 9231], Int.EqualF());
-    }
-    
-    public function testFloat() {
-      doTest(Float.DecomposerT(), Float.ExtractorT(), [0.25, 0.5], Float.EqualF());
-    }
-    
-    public function testString() {
-      doTest(String.DecomposerT(), String.ExtractorT(), ["boo", "baz"], String.EqualF());
-    }
-    
-    public function testDate() {
-      doTest(Date.DecomposerT(), Date.ExtractorT(), [Date.now(), Date.fromTime(0.0)], Date.EqualF());
-    }
-    
-    public function testOption() {
-      var a: Array<Option<Int>> = [Some(123), None];
-      
-      doTest(Option.DecomposerT(Int.DecomposerT()), Option.ExtractorT(Int.ExtractorT()), a);
-    }
-    
-    public function testTuple2() {
-      var a = [Tuple2.create(123, "foo"), Tuple2.create(0, "bar")];
-      
-      doTest(Tuple2.DecomposerT(Int.DecomposerT(), String.DecomposerT()), 
-             Tuple2.ExtractorT(Int.ExtractorT(), String.ExtractorT()), a, 
-             Tuple2.EqualF(Int.EqualF(), String.EqualF()));
-    }
-    
-    public function testTuple3() {
-      var a = [Tuple3.create(123, "foo", true), Tuple3.create(0, "bar", false)];
-      
-      doTest(Tuple3.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT()), 
-             Tuple3.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT()), a, 
-             Tuple3.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF()));
-    }
-    
-    public function testTuple4() {
-      var a = [Tuple4.create(123, "foo", true, 0.25), Tuple4.create(0, "bar", false, 0.5)];
-      
-      doTest(Tuple4.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT(), Float.DecomposerT()), 
-             Tuple4.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT(), Float.ExtractorT()), a, 
-             Tuple4.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF()));
-    }
-    
-    public function testTuple5() {
-      var a = [Tuple5.create(123, "foo", true, 0.25, "biz"), Tuple5.create(0, "bar", false, 0.5, "bop")];
-      
-      doTest(Tuple5.DecomposerT(Int.DecomposerT(), String.DecomposerT(), Bool.DecomposerT(), Float.DecomposerT(), String.DecomposerT()), 
-             Tuple5.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Bool.ExtractorT(), Float.ExtractorT(), String.ExtractorT()), a, 
-             Tuple5.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF(), String.EqualF()));
-    }
-    
-    public function testArray() {
-      var a: Array<Array<Int>> = [[123, 9, -23], []];
-      
-      doTest(Array.DecomposerT(Int.DecomposerT()), Array.ExtractorT(Int.ExtractorT()), a, Array.EqualF(Int.EqualF()));
-    }
-    
-    public function testSet() {
-      var newSet = Set.factory(Int.HasherF(), Int.EqualF());
-      
-      var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
-      
-      doTest(Set.DecomposerT(Int.DecomposerT()), 
-             Set.ExtractorT(Int.ExtractorT(), Int.HasherF(), Int.EqualF()), a);
-    }
-    
-    public function testList() {
-      var newList = List.factory(Int.EqualF());
-      
-      var a: Array<List<Int>> = [newList().addAll([123, 9, -23]), newList()];
-      
-      doTest(List.DecomposerT(Int.DecomposerT()), 
-             List.ExtractorT(Int.ExtractorT(), Int.EqualF()), a);
-    }
-    
-    public function testMap() {
-      var newMap = Map.factory(Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF());
-      
-      var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
-      
-      doTest(Map.DecomposerT(Int.DecomposerT(), String.DecomposerT()), 
-             Map.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF()), a);
-    }
-    
-    public function testJValue() {
-      doTest(
-	    JValue.DecomposerT(), 
-	    JValue.ExtractorT(), 
-		[JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])]);
-    }
+  public function testBool() {
+    doTest(Bool.DecomposerF(), Bool.ExtractorF(), [true, false], Bool.EqualF());
+  }
 
-    private function doTest<T>(decomposer: JDecomposer<T>, extractor: JExtractor<T>, values: Array<T>, ?eq : EqualFunction<T>): Void {  
-	  if(null == eq)
- 	    eq = Stax.getEqualFor(values[0]);
-      for (value in values) {
-        var actual = extractor.extract(decomposer.decompose(value));
-        
-        var equal = eq(value, actual);
-        
-        if (!equal) {
-          throw "Expected " + value + " but was " + actual;
-        }
-        
-        assertTrue(equal);
+  public function testInt() {
+    doTest(Int.DecomposerF(), Int.ExtractorF(), [-1234, 9231], Int.EqualF());
+  }
+
+  public function testFloat() {
+    doTest(Float.DecomposerF(), Float.ExtractorF(), [0.25, 0.5], Float.EqualF());
+  }
+
+  public function testString() {
+    doTest(String.DecomposerF(), String.ExtractorF(), ["boo", "baz"], String.EqualF());
+  }
+
+  public function testDate() {
+    doTest(Date.DecomposerF(), Date.ExtractorF(), [Date.now(), Date.fromTime(0.0)], Date.EqualF());
+  }
+
+  public function testOption() {
+    var a: Array<Option<Int>> = [Some(123), None];
+
+    doTest(Option.DecomposerF(Int.DecomposerF()), Option.ExtractorF(Int.ExtractorF()), a);
+  }
+
+  public function testTuple2() {
+    var a = [Tuple2.create(123, "foo"), Tuple2.create(0, "bar")];
+
+    doTest(Tuple2.DecomposerF(Int.DecomposerF(), String.DecomposerF()),
+           Tuple2.ExtractorF(Int.ExtractorF(), String.ExtractorF()), a,
+           Tuple2.EqualF(Int.EqualF(), String.EqualF()));
+  }
+
+  public function testTuple3() {
+    var a = [Tuple3.create(123, "foo", true), Tuple3.create(0, "bar", false)];
+
+    doTest(Tuple3.DecomposerF(Int.DecomposerF(), String.DecomposerF(), Bool.DecomposerF()),
+           Tuple3.ExtractorF(Int.ExtractorF(), String.ExtractorF(), Bool.ExtractorF()), a,
+           Tuple3.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF()));
+  }
+
+  public function testTuple4() {
+    var a = [Tuple4.create(123, "foo", true, 0.25), Tuple4.create(0, "bar", false, 0.5)];
+
+    doTest(Tuple4.DecomposerF(Int.DecomposerF(), String.DecomposerF(), Bool.DecomposerF(), Float.DecomposerF()),
+           Tuple4.ExtractorF(Int.ExtractorF(), String.ExtractorF(), Bool.ExtractorF(), Float.ExtractorF()), a,
+           Tuple4.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF()));
+  }
+
+  public function testTuple5() {
+    var a = [Tuple5.create(123, "foo", true, 0.25, "biz"), Tuple5.create(0, "bar", false, 0.5, "bop")];
+
+    doTest(Tuple5.DecomposerF(Int.DecomposerF(), String.DecomposerF(), Bool.DecomposerF(), Float.DecomposerF(), String.DecomposerF()),
+           Tuple5.ExtractorF(Int.ExtractorF(), String.ExtractorF(), Bool.ExtractorF(), Float.ExtractorF(), String.ExtractorF()), a,
+           Tuple5.EqualF(Int.EqualF(), String.EqualF(), Bool.EqualF(), Float.EqualF(), String.EqualF()));
+  }
+
+  public function testArray() {
+    var a: Array<Array<Int>> = [[123, 9, -23], []];
+
+    doTest(Array.DecomposerF(Int.DecomposerF()), Array.ExtractorF(Int.ExtractorF()), a, Array.EqualF(Int.EqualF()));
+  }
+
+  public function testSet() {
+    var newSet = Set.factory(Int.HasherF(), Int.EqualF());
+
+    var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
+
+    doTest(Set.DecomposerF(Int.DecomposerF()),
+           Set.ExtractorF(Int.ExtractorF(), Int.HasherF(), Int.EqualF()), a);
+  }
+
+  public function testList() {
+    var newList = List.factory(Int.EqualF());
+
+    var a: Array<List<Int>> = [newList().addAll([123, 9, -23]), newList()];
+
+    doTest(List.DecomposerF(Int.DecomposerF()),
+           List.ExtractorF(Int.ExtractorF(), Int.EqualF()), a);
+  }
+
+  public function testMap() {
+    var newMap = Map.factory(Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF());
+
+    var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
+
+    doTest(Map.DecomposerF(Int.DecomposerF(), String.DecomposerF()),
+           Map.ExtractorF(Int.ExtractorF(), String.ExtractorF(), Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF()), a);
+  }
+
+  public function testJValue() {
+    doTest(
+      JValue.DecomposerF(),
+      JValue.ExtractorF(),
+  	[JNull, JString("foo"), JNumber(123.0), JBool(false), JObject([JField("foo", JString("bar"))]), JArray([JNull, JString("baz")])]);
+  }
+
+  private function doTest<T>(decomposer: JDecomposerFunction<T>, extractor: JExtractorFunction<T>, values: Array<T>, ?eq : EqualFunction<T>): Void {
+    if(null == eq)
+      eq = Stax.getEqualFor(values[0]);
+    for (value in values) {
+      var actual = extractor(decomposer(value));
+
+      var equal = eq(value, actual);
+
+      if (!equal) {
+        throw "Expected " + value + " but was " + actual;
       }
+
+      assertTrue(equal);
     }
+  }
 }
