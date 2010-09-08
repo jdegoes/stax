@@ -25,6 +25,7 @@ enum Unit {
 typedef AnyRef = {}
 typedef CodeBlock = Void -> Void
 typedef Function<P1, R> = P1 -> R
+typedef Function0<R> = Void -> R
 typedef Function1<P1, R> = P1 -> R
 typedef Function2<P1, P2, R> = P1 -> P2 -> R
 typedef Function3<P1, P2, P3, R> = P1 -> P2 -> P3 -> R

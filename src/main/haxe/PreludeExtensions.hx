@@ -486,7 +486,7 @@ class Function0Extensions {
     }
   }
   
-  public static function stage<Z, T>(f: Void -> Z, before: Void -> T, after: T -> Void): Z {
+  public static function stage<Z, T>(f: Function0<Z>, before: Void -> T, after: T -> Void): Z {
     var state = before();
     
     var result = f();
@@ -494,6 +494,12 @@ class Function0Extensions {
     after(state);
     
     return result;
+  }
+  
+  public static function toEffect<T>(f: Function0<T>): Void -> Void {
+    return function() {
+      f();
+    }
   }
 }
 class Function1Extensions {
@@ -526,6 +532,11 @@ class Function1Extensions {
     
     return function() {
       return if (r == null) { r = f(p1); r; } else r;
+    }
+  }
+  public static function toEffect<P1, R>(f: Function<P1, R>): P1 -> Void {
+    return function(p1) {
+      f(p1);
     }
   }
 }
@@ -562,6 +573,11 @@ class Function2Extensions {
       return if (r == null) { r = f(p1, p2); r; } else r;
     }
   }
+  public static function toEffect<P1, P2, R>(f: Function2<P1, P2, R>): P1 -> P2 -> Void {
+    return function(p1, p2) {
+      f(p1, p2);
+    }
+  }
 }
 class Function3Extensions {  
   public static function swallow<A, B, C>(f: Function3<A, B, C, Void>): Function3<A, B, C, Void> {
@@ -591,6 +607,11 @@ class Function3Extensions {
     
     return function() {
       return if (r == null) { r = f(p1, p2, p3); r; } else r;
+    }
+  }
+  public static function toEffect<P1, P2, P3, R>(f: Function3<P1, P2, P3, R>): P1 -> P2 -> P3 -> Void {
+    return function(p1, p2, p3) {
+      f(p1, p2, p3);
     }
   }
 }
@@ -626,6 +647,11 @@ class Function4Extensions {
       return if (r == null) { r = f(p1, p2, p3, p4); r; } else r;
     }
   }
+  public static function toEffect<P1, P2, P3, P4, R>(f: Function4<P1, P2, P3, P4, R>): P1 -> P2 -> P3 -> P4 -> Void {
+    return function(p1, p2, p3, p4) {
+      f(p1, p2, p3, p4);
+    }
+  }
 }
 class Function5Extensions {  
   public static function swallow<A, B, C, D, E>(f: Function5<A, B, C, D, E, Void>): Function5<A, B, C, D, E, Void> {
@@ -659,6 +685,11 @@ class Function5Extensions {
     
     return function() {
       return if (r == null) { r = f(p1, p2, p3, p4, p5); r; } else r;
+    }
+  }
+  public static function toEffect<P1, P2, P3, P4, P5, R>(f: Function5<P1, P2, P3, P4, P5, R>): P1 -> P2 -> P3 -> P4 -> P5 -> Void {
+    return function(p1, p2, p3, p4, p5) {
+      f(p1, p2, p3, p4, p5);
     }
   }
 }
