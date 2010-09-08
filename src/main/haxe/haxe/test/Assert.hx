@@ -149,7 +149,7 @@ class Assert {
 	* unless you know what you are doing.
 	*/
 	public static function equals<T>(expected: T, value: T, ?equal: EqualFunction<T>, ?msg : String , ?pos : PosInfos) {
-	  if (equal == null) equal = Stax.getEqualFor(expected); //*FDynamicExtensions.EqualF();
+	  if (equal == null) equal = Stax.getEqualFor(expected);
 	  
 		if(msg == null) msg = "expected " + q(expected) + " but was " + q(value);
 		isTrue(equal(expected, value), msg, pos);

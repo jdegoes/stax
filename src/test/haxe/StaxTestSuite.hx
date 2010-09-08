@@ -59,30 +59,30 @@ class StaxTestSuite {
 #end      
         var runner = (new Runner()).addAll([   
           new PreludeTestCase(),    
-//          new JValueTestCase(),
+          new JValueTestCase(),
           new MapTestCase(),
           new SetTestCase(),
           new ListTestCase(),
           new LoggerTestCase(),
-//          new JsonTestCase(),
+          new JsonTestCase(),
           new PartialFunctionTestCase(),   
 #if !(neko || php || cpp)  
-//          new ScheduledExecutorTestCase(),
+          new ScheduledExecutorTestCase(),
 #end
-//          new UrlExtensionsTestCase(),
+          new UrlExtensionsTestCase(),
           new StringExtensionsTestCase(),
           new InjectorTestCase(),
-//          new HttpHeaderExtensionsTestCase(),
+          new HttpHeaderExtensionsTestCase(),
           new PointTestCase(),
           new OrderExtensionsTestCase(),
           new GuidTestCase()
           #if js
-//          , new HttpStringTestCase() // This one should be cross-platform, eventually
-//          , new IFrameIOTestCase()      
-//          , new HttpJValueJsonpTestCase()
-//          , new HTMLElementExtensionsTestCase()
-//          , new QuirksTestCase()
-//          , new ObjectExtensionsTestCase()
+          , new HttpStringTestCase() // This one should be cross-platform, eventually
+          , new IFrameIOTestCase()      
+          , new HttpJValueJsonpTestCase()
+          , new HTMLElementExtensionsTestCase()
+          , new QuirksTestCase()
+          , new ObjectExtensionsTestCase()
           #end   
   
         ]);

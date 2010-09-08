@@ -515,8 +515,8 @@ class Stream<T> {
      *
      * @param optStart  An optional start value.
      */
-    public function filterRepeats(?optStart: T): Stream<T> {
-        return filterRepeatsBy(optStart, cast DynamicExtensions.EqualF().equal);
+    public function filterRepeats(?optStart: T): Stream<T> {                     
+        return filterRepeatsBy(optStart, function(v1, v2) return Stax.getEqualFor(v1)(v1, v2));
     }
     
     /**

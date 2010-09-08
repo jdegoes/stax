@@ -100,9 +100,7 @@ class JValueTestCase extends TestCase {
       var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
       
       doTest(Set.DecomposerT(Int.DecomposerT()), 
-             Set.ExtractorT(Int.ExtractorT(), Int.HasherF(), Int.EqualF()), a
-//*F, Set.EqualF(Int.EqualF())
-);
+             Set.ExtractorT(Int.ExtractorT(), Int.HasherF(), Int.EqualF()), a);
     }
     
     public function testList() {
@@ -111,9 +109,7 @@ class JValueTestCase extends TestCase {
       var a: Array<List<Int>> = [newList().addAll([123, 9, -23]), newList()];
       
       doTest(List.DecomposerT(Int.DecomposerT()), 
-             List.ExtractorT(Int.ExtractorT(), Int.EqualF()), a
-//*F, List.EqualF(Int.EqualF())
-);
+             List.ExtractorT(Int.ExtractorT(), Int.EqualF()), a);
     }
     
     public function testMap() {
@@ -122,9 +118,7 @@ class JValueTestCase extends TestCase {
       var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
       
       doTest(Map.DecomposerT(Int.DecomposerT(), String.DecomposerT()), 
-             Map.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF()), a
-//*F, Map.EqualF(Int.EqualF(), String.EqualF())
-);
+             Map.ExtractorT(Int.ExtractorT(), String.ExtractorT(), Int.HasherF(), Int.EqualF(), String.HasherF(), String.EqualF()), a);
     }
     
     public function testJValue() {

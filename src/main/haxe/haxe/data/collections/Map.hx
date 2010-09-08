@@ -34,59 +34,9 @@ using haxe.functional.PartialFunctionExtensions;
 class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements PartialFunction<K, V> {
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
-/*F  
-  public static function OrderF<K, V>(korder: OrderFunction<K>, vorder: OrderFunction<V>): OrderFunction<Map<K, V>> {
-    var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
-      return korder(t1._1, t2._1);
-    }
-    
-    return function(v1: Map<K, V>, v2: Map<K, V>) {
-        var a1 = v1.toArray();
-        var a2 = v2.toArray();
-        
-        a1.sort(keySorter);
-        a2.sort(keySorter);
-        
-        return Array.OrderF(Tuple2.OrderF(korder, vorder))(a1, a2);
-      };
-  }
-  public static function EqualF<K, V>(kequal: EqualFunction<K>, vequal: EqualFunction<V>): EqualFunction<Map<K, V>> {
-    return function(v1: Map<K, V>, v2: Map<K, V>) {
-      var keys1 = v1.keySet();
-      var keys2 = v2.keySet();
-      
-      if (!Set.EqualF(kequal)(keys1, keys2)) return false;
-      
-      for (key in keys1) {
-        var v1 = v1.get(key).get();
-        var v2 = v2.get(key).get();
-        
-        if (!vequal(v1, v2)) return false;
-      }
-      
-      return true;
-    };
-  }
-  public static function ShowF<K, V>(kshow: ShowFunction<K>, vshow: ShowFunction<V>): ShowFunction<Map<K, V>> {
-    return function(v: Map<K, V>) {
-      return "Map" + v.elements().toString(function(t) { return kshow(t._1) + " -> " + vshow(t._2); });
-    };
-  }
-  public static function HasherF<K, V>(khasher: HasherFunction<K>, vhasher: HasherFunction<V>): HasherFunction<Map<K, V>> {
-    return function(v: Map<K, V>) {
-      return v.foldl(786433, function(a, b) {
-        return a + ((khasher(b._1) * 49157 + 6151) * vhasher(b._2));
-      });
-    };
-  }
-*/  
+
   public var size (getSize, null): Int;
-/*F  
-  public var keyHasher:   HasherFunction<K>;
-  public var keyEqual:    EqualFunction<K>;
-  public var valueHasher: HasherFunction<V>;
-  public var valueEqual:  EqualFunction<V>;  
-*/
+
   public var keyEqual(default, null): EqualFunction<K>;
   public var keyOrder(default, null) : OrderFunction<K>;
   public var keyHasher(default, null) : HasherFunction<K>;
@@ -102,16 +52,6 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   var _pf: PartialFunction1<K, V>;
   
   public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>) {
-/*F
-    var keyOrder    = if (korder  == null) cast DynamicExtensions.OrderF();  else korder; 
-    var keyEqual    = if (kequal  == null) cast DynamicExtensions.EqualF();  else kequal;
-    var keyHasher   = if (khasher == null) cast DynamicExtensions.HasherF(); else khasher;
-    var keyShow     = if (kshow   == null) cast DynamicExtensions.ShowF();   else kshow;  
-    var valueOrder  = if (vorder  == null) cast DynamicExtensions.OrderF();  else vorder;   
-    var valueEqual  = if (vequal  == null) cast DynamicExtensions.EqualF();  else vequal; 
-    var valueHasher = if (vhasher == null) cast DynamicExtensions.HasherF(); else vhasher;
-    var valueShow   = if (vshow   == null) cast DynamicExtensions.ShowF();   else vshow;                                                                                           
-*/
     return new Map<K, V>(korder, kequal, khasher, kshow, vorder, vequal, vhasher, vshow, [[]], 0);
   }
   

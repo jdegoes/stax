@@ -28,36 +28,6 @@ using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
-/*F
-  public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<List<T>> {
-    return function(v1: List<T>, v2: List<T>) {
-      var a1 = v1.toArray();
-      var a2 = v2.toArray();
-      
-      return Array.OrderF(order)(a1, a2);
-    };
-  }
-  public static function EqualF<T>(equal: EqualFunction<T>): EqualFunction<List<T>> {
-    return function(v1: List<T>, v2: List<T>) {
-      var a1 = v1.toArray();
-      var a2 = v2.toArray();
-      
-      return Array.EqualF(equal)(a1, a2);
-    };
-  }
-  public static function ShowF<T>(show: ShowFunction<T>): ShowFunction<List<T>> {
-    return function(v: List<T>) {
-      return "List" + v.elements().toString(show);
-    };
-  }
-  public static function HasherF<T>(hasher: HasherFunction<T>): HasherFunction<List<T>> {
-    return function(v: List<T>) {
-      return v.foldl(12289, function(a, b) {
-        return a * (hasher(b) + 12289);
-      });
-    };
-  } 
-*/
   public var size (getSize, null): Int;
   
   public var head (getHead, null): T;
@@ -91,10 +61,10 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   private function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
-    this.equal  = /*Fif (equal  == null) DynamicExtensions.EqualF();  else*/ equal; 
-    this.order  = /*Fif (order  == null) DynamicExtensions.OrderF();  else*/ order; 
-    this.hasher = /*Fif (hasher == null) DynamicExtensions.HasherF(); else*/ hasher; 
-    this.show   = /*Fif (show   == null) DynamicExtensions.ShowF();   else*/ show; 
+    this.equal  = equal; 
+    this.order  = order; 
+    this.hasher = hasher; 
+    this.show   = show; 
   }
   
   public function empty(): List<T> {

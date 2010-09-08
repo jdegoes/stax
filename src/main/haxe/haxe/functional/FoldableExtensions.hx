@@ -341,15 +341,12 @@ class FoldableExtensions {
 	}
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
-//*F    show = if (show == null) DynamicExtensions.ShowF(); else show;  
-//*F TODO review the following if can be moved into the foldl
-	if(null == show)
-	  show = function(v) return Stax.getShowFor(v)(v);
-	    
     var isFirst = true;
     
     return foldable.foldl('', function(a, b) {
-      var prefix = if (isFirst) { isFirst = false; ''; } else sep;
+      var prefix = if (isFirst) { isFirst = false; ''; } else sep;    
+      if(null == show)
+	    show = Stax.getShowFor(b);
       return a + prefix + show(b);
     });
   }

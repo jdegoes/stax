@@ -21,27 +21,6 @@ import haxe.data.collections.Map;
 using PreludeExtensions;
 
 class DynamicExtensions {   
-  //*F TODO replace with Stax.get*F     
-/*F
-  public static function ShowF(): ShowFunction<Dynamic> {
-    return function(d: Dynamic): String {
-      return Std.string(d);
-    };
-  }
-  public static function HasherF(): HasherFunction<Dynamic> {
-    return function(d: Dynamic): Int {
-      return StringExtensions.HasherF(String)(ShowF()(d));
-    };
-  }
-  public static function EqualF(): EqualFunction<Dynamic> {
-    return function(d1: Dynamic, d2: Dynamic): Bool {
-      return d1 == d2;
-    };
-  }  
-  public static function OrderF() : OrderFunction<Dynamic> {
-    return function(d1 : Dynamic, d2 : Dynamic) return Stax.getOrderFor(d1)(d1, d2);  
-  }
-*/
   public static function withEffect<T>(t: T, f: Function<T, Void>): T {
     f(t);
     

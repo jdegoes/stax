@@ -28,38 +28,6 @@ using haxe.functional.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
-/*F
-  public static function OrderF<T>(order: OrderFunction<T>): OrderFunction<Set<T>> {
-    return function(v1: Set<T>, v2: Set<T>) {
-      var a1 = v1.toArray();
-      var a2 = v2.toArray();
-    
-      a1.sort(order);
-      a2.sort(order);
-
-      return Array.OrderF(order)(a1, a2);
-    };
-  }
-  public static function EqualF<T>(equal: EqualFunction<T>): EqualFunction<Set<T>> {
-    return function(v1: Set<T>, v2: Set<T>) {
-      var all = v1.concat(v2);
-      
-      return all.size == v1.size && all.size == v2.size;
-    };
-  }
-  public static function ShowF<T>(show: ShowFunction<T>): ShowFunction<Set<T>> {
-    return function(v: Set<T>) {
-      return "Set" + v.elements().toString(show);
-    };
-  }
-  public static function HasherF<T>(hasher: HasherFunction<T>): HasherFunction<Set<T>> {
-    return function(v: Set<T>) {
-      return v.foldl(393241, function(a, b) {
-        return a + (hasher(b) * 6151);
-      });
-    };
-  }
-*/
   public var size (getSize, null): Int;
   public var equal (default, null): EqualFunction<T>;
   public var order (default, null) : OrderFunction<T>;
@@ -68,13 +36,7 @@ class Set<T> implements Collection<Set<T>, T> {
   
   var _map: Map<T, T>;
   
-  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {
-/*F
-    hasher = if (hasher == null) DynamicExtensions.HasherF(); else hasher;
-    equal  = if (equal == null)  DynamicExtensions.EqualF(); else equal;
-	order  = if (order == null)  DynamicExtensions.OrderF(); else order;
-    show   = if (show == null)   DynamicExtensions.ShowF(); else show;
-*/    
+  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {  
     return new Set<T>(order, equal, hasher, show, Map.create(hasher, equal, order, show, hasher, equal, order, show));
   }
   
@@ -179,11 +141,7 @@ class Set<T> implements Collection<Set<T>, T> {
 	} else show;
     return "Set " + Array.ShowF(sh)(a);
   }
-/*F    
-  public function toString(): String {
-    return Set.ShowF(DynamicExtensions.ShowF())(this);
-  }
-*/    
+   
   private function copyWithMod(newMap: Map<T, T>): Set<T> {
     return new Set<T>(order, equal, hasher, show, newMap);
   }

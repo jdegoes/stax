@@ -67,7 +67,7 @@ class P {
   }
   
   public static function isEqualTo<T>(ref: T, ?equal: EqualFunction<T>): Predicate<T> {
-    if (equal == null) equal = Stax.getEqualFor(ref); //*FDynamicExtensions.EqualF();
+    if (equal == null) equal = Stax.getEqualFor(ref);
     
     return function(value) {
       return equal(ref, value);
