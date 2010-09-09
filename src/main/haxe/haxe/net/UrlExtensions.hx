@@ -18,7 +18,6 @@ package haxe.net;
 import Prelude;
 import haxe.net.Url;
 import haxe.data.collections.Map;
-import haxe.data.collections.Maps;
 
 using PreludeExtensions;
 using haxe.functional.Foldable;
@@ -172,14 +171,14 @@ class UrlExtensions {
    * object, whose fields all have string values.
    */
   public static function toQueryParameters(query: String): QueryParameters {
-    return if (!query.startsWith('?')) Maps.StringString;
+    return if (!query.startsWith('?')) Map.create();
            else query.substr(1).split('&').flatMap(function(kv) {
              var a = kv.split('=').map(function(s) return s.urlDecode());
       
               return if (a.length == 0) [];
                      else if (a.length == 1) [a[0].entuple('')];
                      else [a[0].entuple(a[1])];
-           }).foldl(Maps.StringString, function(m, t) {
+           }).foldl(Map.create(), function(m, t) {
              return m.add(t);
            });
   }

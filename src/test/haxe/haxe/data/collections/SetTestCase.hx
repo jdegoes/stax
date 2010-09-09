@@ -30,12 +30,12 @@ class SetTestCase extends TestCase {
     var s = set();
     
     for (i in 0...100) {
-      assertEquals(i, s.size);
+      assertEquals(i, s.size());
       
       s = s.add(i);
     }
     
-    assertEquals(100, s.size);
+    assertEquals(100, s.size());
   }
   
   public function testSizeDoesNotGrowWhenAddingDuplicateElements(): Void {
@@ -43,19 +43,19 @@ class SetTestCase extends TestCase {
     
     for (i in 0...100) s = s.add(0);
     
-    assertEquals(1, s.size);
+    assertEquals(1, s.size());
   }
   
   public function testSizeShrinksWhenRemovingElements(): Void {
     var s = defaultSet();
     
     for (i in 0...100) {
-      assertEquals(100 - i, s.size);
+      assertEquals(100 - i, s.size());
       
       s = s.remove(i);
     }
     
-    assertEquals(0, s.size);
+    assertEquals(0, s.size());
   }
   
   public function testContainsElements(): Void {
@@ -79,7 +79,7 @@ class SetTestCase extends TestCase {
       s = s.add(i);
       
       assertEquals(oldM, s);
-      assertEquals(100, s.size);
+      assertEquals(100, s.size());
     }
   }
   
@@ -102,7 +102,7 @@ class SetTestCase extends TestCase {
   public function testFilter(): Void {
     var s = defaultSet().filter(function(e) { return e < 50; });
     
-    assertEquals(50, s.size);
+    assertEquals(50, s.size());
   } 
 
   public function testEquals() {  

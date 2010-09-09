@@ -61,7 +61,7 @@ class DynamicExtensions {
     }
   }
   public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
-    var map: Map<String, T> = Map.create(StringExtensions.hashCode, StringExtensions.equals);
+    var map: Map<String, T> = Map.create();
     
     for (field in Reflect.fields(d)) {
       var value = Reflect.field(d, field);
@@ -278,16 +278,16 @@ class ArrayExtensions {
     return "[" + v.map(show).join(", ") + "]";  
   }
   public static function hashCode<T>(v: Array<T>) {
-    return hashCodeWith(v, Stax.getHasherFor(v[0]));
+    return hashCodeWith(v, Stax.getHashFor(v[0]));
   }
-  public static function hashCodeWith<T>(v: Array<T>, hasher : HasherFunction<T>) {
-    var hash = 12289;
-    if(v.length == 0) return hash;
+  public static function hashCodeWith<T>(v: Array<T>, hash : HashFunction<T>) {
+    var h = 12289;
+    if(v.length == 0) return h;
     for (i in 0...v.length) {
-      hash += hasher(v[i]) * 12289;
+      h += hash(v[i]) * 12289;
     }
     
-    return hash;
+    return h;
   }
   
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
@@ -917,16 +917,16 @@ class IterableExtensions {
     return s + suffix;
   }
   
-  public static function toList<T>(i: Iterable<T>, ?equal: EqualFunction<T>) {
-    return haxe.data.collections.List.create(equal).addAll(i);
+  public static function toList<T>(i: Iterable<T>) {
+    return haxe.data.collections.List.create().addAll(i);
   }
   
-  public static function toSet<T>(i: Iterable<T>, ?hash: HasherFunction<T>, ?equal: EqualFunction<T>) {
-    return haxe.data.collections.Set.create(hash, equal).addAll(i);
+  public static function toSet<T>(i: Iterable<T>) {
+    return haxe.data.collections.Set.create().addAll(i);
   }
   
-  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>, ?khash: HasherFunction<K>, ?kequal: EqualFunction<K>, ?vhash: HasherFunction<V>, ?vequal: EqualFunction<V>) {
-    return haxe.data.collections.Map.create(khash, kequal, vhash, vequal).addAll(i);
+  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>) {
+    return haxe.data.collections.Map.create().addAll(i);
   }
   
   public static function toArray<T>(i: Iterable<T>) {

@@ -21,7 +21,6 @@ import haxe.io.http.Http;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.data.collections.Map;
-import haxe.data.collections.Maps;
 
 #if js
 import Dom;
@@ -60,7 +59,7 @@ class HttpStringAsync implements HttpString {
   }
   
   public function custom(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
-    var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC(Maps.StringString));
+    var url = _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC(Map.create()));
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -98,7 +97,7 @@ class HttpStringAsync implements HttpString {
   }
   
   private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
-    return OptionExtensions.toOption(_headers).getOrElseC(Maps.StringString).set("Content-Type", contentType);
+    return OptionExtensions.toOption(_headers).getOrElseC(Map.create()).set("Content-Type", contentType);
   }
 }
 

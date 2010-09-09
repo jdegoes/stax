@@ -25,7 +25,6 @@ import haxe.net.HttpResponseCode;
 import haxe.text.json.JValue;
 import haxe.text.json.Json;
 import haxe.data.collections.Map;
-import haxe.data.collections.Maps;
 
 #if js
 import Dom;
@@ -77,7 +76,7 @@ class HttpJValueJsonp implements HttpJValue {
     var callbackName     = 'stax_jsonp_callback_' + requestId;
     var callbackFullName = 'haxe.io.http.HttpJValueJsonp.Responders.' + callbackName;
     
-    var params = OptionExtensions.toOption(params_).getOrElseC(Maps.StringString).set(callbackParameterName, callbackFullName);
+    var params = OptionExtensions.toOption(params_).getOrElseC(Map.create()).set(callbackParameterName, callbackFullName);
     
     var url = url_.addQueryParameters(params);
     
@@ -109,7 +108,7 @@ class HttpJValueJsonp implements HttpJValue {
       
       future.deliver({
         body:     response,
-        headers:  Maps.StringString,
+        headers:  Map.create(),
         code:     code
       });
     });

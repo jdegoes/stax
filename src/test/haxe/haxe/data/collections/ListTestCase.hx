@@ -31,12 +31,12 @@ class ListTestCase extends TestCase {
     var l = newList();
     
     for (i in 0...100) {
-      assertEquals(i, l.size);
+      assertEquals(i, l.size());
       
       l = l.add(i);
     }
     
-    assertEquals(100, l.size);
+    assertEquals(100, l.size());
   }
   
   public function testSizeGrowsWhenAddingDuplicateElements(): Void {
@@ -44,19 +44,19 @@ class ListTestCase extends TestCase {
     
     for (i in 0...100) l = l.add(0);
     
-    assertEquals(101, l.size);
+    assertEquals(101, l.size());
   }
   
   public function testSizeShrinksWhenRemovingElements(): Void {
     var l = defaultList();
     
     for (i in 0...100) {
-      assertEquals(100 - i, l.size);
+      assertEquals(100 - i, l.size());
       
       l = l.remove(i);
     }
     
-    assertEquals(0, l.size);
+    assertEquals(0, l.size());
   }
   
   public function testContainsElements(): Void {
@@ -90,14 +90,33 @@ class ListTestCase extends TestCase {
   public function testFilter(): Void {
     var l = defaultList().filter(function(e) { return e < 50; });
     
-    assertEquals(50, l.size);
+    assertEquals(50, l.size());
   }
   
   public function testSort(): Void {
     var ul = newList().addAll([9, 2, 1, 100]);
     var ol = newList().addAll([1, 2, 9, 100]);
     
-    assertListEquals(ol, ul.sort(IntExtensions.compare));
+    assertListEquals(ol, ul.sort());
+  }  
+  
+  public function testSortWith(): Void {
+     var ul = newList().addAll([9, 2, 1, 100]);
+     var ol = newList().addAll([1, 9, 2, 100]);
+     
+     var oddsfirst = function(a, b) {
+       if(a == b)
+         return 0;
+       var aeven = a % 2 == 0;
+       var beven = b % 2 == 0;   
+       if((aeven && beven) || (!aeven && !beven))
+         return a - b;
+       else if(aeven)
+         return 1;
+       else
+         return -1;
+     };
+     assertListEquals(ol, ul.withOrderFunction(oddsfirst).sort());
   }
   
   public function testReverse(): Void {
@@ -141,16 +160,14 @@ class ListTestCase extends TestCase {
     var l = defaultList().zip(defaultList().drop(1));
     
     var i1 = 0, i2 = 1;
-    
-    var equal = Tuple2.EqualF(IntExtensions.equals, IntExtensions.equals);
-    
+
     for (z in l) {
-      assertEquals(z, i1.entuple(i2), equal);
+      assertEquals(z, i1.entuple(i2));
       
       ++i1; ++i2;
     }
     
-    assertEquals(99, l.size);
+    assertEquals(99, l.size());
   }    
 
   public function testEquals() { 

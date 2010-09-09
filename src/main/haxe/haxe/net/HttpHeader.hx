@@ -18,7 +18,6 @@ package haxe.net;
 import Prelude;
 
 import haxe.data.collections.Map;
-import haxe.data.collections.Maps;
 
 typedef HttpHeader = Tuple2<String, String>
 

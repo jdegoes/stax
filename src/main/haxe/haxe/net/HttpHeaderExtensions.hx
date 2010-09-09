@@ -18,7 +18,6 @@ package haxe.net;
 import Prelude;
 
 import haxe.data.collections.Map;
-import haxe.data.collections.Maps;
 import haxe.net.HttpHeader;
 
 using PreludeExtensions;
@@ -32,7 +31,7 @@ class HttpHeaderExtensions {
   }
   
   public static function toHttpHeaders(str: String): HttpHeaders {
-    return Maps.StringString.addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
+    return Map.create().addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
       return toHttpHeader(line.trim()).toArray();
     }));
   }

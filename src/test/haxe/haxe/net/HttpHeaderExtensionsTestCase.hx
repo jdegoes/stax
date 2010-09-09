@@ -26,8 +26,6 @@ using PreludeExtensions;
 using haxe.net.HttpHeaderExtensions;
 
 class HttpHeaderExtensionsTestCase extends TestCase {
-  static var headerEq = Tuple2.EqualF(StringExtensions.equals, StringExtensions.equals);
-  
   public function new() {
     super();
   }
@@ -36,7 +34,7 @@ class HttpHeaderExtensionsTestCase extends TestCase {
     var header  = " Mime-type : text/html ";
     var headerP = "Mime-type".entuple("text/html");
     
-    Assert.equals(headerP, header.toHttpHeader().get(), headerEq);
+    Assert.equals(headerP, header.toHttpHeader().get());
   }
   
   public function testThatValidHeaderCanBeIdentified() {

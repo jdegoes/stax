@@ -22,7 +22,7 @@ class Demo {
         </body>
       </html>
     ';
-    
+
     var window1: Window;
     var window2: Window;
 
@@ -41,51 +41,51 @@ class Demo {
 
     var doc1: HTMLDocument = Quirks.getIframeDocument(iframe1);
     var doc2: HTMLDocument = Quirks.getIframeDocument(iframe2);
-    
+
     doc1.open();
     doc1.write(IframeTemplate);
     doc1.close();
-    
+
     doc2.open();
     doc2.write(IframeTemplate);
     doc2.close();
 
     window1 = Quirks.getIframeWindow(iframe1);
     window2 = Quirks.getIframeWindow(iframe2);
-    
+
     iframeIO1 = new IFrameIOAutoDetect(window1);
     iframeIO2 = new IFrameIOAutoDetect(window2);
-    
+
     var div1 = doc1.getElementById('div');
     var div2 = doc2.getElementById('div');
-    
+
     var textarea1: HTMLTextAreaElement = cast doc1.getElementById('textarea');
     var textarea2: HTMLTextAreaElement = cast doc2.getElementById('textarea');
-    
+
     var button1 = doc1.getElementById('button');
     var button2 = doc2.getElementById('button');
-    
+
     iframeIO1.receive(function(data) {
       div1.innerHTML += data;
     }, window2.location.href, window2);
-    
+
     iframeIO2.receive(function(data) {
       div2.innerHTML += data;
     }, window1.location.href, window1);
-    
+
     button1.onclick = function(e) {
       iframeIO1.send(textarea1.value, window2.location.href, window2);
-      
+
       textarea1.value = '';
     };
-    
+
     button2.onclick = function(e) {
       iframeIO2.send(textarea2.value, window1.location.href, window1);
-      
+
       textarea2.value = '';
     };
   }
-  
+
   public static function browserSupportDemo() {
     Env.document.createElement('div').withEffect(function(div) {
       div.innerHTML += '<table>' +
@@ -193,7 +193,7 @@ class Demo {
         '<tr><td>html5Widgets:</td><td>' + BrowserSupport.html5Widgets() + '</td></tr>' +
         '<tr><td>html5Undo:</td><td>' + BrowserSupport.html5Undo() + '</td></tr>' +
         '</table>';
-        
+
       Env.document.body.appendChild(div);
     });
   }
@@ -202,9 +202,9 @@ class Demo {
     Injector.forever(function(c) {
       c.bind(ScheduledExecutor, ScheduledExecutorSystem);
     });
-      
+
     iframeDemo();
-      
+
     //browserSupportDemo();
   }
 }
