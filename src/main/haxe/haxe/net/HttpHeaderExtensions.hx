@@ -31,7 +31,7 @@ class HttpHeaderExtensions {
   }
   
   public static function toHttpHeaders(str: String): HttpHeaders {
-    return Map.Empty().addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
+    return Map.create().addAll(HeaderLinesPattern.split(str).flatMap(function(line) {
       return toHttpHeader(line.trim()).toArray();
     }));
   }

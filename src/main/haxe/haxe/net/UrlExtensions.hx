@@ -171,14 +171,14 @@ class UrlExtensions {
    * object, whose fields all have string values.
    */
   public static function toQueryParameters(query: String): QueryParameters {
-    return if (!query.startsWith('?')) Map.Empty();
+    return if (!query.startsWith('?')) Map.create();
            else query.substr(1).split('&').flatMap(function(kv) {
              var a = kv.split('=').map(function(s) return s.urlDecode());
       
               return if (a.length == 0) [];
                      else if (a.length == 1) [a[0].entuple('')];
                      else [a[0].entuple(a[1])];
-           }).foldl(Map.Empty(), function(m, t) {
+           }).foldl(Map.create(), function(m, t) {
              return m.add(t);
            });
   }
