@@ -31,19 +31,19 @@ class Set<T> implements Collection<Set<T>, T> {
   public var size (getSize, null): Int;
   public var equal (getEqual, null): EqualFunction<T>;
   public var order (getOrder, null) : OrderFunction<T>;
-  public var hasher (getHasher, null) : HasherFunction<T>;
+  public var hash (getHash, null) : HashFunction<T>;
   public var show (getShow, null) : ShowFunction<T>;
   
   var _map: Map<T, T>;
   
-  public static function create<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher: HasherFunction<T>, ?show: ShowFunction<T>): Set<T> {  
-    return new Set<T>(Map.create(order, equal, hasher, show));
+  public static function create<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Set<T> {  
+    return new Set<T>(Map.create(order, equal, hash, show));
   }
   
   /** Creates a factory for sets of the specified type. */
-  public static function factory<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher: HasherFunction<T>, ?show: ShowFunction<T>): Factory<Set<T>> {
+  public static function factory<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Factory<Set<T>> {
     return function() {
-      return Set.create(order, equal, hasher, show);
+      return Set.create(order, equal, hash, show);
     }
   }
 
@@ -57,7 +57,7 @@ class Set<T> implements Collection<Set<T>, T> {
   
   public function empty(): Set<T> {    
     var m : FriendMap<T> = _map;
-    return if (size == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHasher, m._keyShow);
+    return if (size == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHash, m._keyShow);
   }
   
   public function append(s: Set<T>, t: T): Set<T> {
@@ -111,7 +111,7 @@ class Set<T> implements Collection<Set<T>, T> {
   } 
 
   public function hashCode() : Int {
-    var ha = hasher;
+    var ha = hash;
     return foldl(393241, function(a, b) return a * (ha(b) + 6151));
   }
 
@@ -121,22 +121,22 @@ class Set<T> implements Collection<Set<T>, T> {
   
   public function withOrderFunction(order : OrderFunction<T>) {
     var m : FriendMap<T> = _map;
-    return create(order, m._keyEqual, m._keyHasher, m._keyShow).addAll(this);
+    return create(order, m._keyEqual, m._keyHash, m._keyShow).addAll(this);
   }
   
   public function withEqualFunction(equal : EqualFunction<T>) {
     var m : FriendMap<T> = _map;
-    return create(m._keyOrder, equal, m._keyHasher, m._keyShow).addAll(this);
+    return create(m._keyOrder, equal, m._keyHash, m._keyShow).addAll(this);
   }
   
-  public function withHasherFunction(hasher : HasherFunction<T>) {
+  public function withHashFunction(hash : HashFunction<T>) {
     var m : FriendMap<T> = _map;
-    return create(m._keyOrder, m._keyEqual, hasher, m._keyShow).addAll(this);
+    return create(m._keyOrder, m._keyEqual, hash, m._keyShow).addAll(this);
   }
   
   public function withShowFunction(show : ShowFunction<T>) { 
     var m : FriendMap<T> = _map;
-    return create(m._keyOrder, m._keyEqual, m._keyHasher, show).addAll(this);
+    return create(m._keyOrder, m._keyEqual, m._keyHash, show).addAll(this);
   }
   
   /**
@@ -158,8 +158,8 @@ class Set<T> implements Collection<Set<T>, T> {
     return _map.keyEqual;
   } 
   
-  function getHasher() {
-    return _map.keyHasher;
+  function getHash() {
+    return _map.keyHash;
   }
   
   function getShow() {    
@@ -170,6 +170,6 @@ class Set<T> implements Collection<Set<T>, T> {
 private typedef FriendMap<K> = {
   private var _keyEqual  : EqualFunction<K>;
   private var _keyOrder  : OrderFunction<K>;
-  private var _keyHasher : HasherFunction<K>;
+  private var _keyHash : HashFunction<K>;
   private var _keyShow   : ShowFunction<K>;
 }

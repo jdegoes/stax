@@ -276,7 +276,7 @@ class SetExtensions {
   public static function DecomposerF<T>(c: Class<Set<Dynamic>>, d: JDecomposerFunction<T>): JDecomposerFunction<Set<T>> {
     return function(v: Set<T>): JValue { return JArray(v.toArray().map(d)); }
   }
-  public static function ExtractorF<T>(c: Class<Set<Dynamic>>, e: JExtractorFunction<T>, ?h: HasherFunction<T>, ?eq: EqualFunction<T>): JExtractorFunction<Set<T>> {
+  public static function ExtractorF<T>(c: Class<Set<Dynamic>>, e: JExtractorFunction<T>, ?h: HashFunction<T>, ?eq: EqualFunction<T>): JExtractorFunction<Set<T>> {
     return function(v: JValue) {
       return switch(v) {
         case JArray(v): Set.create(eq, h).addAll(v.map(e));
@@ -294,7 +294,7 @@ class MapExtensions {
           return JArray(v.toArray().map(td));
         }
   }
-  public static function ExtractorF<K, V>(c: Class<Map<Dynamic, Dynamic>>, ke: JExtractorFunction<K>, ve: JExtractorFunction<V>, ?kh: HasherFunction<K>, ?keq: EqualFunction<K>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<K, V>> {
+  public static function ExtractorF<K, V>(c: Class<Map<Dynamic, Dynamic>>, ke: JExtractorFunction<K>, ve: JExtractorFunction<V>, ?kh: HashFunction<K>, ?keq: EqualFunction<K>, ?vh: HashFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<K, V>> {
     var te = Tuple2.ExtractorF(ke, ve);
 
     return function(v: JValue) {
@@ -314,7 +314,7 @@ class MapExtensions {
     }
   }
 
-  public static function StringKeyExtractorF<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractorFunction<V>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<String, V>> {
+  public static function StringKeyExtractorF<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractorFunction<V>, ?vh: HashFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<String, V>> {
     var te = Tuple2.ExtractorF(StringExtensions.ExtractorF(String), ve);
 
     var extract0 = function(v: Array<JValue>){

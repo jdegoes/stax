@@ -382,7 +382,7 @@ class Tuple2<A, B> extends AbstractProduct {
     };
   }
 
-  public static function HasherF<T1, T2>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>): HasherFunction<Tuple2<T1, T2>> {
+  public static function HashF<T1, T2>(hash1: HashFunction<T1>, hash2: HashFunction<T2>): HashFunction<Tuple2<T1, T2>> {
     return function (v: Tuple2<T1, T2>) {
       return 786433 * hash1(v._1) + 24593 * hash2(v._2);
     };
@@ -393,14 +393,14 @@ class Tuple2<A, B> extends AbstractProduct {
                                                                  
   public var order(getOrder, null)   : OrderFunction<Tuple2<A, B>>;
   public var equal(getEqual, null)   : EqualFunction<Tuple2<A, B>>;
-  public var hasher(getHasher, null) : HasherFunction<Tuple2<A, B>>;
+  public var hash(getHash, null) : HashFunction<Tuple2<A, B>>;
   public var show(getShow, null)     : ShowFunction<Tuple2<A, B>>;
 
-  public function new(first: A, second: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hasher : HasherFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>) {
+  public function new(first: A, second: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hash : HashFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>) {
     super([first, second]);
 
     this._1  = first; this._2 = second;
-    _order = order; _equal = equal; _hasher = hasher; _show = show;
+    _order = order; _equal = equal; _hash = hash; _show = show;
   }
 
   override private function getProductPrefix(): String {
@@ -428,12 +428,12 @@ class Tuple2<A, B> extends AbstractProduct {
   }
 
   public function  hashCode() : Int {
-    return hasher(this);
+    return hash(this);
   }   
           
   var _order  : OrderFunction <Tuple2<A, B>>;
   var _equal  : EqualFunction <Tuple2<A, B>>;
-  var _hasher : HasherFunction<Tuple2<A, B>>;
+  var _hash : HashFunction<Tuple2<A, B>>;
   var _show   : ShowFunction  <Tuple2<A, B>>;
   function getOrder() {
     return if(null == _order) {
@@ -449,11 +449,11 @@ class Tuple2<A, B> extends AbstractProduct {
       _equal;
   }
   
-  function getHasher() {
-    return if(null == _hasher) {
-      _hasher = HasherF(Stax.getHasherFor(_1), Stax.getHasherFor(_2));
+  function getHash() {
+    return if(null == _hash) {
+      _hash = HashF(Stax.getHashFor(_1), Stax.getHashFor(_2));
     } else 
-      _hasher;
+      _hash;
   }
   
   function getShow() {
@@ -463,8 +463,8 @@ class Tuple2<A, B> extends AbstractProduct {
       _show;
   }
   
-  public static function create<A, B>(a: A, b: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hasher : HasherFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>): Tuple2<A, B> {
-    return new Tuple2<A, B>(a, b, order, equal, hasher, show);
+  public static function create<A, B>(a: A, b: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hash : HashFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>): Tuple2<A, B> {
+    return new Tuple2<A, B>(a, b, order, equal, hash, show);
   }
 }
 
@@ -494,7 +494,7 @@ class Tuple3<A, B, C> extends AbstractProduct {
       return "Tuple3(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ")";
     };
   }
-  public static function HasherF<T1, T2, T3>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>): HasherFunction<Tuple3<T1, T2, T3>> {
+  public static function HashF<T1, T2, T3>(hash1: HashFunction<T1>, hash2: HashFunction<T2>, hash3: HashFunction<T3>): HashFunction<Tuple3<T1, T2, T3>> {
     return function (v: Tuple3<T1, T2, T3>) {
       return 196613 * hash1(v._1) + 3079 * hash2(v._2) + 389 * hash3(v._3);
     };
@@ -506,15 +506,15 @@ class Tuple3<A, B, C> extends AbstractProduct {
   
   public var order(getOrder, null)   : OrderFunction <Tuple3<A, B, C>>;
   public var equal(getEqual, null)   : EqualFunction <Tuple3<A, B, C>>;
-  public var hasher(getHasher, null) : HasherFunction<Tuple3<A, B, C>>;
+  public var hash(getHash, null) : HashFunction<Tuple3<A, B, C>>;
   public var show(getShow, null)     : ShowFunction  <Tuple3<A, B, C>>;
 
-  public function new(first: A, second: B, third: C, ?order : OrderFunction<Tuple3<A, B, C>>, ?equal : EqualFunction<Tuple3<A, B, C>>, ?hasher : HasherFunction<Tuple3<A, B, C>>, ?show : ShowFunction<Tuple3<A, B, C>>) {
+  public function new(first: A, second: B, third: C, ?order : OrderFunction<Tuple3<A, B, C>>, ?equal : EqualFunction<Tuple3<A, B, C>>, ?hash : HashFunction<Tuple3<A, B, C>>, ?show : ShowFunction<Tuple3<A, B, C>>) {
     super([first, second, third]);
 
     this._1 = first; this._2 = second; this._3 = third;   
     
-    _order = order; _equal = equal; _hasher = hasher; _show = show;
+    _order = order; _equal = equal; _hash = hash; _show = show;
   }
 
   override private function getProductPrefix(): String {
@@ -553,12 +553,12 @@ class Tuple3<A, B, C> extends AbstractProduct {
   }
 
   public function  hashCode() : Int {
-    return 196613 * Stax.getHasherFor(_1)(_1) + 3079 * Stax.getHasherFor(_2)(_2) + 389 * Stax.getHasherFor(_3)(_3);
+    return 196613 * Stax.getHashFor(_1)(_1) + 3079 * Stax.getHashFor(_2)(_2) + 389 * Stax.getHashFor(_3)(_3);
   }
   
   var _order  : OrderFunction <Tuple3<A, B, C>>;
   var _equal  : EqualFunction <Tuple3<A, B, C>>;
-  var _hasher : HasherFunction<Tuple3<A, B, C>>;
+  var _hash : HashFunction<Tuple3<A, B, C>>;
   var _show   : ShowFunction  <Tuple3<A, B, C>>;
   function getOrder() {
     return if(null == _order) {
@@ -574,11 +574,11 @@ class Tuple3<A, B, C> extends AbstractProduct {
       _equal;
   }
   
-  function getHasher() {
-    return if(null == _hasher) {
-      _hasher = HasherF(Stax.getHasherFor(_1), Stax.getHasherFor(_2), Stax.getHasherFor(_3));
+  function getHash() {
+    return if(null == _hash) {
+      _hash = HashF(Stax.getHashFor(_1), Stax.getHashFor(_2), Stax.getHashFor(_3));
     } else 
-      _hasher;
+      _hash;
   }
   
   function getShow() {
@@ -588,8 +588,8 @@ class Tuple3<A, B, C> extends AbstractProduct {
       _show;
   }
 
-  public static function create<A, B, C>(a: A, b: B, c: C, ?order : OrderFunction<Tuple3<A, B, C>>, ?equal : EqualFunction<Tuple3<A, B, C>>, ?hasher : HasherFunction<Tuple3<A, B, C>>, ?show : ShowFunction<Tuple3<A, B, C>>): Tuple3<A, B, C> {
-    return new Tuple3<A, B, C>(a, b, c, order, equal, hasher, show);
+  public static function create<A, B, C>(a: A, b: B, c: C, ?order : OrderFunction<Tuple3<A, B, C>>, ?equal : EqualFunction<Tuple3<A, B, C>>, ?hash : HashFunction<Tuple3<A, B, C>>, ?show : ShowFunction<Tuple3<A, B, C>>): Tuple3<A, B, C> {
+    return new Tuple3<A, B, C>(a, b, c, order, equal, hash, show);
   } 
 }
 
@@ -622,7 +622,7 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
       return "Tuple4(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ", " + show4(v1._4) + ")";
     };
   }
-  public static function HasherF<T1, T2, T3, T4>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>, hash4: HasherFunction<T4>): HasherFunction<Tuple4<T1, T2, T3, T4>> {
+  public static function HashF<T1, T2, T3, T4>(hash1: HashFunction<T1>, hash2: HashFunction<T2>, hash3: HashFunction<T3>, hash4: HashFunction<T4>): HashFunction<Tuple4<T1, T2, T3, T4>> {
     return function (v: Tuple4<T1, T2, T3, T4>) {
       return 1543 * hash1(v._1) + 49157 * hash2(v._2) + 196613 * hash3(v._3) + 97 * hash4(v._4);
     };
@@ -635,15 +635,15 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   
   public var order(getOrder, null)   : OrderFunction <Tuple4<A, B, C, D>>;
   public var equal(getEqual, null)   : EqualFunction <Tuple4<A, B, C, D>>;
-  public var hasher(getHasher, null) : HasherFunction<Tuple4<A, B, C, D>>;
+  public var hash(getHash, null) : HashFunction<Tuple4<A, B, C, D>>;
   public var show(getShow, null)     : ShowFunction  <Tuple4<A, B, C, D>>;
 
-  public function new(first: A, second: B, third: C, fourth: D, ?order : OrderFunction<Tuple4<A, B, C, D>>, ?equal : EqualFunction<Tuple4<A, B, C, D>>, ?hasher : HasherFunction<Tuple4<A, B, C, D>>, ?show : ShowFunction<Tuple4<A, B, C, D>>) {
+  public function new(first: A, second: B, third: C, fourth: D, ?order : OrderFunction<Tuple4<A, B, C, D>>, ?equal : EqualFunction<Tuple4<A, B, C, D>>, ?hash : HashFunction<Tuple4<A, B, C, D>>, ?show : ShowFunction<Tuple4<A, B, C, D>>) {
     super([first, second, third, fourth]);
 
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;     
     
-    _order = order; _equal = equal; _hasher = hasher; _show = show;
+    _order = order; _equal = equal; _hash = hash; _show = show;
   }
 
   override private function getProductPrefix(): String {
@@ -687,12 +687,12 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   }
 
   public function  hashCode() : Int {
-    return 1543 * Stax.getHasherFor(_1)(_1) + 49157 * Stax.getHasherFor(_2)(_2) + 196613 * Stax.getHasherFor(_3)(_3) + 97 * Stax.getHasherFor(_4)(_4);
+    return 1543 * Stax.getHashFor(_1)(_1) + 49157 * Stax.getHashFor(_2)(_2) + 196613 * Stax.getHashFor(_3)(_3) + 97 * Stax.getHashFor(_4)(_4);
   } 
   
   var _order  : OrderFunction <Tuple4<A, B, C, D>>;
   var _equal  : EqualFunction <Tuple4<A, B, C, D>>;
-  var _hasher : HasherFunction<Tuple4<A, B, C, D>>;
+  var _hash : HashFunction<Tuple4<A, B, C, D>>;
   var _show   : ShowFunction  <Tuple4<A, B, C, D>>;
   function getOrder() {
     return if(null == _order) {
@@ -708,11 +708,11 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
       _equal;
   }
   
-  function getHasher() {
-    return if(null == _hasher) {
-      _hasher = HasherF(Stax.getHasherFor(_1), Stax.getHasherFor(_2), Stax.getHasherFor(_3), Stax.getHasherFor(_4));
+  function getHash() {
+    return if(null == _hash) {
+      _hash = HashF(Stax.getHashFor(_1), Stax.getHashFor(_2), Stax.getHashFor(_3), Stax.getHashFor(_4));
     } else 
-      _hasher;
+      _hash;
   }
   
   function getShow() {
@@ -722,8 +722,8 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
       _show;
   }
 
-  public static function create<A, B, C, D>(a: A, b: B, c: C, d: D, ?order : OrderFunction<Tuple4<A, B, C, D>>, ?equal : EqualFunction<Tuple4<A, B, C, D>>, ?hasher : HasherFunction<Tuple4<A, B, C, D>>, ?show : ShowFunction<Tuple4<A, B, C, D>>): Tuple4<A, B, C, D> {
-    return new Tuple4<A, B, C, D>(a, b, c, d, order, equal, hasher, show);
+  public static function create<A, B, C, D>(a: A, b: B, c: C, d: D, ?order : OrderFunction<Tuple4<A, B, C, D>>, ?equal : EqualFunction<Tuple4<A, B, C, D>>, ?hash : HashFunction<Tuple4<A, B, C, D>>, ?show : ShowFunction<Tuple4<A, B, C, D>>): Tuple4<A, B, C, D> {
+    return new Tuple4<A, B, C, D>(a, b, c, d, order, equal, hash, show);
   }
 }
 
@@ -759,7 +759,7 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
       return "Tuple5(" + show1(v1._1) + ", " + show2(v1._2) + ", " + show3(v1._3) + ", " + show4(v1._4) + ", " + show5(v1._5) + ")";
     };
   }
-  public static function HasherF<T1, T2, T3, T4, T5>(hash1: HasherFunction<T1>, hash2: HasherFunction<T2>, hash3: HasherFunction<T3>, hash4: HasherFunction<T4>, hash5: HasherFunction<T5>): HasherFunction<Tuple5<T1, T2, T3, T4, T5>> {
+  public static function HashF<T1, T2, T3, T4, T5>(hash1: HashFunction<T1>, hash2: HashFunction<T2>, hash3: HashFunction<T3>, hash4: HashFunction<T4>, hash5: HashFunction<T5>): HashFunction<Tuple5<T1, T2, T3, T4, T5>> {
     return function (v: Tuple5<T1, T2, T3, T4, T5>) {
       return 12289 * hash1(v._1) + 769 * hash2(v._2) + 393241 * hash3(v._3) + 193 * hash4(v._4) + 53 * hash5(v._5);
     };
@@ -773,15 +773,15 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   
   public var order(getOrder, null)   : OrderFunction <Tuple5<A, B, C, D, E>>;
   public var equal(getEqual, null)   : EqualFunction <Tuple5<A, B, C, D, E>>;
-  public var hasher(getHasher, null) : HasherFunction<Tuple5<A, B, C, D, E>>;
+  public var hash(getHash, null) : HashFunction<Tuple5<A, B, C, D, E>>;
   public var show(getShow, null)     : ShowFunction  <Tuple5<A, B, C, D, E>>;
 
-  public function new(first: A, second: B, third: C, fourth: D, fifth: E, ?order : OrderFunction<Tuple5<A, B, C, D, E>>, ?equal : EqualFunction<Tuple5<A, B, C, D, E>>, ?hasher : HasherFunction<Tuple5<A, B, C, D, E>>, ?show : ShowFunction<Tuple5<A, B, C, D, E>>) {
+  public function new(first: A, second: B, third: C, fourth: D, fifth: E, ?order : OrderFunction<Tuple5<A, B, C, D, E>>, ?equal : EqualFunction<Tuple5<A, B, C, D, E>>, ?hash : HashFunction<Tuple5<A, B, C, D, E>>, ?show : ShowFunction<Tuple5<A, B, C, D, E>>) {
     super([first, second, third, fourth, fifth]);
 
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;    
     
-    _order = order; _equal = equal; _hasher = hasher; _show = show;
+    _order = order; _equal = equal; _hash = hash; _show = show;
   }
 
   override private function getProductPrefix(): String {
@@ -826,12 +826,12 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   }
 
   public function  hashCode() : Int {
-    return 12289 * Stax.getHasherFor(_1)(_1) + 769 * Stax.getHasherFor(_2)(_2) + 393241 * Stax.getHasherFor(_3)(_3) + 193 * Stax.getHasherFor(_4)(_4) + 53 * Stax.getHasherFor(_5)(_5);
+    return 12289 * Stax.getHashFor(_1)(_1) + 769 * Stax.getHashFor(_2)(_2) + 393241 * Stax.getHashFor(_3)(_3) + 193 * Stax.getHashFor(_4)(_4) + 53 * Stax.getHashFor(_5)(_5);
   }
 
   var _order  : OrderFunction <Tuple5<A, B, C, D, E>>;
   var _equal  : EqualFunction <Tuple5<A, B, C, D, E>>;
-  var _hasher : HasherFunction<Tuple5<A, B, C, D, E>>;
+  var _hash : HashFunction<Tuple5<A, B, C, D, E>>;
   var _show   : ShowFunction  <Tuple5<A, B, C, D, E>>;
   function getOrder() {
     return if(null == _order) {
@@ -847,11 +847,11 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
       _equal;
   }
   
-  function getHasher() {
-    return if(null == _hasher) {
-      _hasher = HasherF(Stax.getHasherFor(_1), Stax.getHasherFor(_2), Stax.getHasherFor(_3), Stax.getHasherFor(_4), Stax.getHasherFor(_5));
+  function getHash() {
+    return if(null == _hash) {
+      _hash = HashF(Stax.getHashFor(_1), Stax.getHashFor(_2), Stax.getHashFor(_3), Stax.getHashFor(_4), Stax.getHashFor(_5));
     } else 
-      _hasher;
+      _hash;
   }
   
   function getShow() {
@@ -861,15 +861,15 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
       _show;
   }
 
-  public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E, ?order : OrderFunction<Tuple5<A, B, C, D, E>>, ?equal : EqualFunction<Tuple5<A, B, C, D, E>>, ?hasher : HasherFunction<Tuple5<A, B, C, D, E>>, ?show : ShowFunction<Tuple5<A, B, C, D, E>>): Tuple5<A, B, C, D, E> {
-    return new Tuple5<A, B, C, D, E>(a, b, c, d, e, order, equal, hasher, show);
+  public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E, ?order : OrderFunction<Tuple5<A, B, C, D, E>>, ?equal : EqualFunction<Tuple5<A, B, C, D, E>>, ?hash : HashFunction<Tuple5<A, B, C, D, E>>, ?show : ShowFunction<Tuple5<A, B, C, D, E>>): Tuple5<A, B, C, D, E> {
+    return new Tuple5<A, B, C, D, E>(a, b, c, d, e, order, equal, hash, show);
   }
 }
 
 typedef OrderFunction<T>  = Function2<T, T, Int>;
 typedef EqualFunction<T>  = Function2<T, T, Bool>;
 typedef ShowFunction<T>   = Function<T, String>;
-typedef HasherFunction<T> = Function<T, Int>;
+typedef HashFunction<T> = Function<T, Int>;
 
 class Stax {
   static function _createOrderImpl<T>(impl : OrderFunction<Dynamic>) : OrderFunction<T> {
@@ -1076,39 +1076,39 @@ class Stax {
     }
   }
 
-  static function _createHasherImpl<T>(impl : HasherFunction<Dynamic>) return function(v : T) if(null == v) return 0 else return impl(v)
+  static function _createHashImpl<T>(impl : HashFunction<Dynamic>) return function(v : T) if(null == v) return 0 else return impl(v)
 
-  /** Returns a HasherFunction (T -> Int). It works for any type. For Custom Classes you must provide a hashCode()
+  /** Returns a HashFunction (T -> Int). It works for any type. For Custom Classes you must provide a hashCode()
    * method, otherwise the full class name is returned.
    */
-  public static function getHasherFor<T>(t : T) : HasherFunction<T> {
-    return getHasherForType(Type.typeof(t));
+  public static function getHashFor<T>(t : T) : HashFunction<T> {
+    return getHashForType(Type.typeof(t));
   }
-  public static function getHasherForType<T>(v: ValueType) : HasherFunction<T> {
+  public static function getHashForType<T>(v: ValueType) : HashFunction<T> {
     return switch(v) {
       case TBool:
-        _createHasherImpl(BoolExtensions.hashCode);
+        _createHashImpl(BoolExtensions.hashCode);
       case TInt:
-        _createHasherImpl(IntExtensions.hashCode);
+        _createHashImpl(IntExtensions.hashCode);
       case TFloat:
-        _createHasherImpl(FloatExtensions.hashCode);
+        _createHashImpl(FloatExtensions.hashCode);
       case TUnknown:
-      _createHasherImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
+      _createHashImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
       case TObject:
-        _createHasherImpl(function(v){
+        _createHashImpl(function(v){
         var s = getShowFor(v)(v);
-        return getHasherFor(s)(s);
+        return getHashFor(s)(s);
         });
       case TClass(c):
         switch(Type.getClassName(c)) {
         case "String":
-          _createHasherImpl(StringExtensions.hashCode);
+          _createHashImpl(StringExtensions.hashCode);
             case "Date":
-              _createHasherImpl(DateExtensions.hashCode);
+              _createHashImpl(DateExtensions.hashCode);
         case "Array":
-              _createHasherImpl(ArrayExtensions.hashCode);
+              _createHashImpl(ArrayExtensions.hashCode);
           default:
-              _createHasherImpl(function(v : T) {
+              _createHashImpl(function(v : T) {
           return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode"))
             Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
           else
@@ -1116,14 +1116,14 @@ class Stax {
         });
         }
       case TEnum(e):
-        _createHasherImpl(function(v : T) {
+        _createHashImpl(function(v : T) {
         var hash = Type.enumConstructor(v).hashCode() * 6151;
         for(i in Type.enumParameters(v))
-          hash += Stax.getHasherFor(i)(i) * 6151;
+          hash += Stax.getHashFor(i)(i) * 6151;
         return hash;
       });
       case TFunction:
-        _createHasherImpl(function(v : T) return error("function can't provide a hash code"));
+        _createHashImpl(function(v : T) return error("function can't provide a hash code"));
       case TNull:
         function(v) return 0;
       default:

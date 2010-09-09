@@ -177,11 +177,11 @@ class PreludeTestCase extends TestCase {
 
   public function testTupleHashCode() {    
     var tests = [
-      Stax.getHasherFor(Tuple2.create("b",0)),
-      Stax.getHasherFor(Tuple2.create("a",1)), 
-      Stax.getHasherFor(Tuple3.create("a",0,0.1)),
-      Stax.getHasherFor(Tuple4.create("a",0,0.1,"b")),
-      Stax.getHasherFor(Tuple5.create("a",0,0.1,"a",1)), 
+      Stax.getHashFor(Tuple2.create("b",0)),
+      Stax.getHashFor(Tuple2.create("a",1)), 
+      Stax.getHashFor(Tuple3.create("a",0,0.1)),
+      Stax.getHashFor(Tuple4.create("a",0,0.1,"b")),
+      Stax.getHashFor(Tuple5.create("a",0,0.1,"a",1)), 
     ];
    
     while(tests.length > 0)
@@ -361,7 +361,7 @@ class PreludeTestCase extends TestCase {
     assertEquals("Some(Some(value))", getShow(Some(Some("value"))));
   } 
 
-  public function testHasher() {
+  public function testHash() {
     assertHashCodeForIsZero(null);
     assertHashCodeForIsZero(0);
        
@@ -375,18 +375,18 @@ class PreludeTestCase extends TestCase {
     assertHashCodeForIsNotZero([1]);
     assertHashCodeForIsNotZero({});
     assertHashCodeForIsNotZero({n:"a"});
-    assertHashCodeForIsNotZero(new HasHasher(1));
+    assertHashCodeForIsNotZero(new HasHash(1));
     assertHashCodeForIsNotZero(Date.fromString("2000-01-01"));       
     assertHashCodeForIsNotZero(None);
     assertHashCodeForIsNotZero(Some("a"));
   }
 
   public function assertHashCodeForIsZero<T>(v : T) {
-    assertEquals(0, Stax.getHasherFor(v)(v));
+    assertEquals(0, Stax.getHashFor(v)(v));
   }
 
   public function assertHashCodeForIsNotZero<T>(v : T) {
-    assertNotEquals(0, Stax.getHasherFor(v)(v));
+    assertNotEquals(0, Stax.getHashFor(v)(v));
   }
 
   public function toString() return "PreludeTest"
@@ -406,7 +406,7 @@ private class Comparable
   public function compare(other : Comparable) return v == other.v ? 0 : (v > other.v ? 1 : -1)
 }             
 
-private class HasHasher
+private class HasHash
 {
   var v : Int;
   public function new(v : Int) this.v = v

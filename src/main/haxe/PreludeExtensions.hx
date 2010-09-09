@@ -278,16 +278,16 @@ class ArrayExtensions {
     return "[" + v.map(show).join(", ") + "]";  
   }
   public static function hashCode<T>(v: Array<T>) {
-    return hashCodeWith(v, Stax.getHasherFor(v[0]));
+    return hashCodeWith(v, Stax.getHashFor(v[0]));
   }
-  public static function hashCodeWith<T>(v: Array<T>, hasher : HasherFunction<T>) {
-    var hash = 12289;
-    if(v.length == 0) return hash;
+  public static function hashCodeWith<T>(v: Array<T>, hash : HashFunction<T>) {
+    var h = 12289;
+    if(v.length == 0) return h;
     for (i in 0...v.length) {
-      hash += hasher(v[i]) * 12289;
+      h += hash(v[i]) * 12289;
     }
     
-    return hash;
+    return h;
   }
   
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
