@@ -333,6 +333,38 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
            else Math.round(this.size / _buckets.length);
   }
   
+  public function withKeyOrderFunction(order : OrderFunction<K>) {
+    return create(order, _keyEqual, _keyHasher, _keyShow, _valueOrder, _valueEqual, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withKeyEqualFunction(equal : EqualFunction<K>) {
+    return create(_keyOrder, equal, _keyHasher, _keyShow, _valueOrder, _valueEqual, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withKeyHasherFunction(hasher : HasherFunction<K>) {
+    return create(_keyOrder, _keyEqual, hasher, _keyShow, _valueOrder, _valueEqual, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withKeyShowFunction(show : ShowFunction<K>) { 
+    return create(_keyOrder, _keyEqual, _keyHasher, show, _valueOrder, _valueEqual, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withValueOrderFunction(order : OrderFunction<V>) {
+    return create(_keyOrder, _keyEqual, _keyHasher, _keyShow, order, _valueEqual, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withValueEqualFunction(equal : EqualFunction<V>) {
+    return create(_keyOrder, _keyEqual, _keyHasher, _keyShow, _valueOrder, equal, _valueHasher, _valueShow).addAll(this);
+  }
+  
+  public function withValueHasherFunction(hasher : HasherFunction<V>) {
+    return create(_keyOrder, _keyEqual, _keyHasher, _keyShow, _valueOrder, _valueEqual, hasher, _valueShow).addAll(this);
+  }
+  
+  public function withValueShowFunction(show : ShowFunction<V>) { 
+    return create(_keyOrder, _keyEqual, _keyHasher, _keyShow, _valueOrder, _valueEqual, _valueHasher, show).addAll(this);
+  }
+  
   private function entries(): Iterable<Tuple2<K, V>> {
     var buckets = _buckets;
     

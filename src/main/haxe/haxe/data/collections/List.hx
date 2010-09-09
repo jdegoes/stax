@@ -292,10 +292,9 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   /** Returns a list that contains all the elements of this list, sorted by
-   * the specified ordering function.
-   */
-
-  public function sort(order: OrderFunction<T>): List<T> {
+   * the ordering function.
+   */        
+  public function sort(): List<T> {
     var a = this.toArray();
     a.sort(order);
     var result = empty();
@@ -309,6 +308,22 @@ class List<T> implements Collection<List<T>, T> {
 
   public function iterator(): Iterator<T> {
     return FoldableExtensions.iterator(this);
+  }
+  
+  public function withOrderFunction(order : OrderFunction<T>) {
+    return create(order, _equal, _hasher, _show).addAll(this);
+  }
+  
+  public function withEqualFunction(equal : EqualFunction<T>) {
+    return create(_order, equal, _hasher, _show).addAll(this);
+  }
+  
+  public function withHasherFunction(hasher : HasherFunction<T>) {
+    return create(_order, _equal, hasher, _show).addAll(this);
+  }
+  
+  public function withShowFunction(show : ShowFunction<T>) {
+    return create(_order, _equal, _hasher, show).addAll(this);
   }
 
   var _equal : EqualFunction<T>;

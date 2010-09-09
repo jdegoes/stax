@@ -97,7 +97,26 @@ class ListTestCase extends TestCase {
     var ul = newList().addAll([9, 2, 1, 100]);
     var ol = newList().addAll([1, 2, 9, 100]);
     
-    assertListEquals(ol, ul.sort(IntExtensions.compare));
+    assertListEquals(ol, ul.sort());
+  }  
+  
+  public function testSortWith(): Void {
+     var ul = newList().addAll([9, 2, 1, 100]);
+     var ol = newList().addAll([1, 9, 2, 100]);
+     
+     var oddsfirst = function(a, b) {
+       if(a == b)
+         return 0;
+       var aeven = a % 2 == 0;
+       var beven = b % 2 == 0;   
+       if((aeven && beven) || (!aeven && !beven))
+         return a - b;
+       else if(aeven)
+         return 1;
+       else
+         return -1;
+     };
+     assertListEquals(ol, ul.withOrderFunction(oddsfirst).sort());
   }
   
   public function testReverse(): Void {

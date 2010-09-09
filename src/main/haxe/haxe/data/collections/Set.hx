@@ -117,6 +117,26 @@ class Set<T> implements Collection<Set<T>, T> {
 
   public function toString(): String {    
     return "Set " + toArray().toStringWith(show);
+  } 
+  
+  public function withOrderFunction(order : OrderFunction<T>) {
+    var m : FriendMap<T> = _map;
+    return create(order, m._keyEqual, m._keyHasher, m._keyShow).addAll(this);
+  }
+  
+  public function withEqualFunction(equal : EqualFunction<T>) {
+    var m : FriendMap<T> = _map;
+    return create(m._keyOrder, equal, m._keyHasher, m._keyShow).addAll(this);
+  }
+  
+  public function withHasherFunction(hasher : HasherFunction<T>) {
+    var m : FriendMap<T> = _map;
+    return create(m._keyOrder, m._keyEqual, hasher, m._keyShow).addAll(this);
+  }
+  
+  public function withShowFunction(show : ShowFunction<T>) { 
+    var m : FriendMap<T> = _map;
+    return create(m._keyOrder, m._keyEqual, m._keyHasher, show).addAll(this);
   }
   
   /**
