@@ -943,6 +943,50 @@ class Stax {
   }
   }
 
+  public static function getReflectiveOrderFor<T>(t: T) : OrderFunction<T> {
+    return switch(Type.typeof(t)) {
+      case TClass(c):
+        switch(Type.getClassName(c)) {
+        case "String":
+          _createOrderImpl(StringExtensions.compare);
+        case "Date":
+          _createOrderImpl(DateExtensions.compare);
+        case "Array":
+          _createOrderImpl(ArrayExtensions.compare);
+        default:
+          if (Type.getInstanceFields(c).remove("compare")){
+            _createOrderImpl(function(a, b) return (cast a).compare(b));
+          }
+          else{
+            _createOrderImpl(function(a, b) {
+              var m = haxe.rtti.Meta.getFields(c);
+              var orderedFields = Reflect.fields(t).map(function(v){
+                var fieldMeta = Reflect.field(m, v);
+                var weight    = if (fieldMeta != null){
+                    if (Reflect.hasField(fieldMeta, "OrderAscending")) 1
+                    else if (Reflect.hasField(fieldMeta, "OrderDescending")) -1
+                    else 0;
+                  }
+                  else 0;
+                return Tuple2.create(v, weight);
+              }).filter(function(v){return v._2 != 0;});
+
+              var values = orderedFields.map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
+
+              for (value in values) {
+                var c = getOrderFor(value._1)(value._1, value._2) * value._3;
+
+                if (c != 0) return c;
+              }
+
+              return 0;
+            });
+          }
+        }
+      default: getOrderFor(t);
+    }
+  }
+
   static function _createEqualImpl<T>(impl : EqualFunction<Dynamic>) {
     return function(a, b) {
     return if(a == b || (a == null && b == null)) true;
@@ -1076,6 +1120,34 @@ class Stax {
     }
   }
 
+
+  public static function getReflectiveShowFor<T>(t: T) : ShowFunction<T> {
+    return switch(Type.typeof(t)) {
+      case TClass(c):
+        switch(Type.getClassName(c)) {
+        case "String":
+          _createShowImpl(StringExtensions.toString);
+        case "Date":
+          _createShowImpl(DateExtensions.toString);
+        case "Array":
+          _createShowImpl(ArrayExtensions.toString);
+        default:
+          if (Type.getInstanceFields(Type.getClass(t)).remove("toString")){
+            _createShowImpl(function(v : T) {
+              return Reflect.callMethod(v, Reflect.field(v, "toString"), []);
+            });
+          }
+          else{
+            _createShowImpl(function(v : T) {
+              var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);}).map(function(v){return Stax.getShowFor(v)(v);});
+              return values.mkString(Type.getClassName(c) + '(', ')', ', ');
+            });
+          }
+        }
+      default: getShowFor(t);
+    }
+  }
+
   static function _createHashImpl<T>(impl : HashFunction<Dynamic>) return function(v : T) if(null == v) return 0 else return impl(v)
 
   /** Returns a HashFunction (T -> Int). It works for any type. For Custom Classes you must provide a hashCode()
@@ -1128,6 +1200,34 @@ class Stax {
         function(v) return 0;
       default:
       function(v : T) return -1;
+    }
+  }
+
+  public static function getReflectiveHashFor<T>(t: T) : HashFunction<T> {
+    return switch(Type.typeof(t)) {
+      case TClass(c):
+        switch(Type.getClassName(c)) {
+        case "String":
+          _createHasherImpl(StringExtensions.hashCode);
+        case "Date":
+          _createHasherImpl(DateExtensions.hashCode);
+        case "Array":
+          _createHasherImpl(ArrayExtensions.hashCode);
+        default:
+          if (Type.getInstanceFields(Type.getClass(t)).remove("hashCode")){
+            _createHasherImpl(function(v : T) {
+              return Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
+            });
+          }
+          else{
+            _createHasherImpl(function(v : T) {
+              var className = Type.getClassName(c);
+              var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);});
+              return values.foldl(9901 * String.HasherF()(className), function(v, e){return v + (333667 * (Stax.getHasherFor(e)(e) + 197192));});
+            });
+          }
+        }
+      default: getHasherFor(t);
     }
   }
 

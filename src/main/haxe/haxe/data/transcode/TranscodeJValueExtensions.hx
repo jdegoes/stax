@@ -30,61 +30,30 @@ using haxe.functional.FoldableExtensions;
 using haxe.text.json.JValueExtensions;
 
 class ExtractorHelpers {
-  public static function extractFieldValue<T>(j: JValue, n: String, e: JExtractorFunction<T>, def: JValue) {
-    var fieldValue = j.getOrElse(n, def.toThunk());
+    public static function extractFieldValue<T>(j: JValue, n: String, e: JExtractorFunction<T>, def: JValue) {
+      var fieldValue = j.getOrElse(n, def.toThunk());
 
-    try {
-      return e(fieldValue);
+      try {
+        return e(fieldValue);
+      }
+      catch (err: Dynamic) {
+        return e(def);
+      }
     }
-    catch (err: Dynamic) {
-      return e(def);
-    }
-  }
-  public static function extractImplementation<T>(v : JValue, namespace: String, ?nameEncodeFunction: Function1<String, String>): T {
-    var hash = v.extractHash();
-    var keys = hash.keys();
-
-    if (keys.hasNext()){
-      var className = keys.next();
-      var value     = hash.get(className);
-      if (null != nameEncodeFunction) className = nameEncodeFunction(className);
-
-      var clazz = Type.resolveClass(namespace + "." + className);
-      return cast Reflect.callMethod(clazz, Reflect.field(clazz, "deserialize"), [value]);
-    }
-    else Stax.error("Implementation cannot be deserialized."); return null;
-  }
 }
 
 class DecomposerHelpers {
-  public static function serializeImplementation<T>(t : T, ?nameEncodeFunction: Function1<String, String>): JValue {
-    var className = DecomposerHelpers.getClassShortName(t);
-    if (null != nameEncodeFunction) className = nameEncodeFunction(className);
-    return JObject([JField(className, DecomposerHelpers.getDecomposerFor(t)(t))]);
-  }
-  static function getClassShortName<T>(t : T): String{
-    switch(Type.typeof(t))
-    {
-      case TClass(c): {
-        var name  = Type.getClassName(c);
-        var index = name.lastIndexOf(".");
-        return if (index != -1) name.substr(index + 1);
-        else name;
-      }
-      default: Stax.error("Value is not class. Value: " + t); return null;
+    public static function getDecomposerFor<T>(t : T) : JDecomposerFunction<T> {
+      return _createDecomposerImpl(function(v : T) {
+        return if(Type.getInstanceFields(Type.getClass(v)).remove("decompose"))
+          Reflect.callMethod(v, Reflect.field(v, "decompose"), []);
+        else
+          Stax.error("Decomposer function cannt be created. 'Serialize' method is missing. Object: " + t);
+      });
     }
-  }
-  public static function getDecomposerFor<T>(t : T) : JDecomposerFunction<T> {
-    return _createDecomposerImpl(function(v : T) {
-      return if(Type.getInstanceFields(Type.getClass(v)).remove("serialize"))
-        Reflect.callMethod(v, Reflect.field(v, "serialize"), []);
-      else
-        Stax.error("Decomposer function cannt be created. 'Serialize' method is missing. Object: " + t);
-    });
-  }
-  static function _createDecomposerImpl<T>(impl : JDecomposerFunction<Dynamic>) : JDecomposerFunction<T> {
-    return function(v) return null == v ? JNull : impl(v);
-  }
+    static function _createDecomposerImpl<T>(impl : JDecomposerFunction<Dynamic>) : JDecomposerFunction<T> {
+      return function(v) return null == v ? JNull : impl(v);
+    }
 }
 
 class BoolExtensions {
