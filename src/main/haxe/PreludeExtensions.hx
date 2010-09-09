@@ -61,7 +61,7 @@ class DynamicExtensions {
     }
   }
   public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
-    var map: Map<String, T> = Map.create(StringExtensions.equals, StringExtensions.hashCode);
+    var map: Map<String, T> = Map.create();
     
     for (field in Reflect.fields(d)) {
       var value = Reflect.field(d, field);
@@ -893,16 +893,16 @@ class IterableExtensions {
     return s + suffix;
   }
   
-  public static function toList<T>(i: Iterable<T>, ?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>) {
-    return haxe.data.collections.List.create(order, equal, hasher, show).addAll(i);
+  public static function toList<T>(i: Iterable<T>) {
+    return haxe.data.collections.List.create().addAll(i);
   }
   
-  public static function toSet<T>(i: Iterable<T>, ?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>) {
-    return haxe.data.collections.Set.create(order, equal, hasher, show).addAll(i);
+  public static function toSet<T>(i: Iterable<T>) {
+    return haxe.data.collections.Set.create().addAll(i);
   }
   
-  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>, ?korder: OrderFunction<K>, ?kequal: EqualFunction<K>, ?khasher: HasherFunction<K>, ?kshow: ShowFunction<K>, ?vorder: OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhasher: HasherFunction<V>, ?vshow: ShowFunction<V>) {
-    return haxe.data.collections.Map.create(korder, kequal, khasher, kshow, vorder, vequal, vhasher, vshow).addAll(i);
+  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>) {
+    return haxe.data.collections.Map.create().addAll(i);
   }
   
   public static function toArray<T>(i: Iterable<T>) {

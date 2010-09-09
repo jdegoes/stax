@@ -313,10 +313,7 @@ class MapExtensions {
       }));
     }
   }
-  /**
-   *  @todo the Map.create() below used to pass StringExtensions.equals and StringExtensions.hashCode, but due to a bug in haXe (issue 204)
-   *  it is not possible to reference that method.
-   */
+
   public static function StringKeyExtractorF<V>(c: Class<Map<Dynamic, Dynamic>>, ve: JExtractorFunction<V>, ?vh: HasherFunction<V>, ?veq: EqualFunction<V>): JExtractorFunction<Map<String, V>> {
     var te = Tuple2.ExtractorF(StringExtensions.ExtractorF(String), ve);
 

@@ -92,27 +92,21 @@ class JValueTestCase extends TestCase {
   }
 
   public function testSet() {
-    var newSet = Set.factory(IntExtensions.equals, IntExtensions.hashCode);
-
-    var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
+    var a: Array<Set<Int>> = [Set.create().addAll([123, 9, -23]), Set.create()];
 
     doTest(Set.DecomposerF(Int.DecomposerF()),
            Set.ExtractorF(Int.ExtractorF(), IntExtensions.hashCode, IntExtensions.equals), a);
   }
 
   public function testList() {
-    var newList = List.factory(IntExtensions.equals);
-
-    var a: Array<List<Int>> = [newList().addAll([123, 9, -23]), newList()];
+    var a: Array<List<Int>> = [List.create().addAll([123, 9, -23]), List.create()];
 
     doTest(List.DecomposerF(Int.DecomposerF()),
            List.ExtractorF(Int.ExtractorF(), IntExtensions.equals), a);
   }
 
   public function testMap() {
-    var newMap = Map.factory(IntExtensions.equals, IntExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode);
-
-    var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
+    var a: Array<Map<Int, String>> = [Map.create().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), Map.create()];
 
     doTest(Map.DecomposerF(Int.DecomposerF(), String.DecomposerF()),
            Map.ExtractorF(Int.ExtractorF(), String.ExtractorF(), IntExtensions.hashCode, IntExtensions.equals, StringExtensions.hashCode, StringExtensions.equals), a);
