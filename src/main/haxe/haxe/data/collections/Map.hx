@@ -286,24 +286,24 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
 
   public function compare(other : Map<K, V>) {
-  var a1 = this.toArray();
-  var a2 = other.toArray(); 
-  
-  var ko = if(null == keyOrder) {
-    if(a1.length == 0) 
-      Stax.getOrderFor(null);
-    else
-      keyOrder = Stax.getOrderFor(a1[0]._1);  
-  } else keyOrder;
-  
-  var vo = if(null == valueOrder) {
-    if(a1.length == 0) 
-      Stax.getOrderFor(null);
-    else
-      valueOrder = Stax.getOrderFor(a1[0]._2);  
-  } else valueOrder;        
-  
-  var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
+    var a1 = this.toArray();
+    var a2 = other.toArray(); 
+    
+    var ko = if(null == keyOrder) {
+      if(a1.length == 0) 
+        Stax.getOrderFor(null);
+      else
+        keyOrder = Stax.getOrderFor(a1[0]._1);  
+    } else keyOrder;
+    
+    var vo = if(null == valueOrder) {
+      if(a1.length == 0) 
+        Stax.getOrderFor(null);
+      else
+        valueOrder = Stax.getOrderFor(a1[0]._2);  
+    } else valueOrder;        
+    
+    var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
       return ko(t1._1, t2._1);
     }
     

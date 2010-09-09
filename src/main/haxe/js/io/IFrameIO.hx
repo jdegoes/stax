@@ -308,11 +308,11 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   
   public function new(w: Window) {
     super();
-    
+                             
     this.bindTarget         = w;
     this.executor           = ScheduledExecutor.inject();
     this.fragmentsToSend    = newFragmentsList();
-    this.fragmentsReceived  = Map.create(MessageKey.HasherF(), MessageKey.EqualF());
+    this.fragmentsReceived  = Map.create();
     this.receivers          = new Hash();
     this.originUrlToWindow  = new Hash();
     
@@ -566,24 +566,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   }
 }
 
-private class MessageKey {
-  public static function HasherF(): HasherFunction<MessageKey> {
-    return function(v: MessageKey) {
-      return v.messageId.hashCode() * 
-             v.from.hashCode() * 
-             v.to.hashCode() *
-             v.fragmentCount.hashCode();
-    };
-  }
-  public static function EqualF(): EqualFunction<MessageKey> {
-    return function(v1: MessageKey, v2: MessageKey) {
-      return v1.messageId  == v2.messageId && 
-             v1.from       == v2.from &&
-             v1.to         == v2.to &&
-             v1.fragmentCount == v2.fragmentCount;
-    };
-  }
-  
+private class MessageKey {  
   public var messageId     (default, null): Int;
   public var from          (default, null): String;
   public var to            (default, null): String;
@@ -594,6 +577,20 @@ private class MessageKey {
     this.from = from;
     this.to = to;
     this.fragmentCount = fragmentCount;
+  }  
+  
+  public function hashCode() {
+    return messageId.hashCode() * 
+           from.hashCode() * 
+           to.hashCode() *
+           fragmentCount.hashCode();
+  }
+  public function equals(other: MessageKey) {
+    return messageId  == other.messageId && 
+           from       == other.from &&
+           to         == other.to &&
+           fragmentCount == other.fragmentCount;
+    
   }
 }
 

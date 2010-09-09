@@ -274,7 +274,7 @@ class List<T> implements Collection<List<T>, T> {
     var iterator1 = this.reverse().drop(0.max(this.size - len)).iterator();
     var iterator2 = that.reverse().drop(0.max(that.size - len)).iterator();
 
-    var r = List.create(Tuple2.EqualF(this.equal, that.equal));
+    var r = List.create();
 
     for (i in 0...len) {
       r = r.cons(Tuple2.create(iterator1.next(), iterator2.next()));

@@ -27,72 +27,72 @@ using PreludeExtensions;
 class Mock<T> implements Dynamic<T>{
   var _expects: Map<String, Array<Dynamic>>;
   
-    private function new() {
-      _expects = Map.create(String.HasherF(), String.EqualF(), Array.HasherF(DynamicExtensions.HasherF()), Array.EqualF(DynamicExtensions.EqualF()));
-    }
+  private function new() {
+    _expects = Map.create(StringExtensions.hashCode, StringExtensions.equals, ArrayExtensions.hashCode, ArrayExtensions.equals);
+  }
+  
+  public function expect1<P1, R>(name: String, f: Function<P1, R>, times: Int = 1): Void {
+    var self = this;
     
-    public function expect1<P1, R>(name: String, f: Function<P1, R>, times: Int = 1): Void {
-      var self = this;
+    for (i in 0...times) {
+      internal_add(name, function(p: P1): R {
+        self.internal_remove(name);
       
-      for (i in 0...times) {
-        internal_add(name, function(p: P1): R {
-          self.internal_remove(name);
-        
-          return f(p);
-        });
-      }
+        return f(p);
+      });
+    }
   }
   
   public function expect2<P1, P2, R>(name: String, f: Function2<P1, P2, R>, times: Int = 1): Void {
     var self = this;
     
     for (i in 0...times) {
-        internal_add(name, function(p1: P1, p2: P2): R {
-          self.internal_remove(name);
-        
-          return f(p1, p2);
-        });
-      }
+      internal_add(name, function(p1: P1, p2: P2): R {
+        self.internal_remove(name);
+      
+        return f(p1, p2);
+      });
+    }
   }
   
   public function expect3<P1, P2, P3, R>(name: String, f: Function3<P1, P2, P3, R>, times: Int = 1): Void {
     var self = this;
     
     for (i in 0...times) {
-        internal_add(name, function(p1: P1, p2: P2, p3: P3): R {
-          self.internal_remove(name);
-        
-          return f(p1, p2, p3);
-        });
-      }
+      internal_add(name, function(p1: P1, p2: P2, p3: P3): R {
+        self.internal_remove(name);
+      
+        return f(p1, p2, p3);
+      });
+    }
   }
   
   public function expect4<P1, P2, P3, P4, R>(name: String, f: Function4<P1, P2, P3, P4, R>, times: Int = 1): Void {
     var self = this;
     
     for (i in 0...times) {
-        internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4): R {
-          self.internal_remove(name);
-        
-          return f(p1, p2, p3, p4);
-        });
-      }
+      internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4): R {
+        self.internal_remove(name);
+      
+        return f(p1, p2, p3, p4);
+      });
+    }
   }
   
   public function expect5<P1, P2, P3, P4, P5, R>(name: String, f: Function5<P1, P2, P3, P4, P5, R>, times: Int = 1): Void {
     var self = this;
     
     for (i in 0...times) {
-        internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): R {
-          self.internal_remove(name);
-        
-          return f(p1, p2, p3, p4, p5);
-        });
-      }
+      internal_add(name, function(p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): R {
+        self.internal_remove(name);
+      
+        return f(p1, p2, p3, p4, p5);
+      });
+    }
   }
   
   public function allow1<P1, R>(name: String, f: Function<P1, R>): Void {
-      Reflect.setField(this, name, f);
+    Reflect.setField(this, name, f);
   }
   
   public function allow2<P1, P2, R>(name: String, f: Function2<P1, P2, R>): Void {
@@ -170,8 +170,7 @@ class MockTestCase extends TestCase {
     
     if (_runningTest) {
       _localMocks.push(mock);
-    }
-    else {
+    } else {
       _globalMocks.push(mock);
     }
     
@@ -187,8 +186,7 @@ class MockTestCase extends TestCase {
       _localMocks = [];
       
       _runningTest = false;
-    }
-    catch (e: Dynamic) {
+    } catch (e: Dynamic) {
       _runningTest = false;
       
       throw e;
