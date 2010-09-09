@@ -35,8 +35,6 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
 
-  public var size (getSize, null): Int;  
-
   public var keyEqual(getKeyEqual, null): EqualFunction<K>;
   public var keyOrder(getKeyOrder, null) : OrderFunction<K>;
   public var keyHash(getKeyHash, null) : HashFunction<K>;
@@ -111,7 +109,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function empty(): Map<K, V> {
-    return if (size == 0) this; else Map.create(_keyOrder, _keyEqual, _keyHash, _keyShow, _valueOrder, _valueEqual, _valueHash, _valueShow);
+    return if (size() == 0) this; else Map.create(_keyOrder, _keyEqual, _keyHash, _keyShow, _valueOrder, _valueEqual, _valueHash, _valueShow);
   }
   
   public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
@@ -335,7 +333,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   
   public function load(): Int {
     return if (_buckets.length == 0) MaxLoad;
-           else Math.round(this.size / _buckets.length);
+           else Math.round(this.size() / _buckets.length);
   }
   
   public function withKeyOrderFunction(order : OrderFunction<K>) {
@@ -458,11 +456,11 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
       newTable.push(_buckets[i]);
     }
     
-    return new Map<K, V>(_keyOrder, _keyEqual, _keyHash, _keyShow, _valueOrder, _valueEqual, _valueHash, _valueShow, newTable, size);      
+    return new Map<K, V>(_keyOrder, _keyEqual, _keyHash, _keyShow, _valueOrder, _valueEqual, _valueHash, _valueShow, newTable, size());      
   }
   
   private function rebalance(): Void {
-    var newSize = Math.round(size / ((MaxLoad + MinLoad) / 2));
+    var newSize = Math.round(size() / ((MaxLoad + MinLoad) / 2));
     
     if (newSize > 0) {
       var all = entries();
@@ -490,7 +488,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     else _buckets[bucketFor(k)];
   }
   
-  private function getSize(): Int {
+  public function size(): Int {
     return _size;
   }
   

@@ -28,7 +28,6 @@ using haxe.functional.FoldableExtensions;
 
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
-  public var size (getSize, null): Int;
   public var equal (getEqual, null): EqualFunction<T>;
   public var order (getOrder, null) : OrderFunction<T>;
   public var hash (getHash, null) : HashFunction<T>;
@@ -62,7 +61,7 @@ class Set<T> implements Collection<Set<T>, T> {
   
   public function empty(): Set<T> {    
     var m : FriendMap<T> = _map;
-    return if (size == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHash, m._keyShow);
+    return if (size() == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHash, m._keyShow);
   }
   
   public function append(s: Set<T>, t: T): Set<T> {
@@ -151,8 +150,8 @@ class Set<T> implements Collection<Set<T>, T> {
     return new Set<T>(newMap);
   }
   
-  private function getSize(): Int {
-    return _map.size;
+  public function size(): Int {
+    return _map.size();
   } 
 
   function getOrder() {

@@ -360,7 +360,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       to:             to,
       messageId:      lastMessageId.toString(),
       fragmentId:     (fragmentId++).toString(),
-      fragmentCount:  fragments.size.toString(),
+      fragmentCount:  fragments.size().toString(),
       data:           chunk
     }));
     
@@ -453,7 +453,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       // We did not receive a chunk, so let's look for missing fragments:
       var fragmentRequests = findMissingFragments();
       
-      if (fragmentRequests.size > 0) {
+      if (fragmentRequests.size() > 0) {
         var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
           var window = self.originUrlToWindow.get(request.to);
         

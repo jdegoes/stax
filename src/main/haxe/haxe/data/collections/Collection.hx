@@ -23,15 +23,15 @@ import haxe.functional.Foldable;
  * equality predicates on elements in the collection.
  */
 interface Collection<C, T> implements Foldable<C, T> {
-  public var size (getSize, null): Int;
+  public function size(): Int;
   
   public function contains(t: T): Bool;
   
-    public function add(t: T): C;
-    
-    public function addAll(t: Iterable<T>): C;
-    
-    public function remove(t: T): C;
-    
-    public function removeAll(t: Iterable<T>): C;
+  public function add(t: T): C;
+  
+  public function addAll(t: Iterable<T>): C;
+  
+  public function remove(t: T): C;
+  
+  public function removeAll(t: Iterable<T>): C;
 }

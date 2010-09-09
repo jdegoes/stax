@@ -30,12 +30,12 @@ class MapTestCase extends TestCase {
     var m = map();
     
     for (i in 0...100) {
-      assertEquals(i, m.size);
+      assertEquals(i, m.size());
       
       m = m.set(i, "foo");
     }
     
-    assertEquals(100, m.size);
+    assertEquals(100, m.size());
   }
   
   public function testSizeGrowsWhenAddingDuplicateKeys(): Void {
@@ -43,7 +43,7 @@ class MapTestCase extends TestCase {
     
     for (i in 0...100) m = m.set(0, "foo");
     
-    assertEquals(1, m.size);
+    assertEquals(1, m.size());
   }
   
   public function testCanRetrieveValuesForKeys(): Void {
@@ -58,12 +58,12 @@ class MapTestCase extends TestCase {
     var m = defaultMap();
     
     for (i in 0...100) {
-      assertEquals(100 - i, m.size);
+      assertEquals(100 - i, m.size());
       
       m = m.removeByKey(i);
     }
     
-    assertEquals(0, m.size);
+    assertEquals(0, m.size());
   }
   
   public function testLoadNeverExceedsMax(): Void {
@@ -97,7 +97,7 @@ class MapTestCase extends TestCase {
       m = m.set(i, "foo");
       
       assertEquals(oldM, m);
-      assertEquals(100, m.size);
+      assertEquals(100, m.size());
     }
   }
   
@@ -108,7 +108,7 @@ class MapTestCase extends TestCase {
       m = m.set(i, "bar");
 
       assertEquals("bar", m.get(i).get());
-      assertEquals(100, m.size);
+      assertEquals(100, m.size());
     }
   }
   
@@ -139,7 +139,7 @@ class MapTestCase extends TestCase {
   public function testFilter(): Void {
     var m = defaultMap().filter(function(t) { return t._1 < 50; });
     
-    assertEquals(50, m.size);
+    assertEquals(50, m.size());
   }  
 
   public function testEquals() { 

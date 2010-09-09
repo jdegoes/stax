@@ -28,8 +28,6 @@ using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
-  public var size (getSize, null): Int;
-
   public var head (getHead, null): T;
   public var tail (getTail, null): List<T>;
 
@@ -68,7 +66,7 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   public function empty(): List<T> {
-    return if (size == 0) this;
+    return if (size() == 0) this;
            else nil(_order, _equal, _hash, _show);
   }
 
@@ -113,7 +111,7 @@ class List<T> implements Collection<List<T>, T> {
     var acc = z;
     var cur = this;
 
-    for (i in 0...size) {
+    for (i in 0...size()) {
       acc = f(acc, cur.head);
 
       cur = cur.tail;
@@ -130,8 +128,8 @@ class List<T> implements Collection<List<T>, T> {
 
     var acc = z;
 
-    for (i in 0...size) {
-      var e = a[size - 1 - i];
+    for (i in 0...size()) {
+      var e = a[size() - 1 - i];
 
       acc = f(e, acc);
     }
@@ -142,7 +140,7 @@ class List<T> implements Collection<List<T>, T> {
   public function contains(t: T): Bool {
     var cur = this;
     var eq = equal;
-    for (i in 0...size) {
+    for (i in 0...size()) {
       if (eq(t, cur.head)) return true;
       cur = cur.tail;
     }
@@ -180,7 +178,7 @@ class List<T> implements Collection<List<T>, T> {
     var post: List<T> = nil(_order, _equal, _hash, _show);
     var cur = this;      
     var eq = equal;
-    for (i in 0...size) {
+    for (i in 0...size()) {
       if (eq(t, cur.head)) {
         post = cur.tail;
 
@@ -221,7 +219,7 @@ class List<T> implements Collection<List<T>, T> {
   public function drop(n: Int): List<T> {
     var cur = this;
 
-    for (i in 0...size.min(n)) {
+    for (i in 0...size().min(n)) {
       cur = cur.tail;
     }
 
@@ -232,7 +230,7 @@ class List<T> implements Collection<List<T>, T> {
   public function dropWhile(pred: T -> Bool): List<T> {
     var cur = this;
 
-    for (i in 0...size) {
+    for (i in 0...size()) {
       if (pred(cur.head)) return cur;
 
       cur = cur.tail;
@@ -243,7 +241,7 @@ class List<T> implements Collection<List<T>, T> {
 
   /** Override Foldable to provide higher performance: */
   public function take(n: Int): List<T> {
-    return reverse().drop(size - n);
+    return reverse().drop(size() - n);
   }
 
   /** Override Foldable to provide higher performance: */
@@ -269,10 +267,10 @@ class List<T> implements Collection<List<T>, T> {
 
   /** Zips this list and the specified list into a list of tuples. */
   public function zip<U>(that: List<U>): List<Tuple2<T, U>> {
-    var len = this.size.min(that.size);
+    var len = this.size().min(that.size());
 
-    var iterator1 = this.reverse().drop(0.max(this.size - len)).iterator();
-    var iterator2 = that.reverse().drop(0.max(that.size - len)).iterator();
+    var iterator1 = this.reverse().drop(0.max(this.size() - len)).iterator();
+    var iterator2 = that.reverse().drop(0.max(that.size() - len)).iterator();
 
     var r = List.create();
 
@@ -332,7 +330,7 @@ class List<T> implements Collection<List<T>, T> {
   var _show  : ShowFunction<T>;
   function getOrder() {
     return if(null == _order) {
-      if(size == 0)
+      if(size() == 0)
         Stax.getOrderFor(null);
       else
         _order = Stax.getOrderFor(first);
@@ -341,7 +339,7 @@ class List<T> implements Collection<List<T>, T> {
   
   function getEqual() { 
     return if(null == _equal) {
-      if(size == 0)
+      if(size() == 0)
         Stax.getEqualFor(null);
       else
         _equal = Stax.getEqualFor(first);
@@ -350,7 +348,7 @@ class List<T> implements Collection<List<T>, T> {
 
   function getHash() {
     return if(null == _hash) {
-      if(size == 0)
+      if(size() == 0)
       Stax.getHashFor(null);
       else
         _hash = Stax.getHashFor(first);   
@@ -359,7 +357,7 @@ class List<T> implements Collection<List<T>, T> {
   
   function getShow() {
     return if(null == _show) {
-      if(size == 0)
+      if(size() == 0)
       Stax.getShowFor(null);
       else
         _show = Stax.getShowFor(first);   
@@ -383,7 +381,7 @@ class List<T> implements Collection<List<T>, T> {
     return "List " + toArray().toStringWith(show);
   }
 
-  private function getSize(): Int {
+  public function size(): Int {
     return 0;
   }
 
@@ -417,7 +415,7 @@ private class Cons<T> extends List<T> {
     super(order, equal, hash, show);
     _head = head;
     _tail = tail;
-    _size = tail.size + 1;
+    _size = tail.size() + 1;
   }
 
   override private function getHead(): T {
@@ -427,7 +425,7 @@ private class Cons<T> extends List<T> {
   override private function getLast(): T {
     var cur: List<T> = this;
 
-    for (i in 0...(size - 1)) {
+    for (i in 0...(size() - 1)) {
       cur = cur.tail;
     }
 
@@ -446,7 +444,7 @@ private class Cons<T> extends List<T> {
     return Some(last);
   }
 
-  override private function getSize(): Int {
+  override public function size(): Int {
     return _size;
   }
 }

@@ -31,12 +31,12 @@ class ListTestCase extends TestCase {
     var l = newList();
     
     for (i in 0...100) {
-      assertEquals(i, l.size);
+      assertEquals(i, l.size());
       
       l = l.add(i);
     }
     
-    assertEquals(100, l.size);
+    assertEquals(100, l.size());
   }
   
   public function testSizeGrowsWhenAddingDuplicateElements(): Void {
@@ -44,19 +44,19 @@ class ListTestCase extends TestCase {
     
     for (i in 0...100) l = l.add(0);
     
-    assertEquals(101, l.size);
+    assertEquals(101, l.size());
   }
   
   public function testSizeShrinksWhenRemovingElements(): Void {
     var l = defaultList();
     
     for (i in 0...100) {
-      assertEquals(100 - i, l.size);
+      assertEquals(100 - i, l.size());
       
       l = l.remove(i);
     }
     
-    assertEquals(0, l.size);
+    assertEquals(0, l.size());
   }
   
   public function testContainsElements(): Void {
@@ -90,7 +90,7 @@ class ListTestCase extends TestCase {
   public function testFilter(): Void {
     var l = defaultList().filter(function(e) { return e < 50; });
     
-    assertEquals(50, l.size);
+    assertEquals(50, l.size());
   }
   
   public function testSort(): Void {
@@ -167,7 +167,7 @@ class ListTestCase extends TestCase {
       ++i1; ++i2;
     }
     
-    assertEquals(99, l.size);
+    assertEquals(99, l.size());
   }    
 
   public function testEquals() { 
