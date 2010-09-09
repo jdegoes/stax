@@ -30,7 +30,7 @@ using haxe.util.ObjectExtensions;
 /** Feature detection library */
 // windowEvalEvaluatesInGlobalScope
 class BrowserSupport {
-  static var memorized = Map.create(StringExtensions.hashCode, StringExtensions.equals, BoolExtensions.hashCode, BoolExtensions.equals);
+  static var memorized = Map.create(StringExtensions.equals, StringExtensions.hashCode, BoolExtensions.equals, BoolExtensions.hashCode);
 
   /**
    * Determines if the browser supports "css transformation".

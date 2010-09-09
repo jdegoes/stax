@@ -279,7 +279,7 @@ class SetExtensions {
   public static function ExtractorF<T>(c: Class<Set<Dynamic>>, e: JExtractorFunction<T>, ?h: HasherFunction<T>, ?eq: EqualFunction<T>): JExtractorFunction<Set<T>> {
     return function(v: JValue) {
       return switch(v) {
-        case JArray(v): Set.create(h, eq).addAll(v.map(e));
+        case JArray(v): Set.create(eq, h).addAll(v.map(e));
 
         default: Stax.error("Expected Array but was: " + v);
       }
@@ -299,7 +299,7 @@ class MapExtensions {
 
     return function(v: JValue) {
       return switch(v) {
-        case JArray(v): Map.create(kh, keq, vh, veq).addAll(v.map(te));
+        case JArray(v): Map.create(keq, kh, veq, vh).addAll(v.map(te));
 
         default: Stax.error("Expected Array but was: " + v);
       }
@@ -321,7 +321,7 @@ class MapExtensions {
     var te = Tuple2.ExtractorF(StringExtensions.ExtractorF(String), ve);
 
     var extract0 = function(v: Array<JValue>){
-      return Map.create(null, null, vh, veq).addAll(v.map(function(j) {
+      return Map.create(null, null, veq, vh).addAll(v.map(function(j) {
         return switch(j) {
           case JField(k, v): Tuple2.create(k, ve(v));
 

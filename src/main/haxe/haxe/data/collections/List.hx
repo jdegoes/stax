@@ -45,31 +45,31 @@ class List<T> implements Collection<List<T>, T> {
   public var hasher(getHasher, null) : HasherFunction<T>;
   public var show  (getShow, null) : ShowFunction<T>;
 
-  public static function nil<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
-    return new Nil(equal, order, hasher, show);
+  public static function nil<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
+    return new Nil(order, equal, hasher, show);
   }
   
-  public static function create<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
-    return nil(equal, order, hasher, show);
+  public static function create<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): List<T> {
+    return nil(order, equal, hasher, show);
   }
 
   /** Creates a factory for lists of the specified type. */
-  public static function factory<T>(?equal: EqualFunction<T>, ?order : OrderFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): Factory<List<T>> {
+  public static function factory<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher : HasherFunction<T>, ?show : ShowFunction<T>): Factory<List<T>> {
     return function() {
-      return List.create(equal, order, hasher, show);
+      return List.create(order, equal, hasher, show);
     }
   }
 
-  private function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
-    _equal  = equal; 
-    _order  = order; 
+  private function new(order : OrderFunction<T>, equal: EqualFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
+    _order  = order;
+    _equal  = equal;  
     _hasher = hasher; 
     _show   = show; 
   }
 
   public function empty(): List<T> {
     return if (size == 0) this;
-           else nil(_equal, _order, _hasher, _show);
+           else nil(_order, _equal, _hasher, _show);
   }
 
   /** Prepends an element to the list. This method is dramatically faster than
@@ -77,7 +77,7 @@ class List<T> implements Collection<List<T>, T> {
    * construct lists by prepending, and then reverse at the end if necessary.
    */
   public function cons(head: T): List<T> {
-    return new Cons(_equal, _order, _hasher, _show, head, this);
+    return new Cons(_order, _equal, _hasher, _show, head, this);
   }
 
   /** Synonym for cons. */
@@ -177,7 +177,7 @@ class List<T> implements Collection<List<T>, T> {
 
   public function remove(t: T): List<T> {
     var pre: Array<T> = [];
-    var post: List<T> = nil(_equal, _order, _hasher, _show);
+    var post: List<T> = nil(_order, _equal, _hasher, _show);
     var cur = this;      
     var eq = equal;
     for (i in 0...size) {
@@ -398,8 +398,8 @@ private class Cons<T> extends List<T> {
   var _tail: List<T>;
   var _size: Int;
 
-  public function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>, head: T, tail: List<T>) {
-    super(equal, order, hasher, show);
+  public function new(order : OrderFunction<T>, equal: EqualFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>, head: T, tail: List<T>) {
+    super(order, equal, hasher, show);
     _head = head;
     _tail = tail;
     _size = tail.size + 1;
@@ -437,7 +437,7 @@ private class Cons<T> extends List<T> {
 }
 
 private class Nil<T> extends List<T> {
-  public function new(equal: EqualFunction<T>, order : OrderFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
-    super(equal, order, hasher, show);
+  public function new(order : OrderFunction<T>, equal: EqualFunction<T>, hasher : HasherFunction<T>, show : ShowFunction<T>) {
+    super(order, equal, hasher, show);
   }
 }

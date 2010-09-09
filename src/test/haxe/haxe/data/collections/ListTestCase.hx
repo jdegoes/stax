@@ -141,9 +141,7 @@ class ListTestCase extends TestCase {
     var l = defaultList().zip(defaultList().drop(1));
     
     var i1 = 0, i2 = 1;
-    
-//*F    var equal = Tuple2.EqualF(IntExtensions.equals, IntExtensions.equals);
-    
+
     for (z in l) {
       assertEquals(z, i1.entuple(i2));
       

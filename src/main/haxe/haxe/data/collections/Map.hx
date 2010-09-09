@@ -51,18 +51,18 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   var _size: Int;
   var _pf: PartialFunction1<K, V>;
   
-  public static function create<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>) {
+  public static function create<K, V>(?korder : OrderFunction<K>, ?kequal: EqualFunction<K>, ?khasher: HasherFunction<K>, ?kshow : ShowFunction<K>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhasher: HasherFunction<V>, ?vshow : ShowFunction<V>) {
     return new Map<K, V>(korder, kequal, khasher, kshow, vorder, vequal, vhasher, vshow, [[]], 0);
   }
   
   /** Creates a factory for maps of the specified types. */
-  public static function factory<K, V>(?khasher: HasherFunction<K>, ?kequal: EqualFunction<K>, ?korder : OrderFunction<K>, ?kshow : ShowFunction<K>, ?vhasher: HasherFunction<V>, ?vequal: EqualFunction<V>, ?vorder : OrderFunction<V>, ?vshow : ShowFunction<V>): Factory<Map<K, V>> {
+  public static function factory<K, V>(?korder : OrderFunction<K>, ?kequal: EqualFunction<K>, ?khasher: HasherFunction<K>, ?kshow : ShowFunction<K>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhasher: HasherFunction<V>, ?vshow : ShowFunction<V>): Factory<Map<K, V>> {
     return function() {
-      return Map.create(khasher, kequal, korder, kshow, vhasher, vequal, vorder, vshow);
+      return Map.create(korder, kequal, khasher, kshow, vorder, vequal, vhasher, vshow);
     }
   }
   
-  private function new(korder : OrderFunction<K>, kequal: EqualFunction<K>, khasher: HasherFunction<K>, kshow: ShowFunction<K>, vorder: OrderFunction<V>, vequal: EqualFunction<V>, vhasher: HasherFunction<V>, vshow: ShowFunction<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
+  private function new(korder : OrderFunction<K>, kequal: EqualFunction<K>, khasher: HasherFunction<K>, kshow : ShowFunction<K>, vorder : OrderFunction<V>, vequal: EqualFunction<V>, vhasher: HasherFunction<V>, vshow : ShowFunction<V>, buckets: Array<Array<Tuple2<K, V>>>, size: Int) {
     var self = this;
     
     _keyOrder = korder; _keyEqual = kequal; _keyHasher = khasher; _keyShow = kshow; 
@@ -106,7 +106,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function empty(): Map<K, V> {
-    return if (size == 0) this; else Map.create(_keyHasher, _keyEqual, _keyOrder, _keyShow, _valueHasher, _valueEqual, _valueOrder, _valueShow);
+    return if (size == 0) this; else Map.create(_keyOrder, _keyEqual, _keyHasher, _keyShow, _valueOrder, _valueEqual, _valueHasher, _valueShow);
   }
   
   public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
@@ -259,7 +259,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   }
   
   public function keySet(): Set<K> {
-    return Set.create(_keyHasher, _keyEqual, _keyOrder, _keyShow).addAll(keys());
+    return Set.create(_keyOrder, _keyEqual, _keyHasher, _keyShow).addAll(keys());
   }
   
   public function values(): Iterable<V> {

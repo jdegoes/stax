@@ -92,7 +92,7 @@ class JValueTestCase extends TestCase {
   }
 
   public function testSet() {
-    var newSet = Set.factory(IntExtensions.hashCode, IntExtensions.equals);
+    var newSet = Set.factory(IntExtensions.equals, IntExtensions.hashCode);
 
     var a: Array<Set<Int>> = [newSet().addAll([123, 9, -23]), newSet()];
 
@@ -110,7 +110,7 @@ class JValueTestCase extends TestCase {
   }
 
   public function testMap() {
-    var newMap = Map.factory(IntExtensions.hashCode, IntExtensions.equals, StringExtensions.hashCode, StringExtensions.equals);
+    var newMap = Map.factory(IntExtensions.equals, IntExtensions.hashCode, StringExtensions.equals, StringExtensions.hashCode);
 
     var a: Array<Map<Int, String>> = [newMap().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), newMap()];
 

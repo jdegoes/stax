@@ -36,14 +36,14 @@ class Set<T> implements Collection<Set<T>, T> {
   
   var _map: Map<T, T>;
   
-  public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {  
-    return new Set<T>(Map.create(hasher, equal, order, show));
+  public static function create<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher: HasherFunction<T>, ?show: ShowFunction<T>): Set<T> {  
+    return new Set<T>(Map.create(order, equal, hasher, show));
   }
   
   /** Creates a factory for sets of the specified type. */
-  public static function factory<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Factory<Set<T>> {
+  public static function factory<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hasher: HasherFunction<T>, ?show: ShowFunction<T>): Factory<Set<T>> {
     return function() {
-      return Set.create(hasher, equal, order, show);
+      return Set.create(order, equal, hasher, show);
     }
   }
 
@@ -57,7 +57,7 @@ class Set<T> implements Collection<Set<T>, T> {
   
   public function empty(): Set<T> {    
     var m : FriendMap<T> = _map;
-    return if (size == 0) this; else Set.create(m._keyHasher, m._keyEqual, m._keyOrder, m._keyShow);
+    return if (size == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHasher, m._keyShow);
   }
   
   public function append(s: Set<T>, t: T): Set<T> {
