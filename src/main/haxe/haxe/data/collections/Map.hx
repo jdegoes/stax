@@ -226,11 +226,11 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     }
   }
   
-  public function contains(t: Tuple2<K, V>): Bool {
-    var tupleEqual = Tuple2.EqualF(keyEqual, valueEqual);
-    
+  public function contains(t: Tuple2<K, V>): Bool {      
+    var ke = keyEqual;
+    var ve = valueEqual;
     for (e in entries()) {
-      if (tupleEqual(e, t)) return true;
+      if (ke(e._1, t._1) && ve(t._2, t._2)) return true;
     }
     
     return false;
@@ -294,14 +294,18 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var ko = keyOrder;
     var vo = valueOrder;        
     
-    var keySorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
-      return ko(t1._1, t2._1);
+    var sorter = function(t1: Tuple2<K, V>, t2: Tuple2<K, V>): Int {
+      var c = ko(t1._1, t2._1);
+      return if(c != 0)
+        c;
+      else
+        vo(t1._2, t2._2);
     }
     
-    a1.sort(keySorter);
-    a2.sort(keySorter);
+    a1.sort(sorter);
+    a2.sort(sorter);
     
-    return a1.compareWith(a2, Tuple2.OrderF(ko, vo));
+    return a1.compare(a2);
   } 
   
   public function equals(other : Map<K, V>) {
