@@ -411,6 +411,30 @@ class ArrayExtensions {
     for (e in a) f(e);
     
     return a;
+  }  
+  public static function take<T>(a: Array<T>, n: Int): Array<T> {
+    return a.slice(0, n.min(a.length));
+  }
+  public static function takeWhile<T>(a: Array<T>, p: T -> Bool): Array<T> {
+    var r = [];
+    
+    for (e in a) {
+      if (p(e)) r.push(e); else break;
+    }
+    
+    return r;
+  }
+  public static function drop<T>(a: Array<T>, n: Int): Array<T> {
+    return if (n >= a.length) [] else a.slice(n);
+  }
+  public static function dropWhile<T>(a: Array<T>, p: T -> Bool): Array<T> {
+    var r = [].concat(a);
+    
+    for (e in a) {
+      if (p(e)) r.shift(); else break;
+    }
+    
+    return r;
   }
 }
 class Function0Extensions {
