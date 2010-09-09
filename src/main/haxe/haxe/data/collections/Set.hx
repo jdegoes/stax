@@ -36,6 +36,11 @@ class Set<T> implements Collection<Set<T>, T> {
   
   var _map: Map<T, T>;
   
+  static var _empty = new Set<Dynamic>(Map.create());
+  public static function Empty<T>() : Set<T> {
+    return cast _empty;
+  }
+  
   public static function create<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Set<T> {  
     return new Set<T>(Map.create(order, equal, hash, show));
   }

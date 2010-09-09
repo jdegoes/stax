@@ -396,11 +396,10 @@ class Tuple2<A, B> extends AbstractProduct {
   public var hash(getHash, null) : HashFunction<Tuple2<A, B>>;
   public var show(getShow, null)     : ShowFunction<Tuple2<A, B>>;
 
-  public function new(first: A, second: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hash : HashFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>) {
+  public function new(first: A, second: B) {
     super([first, second]);
 
     this._1  = first; this._2 = second;
-    _order = order; _equal = equal; _hash = hash; _show = show;
   }
 
   override private function getProductPrefix(): String {
@@ -463,8 +462,8 @@ class Tuple2<A, B> extends AbstractProduct {
       _show;
   }
   
-  public static function create<A, B>(a: A, b: B, ?order : OrderFunction<Tuple2<A, B>>, ?equal : EqualFunction<Tuple2<A, B>>, ?hash : HashFunction<Tuple2<A, B>>, ?show : ShowFunction<Tuple2<A, B>>): Tuple2<A, B> {
-    return new Tuple2<A, B>(a, b, order, equal, hash, show);
+  public static function create<A, B>(a: A, b: B): Tuple2<A, B> {
+    return new Tuple2<A, B>(a, b);
   }
 }
 

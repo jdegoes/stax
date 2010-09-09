@@ -35,7 +35,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   public static var MaxLoad = 10;
   public static var MinLoad = 1;
 
-  public var size (getSize, null): Int;
+  public var size (getSize, null): Int;  
 
   public var keyEqual(getKeyEqual, null): EqualFunction<K>;
   public var keyOrder(getKeyOrder, null) : OrderFunction<K>;
@@ -50,6 +50,11 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
   
   var _size: Int;
   var _pf: PartialFunction1<K, V>;
+  
+  static var _empty = new Map<Dynamic, Dynamic>(null, null, null, null, null, null, null, null, [[]], 0);
+  public static function Empty<K, V>() : Map<K, V> {
+    return cast _empty;
+  }
   
   public static function create<K, V>(?korder : OrderFunction<K>, ?kequal: EqualFunction<K>, ?khash: HashFunction<K>, ?kshow : ShowFunction<K>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhash: HashFunction<V>, ?vshow : ShowFunction<V>) {
     return new Map<K, V>(korder, kequal, khash, kshow, vorder, vequal, vhash, vshow, [[]], 0);
