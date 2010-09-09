@@ -419,7 +419,7 @@ class Tuple2<A, B> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
 
-  public function new(first: A, second: B) {
+  function new(first: A, second: B) {
     super([first, second]);
 
     this._1  = first; this._2 = second;
@@ -455,7 +455,7 @@ class Tuple3<A, B, C> extends AbstractProduct {
   public var _2 (default, null): B;
   public var _3 (default, null): C;
 
-  public function new(first: A, second: B, third: C) {
+  function new(first: A, second: B, third: C) {
     super([first, second, third]);
 
     this._1 = first; this._2 = second; this._3 = third;   
@@ -492,7 +492,7 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   public var _3 (default, null): C;
   public var _4 (default, null): D; 
 
-  public function new(first: A, second: B, third: C, fourth: D) {
+  function new(first: A, second: B, third: C, fourth: D) {
     super([first, second, third, fourth]);
 
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;     
@@ -530,7 +530,7 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   public var _4 (default, null): D;
   public var _5 (default, null): E;      
 
-  public function new(first: A, second: B, third: C, fourth: D, fifth: E) {
+  function new(first: A, second: B, third: C, fourth: D, fifth: E) {
     super([first, second, third, fourth, fifth]);
 
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;    
