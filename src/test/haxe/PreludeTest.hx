@@ -396,7 +396,7 @@ class PreludeTestCase extends TestCase {
     assertEquals("<function>", getReflectiveShow(function() trace("")));
     assertEquals("None", getReflectiveShow(None));
     assertEquals("Some(Some(value))", getReflectiveShow(Some(Some("value"))));
-    assertEquals("_PreludeTest.HasNoHasherAndShower(1)", getReflectiveShow(new HasNoHasherAndShower(1)));
+    assertEquals("_PreludeTest.HasNoHashAndShow(1)", getReflectiveShow(new HasNoHashAndShow(1)));
   }
 
   public function testHash() {
@@ -424,7 +424,7 @@ class PreludeTestCase extends TestCase {
     for(z in zerocodes)
       assertEquals(0, Stax.getReflectiveHashFor(z)(z));
 
-    var nonzerocodes : Array<Dynamic> = [true, false, "", "a", 1, 0.1, [],[1], {}, {n:"a"}, new HasNoHasherAndShower(1), new HasHasher(1), Date.fromString("2000-01-01"), None, Some("a")];
+    var nonzerocodes : Array<Dynamic> = [true, false, "", "a", 1, 0.1, [],[1], {}, {n:"a"}, new HasNoHashAndShow(1), new HasHash(1), Date.fromString("2000-01-01"), None, Some("a")];
     for(n in nonzerocodes)
       this.assertNotEquals(0, Stax.getReflectiveHashFor(n)(n));
   }
@@ -461,7 +461,7 @@ private class HasHash
   public function hashCode() return v
 }
 
-private class HasNoHasherAndShower
+private class HasNoHashAndShow
 {
   @OrderDescending
 	var v : Int;
