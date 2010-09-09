@@ -1223,7 +1223,7 @@ class Stax {
             _createHashImpl(function(v : T) {
               var className = Type.getClassName(c);
               var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);});
-              return values.foldl(9901 * String.HasherF()(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
+              return values.foldl(9901 * StringExtensions.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
             });
           }
         }
