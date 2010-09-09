@@ -26,8 +26,6 @@ using PreludeExtensions;
 using haxe.net.HttpHeaderExtensions;
 
 class HttpHeaderExtensionsTestCase extends TestCase {
-//*F  static var headerEq = Tuple2.EqualF(StringExtensions.equals, StringExtensions.equals);
-  
   public function new() {
     super();
   }

@@ -29,15 +29,15 @@ using haxe.functional.FoldableExtensions;
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
   public var size (getSize, null): Int;
-  public var equal (default, null): EqualFunction<T>;
-  public var order (default, null) : OrderFunction<T>;
-  public var hasher (default, null) : HasherFunction<T>;
-  public var show (default, null) : ShowFunction<T>;
+  public var equal (getEqual, null): EqualFunction<T>;
+  public var order (getOrder, null) : OrderFunction<T>;
+  public var hasher (getHasher, null) : HasherFunction<T>;
+  public var show (getShow, null) : ShowFunction<T>;
   
   var _map: Map<T, T>;
   
   public static function create<T>(?hasher: HasherFunction<T>, ?equal: EqualFunction<T>, ?order: OrderFunction<T>, ?show: ShowFunction<T>): Set<T> {  
-    return new Set<T>(order, equal, hasher, show, Map.create(hasher, equal, order, show, hasher, equal, order, show));
+    return new Set<T>(Map.create(hasher, equal, order, show));
   }
   
   /** Creates a factory for sets of the specified type. */
@@ -47,16 +47,17 @@ class Set<T> implements Collection<Set<T>, T> {
     }
   }
 
-  private function new(order : OrderFunction<T>, equal: EqualFunction<T>, hasher: HasherFunction<T>, show : ShowFunction<T>, map: Map<T, T>) {
-    this.order = order; this.equal = equal; this.hasher = hasher; this.show = show; _map = map;
+  private function new(map: Map<T, T>) {
+    _map = map;
   }
   
   public function contains(e: T): Bool {
     return _map.containsKey(e);
   }
   
-  public function empty(): Set<T> {
-    return if (size == 0) this; else Set.create(hasher, equal, order, show);
+  public function empty(): Set<T> {    
+    var m : FriendMap<T> = _map;
+    return if (size == 0) this; else Set.create(m._keyHasher, m._keyEqual, m._keyOrder, m._keyShow);
   }
   
   public function append(s: Set<T>, t: T): Set<T> {
@@ -101,52 +102,54 @@ class Set<T> implements Collection<Set<T>, T> {
     return FoldableExtensions.iterator(this);
   } 
           
-  /**
-  *  @todo this method doesn't use equal at all
-  */
   public function equals(other : Set<T>) {
-      var all = other.concat(this);
-      return all.size == size && all.size == other.size;
+    return toArray().equalsWith(other.toArray(), equal);
   }
 
   public function compare(other : Set<T>) {
-    var a1 = this.toArray();
-    var a2 = other.toArray();
-    var or = if(null == equal) {
-    if(a1.length == 0)
-      Stax.getOrderFor(null);
-    else
-      order = Stax.getOrderFor(a1[0]);
-    } else order;
-    return a1.compareWith(a2, or);
+    return toArray().compareWith(other.toArray(), order);
   } 
 
   public function hashCode() : Int {
-    var ha = if(null == hasher) {
-    if(size == 0)
-      Stax.getHasherFor(null);
-    else
-      hasher = Stax.getHasherFor(iterator().next());   
-    } else hasher;
+    var ha = hasher;
     return foldl(393241, function(a, b) return a * (ha(b) + 6151));
   }
 
-  public function toString(): String { 
-    var a = this.toArray();
-    var sh = if(null == show) {
-    if(a.length == 0)
-      Stax.getShowFor(null);
-    else
-      show = Stax.getShowFor(a[0]);  
-    } else show;
-    return "Set " + a.toStringWith(sh);
+  public function toString(): String {    
+    return "Set " + toArray().toStringWith(show);
   }
-   
+  
+  /**
+   *  @todo inject *Functions here?
+   */ 
   private function copyWithMod(newMap: Map<T, T>): Set<T> {
-    return new Set<T>(order, equal, hasher, show, newMap);
+    return new Set<T>(newMap);
   }
   
   private function getSize(): Int {
     return _map.size;
+  } 
+
+  function getOrder() {
+    return _map.keyOrder;     
   }
+  
+  function getEqual() { 
+    return _map.keyEqual;
+  } 
+  
+  function getHasher() {
+    return _map.keyHasher;
+  }
+  
+  function getShow() {    
+    return _map.keyShow;
+  }
+}     
+
+private typedef FriendMap<K> = {
+  private var _keyEqual  : EqualFunction<K>;
+  private var _keyOrder  : OrderFunction<K>;
+  private var _keyHasher : HasherFunction<K>;
+  private var _keyShow   : ShowFunction<K>;
 }
