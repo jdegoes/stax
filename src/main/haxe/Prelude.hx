@@ -1208,26 +1208,26 @@ class Stax {
       case TClass(c):
         switch(Type.getClassName(c)) {
         case "String":
-          _createHasherImpl(StringExtensions.hashCode);
+          _createHashImpl(StringExtensions.hashCode);
         case "Date":
-          _createHasherImpl(DateExtensions.hashCode);
+          _createHashImpl(DateExtensions.hashCode);
         case "Array":
-          _createHasherImpl(ArrayExtensions.hashCode);
+          _createHashImpl(ArrayExtensions.hashCode);
         default:
           if (Type.getInstanceFields(Type.getClass(t)).remove("hashCode")){
-            _createHasherImpl(function(v : T) {
+            _createHashImpl(function(v : T) {
               return Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
             });
           }
           else{
-            _createHasherImpl(function(v : T) {
+            _createHashImpl(function(v : T) {
               var className = Type.getClassName(c);
               var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);});
-              return values.foldl(9901 * String.HasherF()(className), function(v, e){return v + (333667 * (Stax.getHasherFor(e)(e) + 197192));});
+              return values.foldl(9901 * String.HasherF()(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
             });
           }
         }
-      default: getHasherFor(t);
+      default: getHashFor(t);
     }
   }
 
