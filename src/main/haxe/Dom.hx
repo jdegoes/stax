@@ -321,7 +321,7 @@ typedef HTMLAttr = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<Attr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -686,7 +686,7 @@ typedef HTMLComment = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<Attr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -906,7 +906,7 @@ typedef HTMLCDATASection = {
   public var previousSibling  (default,null): HTMLElement;
   public var nextSibling      (default,null): HTMLElement;
   public var attributes       (default,null): NamedNodeMap<Attr>;
-  public var ownerDocument    (default,null): Document;
+  public var ownerDocument    (default,null): HTMLDocument;
   
   public function hasChildNodes(): Bool;
   
@@ -1284,7 +1284,7 @@ typedef HTMLEntityReference = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<Attr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
 
     public function hasChildNodes(): Bool;
 
@@ -1421,7 +1421,7 @@ typedef HTMLProcessingInstruction = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<Attr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
 
     public function hasChildNodes(): Bool;
 
@@ -1560,7 +1560,7 @@ typedef HTMLDocumentFragment = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<Attr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
 
     public function hasChildNodes(): Bool;
 
@@ -2100,7 +2100,7 @@ typedef HTMLVideoElement = {
   public var previousSibling  (default,null): HTMLElement;
   public var nextSibling      (default,null): HTMLElement;
   public var attributes       (default,null): NamedNodeMap<Attr>;
-  public var ownerDocument    (default,null): Document;
+  public var ownerDocument    (default,null): HTMLDocument;
   
   public function hasChildNodes(): Bool;
   
@@ -2355,7 +2355,7 @@ typedef HTMLAudioElement = {
   public var previousSibling  (default,null): HTMLElement;
   public var nextSibling      (default,null): HTMLElement;
   public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-  public var ownerDocument    (default,null): Document;
+  public var ownerDocument    (default,null): HTMLDocument;
   
   public function hasChildNodes(): Bool;
   
@@ -2611,7 +2611,7 @@ typedef HTMLMediaElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -2906,7 +2906,7 @@ typedef HTMLDocument = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
 
     public function hasChildNodes(): Bool;
 
@@ -3129,7 +3129,7 @@ typedef HTMLUnknownElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -3349,7 +3349,7 @@ typedef HTMLElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -3592,7 +3592,7 @@ typedef HTMLTextElement = { // Non-standard class to be cast to when retrieving 
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -3815,7 +3815,7 @@ typedef HTMLHtmlElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -4038,7 +4038,7 @@ typedef HTMLHeadElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -4268,7 +4268,7 @@ typedef HTMLLinkElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -4491,7 +4491,7 @@ typedef HTMLTitleElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -4718,7 +4718,7 @@ typedef HTMLMetaElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -4942,7 +4942,7 @@ typedef HTMLBaseElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -5166,7 +5166,7 @@ typedef HTMLIsIndexElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -5391,7 +5391,7 @@ typedef HTMLStyleElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -5619,7 +5619,7 @@ typedef HTMLBodyElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -5856,7 +5856,7 @@ typedef HTMLFormElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -6092,7 +6092,7 @@ typedef HTMLSelectElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -6320,7 +6320,7 @@ typedef HTMLCanvasElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -6636,7 +6636,7 @@ typedef HTMLOptGroupElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -6865,7 +6865,7 @@ typedef HTMLOptionElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -7104,7 +7104,7 @@ typedef HTMLInputElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -7337,7 +7337,7 @@ typedef HTMLTextAreaElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -7565,7 +7565,7 @@ typedef HTMLButtonElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -7790,7 +7790,7 @@ typedef HTMLLabelElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -8014,7 +8014,7 @@ typedef HTMLFieldSetElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -8238,7 +8238,7 @@ typedef HTMLLegendElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -8462,7 +8462,7 @@ typedef HTMLUListElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -8687,7 +8687,7 @@ typedef HTMLOListElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -8910,7 +8910,7 @@ typedef HTMLDListElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -9133,7 +9133,7 @@ typedef HTMLDirectoryElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -9356,7 +9356,7 @@ typedef HTMLMenuElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -9579,7 +9579,7 @@ typedef HTMLLIElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -9801,7 +9801,7 @@ typedef HTMLDivElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -10023,7 +10023,7 @@ typedef HTMLParagraphElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -10245,7 +10245,7 @@ typedef HTMLHeadingElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -10467,7 +10467,7 @@ typedef HTMLQuoteElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -10689,7 +10689,7 @@ typedef HTMLPreElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -10911,7 +10911,7 @@ typedef HTMLBRElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -11135,7 +11135,7 @@ typedef HTMLBaseFontElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -11359,7 +11359,7 @@ typedef HTMLFontElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -11584,7 +11584,7 @@ typedef HTMLHRElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -11807,7 +11807,7 @@ typedef HTMLModElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -12040,7 +12040,7 @@ typedef HTMLAnchorElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -12273,7 +12273,7 @@ typedef HTMLImageElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -12514,7 +12514,7 @@ typedef HTMLObjectElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -12739,7 +12739,7 @@ typedef HTMLParamElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -12971,7 +12971,7 @@ typedef HTMLAppletElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -13195,7 +13195,7 @@ typedef HTMLMapElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -13424,7 +13424,7 @@ typedef HTMLAreaElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -13652,7 +13652,7 @@ typedef HTMLScriptElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -13904,7 +13904,7 @@ typedef HTMLTableElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -14126,7 +14126,7 @@ typedef HTMLTableCaptionElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -14353,7 +14353,7 @@ typedef HTMLTableColElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -14584,7 +14584,7 @@ typedef HTMLTableSectionElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -14818,7 +14818,7 @@ typedef HTMLTableRowElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -15055,7 +15055,7 @@ typedef HTMLTableCellElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -15278,7 +15278,7 @@ typedef HTMLFrameSetElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -15510,7 +15510,7 @@ typedef HTMLFrameElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
@@ -15744,7 +15744,7 @@ typedef HTMLIFrameElement = {
     public var previousSibling  (default,null): HTMLElement;
     public var nextSibling      (default,null): HTMLElement;
     public var attributes       (default,null): NamedNodeMap<HTMLAttr>;
-    public var ownerDocument    (default,null): Document;
+    public var ownerDocument    (default,null): HTMLDocument;
     
     public function hasChildNodes(): Bool;
     
