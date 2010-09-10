@@ -38,6 +38,7 @@ import haxe.util.OrderExtensionsTestCase;
 import haxe.framework.InjectorTestCase;
 import haxe.math.geom.PointTestCase;
 import haxe.math.tween.TweenTestCase;
+import haxe.data.transcode.TranscodeJValueExtensionsTestCase;
 
 import haxe.time.ScheduledExecutor;
 import haxe.framework.Injector;
@@ -85,7 +86,8 @@ class StaxTestSuite {
           , new HTMLElementExtensionsTestCase()
           , new QuirksTestCase()
           , new ObjectExtensionsTestCase()
-          #end   
+          , new TranscodeJValueExtensionsTestCase()
+          #end
   
         ]);
 
