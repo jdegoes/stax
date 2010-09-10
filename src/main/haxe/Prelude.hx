@@ -16,6 +16,9 @@
 */
 import Type;
 
+import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
 import PreludeExtensions;
 using PreludeExtensions;
 
@@ -337,7 +340,7 @@ private class AbstractProduct implements Product {
   public function productElement(n: Int): Dynamic {
     return _productElements[n];
   }
-  
+
   public function toString(): String {
     var s = productPrefix + "(" + getShow(0)(productElement(0));
     for(i in 1...productArity)
@@ -351,23 +354,27 @@ private class AbstractProduct implements Product {
     [1543, 49157, 196613, 97],
     [12289, 769, 393241, 193, 53]
   ];
-  public function hashCode() : Int { 
-    var h = 0;      
+  public function hashCode() : Int {
+    var h = 0;
     for(i in 0...productArity)
       h += _baseHashes[productArity-2][i] * getHash(i)(productElement(i));
     return h;
   }
-  
+
   private function productCompare(other : AbstractProduct): Int {
     for(i in 0...productArity) {
       var c = getOrder(i)(productElement(i), other.productElement(i));
       if(c != 0)
         return c;
-    }          
+    }
     return 0;
   }
 
-  private function productEquals(other : AbstractProduct): Bool {   
+  private function productDecompose(): JValue{
+    return JArray(_productElements.map(function(t){return TranscodeJValue.getDecomposerFor(Type.typeof(t))(t);}));
+  }
+
+  private function productEquals(other : AbstractProduct): Bool {
     for(i in 0...productArity)
       if(!getEqual(i)(productElement(i), other.productElement(i)))
         return false;
@@ -381,7 +388,7 @@ private class AbstractProduct implements Product {
   private function getProductArity(): Int {
     return Stax.error("Not implemented");
   }
-  
+
   private var _orders : Array<OrderFunction<Dynamic>>;
   private var _equals : Array<EqualFunction<Dynamic>>;
   private var _hashes : Array<HashFunction <Dynamic>>;
@@ -389,33 +396,33 @@ private class AbstractProduct implements Product {
   private function getOrder(i : Int) {
     return if(null == _orders[i]) {
       _orders[i] = Stax.getOrderFor(productElement(i));
-    } else 
+    } else
       _orders[i];
   }
-  
+
   private function getEqual(i : Int) {
     return if(null == _equals[i]) {
       _equals[i] = Stax.getEqualFor(productElement(i));
-    } else 
+    } else
       _equals[i];
   }
-  
+
   private function getHash(i : Int) {
     return if(null == _hashes[i]) {
       _hashes[i] = Stax.getHashFor(productElement(i));
-    } else 
+    } else
       _hashes[i];
   }
-  
+
   private function getShow(i : Int) {
     return if(null == _shows[i]) {
       _shows[i] = Stax.getShowFor(productElement(i));
-    } else 
+    } else
       _shows[i];
   }
-}     
+}
 
-class Tuple2<A, B> extends AbstractProduct {         
+class Tuple2<A, B> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
 
@@ -437,16 +444,26 @@ class Tuple2<A, B> extends AbstractProduct {
     return Tuple3.create(_1, _2, c);
   }
 
-  public function compare(other : Tuple2<A, B>): Int {          
+  public function compare(other : Tuple2<A, B>): Int {
     return productCompare(other);
   }
 
-  public function equals(other : Tuple2<A, B>): Bool {   
+  public function equals(other : Tuple2<A, B>): Bool {
     return productEquals(other);
-  }   
-  
+  }
+
   public static function create<A, B>(a: A, b: B): Tuple2<A, B> {
     return new Tuple2<A, B>(a, b);
+  }
+  public function decompose(): JValue {
+    return productDecompose();
+  }
+  public static function extract<A, B>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>): Tuple2<A, B> {
+    return switch(v) {
+      case JArray(v): Tuple2.create(e1(v[0]), e2(v[1]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 }
 
@@ -458,7 +475,7 @@ class Tuple3<A, B, C> extends AbstractProduct {
   function new(first: A, second: B, third: C) {
     super([first, second, third]);
 
-    this._1 = first; this._2 = second; this._3 = third;   
+    this._1 = first; this._2 = second; this._3 = third;
   }
 
   override private function getProductPrefix(): String {
@@ -473,29 +490,39 @@ class Tuple3<A, B, C> extends AbstractProduct {
     return Tuple4.create(_1, _2, _3, d);
   }
 
-  public function compare(other : Tuple3<A, B, C>): Int {          
+  public function compare(other : Tuple3<A, B, C>): Int {
     return productCompare(other);
   }
 
-  public function equals(other : Tuple3<A, B, C>): Bool {   
+  public function equals(other : Tuple3<A, B, C>): Bool {
     return productEquals(other);
   }
 
   public static function create<A, B, C>(a: A, b: B, c: C): Tuple3<A, B, C> {
     return new Tuple3<A, B, C>(a, b, c);
-  } 
+  }
+  public function decompose(): JValue {
+    return productDecompose();
+  }
+  public static function extract<A, B, C>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>): Tuple3<A, B, C> {
+    return switch(v) {
+      case JArray(v): Tuple3.create(e1(v[0]), e2(v[1]), e3(v[2]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
+  }
 }
 
 class Tuple4<A, B, C, D> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
   public var _3 (default, null): C;
-  public var _4 (default, null): D; 
+  public var _4 (default, null): D;
 
   function new(first: A, second: B, third: C, fourth: D) {
     super([first, second, third, fourth]);
 
-    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;     
+    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;
   }
 
   override private function getProductPrefix(): String {
@@ -510,16 +537,26 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
     return Tuple5.create(_1, _2, _3, _4, e);
   }
 
-  public function compare(other : Tuple4<A, B, C, D>): Int {          
+  public function compare(other : Tuple4<A, B, C, D>): Int {
     return productCompare(other);
   }
 
-  public function equals(other : Tuple4<A, B, C, D>): Bool {   
+  public function equals(other : Tuple4<A, B, C, D>): Bool {
     return productEquals(other);
   }
 
   public static function create<A, B, C, D>(a: A, b: B, c: C, d: D): Tuple4<A, B, C, D> {
     return new Tuple4<A, B, C, D>(a, b, c, d);
+  }
+  public function decompose(): JValue {
+    return productDecompose();
+  }
+  public static function extract<A, B, C, D>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>): Tuple4<A, B, C, D> {
+    return switch(v) {
+      case JArray(v): Tuple4.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 }
 
@@ -528,12 +565,12 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
   public var _2 (default, null): B;
   public var _3 (default, null): C;
   public var _4 (default, null): D;
-  public var _5 (default, null): E;      
+  public var _5 (default, null): E;
 
   function new(first: A, second: B, third: C, fourth: D, fifth: E) {
     super([first, second, third, fourth, fifth]);
 
-    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;    
+    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;
   }
 
   override private function getProductPrefix(): String {
@@ -544,16 +581,26 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
     return 5;
   }
 
-  public function compare(other : Tuple5<A, B, C, D, E>): Int {          
+  public function compare(other : Tuple5<A, B, C, D, E>): Int {
     return productCompare(other);
   }
 
-  public function equals(other : Tuple5<A, B, C, D, E>): Bool {   
+  public function equals(other : Tuple5<A, B, C, D, E>): Bool {
     return productEquals(other);
   }
 
   public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): Tuple5<A, B, C, D, E> {
     return new Tuple5<A, B, C, D, E>(a, b, c, d, e);
+  }
+  public function decompose(): JValue {
+    return productDecompose();
+  }
+  public static function extract<A, B, C, D, E>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>, e5: JExtractorFunction<E>): Tuple5<A, B, C, D, E> {
+    return switch(v) {
+      case JArray(v): Tuple5.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]), e5(v[4]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 }
 

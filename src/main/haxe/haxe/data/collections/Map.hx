@@ -19,6 +19,9 @@ package haxe.data.collections;
 import Prelude;
 import PreludeExtensions;
 
+import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.functional.Foldable;
 import haxe.functional.PartialFunction;
 import haxe.data.collections.Collection;
@@ -328,6 +331,20 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var kha = keyHash;  
     var vha = valueHash; 
     return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
+  }
+
+  public function decompose(): JValue {
+    return ArrayExtensions.decompose(toArray());
+  }
+
+  public static function extract<K, V>(v: JValue, ke: JExtractorFunction<K>, ve: JExtractorFunction<V>): Map<K, V> {
+    var te = function(v){return Tuple2.extract(v, ke, ve);};
+
+    return switch(v) {
+      case JArray(v): Map.create().addAll(v.map(te));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
   
   public function load(): Int {

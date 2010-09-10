@@ -19,6 +19,9 @@ package haxe.data.collections;
 import Prelude;
 import PreludeExtensions;
 
+import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
@@ -383,6 +386,18 @@ class List<T> implements Collection<List<T>, T> {
 
   public function size(): Int {
     return 0;
+  }
+
+  public function decompose(): JValue {
+    return ArrayExtensions.decompose(toArray());
+  }
+
+  public static function extract<A>(v: JValue, e: JExtractorFunction<A>): List<A> {
+    return switch(v) {
+      case JArray(v): List.create().addAll(v.map(e));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 
   private function getHead(): T {
