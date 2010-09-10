@@ -99,6 +99,12 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
     doTest(a);
   }
 
+  public function testEnum() {
+    var a: Array<TestEnum> = [Second(123), First];
+
+    doTest(a, [TranscodeJValue.getExtractorFor(TInt)]);
+  }
+
 
   private function doTest<T>(values: Array<T>, ?valueType: ValueType, ?extractors: Array<JExtractorFunction<T>>): Void {
     for (value in values) {
@@ -106,7 +112,6 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
         valueType = Type.typeof(value);
       var decomposed = TranscodeJValue.getDecomposerFor(valueType)(value);
       var actual     = TranscodeJValue.getExtractorFor(valueType, extractors)(decomposed);
-
       var equal      = Stax.getEqualFor(value)(value, actual);
 
       if (!equal) {
@@ -116,4 +121,10 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
       assertTrue(equal);
     }
   }
+}
+
+
+enum TestEnum {
+  First;
+  Second(v: Int);
 }
