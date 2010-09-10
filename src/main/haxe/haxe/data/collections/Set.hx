@@ -19,6 +19,9 @@ package haxe.data.collections;
 import Prelude;
 import PreludeExtensions;
 
+import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
@@ -112,6 +115,18 @@ class Set<T> implements Collection<Set<T>, T> {
   public function hashCode() : Int {
     var ha = hash;
     return foldl(393241, function(a, b) return a * (ha(b) + 6151));
+  }
+
+  public function decompose(): JValue {
+    return ArrayExtensions.decompose(toArray());
+  }
+
+  public static function extract<T>(v: JValue, e: JExtractorFunction<T>): Set<T> {
+    return switch(v) {
+      case JArray(v): Set.create().addAll(v.map(e));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 
   public function toString(): String {    

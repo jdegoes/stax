@@ -16,6 +16,9 @@
 */
 import Prelude;
 
+import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.data.collections.Map;
 
 using PreludeExtensions;
@@ -102,7 +105,19 @@ class BoolExtensions {
 
   public static function toString(v : Bool) : String {
     return if (v) "true" else "false";  
-  } 
+  }
+  public static function decompose(v: Bool): JValue {
+    return JBool(v);
+  }
+  public static function extract(c : Enum<Bool>, v: JValue): Bool {
+    return switch(v) {
+      case JBool(v): v;
+      case JNumber(v): if (v == 0.0) false; else true;
+      case JString(v): v.toBool();
+
+      default: Stax.error("Expected Bool but found: " + v);
+    }
+  }
 }
 class IntExtensions {
   public static function max(v1: Int, v2: Int): Int { return if (v2 > v1) v2; else v1; }
@@ -138,6 +153,17 @@ class IntExtensions {
   public static function hashCode(v: Int) : Int {
     return v * 196613;
   }
+  public static function decompose(v: Int): JValue {
+    return JNumber(v);
+  }
+  public static function extract(c: Class<Int>, v: JValue): Int {
+    return switch(v) {
+      case JNumber(v): v.toInt();
+      case JString(v): v.toInt();
+
+      default: Stax.error("Expected Int but found: " + v);
+    }
+  }
 }
 class FloatExtensions {
   public static function round(v: Float): Int { return Math.round(v); }
@@ -157,6 +183,17 @@ class FloatExtensions {
   }
   public static function hashCode(v: Float) {
     return Std.int(v * 98317); 
+  }
+  public static function decompose(v: Float): JValue{
+    return JNumber(v);
+  }
+  public static function extract(c: Class<Float>, v: JValue): Float{
+    return switch(v) {
+      case JNumber(v): v;
+      case JString(v): v.toFloat();
+
+      default: Stax.error("Expected Float but found: " + v);
+    }
   }
 }
 class StringExtensions {
@@ -222,6 +259,18 @@ class StringExtensions {
     
     return hash;
   }
+  public static function decompose(v: String): JValue {
+    return JString(v);
+  }
+  public static function extract(c: Class<String>, v: JValue): String {
+    return switch(v) {
+      case JNumber(v): v.toString();
+      case JBool(v): v.toString();
+      case JString(v): v;
+
+      default: Stax.error("Expected String but found: " + v);
+    }
+  }
 }
 class DateExtensions {
   public static function compare(v1: Date, v2: Date) {  
@@ -237,6 +286,17 @@ class DateExtensions {
   }
   public static function hashCode(v: Date) {
     return Math.round(v.getTime() * 49157);
+  }
+  public static function decompose(v: Date): JValue {
+    return JNumber(v.getTime());
+  }
+  public static function extract(c: Class<Date>, v: JValue): Date {
+    return switch(v) {
+      case JNumber(v): Date.fromTime(v);
+      case JString(v): Date.fromTime(v.toFloat());
+
+      default: Stax.error("Expected Number but found: " + v);
+    }
   }
 }
 class ArrayExtensions {
@@ -435,6 +495,22 @@ class ArrayExtensions {
     }
     
     return r;
+  }
+  public static function decompose<T>(v: Array<T>): JValue {
+    return if (v.size() != 0){
+      var d = TranscodeJValue.getDecomposerFor(Type.typeof(v[0]));
+      JArray(v.map(d));
+    }
+    else{
+      JArray([]);
+    }
+  }
+  public static function extract<T>(c: Class<Array<Dynamic>>, v: JValue, e: JExtractorFunction<T>): Array<T> {
+    return switch(v) {
+      case JArray(v): v.map(e);
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
   }
 }
 class Function0Extensions {
@@ -787,6 +863,16 @@ class OptionExtensions {
       case Some(v): false;
     }
   }
+  public static function decompose<T>(v: Option<T>): JValue {
+    return v.map(function(v) {return TranscodeJValue.getDecomposerFor(Type.typeof(v))(v);}).getOrElse(JNull.toThunk());
+  }
+  public static function extract<T>(c : Enum<Option<Dynamic>>, v: JValue, e: JExtractorFunction<T>): Option<T> {
+    return switch(v) {
+      case JNull: None;
+
+      default: Some(e(v));
+    }
+  }
 }
 
 class EitherExtensions {
@@ -947,5 +1033,14 @@ class IterableExtensions {
     for (e in i) a.push(e);
 
     return a;
+  }
+}
+
+class JValueExtensions {
+  public static function decompose(v: JValue): JValue {
+    return v;
+  }
+  public static function extract(c : Enum<JValue>, v: JValue): JValue {
+    return v;
   }
 }
