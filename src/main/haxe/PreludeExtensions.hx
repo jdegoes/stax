@@ -529,7 +529,16 @@ class Function0Extensions {
       f2();
     }
   }
-  
+  public static function returning<R1, R2>(f: Void -> R1, thunk: Thunk<R2>): Void -> R2 {
+    return function() {
+      f();
+      
+      return thunk();
+    }
+  }
+  public static function returningC<R1, R2>(f: Void -> R2, value: R2): Void -> R2 {
+    return returning(f, value.toThunk());
+  }
   public static function promote<A, Z>(f: Void -> Z): A -> Z {
     return function(a: A): Z {
       return f();
@@ -571,6 +580,16 @@ class Function1Extensions {
       return d;
     }
   }
+  public static function returning<P1, R1, R2>(f: Function<P1, R1>, thunk: Thunk<R2>): Function<P1, R2> {
+    return function(p1) {
+      f(p1);
+      
+      return thunk();
+    }
+  }
+  public static function returningC<P1, R1, R2>(f: Function<P1, R2>, value: R2): Function<P1, R2> {
+    return returning(f, value.toThunk());
+  }
   public static function compose<U, V, W>(f1: Function<V, W>, f2: Function<U, V>): Function<U, W> {
     return function(u: U): W {
       return f1(f2(u));
@@ -604,6 +623,16 @@ class Function2Extensions {
       catch (e: Dynamic) { }
       return d;
     }
+  }
+  public static function returning<P1, P2, R1, R2>(f: Function2<P1, P2, R1>, thunk: Thunk<R2>): Function2<P1, P2, R2> {
+    return function(p1, p2) {
+      f(p1, p2);
+      
+      return thunk();
+    }
+  }
+  public static function returningC(f, value) {
+    return returning(f, value.toThunk());
   }
   public static function flip<P1, P2, R>(f: Function2<P1, P2, R>): Function2<P2, P1, R> {
     return function(p2, p1) {
@@ -648,6 +677,16 @@ class Function3Extensions {
       return d;
     }
   }
+  public static function returning<P1, P2, P3, R1, R2>(f: Function3<P1, P2, P3, R1>, thunk: Thunk<R2>): Function3<P1, P2, P3, R2> {
+    return function(p1, p2, p3) {
+      f(p1, p2, p3);
+      
+      return thunk();
+    }
+  }
+  public static function returningC(f, value) {
+    return returning(f, value.toThunk());
+  }
   public static function curry<P1, P2, P3, R>(f: Function3<P1, P2, P3, R>): Function<P1, Function<P2, Function<P3, R>>> {
     return function(p1: P1) {
       return function(p2: P2) {
@@ -687,6 +726,16 @@ class Function4Extensions {
       catch (e: Dynamic) { }
       return def;
     }
+  }
+  public static function returning<P1, P2, P3, P4, R1, R2>(f: Function4<P1, P2, P3, P4, R1>, thunk: Thunk<R2>): Function4<P1, P2, P3, P4, R2> {
+    return function(p1, p2, p3, p4) {
+      f(p1, p2, p3, p4);
+      
+      return thunk();
+    }
+  }
+  public static function returningC(f, value) {
+    return returning(f, value.toThunk());
   }
   public static function curry<P1, P2, P3, P4, R>(f: Function4<P1, P2, P3, P4, R>): Function<P1, Function<P2, Function<P3, Function<P4, R>>>> {
     return function(p1: P1) {
@@ -729,6 +778,16 @@ class Function5Extensions {
       catch (e: Dynamic) { }
       return def;
     }
+  }
+  public static function returning<P1, P2, P3, P4, P5, R1, R2>(f: Function5<P1, P2, P3, P4, P5, R1>, thunk: Thunk<R2>): Function5<P1, P2, P3, P4, P5, R2> {
+    return function(p1, p2, p3, p4, p5) {
+      f(p1, p2, p3, p4, p5);
+      
+      return thunk();
+    }
+  }
+  public static function returningC(f, value) {
+    return returning(f, value.toThunk());
   }
   public static function curry<P1, P2, P3, P4, P5, R>(f: Function5<P1, P2, P3, P4, P5, R>): Function<P1, Function<P2, Function<P3, Function<P4, Function<P5, R>>>>> {
     return function(p1: P1) {
