@@ -44,20 +44,6 @@ class ExtractorHelpers {
     }
 }
 
-class DecomposerHelpers {
-    public static function getDecomposerFor<T>(t : T) : JDecomposerFunction<T> {
-      return _createDecomposerImpl(function(v : T) {
-        return if(Type.getInstanceFields(Type.getClass(v)).remove("decompose"))
-          Reflect.callMethod(v, Reflect.field(v, "decompose"), []);
-        else
-          Stax.error("Decomposer function cannt be created. 'Serialize' method is missing. Object: " + t);
-      });
-    }
-    static function _createDecomposerImpl<T>(impl : JDecomposerFunction<Dynamic>) : JDecomposerFunction<T> {
-      return function(v) return null == v ? JNull : impl(v);
-    }
-}
-
 class MapExtensions {
   public static function stringKeyDecompose<V>(v: Map<String, V>): JValue {
     var it = v.iterator();
