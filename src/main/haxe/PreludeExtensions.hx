@@ -491,21 +491,13 @@ class Function1Extensions {
       catch (e: Dynamic) { }
     }
   }
-  
-  public static function toFunction1<A, B>(f: Void -> B): Function<A, B> {
-    return function(v) {
-      return f();
-    }
-  }  
   public static function compose<U, V, W>(f1: Function<V, W>, f2: Function<U, V>): Function<U, W> {
     return function(u: U): W {
       return f1(f2(u));
     }
   }
   public static function andThen<U, V, W>(f1: Function<U, V>, f2: Function<V, W>): Function<U, W> {
-    return function(u: U): W {
-      return f2(f1(u));
-    }
+    return compose(f2, f1);
   }
   public static function lazy<P1, R>(f: Function<P1, R>, p1: P1): Thunk<R> {
     var r = null;
