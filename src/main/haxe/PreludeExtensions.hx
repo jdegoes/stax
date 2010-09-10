@@ -484,11 +484,15 @@ class Function0Extensions {
 }
 class Function1Extensions {
   public static function swallow<A>(f: Function<A, Void>): Function<A, Void> {
+    return toEffect(swallowWith(f, null));
+  }
+  public static function swallowWith<P1, R>(f: Function<P1, R>, d: R): Function<P1, R> {
     return function(a) {
       try {
-        f(a);
+        return f(a);
       }
       catch (e: Dynamic) { }
+      return d;
     }
   }
   public static function compose<U, V, W>(f1: Function<V, W>, f2: Function<U, V>): Function<U, W> {
@@ -513,12 +517,16 @@ class Function1Extensions {
   }
 }
 class Function2Extensions {  
-  public static function swallow<A, B>(f: Function2<A, B, Void>): Function2<A, B, Void> {
-    return function(a, b) {
+  public static function swallow<P1, P2>(f: Function2<P1, P2, Void>): Function2<P1, P2, Void> {
+    return toEffect(swallowWith(f, null));
+  }
+  public static function swallowWith<P1, P2, R>(f: Function2<P1, P2, R>, d: R): Function2<P1, P2, R> {
+    return function(p1, p2) {
       try {
-        f(a, b);
+        return f(p1, p2);
       }
       catch (e: Dynamic) { }
+      return d;
     }
   }
   public static function flip<P1, P2, R>(f: Function2<P1, P2, R>): Function2<P2, P1, R> {
@@ -553,11 +561,15 @@ class Function2Extensions {
 }
 class Function3Extensions {  
   public static function swallow<A, B, C>(f: Function3<A, B, C, Void>): Function3<A, B, C, Void> {
+    return toEffect(swallowWith(f, null));
+  }
+  public static function swallowWith<A, B, C, R>(f: Function3<A, B, C, R>, d: R): Function3<A, B, C, R> {
     return function(a, b, c) {
       try {
-        f(a, b, c);
+        return f(a, b, c);
       }
       catch (e: Dynamic) { }
+      return d;
     }
   }
   public static function curry<P1, P2, P3, R>(f: Function3<P1, P2, P3, R>): Function<P1, Function<P2, Function<P3, R>>> {
@@ -589,11 +601,15 @@ class Function3Extensions {
 }
 class Function4Extensions {  
   public static function swallow<A, B, C, D>(f: Function4<A, B, C, D, Void>): Function4<A, B, C, D, Void> {
+    return toEffect(swallowWith(f, null));
+  }
+  public static function swallowWith<A, B, C, D, R>(f: Function4<A, B, C, D, R>, def: R): Function4<A, B, C, D, R> {
     return function(a, b, c, d) {
       try {
-        f(a, b, c, d);
+        return f(a, b, c, d);
       }
       catch (e: Dynamic) { }
+      return def;
     }
   }
   public static function curry<P1, P2, P3, P4, R>(f: Function4<P1, P2, P3, P4, R>): Function<P1, Function<P2, Function<P3, Function<P4, R>>>> {
@@ -627,11 +643,15 @@ class Function4Extensions {
 }
 class Function5Extensions {  
   public static function swallow<A, B, C, D, E>(f: Function5<A, B, C, D, E, Void>): Function5<A, B, C, D, E, Void> {
+    return toEffect(swallowWith(f, null));
+  }
+  public static function swallowWith<A, B, C, D, E, R>(f: Function5<A, B, C, D, E, R>, def: R): Function5<A, B, C, D, E, R> {
     return function(a, b, c, d, e) {
       try {
-        f(a, b, c, d, e);
+        return f(a, b, c, d, e);
       }
       catch (e: Dynamic) { }
+      return def;
     }
   }
   public static function curry<P1, P2, P3, P4, P5, R>(f: Function5<P1, P2, P3, P4, P5, R>): Function<P1, Function<P2, Function<P3, Function<P4, Function<P5, R>>>>> {
