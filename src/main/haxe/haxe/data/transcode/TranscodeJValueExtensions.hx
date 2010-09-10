@@ -118,7 +118,7 @@ class TranscodeJValue{
           return if(Type.getInstanceFields(Type.getClass(v)).remove("decompose"))
             Reflect.callMethod(v, Reflect.field(v, "decompose"), []);
           else
-            Stax.error("class does not have a hashCode method");
+            Stax.error("Decompose function cannot be created. 'decompose' method is missing. Object: " + v);
         });
         }
       case TEnum(e):
@@ -126,9 +126,10 @@ class TranscodeJValue{
            case "Option": _createDecomposeImpl(OptionExtensions.decompose);
            case "haxe.text.json.JValue" : _createDecomposeImpl(JValueExtensions.decompose);
            default: _createDecomposeImpl(function(v){
-              var constructor = Type.enumConstructor(v);
-              var decomposed  = JField(Type.enumConstructor(v), JArray(Type.enumParameters(v).map(function(v){return TranscodeJValue.getDecomposerFor(Type.typeof(v))(v);})));
-              return JObject([decomposed]);
+             var name        = StringExtensions.decompose(Type.getEnumName(e));
+             var constructor = StringExtensions.decompose(Type.enumConstructor(v));
+             var parameters  = JArray(Type.enumParameters(v).map(function(v){return TranscodeJValue.getDecomposerFor(Type.typeof(v))(v);}));
+             return JArray([name, constructor, parameters]);
            });
          }
       case TFunction:
@@ -137,6 +138,74 @@ class TranscodeJValue{
         function(v) return JNull;
       default:
         _createDecomposeImpl(function(v) {Stax.error("Can't decompose unknown type."); return JNull;});
+    }
+  }
+
+  static function _createExtractorImpl<T>(impl : JExtractorFunction<Dynamic>) return function(v : JValue) if(null == v) return null else return impl(v)
+
+  public static function getExtractorFor<T>(valueType: ValueType, ?extractors: Array<JExtractorFunction<T>>): JExtractorFunction<T>{
+    return switch (valueType){
+      case TBool:
+        _createExtractorImpl(function(v){return BoolExtensions.extract(Bool, v);});
+      case TInt:
+        _createExtractorImpl(function(v){return IntExtensions.extract(Int, v);});
+      case TFloat:
+        _createExtractorImpl(function(v){return FloatExtensions.extract(Float, v);});
+      case TUnknown:
+        _createExtractorImpl(function(v) return Stax.error("Can't extract TUnknown: " + v));
+      case TObject:
+        _createExtractorImpl(function(v) return Stax.error("Can't extract TObject: " + v));
+      case TClass(c):
+        switch(Type.getClassName(c)) {
+        case "String":
+          _createExtractorImpl(function(v){return StringExtensions.extract(String, v);});
+        case "Date":
+          _createExtractorImpl(function(v){return DateExtensions.extract(Date, v);});
+        case "Array":
+          _createExtractorImpl(function(v){return ArrayExtensions.extract(Array, v, extractors[0]);});
+        default:
+          _createExtractorImpl(function(v) {
+            return if(Type.getClassFields(c).remove("extract")){
+              var args: Array<Dynamic> = [cast v];
+              if (extractors != null){
+                for (e in extractors){
+                  args.push(e);
+                }
+              }
+              Reflect.callMethod(c, Reflect.field(c, "extract"), args);
+            }
+            else
+              Stax.error("Extract function cannot be created. 'extract' method is missing. Type: " + valueType);
+        });
+        }
+      case TEnum(e):
+         switch (Type.getEnumName(e)){
+           case "Option": _createExtractorImpl(function(v){return OptionExtensions.extract(Option, v, extractors[0]);});
+           case "haxe.text.json.JValue" : _createExtractorImpl(function(v){return JValueExtensions.extract(JValue, v);});
+           default: _createExtractorImpl(function(v){
+              switch(v){
+                case JArray(arr): {
+                  var name        = StringExtensions.extract(String, arr[0]);
+                  var constructor = StringExtensions.extract(String, arr[1]);
+                  var parameters  = switch (arr[2]){
+                      case JArray(a):
+                        if (extractors == null)
+                          extractors = [];
+                        ArrayExtensions.zip(a, extractors).map(function(t){return t._2(t._1);});
+                      default: Stax.error("Expected JArray but was: " + v);
+                    }
+                  return Type.createEnum(Type.resolveEnum(name), constructor, parameters);
+                };
+                default: Stax.error("Expected JArray but was: " + v); return null;
+              }
+           });
+         }
+      case TFunction:
+        _createExtractorImpl(function(v) {Stax.error("Can't extract function."); return JNull;});
+      case TNull:
+        function(v) return null;
+      default:
+        _createExtractorImpl(function(v) {Stax.error("Can't extract unknown type."); return JNull;});
     }
   }
 }
