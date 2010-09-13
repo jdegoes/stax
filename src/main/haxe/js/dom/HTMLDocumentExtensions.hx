@@ -62,12 +62,10 @@ class HTMLDocumentExtensions {
     iframe.style.margin            = '0';
     iframe.style.padding           = '0';
     iframe.style.border            = 'none';
-    iframe.style.borderWidth       = '0';
-    iframe.style.borderHeight      = '0';
-    iframe.style.borderTopWidth    = '0';
-    iframe.style.borderLeftWidth   = '0';
-    iframe.style.borderRightWidth  = '0';
-    iframe.style.borderBottomWidth = '0';
+    iframe.style.borderLeftStyle   = 'none';
+    iframe.style.borderRightStyle  = 'none';
+    iframe.style.borderTopStyle    = 'none';
+    iframe.style.borderBottomStyle = 'none';
     iframe.style.backgroundColor   = 'transparent';
     
     return iframe;
