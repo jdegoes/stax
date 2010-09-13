@@ -61,6 +61,16 @@ class Logger {
     return new LoggerBridge(LogHandlers.filter(LogHandlers.composite(config.handlers), config.level));
   }
   
+  /** Convenience function that constructs a logger that will not log anything
+   * to anywhere (useful for production code).
+   */
+  public static function none(): LoggerFacade {
+    return Logger.create({
+      level:    None.toThunk(),
+      handlers: []
+    });
+  }
+  
   /** Convenience function that creates a debug logger facade that traces all
    * information using HaXe's built-in trace function (and the browser console, 
    * if the target is JavaScript or Flash).

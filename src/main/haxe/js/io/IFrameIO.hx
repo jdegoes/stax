@@ -398,11 +398,11 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       case Some(tuple): 
         fragmentsToSend = fragmentsToSend.drop(1);
         
-        var window   = tuple._1;
-        var fragment = tuple._2;
+        var win  = tuple._1;
+        var frag = tuple._2;
                 
         // Send this chunk via the hash tag:        
-        window.location.href = fragment.to + '#' + fragment.toMap().toQueryString().substr(1);
+        win.location.href = frag.to + '#' + frag.toMap().toQueryString().substr(1);
     }
   }
   
@@ -455,10 +455,10 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       
       if (fragmentRequests.size() > 0) {
         var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
-          var window = self.originUrlToWindow.get(request.to);
+          var win = self.originUrlToWindow.get(request.to);
         
-          return if (window != null) {
-            List.nil().cons(window.entuple(request));
+          return if (win != null) {
+            List.nil().cons(win.entuple(request));
           }
           else {
             List.nil();
