@@ -130,7 +130,7 @@ class PreludeTestCase extends TestCase {
     var c1 = new DynamicComparable(1);
     var c2 = new DynamicComparable(2);
     var c3 = new DynamicComparable(1);
-    var order = Stax.getReflectiveOrderFor(c1);
+    var order = Stax.getOrderFor(c1);
     assertTrue(order(c2, c1)  > 0);
     assertTrue(order(c1, c2)  < 0);
     assertTrue(order(c1, c3) == 0);
@@ -140,7 +140,7 @@ class PreludeTestCase extends TestCase {
     var c1 = new DynamicComparableDescending(1);
     var c2 = new DynamicComparableDescending(2);
     var c3 = new DynamicComparableDescending(1);
-    var order = Stax.getReflectiveOrderFor(c1);
+    var order = Stax.getOrderFor(c1);
     assertTrue(order(c2, c1)  < 0);
     assertTrue(order(c1, c2)  > 0);
     assertTrue(order(c1, c3) == 0);
@@ -314,16 +314,6 @@ class PreludeTestCase extends TestCase {
     assertTrue(equal(c1, c3));
   }
 
-  public function testEqualForComparableClass() {   
-    var c1 = new Comparable(1);
-    var c2 = new Comparable(2);  
-    var c3 = new Comparable(1);
-    var equal = Stax.getEqualFor(c1);
-    assertFalse(equal(c2, c1));
-    assertFalse(equal(c1, c2));
-    assertTrue(equal(c1, c3));
-  } 
-
   public function testEqualForNotClassWithoutEquals() {                 
     this.assertThrowsException(function() Stax.getEqualFor(new TestCase()));
   } 
@@ -363,8 +353,7 @@ class PreludeTestCase extends TestCase {
     assertTrue(equal(testEqualForMethods, testEqualForMethods));
   }  
                      
-  static function getShow<T>(v : T) return Stax.getShowFor(v)(v)
-  static function getReflectiveShow<T>(v : T) return Stax.getReflectiveShowFor(v)(v)
+  static function getShow<T>(v : T) return Stax.getShowFor(v)(v)                           
   
   public function testShowFor() {         
     assertEquals("null",  getShow(null));
@@ -380,23 +369,7 @@ class PreludeTestCase extends TestCase {
     assertEquals("<function>", getShow(function() trace("")));
     assertEquals("None", getShow(None));
     assertEquals("Some(Some(value))", getShow(Some(Some("value"))));
-  }
-
-  public function testReflectiveShowFor() {
-    assertEquals("null",  getReflectiveShow(null));
-	  assertEquals("true",  getReflectiveShow(true));
-  	assertEquals("false", getReflectiveShow(false));
-    assertEquals("a",     getReflectiveShow("a"));
-    assertEquals("1",  getReflectiveShow(1));
-    assertEquals("0.123",  getReflectiveShow(0.123));
-    assertEquals("{name:stax}",  getReflectiveShow({ name : "stax" }));
-    assertEquals("[[1, 2], [3, 4]]", getReflectiveShow([[1,2],[3,4]]));
-    assertEquals("PreludeTest", getReflectiveShow(this));
-    assertEquals("_PreludeTest.HasEquals(1)", getReflectiveShow(new HasEquals(1)));
-    assertEquals("<function>", getReflectiveShow(function() trace("")));
-    assertEquals("None", getReflectiveShow(None));
-    assertEquals("Some(Some(value))", getReflectiveShow(Some(Some("value"))));
-    assertEquals("_PreludeTest.HasNoHashAndShow(1)", getReflectiveShow(new HasNoHashAndShow(1)));
+    assertEquals("_PreludeTest.HasNoHashAndShow(1)", getShow(new HasNoHashAndShow(1)));
   }
 
   public function testHash() {
@@ -422,11 +395,11 @@ class PreludeTestCase extends TestCase {
   public function testReflectiveHasher(){
     var zerocodes : Array<Dynamic> = [null, 0];
     for(z in zerocodes)
-      assertEquals(0, Stax.getReflectiveHashFor(z)(z));
+      assertEquals(0, Stax.getHashFor(z)(z));
 
     var nonzerocodes : Array<Dynamic> = [true, false, "", "a", 1, 0.1, [],[1], {}, {n:"a"}, new HasNoHashAndShow(1), new HasHash(1), Date.fromString("2000-01-01"), None, Some("a")];
     for(n in nonzerocodes)
-      this.assertNotEquals(0, Stax.getReflectiveHashFor(n)(n));
+      this.assertNotEquals(0, Stax.getHashFor(n)(n));
   }
 
   public function assertHashCodeForIsZero<T>(v : T) {
@@ -461,22 +434,22 @@ private class HasHash
   public function hashCode() return v
 }
 
-private class HasNoHashAndShow
+@DataClass private class HasNoHashAndShow
 {
   @OrderDescending
 	var v : Int;
 	public function new(v : Int) this.v = v
 }
 
-private class DynamicComparable
+@DataClass private class DynamicComparable
 {
   @OrderAscending
 	var v : Int;
-	public function new(v : Int) this.v = v
+	public function new(v : Int) this.v = v   
 }
-private class DynamicComparableDescending
+@DataClass private class DynamicComparableDescending
 {
   @OrderDescending
 	var v : Int;
-	public function new(v : Int) this.v = v
-}
+	public function new(v : Int) this.v = v 
+}           
