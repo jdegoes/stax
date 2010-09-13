@@ -243,7 +243,12 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
     
     if (targetUrl.startsWith('file:')) targetUrl = '*';
     
-    targetWindow.postMessage(Json.encodeObject(data), targetUrl);
+    try {
+      targetWindow.postMessage(Json.encodeObject(data), targetUrl);
+    }
+    catch (e: Dynamic) {
+      log.fatal('Error while posting message to ' + targetUrl + ': ' + e.message);
+    }
     
     return this;
   }
