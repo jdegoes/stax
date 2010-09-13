@@ -121,9 +121,9 @@ class Set<T> implements Collection<Set<T>, T> {
     return ArrayExtensions.decompose(toArray());
   }
 
-  public static function extract<T>(v: JValue, e: JExtractorFunction<T>): Set<T> {
+  public static function extract<T>(v: JValue, e: JExtractorFunction<T>, ?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Set<T> {
     return switch(v) {
-      case JArray(v): Set.create().addAll(v.map(e));
+      case JArray(v): Set.create(order, equal, hash, show).addAll(v.map(e));
 
       default: Stax.error("Expected Array but was: " + v);
     }

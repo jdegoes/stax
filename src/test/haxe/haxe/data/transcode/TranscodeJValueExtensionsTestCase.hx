@@ -14,6 +14,8 @@ import haxe.data.transcode.TranscodeJValueExtensions;
 
 using PreludeExtensions;
 
+typedef UnionOfSimpleFeedTypes = Dynamic
+
 class TranscodeJValueExtensionsTestCase extends TestCase {
   public function new() {
     super();
