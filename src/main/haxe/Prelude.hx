@@ -633,16 +633,16 @@ class Stax {
     case TFloat:
       _createOrderImpl(FloatExtensions.compare);
     case TUnknown:
-    function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
+      function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
     case TObject:
       _createOrderImpl(function(a, b){
-         for(key in Reflect.fields(a)) {
-        var va = Reflect.field(a, key);
-        var v = getOrderFor(va)(va, Reflect.field(b, key));
-        if(0 != v)
-          return v;
-      }
-      return 0;
+        for(key in Reflect.fields(a)) {
+          var va = Reflect.field(a, key);
+          var v = getOrderFor(va)(va, Reflect.field(b, key));
+          if(0 != v)
+            return v;
+        }
+        return 0;
       });
     case TClass(c):
       switch(Type.getClassName(c)) {
@@ -651,13 +651,39 @@ class Stax {
       case "Date":
         _createOrderImpl(DateExtensions.compare);
       case "Array":
-      _createOrderImpl(ArrayExtensions.compare);
-        default:
-      if(Type.getInstanceFields(c).remove("compare")) {
-        _createOrderImpl(function(a, b) return (cast a).compare(b));
-      } else {
-        error("class "+Type.getClassName(c)+" is not comparable");
-      }
+        _createOrderImpl(ArrayExtensions.compare);
+      default:
+        if(_hasMetaDataClass(c)) {
+		      _createOrderImpl(function(a, b) {
+            var m = haxe.rtti.Meta.getFields(c);
+            var orderedFields = Type.getInstanceFields(c).map(function(v){
+              var fieldMeta = Reflect.field(m, v);
+              var weight    = if (fieldMeta != null){
+                  if (Reflect.hasField(fieldMeta, "OrderAscending")) 1
+                  else if (Reflect.hasField(fieldMeta, "OrderDescending")) -1
+                  else 0;
+                }
+                else 0;
+              return Tuple2.create(v, weight);
+            }).filter(function(v){return v._2 != 0;});
+
+            var values = orderedFields.map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
+
+            for (value in values) {
+//              if(Reflect.isFunction(value._1))
+//                continue;
+              var c = getOrderFor(value._1)(value._1, value._2) * value._3;
+
+              if (c != 0) return c;
+            }
+
+            return 0;
+          });
+		    } else if(Type.getInstanceFields(c).remove("compare")) {
+          _createOrderImpl(function(a, b) return (cast a).compare(b));
+   		  } else {
+          error("class "+Type.getClassName(c)+" is not comparable");
+        }
       }
     case TEnum(e):
         _createOrderImpl(function(a, b) {
@@ -677,54 +703,12 @@ class Stax {
       _createOrderImpl(function(a, b) return error("at least one of the arguments should be null"));
     case TFunction:
     error("unable to compare on a function");
-
-  }
-  }
-
-  public static function getReflectiveOrderFor<T>(t: T) : OrderFunction<T> {
-    return switch(Type.typeof(t)) {
-      case TClass(c):
-        switch(Type.getClassName(c)) {
-        case "String":
-          _createOrderImpl(StringExtensions.compare);
-        case "Date":
-          _createOrderImpl(DateExtensions.compare);
-        case "Array":
-          _createOrderImpl(ArrayExtensions.compare);
-        default:
-          if (Type.getInstanceFields(c).remove("compare")){
-            _createOrderImpl(function(a, b) return (cast a).compare(b));
-          }
-          else{
-            _createOrderImpl(function(a, b) {
-              var m = haxe.rtti.Meta.getFields(c);
-              var orderedFields = Reflect.fields(t).map(function(v){
-                var fieldMeta = Reflect.field(m, v);
-                var weight    = if (fieldMeta != null){
-                    if (Reflect.hasField(fieldMeta, "OrderAscending")) 1
-                    else if (Reflect.hasField(fieldMeta, "OrderDescending")) -1
-                    else 0;
-                  }
-                  else 0;
-                return Tuple2.create(v, weight);
-              }).filter(function(v){return v._2 != 0;});
-
-              var values = orderedFields.map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
-
-              for (value in values) {
-                var c = getOrderFor(value._1)(value._1, value._2) * value._3;
-
-                if (c != 0) return c;
-              }
-
-              return 0;
-            });
-          }
-        }
-      default: getOrderFor(t);
     }
   }
-
+  static function _hasMetaDataClass(c : Class<Dynamic>) {
+    var m = haxe.rtti.Meta.getType(c); 
+    return null != m && Reflect.hasField(m, "DataClass");
+  }
   static function _createEqualImpl<T>(impl : EqualFunction<Dynamic>) {
     return function(a, b) {
     return if(a == b || (a == null && b == null)) true;
@@ -765,12 +749,21 @@ class Stax {
           _createEqualImpl(DateExtensions.equals);
         case "Array":
           _createEqualImpl(ArrayExtensions.equals);
-        default:
+        default:                 
           var fields = Type.getInstanceFields(c);
-          if(fields.remove("equals")) {
+          if(_hasMetaDataClass(c)) { 
+            _createEqualImpl(function(a, b) {          
+              var values = fields.map(function(f){return Tuple2.create(Reflect.field(a, f), Reflect.field(b, f));});
+              for (value in values) {
+                if(Reflect.isFunction(value._1))
+                  continue;
+                if(!getEqualFor(value._1)(value._1, value._2))
+                  return false;
+              }
+              return true;
+            });    
+          } else if(fields.remove("equals")) {
             _createEqualImpl(function(a, b) return (cast a).equals(b));
-          } else if(fields.remove("compare")) {
-            _createEqualImpl(function(a, b) return (cast a).compare(b) == 0);
           } else {
             error("class "+Type.getClassName(c)+" has not equals method");
           }
@@ -804,6 +797,11 @@ class Stax {
   public static function getShowFor<T>(t : T) : ShowFunction<T> {
     return getShowForType(Type.typeof(t));
   }
+  
+  /**
+   *  @todo Reflect.fields doesn't work consistenly across platforms so we may probably pass to use Type.getInstanceFields. The problem here
+   *  is that we must check if the fields are functions before grabbing the value.
+   */
   public static function getShowForType<T>(v : ValueType) : ShowFunction<T> {
     return switch(v) {
       case TBool:
@@ -827,62 +825,37 @@ class Stax {
       case TClass(c):
         switch(Type.getClassName(c)) {
         case "String":
-              _createShowImpl(StringExtensions.toString);
+          _createShowImpl(StringExtensions.toString);
         case "Array":
-              _createShowImpl(ArrayExtensions.toString);
-          default:
-              _createShowImpl(function(v : T) {
-          return if(Type.getInstanceFields(Type.getClass(v)).remove("toString"))
+          _createShowImpl(ArrayExtensions.toString);
+        default:
+          _createShowImpl(function(v : T) {
+          return if(_hasMetaDataClass(c)) {
+            var values = Reflect.fields(v).map(function(f){return Reflect.field(v, f);}).map(function(v){return Stax.getShowFor(v)(v);});
+            values.mkString(Type.getClassName(c) + '(', ')', ', ');
+          } else if(Type.getInstanceFields(c).remove("toString"))
             Reflect.callMethod(v, Reflect.field(v, "toString"), []);
           else
-                Type.getClassName(Type.getClass(v));
-        });
+            Type.getClassName(Type.getClass(v));
+          });
         }
       case TEnum(e):
         _createShowImpl(function(v) {
-        var buf = Type.enumConstructor(v);
-        var params = Type.enumParameters(v);
-        if(params.length == 0)
-          return buf;
-        else {
-        buf +="(";
-        for(p in params)
-          buf += getShowFor(p)(p);
-        return buf + ")";
-        }
+          var buf = Type.enumConstructor(v);
+          var params = Type.enumParameters(v);
+          if(params.length == 0)
+            return buf;
+          else {
+          buf +="(";
+          for(p in params)
+            buf += getShowFor(p)(p);
+          return buf + ")";
+          }
         });
       case TNull:
         function(v) return "null";
       case TFunction:
         _createShowImpl(function(v) return '<function>');
-    }
-  }
-
-
-  public static function getReflectiveShowFor<T>(t: T) : ShowFunction<T> {
-    return switch(Type.typeof(t)) {
-      case TClass(c):
-        switch(Type.getClassName(c)) {
-        case "String":
-          _createShowImpl(StringExtensions.toString);
-        case "Date":
-          _createShowImpl(DateExtensions.toString);
-        case "Array":
-          _createShowImpl(ArrayExtensions.toString);
-        default:
-          if (Type.getInstanceFields(Type.getClass(t)).remove("toString")){
-            _createShowImpl(function(v : T) {
-              return Reflect.callMethod(v, Reflect.field(v, "toString"), []);
-            });
-          }
-          else{
-            _createShowImpl(function(v : T) {
-              var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);}).map(function(v){return Stax.getShowFor(v)(v);});
-              return values.mkString(Type.getClassName(c) + '(', ')', ', ');
-            });
-          }
-        }
-      default: getShowFor(t);
     }
   }
 
@@ -913,17 +886,22 @@ class Stax {
         switch(Type.getClassName(c)) {
         case "String":
           _createHashImpl(StringExtensions.hashCode);
-            case "Date":
-              _createHashImpl(DateExtensions.hashCode);
+        case "Date":
+          _createHashImpl(DateExtensions.hashCode);
         case "Array":
-              _createHashImpl(ArrayExtensions.hashCode);
-          default:
-              _createHashImpl(function(v : T) {
-          return if(Type.getInstanceFields(Type.getClass(v)).remove("hashCode"))
-            Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
-          else
-                error("class does not have a hashCode method");
-        });
+          _createHashImpl(ArrayExtensions.hashCode);
+        default:
+          if(_hasMetaDataClass(c)) {
+            _createHashImpl(function(v : T) {
+              var className = Type.getClassName(c);
+              var values    = Reflect.fields(v).map(function(f){return Reflect.field(v, f);});
+              return values.foldl(9901 * StringExtensions.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
+            });
+          } else if(Type.getInstanceFields(c).remove("hashCode")) {
+            _createHashImpl(function(v) return Reflect.callMethod(v, Reflect.field(v, "hashCode"), []));
+          } else {
+            error("class does not have a hashCode method");
+          }
         }
       case TEnum(e):
         _createHashImpl(function(v : T) {
@@ -938,34 +916,6 @@ class Stax {
         function(v) return 0;
       default:
       function(v : T) return -1;
-    }
-  }
-
-  public static function getReflectiveHashFor<T>(t: T) : HashFunction<T> {
-    return switch(Type.typeof(t)) {
-      case TClass(c):
-        switch(Type.getClassName(c)) {
-        case "String":
-          _createHashImpl(StringExtensions.hashCode);
-        case "Date":
-          _createHashImpl(DateExtensions.hashCode);
-        case "Array":
-          _createHashImpl(ArrayExtensions.hashCode);
-        default:
-          if (Type.getInstanceFields(Type.getClass(t)).remove("hashCode")){
-            _createHashImpl(function(v : T) {
-              return Reflect.callMethod(v, Reflect.field(v, "hashCode"), []);
-            });
-          }
-          else{
-            _createHashImpl(function(v : T) {
-              var className = Type.getClassName(c);
-              var values    = Reflect.fields(t).map(function(v){return Reflect.field(t, v);});
-              return values.foldl(9901 * StringExtensions.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
-            });
-          }
-        }
-      default: getHashFor(t);
     }
   }
 
