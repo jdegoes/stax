@@ -71,17 +71,18 @@ class Logger {
     });
   }
   
-  /** Convenience function that creates a debug logger facade that traces all
-   * information using HaXe's built-in trace function (and the browser console, 
-   * if the target is JavaScript or Flash).
+  /** Convenience function that creates a debug logger facade that sends information
+   * to the browser console on JavaScript and Flash, and uses HaXe's trace method
+   * otherwise.
    */
   public static function debug(): LoggerFacade {
     return Logger.create({
       level:    Debug.toThunk(),
       handlers: [
-        LogHandlers.Trace 
         #if (js || flash)
-        , LogHandlers.Console
+        LogHandlers.Console
+        #else
+        LogHandlers.Trace 
         #end
       ]
     });

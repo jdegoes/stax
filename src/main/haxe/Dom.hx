@@ -17336,6 +17336,7 @@ typedef CSS2Properties = {
     public var borderBottomWidth:    DOMString;
     public var borderLeftWidth:      DOMString;
     public var borderWidth:          DOMString;
+    public var borderHeight:         DOMString;
     public var bottom:               DOMString;
     public var captionSide:          DOMString;
     public var clear:                DOMString;
@@ -17455,7 +17456,7 @@ typedef CSSStyleDeclaration = {
     public function item(index: Int): DOMString;
 }
 //Unable to Test
-typedef CSSInlineStyleDeclaration = {
+typedef CSSInlineStyleDeclaration = {>CSS2Properties, 
     public var length       (default, null): Int;
     public var parentRule   (default, null): CSSRule;
     
@@ -17469,133 +17470,7 @@ typedef CSSInlineStyleDeclaration = {
 
     public function setProperty(propertyName: DOMString, value: DOMString, priority: DOMString): Void;
     
-    public function item(index: Int): DOMString;
-    
-    //CSS2Properties
-    
-    public var azimuth:              DOMString;
-    public var background:           DOMString;
-    public var backgroundAttachment: DOMString;
-    public var backgroundColor:      DOMString;
-    public var backgroundImage:      DOMString;
-    public var backgroundPosition:   DOMString;
-    public var backgroundRepeat:     DOMString;
-    public var border:               DOMString;
-    public var borderCollapse:       DOMString;
-    public var borderColor:          DOMString;
-    public var borderSpacing:        DOMString;
-    public var borderStyle:          DOMString;
-    public var borderTop:            DOMString;
-    public var borderRight:          DOMString;
-    public var borderBottom:         DOMString;
-    public var borderLeft:           DOMString;
-    public var borderTopColor:       DOMString;
-    public var borderRightColor:     DOMString;
-    public var borderBottomColor:    DOMString;
-    public var borderLeftColor:      DOMString;
-    public var borderTopStyle:       DOMString;
-    public var borderRightStyle:     DOMString;
-    public var borderBottomStyle:    DOMString;
-    public var borderLeftStyle:      DOMString;
-    public var borderTopWidth:       DOMString;
-    public var borderRightWidth:     DOMString;
-    public var borderBottomWidth:    DOMString;
-    public var borderLeftWidth:      DOMString;
-    public var borderWidth:          DOMString;
-    public var bottom:               DOMString;
-    public var captionSide:          DOMString;
-    public var clear:                DOMString;
-    public var clip:                 DOMString;
-    public var color:                DOMString;
-    public var content:              DOMString;
-    public var counterIncrement:     DOMString;
-    public var counterReset:         DOMString;
-    public var cue:                  DOMString;
-    public var cueAfter:             DOMString;
-    public var cueBefore:            DOMString;
-    public var cursor:               DOMString;
-    public var direction:            DOMString;
-    public var display:              DOMString;
-    public var elevation:            DOMString;
-    public var emptyCells:           DOMString;
-    public var cssFloat:             DOMString;
-    public var font:                 DOMString;
-    public var fontFamily:           DOMString;
-    public var fontSize:             DOMString;
-    public var fontSizeAdjust:       DOMString;
-    public var fontStretch:          DOMString;
-    public var fontStyle:            DOMString;
-    public var fontVariant:          DOMString;
-    public var fontWeight:           DOMString;
-    public var height:               DOMString;
-    public var left:                 DOMString;
-    public var letterSpacing:        DOMString;
-    public var lineHeight:           DOMString;
-    public var listStyle:            DOMString;
-    public var listStyleImage:       DOMString;
-    public var listStylePosition:    DOMString;
-    public var listStyleType:        DOMString;
-    public var margin:               DOMString;
-    public var marginTop:            DOMString;
-    public var marginRight:          DOMString;
-    public var marginBottom:         DOMString;
-    public var marginLeft:           DOMString;
-    public var markerOffset:         DOMString;
-    public var marks:                DOMString;
-    public var maxHeight:            DOMString;
-    public var maxWidth:             DOMString;
-    public var minHeight:            DOMString;
-    public var minWidth:             DOMString;
-    public var orphans:              DOMString;
-    public var outline:              DOMString;
-    public var outlineColor:         DOMString;
-    public var outlineStyle:         DOMString;
-    public var outlineWidth:         DOMString;
-    public var overflow:             DOMString;
-    public var padding:              DOMString;
-    public var paddingTop:           DOMString;
-    public var paddingRight:         DOMString;
-    public var paddingBottom:        DOMString;
-    public var paddingLeft:          DOMString;
-    public var page:                 DOMString;
-    public var pageBreakAfter:       DOMString;
-    public var pageBreakBefore:      DOMString;
-    public var pageBreakInside:      DOMString;
-    public var pause:                DOMString;
-    public var pauseAfter:           DOMString;
-    public var pauseBefore:          DOMString;
-    public var pitch:                DOMString;
-    public var pitchRange:           DOMString;
-    public var playDuring:           DOMString;
-    public var position:             DOMString;
-    public var quotes:               DOMString;
-    public var richness:             DOMString;
-    public var right:                DOMString;
-    public var size:                 DOMString;
-    public var speak:                DOMString;
-    public var speakHeader:          DOMString;
-    public var speakNumeral:         DOMString;
-    public var speakPunctuation:     DOMString;
-    public var speechRate:           DOMString;
-    public var stress:               DOMString;
-    public var tableLayout:          DOMString;
-    public var textAlign:            DOMString;
-    public var textDecoration:       DOMString;
-    public var textIndent:           DOMString;
-    public var textShadow:           DOMString;
-    public var textTransform:        DOMString;
-    public var top:                  DOMString;
-    public var unicodeBidi:          DOMString;
-    public var verticalAlign:        DOMString;
-    public var visibility:           DOMString;
-    public var voiceFamily:          DOMString;
-    public var volume:               DOMString;
-    public var whiteSpace:           DOMString;
-    public var widows:               DOMString;
-    public var width:                DOMString;
-    public var wordSpacing:          DOMString;
-    public var opacity:              DOMString;
-    public var zIndex:               DOMString;
+    public function item(index: Int): DOMString;    
 }
 
 //Unable to Test
