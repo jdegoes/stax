@@ -392,9 +392,9 @@ class List<T> implements Collection<List<T>, T> {
     return ArrayExtensions.decompose(toArray());
   }
 
-  public static function extract<A>(v: JValue, e: JExtractorFunction<A>): List<A> {
+  public static function extract<A>(v: JValue, e: JExtractorFunction<A>, ?order : OrderFunction<A>, ?equal: EqualFunction<A>, ?hash : HashFunction<A>, ?show : ShowFunction<A>): List<A> {
     return switch(v) {
-      case JArray(v): List.create().addAll(v.map(e));
+      case JArray(v): List.create(order, equal, hash, show).addAll(v.map(e));
 
       default: Stax.error("Expected Array but was: " + v);
     }

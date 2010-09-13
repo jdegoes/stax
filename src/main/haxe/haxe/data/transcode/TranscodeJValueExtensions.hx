@@ -47,7 +47,7 @@ class ExtractorHelpers {
 class MapExtensions {
   public static function stringKeyDecompose<V>(v: Map<String, V>): JValue {
     var it = v.iterator();
-    if(!it.hasNext()) {
+    if(it.hasNext()) {
       var dv = TranscodeJValue.getDecomposerFor(Type.typeof(it.next()._2));
       return JObject(v.toArray().map(function(t) {return JField(t._1, dv(t._2));}));
     }
@@ -56,9 +56,9 @@ class MapExtensions {
     }
   }
 
-  public static function stringKeyExtract<V>(v: JValue, ve: JExtractorFunction<V>): Map<String, V> {
+  public static function stringKeyExtract<V>(v: JValue, ve: JExtractorFunction<V>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhash: HashFunction<V>, ?vshow : ShowFunction<V>): Map<String, V> {
     var extract0 = function(v: Array<JValue>){
-      return Map.create().addAll(v.map(function(j) {
+      return Map.create(StringExtensions.compare, StringExtensions.equals, StringExtensions.hashCode, StringExtensions.toString, vorder, vequal, vhash, vshow).addAll(v.map(function(j) {
         return switch(j) {
           case JField(k, v): Tuple2.create(k, ve(v));
 
@@ -129,7 +129,7 @@ class TranscodeJValue{
 
   static function _createExtractorImpl<T>(impl : JExtractorFunction<Dynamic>) return function(v : JValue) if(null == v) return null else return impl(v)
 
-  public static function getExtractorFor<T>(valueType: ValueType, ?extractors: Array<JExtractorFunction<T>>): JExtractorFunction<T>{
+  public static function getExtractorFor<T>(valueType: ValueType, ?extractorArgs: Array<Dynamic>): JExtractorFunction<T>{
     return switch (valueType){
       case TBool:
         _createExtractorImpl(function(v){return BoolExtensions.extract(Bool, v);});
@@ -148,13 +148,13 @@ class TranscodeJValue{
         case "Date":
           _createExtractorImpl(function(v){return DateExtensions.extract(Date, v);});
         case "Array":
-          _createExtractorImpl(function(v){return ArrayExtensions.extract(Array, v, extractors[0]);});
+          _createExtractorImpl(function(v){return ArrayExtensions.extract(Array, v, extractorArgs[0]);});
         default:
           _createExtractorImpl(function(v) {
             return if(Type.getClassFields(c).remove("extract")){
               var args: Array<Dynamic> = [cast v];
-              if (extractors != null){
-                for (e in extractors){
+              if (extractorArgs != null){
+                for (e in extractorArgs){
                   args.push(e);
                 }
               }
@@ -166,7 +166,7 @@ class TranscodeJValue{
         }
       case TEnum(e):
          switch (Type.getEnumName(e)){
-           case "Option": _createExtractorImpl(function(v){return OptionExtensions.extract(Option, v, extractors[0]);});
+           case "Option": _createExtractorImpl(function(v){return OptionExtensions.extract(Option, v, extractorArgs[0]);});
            case "haxe.text.json.JValue" : _createExtractorImpl(function(v){return JValueExtensions.extract(JValue, v);});
            default: _createExtractorImpl(function(v){
               switch(v){
@@ -175,9 +175,9 @@ class TranscodeJValue{
                   var constructor = StringExtensions.extract(String, arr[1]);
                   var parameters  = switch (arr[2]){
                       case JArray(a):
-                        if (extractors == null)
-                          extractors = [];
-                        ArrayExtensions.zip(a, extractors).map(function(t){return t._2(t._1);});
+                        if (extractorArgs == null)
+                          extractorArgs = [];
+                        ArrayExtensions.zip(a, extractorArgs).map(function(t){return t._2(t._1);});
                       default: Stax.error("Expected JArray but was: " + v);
                     }
                   return Type.createEnum(Type.resolveEnum(name), constructor, parameters);
