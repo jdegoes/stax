@@ -141,7 +141,7 @@ class PreludeTestCase extends TestCase {
     var c2 = new DynamicComparableDescending(2);
     var c3 = new DynamicComparableDescending(1);
     var order = Stax.getOrderFor(c1);
-    assertTrue(order(c2, c1)  < 0);
+    assertTrue(order(c2, c1)  < 0);    
     assertTrue(order(c1, c2)  > 0);
     assertTrue(order(c1, c3) == 0);
   }
@@ -369,7 +369,8 @@ class PreludeTestCase extends TestCase {
     assertEquals("<function>", getShow(function() trace("")));
     assertEquals("None", getShow(None));
     assertEquals("Some(Some(value))", getShow(Some(Some("value"))));
-    assertEquals("_PreludeTest.HasNoHashAndShow(1)", getShow(new HasNoHashAndShow(1)));
+    assertEquals("_PreludeTest.HasNoHashAndShow()", getShow(new HasNoHashAndShow(1)));
+    assertEquals("_PreludeTest.DynamicComparable(1)", getShow(new DynamicComparable(1)));
   }
 
   public function testHash() {
@@ -435,21 +436,20 @@ private class HasHash
 }
 
 @DataClass private class HasNoHashAndShow
-{
-  @OrderDescending
+{ 
+  @DataField({show:false})   
 	var v : Int;
 	public function new(v : Int) this.v = v
 }
 
 @DataClass private class DynamicComparable
-{
-  @OrderAscending
-	var v : Int;
-	public function new(v : Int) this.v = v   
+{           
+	var v : Int;  
+	public function new(v : Int) this.v = v     
 }
 @DataClass private class DynamicComparableDescending
-{
-  @OrderDescending
+{  
+  @DataField({order:FieldOrder.Descending})
 	var v : Int;
 	public function new(v : Int) this.v = v 
 }           

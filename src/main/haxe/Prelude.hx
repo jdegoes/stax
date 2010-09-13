@@ -607,7 +607,13 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
 typedef OrderFunction<T>  = Function2<T, T, Int>;
 typedef EqualFunction<T>  = Function2<T, T, Bool>;
 typedef ShowFunction<T>   = Function<T, String>;
-typedef HashFunction<T> = Function<T, Int>;
+typedef HashFunction<T> = Function<T, Int>;   
+
+class FieldOrder {
+  public static inline var Ascending = 1;
+  public static inline var Descending = -1;
+  public static inline var Ignore = 0;
+}
 
 class Stax {
   static function _createOrderImpl<T>(impl : OrderFunction<Dynamic>) : OrderFunction<T> {
@@ -654,26 +660,24 @@ class Stax {
         _createOrderImpl(ArrayExtensions.compare);
       default:
         if(_hasMetaDataClass(c)) {
-		      _createOrderImpl(function(a, b) {
-            var m = haxe.rtti.Meta.getFields(c);
-            var orderedFields = Type.getInstanceFields(c).map(function(v){
-              var fieldMeta = Reflect.field(m, v);
-              var weight    = if (fieldMeta != null){
-                  if (Reflect.hasField(fieldMeta, "OrderAscending")) 1
-                  else if (Reflect.hasField(fieldMeta, "OrderDescending")) -1
-                  else 0;
-                }
-                else 0;
-              return Tuple2.create(v, weight);
-            }).filter(function(v){return v._2 != 0;});
-
-            var values = orderedFields.map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
-
+          var i = 0;
+          var fields = Type.getInstanceFields(c).map(function(v){
+            var fieldMeta = _getMetaDataField(c, v);
+            var weight = if (fieldMeta != null && Reflect.hasField(fieldMeta, "order"))
+              Reflect.field(fieldMeta, "order");
+            else
+              1;
+            return Tuple3.create(v, weight, if(fieldMeta != null && Reflect.hasField(fieldMeta, "index")) Reflect.field(fieldMeta, "index"); else i++);                
+          }).filter(function(v){return v._2 != 0;}).sortWith(function(a, b) {
+            var c = a._3 - b._3;
+            if(c != 0)
+              return c;
+            return StringExtensions.compare(a._1, b._1);
+          });
+		      _createOrderImpl(function(a, b) {       
+            var values = fields.filter(function(v) return !Reflect.isFunction(Reflect.field(a, v._1))).map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
             for (value in values) {
-//              if(Reflect.isFunction(value._1))
-//                continue;
               var c = getOrderFor(value._1)(value._1, value._2) * value._3;
-
               if (c != 0) return c;
             }
 
@@ -708,6 +712,32 @@ class Stax {
   static function _hasMetaDataClass(c : Class<Dynamic>) {
     var m = haxe.rtti.Meta.getType(c); 
     return null != m && Reflect.hasField(m, "DataClass");
+  }
+  static function _getMetaDataField(c : Class<Dynamic>, f : String) {
+    var m = haxe.rtti.Meta.getFields(c);  
+    if(null == m || !Reflect.hasField(m, f)) 
+      return null;
+    var fm = Reflect.field(m, f);
+    if(!Reflect.hasField(fm, "DataField"))
+      return null;
+    return Reflect.field(fm, "DataField").copy().pop();
+  }              
+  static function _fieldsWithMeta(c : Class<Dynamic>, name : String) {   
+    var i = 0;   
+    return Type.getInstanceFields(c).map(function(v){ 
+      var fieldMeta = _getMetaDataField(c, v);     
+      var inc = (fieldMeta == null || !Reflect.hasField(fieldMeta, name) || Reflect.field(fieldMeta, name)); 
+      return Tuple3.create(v, inc, if(fieldMeta != null && Reflect.hasField(fieldMeta, "index")) Reflect.field(fieldMeta, "index"); else i++);                
+    }).filter(function(v) {
+      return v._2;
+    }).sortWith(function(a, b) {
+      var c = a._3 - b._3;
+      if(c != 0)
+        return c;
+      return StringExtensions.compare(a._1, b._1);
+    }).map(function(v) {
+      return v._1;
+    });
   }
   static function _createEqualImpl<T>(impl : EqualFunction<Dynamic>) {
     return function(a, b) {
@@ -750,10 +780,10 @@ class Stax {
         case "Array":
           _createEqualImpl(ArrayExtensions.equals);
         default:                 
-          var fields = Type.getInstanceFields(c);
-          if(_hasMetaDataClass(c)) { 
-            _createEqualImpl(function(a, b) {          
-              var values = fields.map(function(f){return Tuple2.create(Reflect.field(a, f), Reflect.field(b, f));});
+          if(_hasMetaDataClass(c)) {  
+            var fields = _fieldsWithMeta(c, "equalHash");
+            _createEqualImpl(function(a, b) {         
+              var values = fields.map(function(v){return Tuple2.create(Reflect.field(a, v), Reflect.field(b, v));});
               for (value in values) {
                 if(Reflect.isFunction(value._1))
                   continue;
@@ -762,7 +792,7 @@ class Stax {
               }
               return true;
             });    
-          } else if(fields.remove("equals")) {
+          } else if(Type.getInstanceFields(c).remove("equals")) {
             _createEqualImpl(function(a, b) return (cast a).equals(b));
           } else {
             error("class "+Type.getClassName(c)+" has not equals method");
@@ -829,15 +859,16 @@ class Stax {
         case "Array":
           _createShowImpl(ArrayExtensions.toString);
         default:
-          _createShowImpl(function(v : T) {
-          return if(_hasMetaDataClass(c)) {
-            var values = Reflect.fields(v).map(function(f){return Reflect.field(v, f);}).map(function(v){return Stax.getShowFor(v)(v);});
-            values.mkString(Type.getClassName(c) + '(', ')', ', ');
-          } else if(Type.getInstanceFields(c).remove("toString"))
-            Reflect.callMethod(v, Reflect.field(v, "toString"), []);
-          else
-            Type.getClassName(Type.getClass(v));
-          });
+            if(_hasMetaDataClass(c)) {
+              var fields = _fieldsWithMeta(c, "show");
+              _createShowImpl(function(v : T) { 
+                var values = fields.map(function(f){return Reflect.field(v, f);}).filter(function(v) return !Reflect.isFunction(v)).map(function(v){return Stax.getShowFor(v)(v);});
+                return values.mkString(Type.getClassName(c) + '(', ')', ', '); 
+              });
+            } else if(Type.getInstanceFields(c).remove("toString"))
+              _createShowImpl(function(v) return Reflect.callMethod(v, Reflect.field(v, "toString"), []));
+            else
+              _createShowImpl(function(v) return Type.getClassName(Type.getClass(v)));
         }
       case TEnum(e):
         _createShowImpl(function(v) {
@@ -891,10 +922,12 @@ class Stax {
         case "Array":
           _createHashImpl(ArrayExtensions.hashCode);
         default:
-          if(_hasMetaDataClass(c)) {
+          var fields = Type.getInstanceFields(c);
+          if(_hasMetaDataClass(c)) {       
+            var fields = _fieldsWithMeta(c, "equalHash");
             _createHashImpl(function(v : T) {
               var className = Type.getClassName(c);
-              var values    = Reflect.fields(v).map(function(f){return Reflect.field(v, f);});
+              var values    = fields.map(function(f){return Reflect.field(v, f);}).filter(function(v) return !Reflect.isFunction(v));
               return values.foldl(9901 * StringExtensions.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
             });
           } else if(Type.getInstanceFields(c).remove("hashCode")) {

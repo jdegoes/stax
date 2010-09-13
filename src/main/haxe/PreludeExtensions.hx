@@ -300,6 +300,16 @@ class DateExtensions {
   }
 }
 class ArrayExtensions {
+  public static function sort<T>(v : Array<T>) : Array<T> {
+    return sortWith(v, Stax.getOrderFor(v[0]));
+  }
+  
+  public static function sortWith<T>(v : Array<T>, order : OrderFunction<T>) : Array<T> {
+    var r = v.copy();
+    r.sort(order);
+    return r;
+  }
+  
   public static function compare<T>(v1: Array<T>, v2: Array<T>) {
       return compareWith(v1, v2, Stax.getOrderFor(v1[0]));
   } 
