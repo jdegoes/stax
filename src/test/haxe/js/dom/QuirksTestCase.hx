@@ -99,6 +99,16 @@ class QuirksTestCase extends TestCase {
 
     assertEquals(false, element.hasClass(className));
   }
+  public function testRemoveClassRemoveCorrectClass(): Void {
+    var className  = "test-class";
+    var className1 = "foo";
+
+    element.addClass(className);
+    element.addClass(className1);
+    element.removeClass(className);
+
+    assertEquals(true, element.hasClass(className1));
+  }
   public function testHasClass(): Void {
     var className = "test-class";
 

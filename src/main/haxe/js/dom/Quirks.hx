@@ -450,14 +450,16 @@ class Quirks {
    * Remove a single the element.
    */
   public static function removeClass(element: HTMLElement, value: String){
-    element.className = untyped __js__ ("element.className.replace(new RegExp('(^|\\s)' + value + '(\\s|$)', 'g'), '$2').replace(/^\\s|\\s$/, '')");
+    var result        = new EReg('(^|\\s)' + value + '(\\s|$)', 'g').replace(element.className,"$2");
+    element.className = new EReg('/^\\s|\\s$/', "").replace(result, '');
   }
 
   /**
    * Determine whether the element is assigned the given class.
    */
   public static function hasClass(element: HTMLElement, value: String){
-    return untyped __js__ ("(new RegExp('(^|\\s)' + value + '(\\s|$)')).test(element.className || '');");
+    var r = new EReg('(^|\\s)' + value + '(\\s|$)', "");
+    return if (element.className != null) r.match(element.className); else false;
   }
 
   public static function setWidth(elem: HTMLElement, width: Int): HTMLElement{
