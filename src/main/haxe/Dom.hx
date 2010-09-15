@@ -17720,6 +17720,7 @@ typedef Window = {
     public var returnValue      : DOMString;
     public var sessionStorage   (default, null): Storage;
     public var crypto           (default, null): Crypto;
+    public var filter           : DOMString;
     
     public var onabort: EventListener<Event>;
     public var onafterprint: EventListener<Event>;
