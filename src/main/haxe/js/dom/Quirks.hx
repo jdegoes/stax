@@ -450,14 +450,16 @@ class Quirks {
    * Remove a single the element.
    */
   public static function removeClass(element: HTMLElement, value: String){
-    element.className = untyped __js__ ("element.className.replace(new RegExp('(^|\\s)' + value + '(\\s|$)', 'g'), '$2').replace(/^\\s|\\s$/, '')");
+    var result        = new EReg('(^|\\s)' + value + '(\\s|$)', 'g').replace(element.className,"$2");
+    element.className = new EReg('/^\\s|\\s$/', "").replace(result, '');
   }
 
   /**
    * Determine whether the element is assigned the given class.
    */
   public static function hasClass(element: HTMLElement, value: String){
-    return untyped __js__ ("(new RegExp('(^|\\s)' + value + '(\\s|$)')).test(element.className || '');");
+    var r = new EReg('(^|\\s)' + value + '(\\s|$)', "");
+    return if (element.className != null) r.match(element.className); else false;
   }
 
   public static function setWidth(elem: HTMLElement, width: Int): HTMLElement{
@@ -471,7 +473,8 @@ class Quirks {
    *  Sets new value of the css property.
    */
   public static function setCssProperty(elem: HTMLElement, name: String, value: String): HTMLElement{
-    if (elem == null || elem.nodeType == 3 || elem.nodeType == 8) return elem;
+    trace("setting CSS property");
+    if (elem == null || elem.nodeType == 3 || elem.nodeType == 8) { trace('elem is null'); return elem; }
     else{
       // ignore negative width and height values #1599
       if ( (name == "width" || name == "height") && value.toFloat() < 0 ) {
@@ -480,7 +483,9 @@ class Quirks {
       else{
         var style = elem.style;
         // IE uses filters for opacity
-        if ( name == "opacity" && !BrowserSupport.opacity()) {
+        trace(BrowserSupport.opacity());
+        if (name == "opacity" && !BrowserSupport.opacity()) {
+          trace('IE supports opacity');
           // IE has trouble with opacity if it does not have layout
           // Force it by setting the zoom level
           untyped style.zoom = 1;
@@ -495,6 +500,7 @@ class Quirks {
             (OpacityPattern.matched(1).toFloat() / 100.0).toString();
           }
           else {
+            trace('browser does support Opacity');
             "";
           }
         }

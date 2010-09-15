@@ -17721,6 +17721,7 @@ typedef Window = {
     public var sessionStorage   (default, null): Storage;
     public var crypto           (default, null): Crypto;
     
+    
     public var onabort: EventListener<Event>;
     public var onafterprint: EventListener<Event>;
     public var onbeforeprint: EventListener<Event>;
