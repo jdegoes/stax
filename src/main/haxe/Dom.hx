@@ -17307,7 +17307,6 @@ typedef CSSUnknownRule = {
 }
 //UnableToTest
 typedef CSS2Properties = {
-    public var filter:               DOMString;
     public var azimuth:              DOMString;
     public var background:           DOMString;
     public var backgroundAttachment: DOMString;
