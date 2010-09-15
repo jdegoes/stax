@@ -105,7 +105,8 @@ class Set<T> implements Collection<Set<T>, T> {
   } 
           
   public function equals(other : Set<T>) {
-    return toArray().equalsWith(other.toArray(), equal);
+    var all = concat(other);
+    return all.size() == size() && all.size() == other.size();
   }
 
   public function compare(other : Set<T>) {

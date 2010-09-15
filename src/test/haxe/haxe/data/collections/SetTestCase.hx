@@ -108,6 +108,7 @@ class SetTestCase extends TestCase {
   public function testEquals() {  
   assertTrue (set().equals(set()));
   assertTrue (set([1,2,3]).equals(set([1,2,3])));
+  assertTrue (set([2,1]).equals(set([1,2])));    
   assertFalse(set().equals(set([1])));
   assertFalse(set([2]).equals(set([1])));
   assertFalse(set([1,2]).equals(set([1,3])));
