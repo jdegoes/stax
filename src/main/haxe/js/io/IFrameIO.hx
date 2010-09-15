@@ -247,7 +247,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
       targetWindow.postMessage(Json.encodeObject(data), targetUrl);
     }
     catch (e: Dynamic) {
-      log.fatal('Error while posting message to ' + targetUrl + ': ' + e.message);
+      log.fatal('Error while posting message to ' + targetUrl + ' (originally ' + targetUrl_ + '): ' + e.message);
     }
     
     return this;
@@ -266,16 +266,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   private static function getUrlFor(w: Window, url_: Url): Url {
     // TODO: Cleanup!!!
     var tryExtractUrl = function(w: Window): Url {
-      return normalizeOpt(url_).getOrElse(
-        function() {
-          try {
-            return normalize(w.location.href);
-          }
-          catch (d: Dynamic) {
-            return url_;
-          }
-        }
-      );
+      return normalizeOpt(url_).getOrElse(normalize.swallowWith(url_).lazy(w.location.href));
     }
     
     var cur = w;
