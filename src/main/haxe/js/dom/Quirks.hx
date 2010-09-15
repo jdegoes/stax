@@ -483,29 +483,26 @@ class Quirks {
       else{
         var style = elem.style;
         // IE uses filters for opacity
-        trace(BrowserSupport.opacity());
         if (name == "opacity" && !BrowserSupport.opacity()) {
-          trace('IE supports opacity');
+          //trace('IE supports opacity');
           // IE has trouble with opacity if it does not have layout
           // Force it by setting the zoom level
           untyped style.zoom = 1;
 
           // Set the alpha filter to set the opacity
-          var opacity  = "alpha(opacity=" + value.toInt() * 100 + ")";
-          var filter   = if (untyped style.filter != null ) getComputedCssProperty( elem, "filter" ).getOrElseC("") else "";
-          untyped style.filter = if (AlphaPattern.match(filter)) AlphaPattern.replace(filter, opacity) else opacity;
-
-          value = untyped if (style.filter.indexOf("opacity=") >= 0) {
-            OpacityPattern.match(style.filter)
-            (OpacityPattern.matched(1).toFloat() / 100.0).toString();
-          }
-          else {
-            trace('browser does support Opacity');
-            "";
-          }
+          var opacity = "alpha(opacity=" + value.toInt() * 100 + ")";
+          
+          var filter = if (untyped style.filter != null) getComputedCssProperty(elem, "filter").getOrElseC("") else "";
+          
+          var newFilter = if (AlphaPattern.match(filter)) AlphaPattern.replace(filter, opacity) else opacity;
+          
+          untyped style.filter = newFilter;
         }
+        else {
+          var propertyName = getActualCssPropertyName(name).toCamelCase();
 
-        untyped elem.style[ getActualCssPropertyName(name).toCamelCase() ] = value;
+          untyped elem.style[propertyName] = value;
+        }
 
         return elem;
       }
