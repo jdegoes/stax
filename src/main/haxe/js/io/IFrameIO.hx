@@ -247,7 +247,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
       targetWindow.postMessage(Json.encodeObject(data), targetUrl);
     }
     catch (e: Dynamic) {
-      log.fatal('Error while posting message to ' + targetUrl + ': ' + e.message);
+      log.fatal('Error while posting message to ' + targetUrl + ' (originally ' + targetUrl_ + '): ' + e.message);
     }
     
     return this;
@@ -264,34 +264,24 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function getUrlFor(w: Window, url_: Url): Url {
-    // TODO: Cleanup!!!
-    var tryExtractUrl = function(w: Window): Url {
-      return normalizeOpt(url_).getOrElse(
-        function() {
-          try {
-            return normalize(w.location.href);
-          }
-          catch (d: Dynamic) {
-            return url_;
-          }
+    return if (url_.startsWith('about:')) {
+      var allWindows = [w].concat(Stax.unfold(w, function(w) {
+        var parentWindow = w.parent;
+        
+        return if (w == parentWindow) None;
+               else Some(parentWindow.entuple(parentWindow));
+      }).toArray());
+      
+      allWindows.flatMap(function(w) {
+        try {
+          return normalizeOpt(w.location.href).toArray();
         }
-      );
+        catch (e: Dynamic) {
+          return [];
+        }
+      }).first();
     }
-    
-    var cur = w;
-    
-    while (cur != null) {
-      var url = tryExtractUrl(cur);
-      
-      if (!url.startsWith('about:')) {
-        return normalize(url);
-      }
-      
-      if (cur == cur.top) cur = null;
-      else cur = cur.parent;
-    }
-    
-    return url_;
+    else normalize(url_);
   }
 }
 
