@@ -482,16 +482,16 @@ class Quirks {
       }
       else{
         var style = elem.style;
-        // IE uses filters for opacity
+
         if (name == "opacity" && !BrowserSupport.opacity()) {
-          //trace('IE supports opacity');
+
           // IE has trouble with opacity if it does not have layout
           // Force it by setting the zoom level
           untyped style.zoom = 1;
 
           // Set the alpha filter to set the opacity
           var opacity = "alpha(opacity=" + value.toInt() * 100 + ")";
-          
+          trace(opacity);
           var filter = if (untyped style.filter != null) getComputedCssProperty(elem, "filter").getOrElseC("") else "";
           
           var newFilter = if (AlphaPattern.match(filter)) AlphaPattern.replace(filter, opacity) else opacity;
