@@ -481,6 +481,7 @@ class Quirks {
         return elem;
       }
       else{
+        trace('assigning style');
         var style = elem.style;
         // IE uses filters for opacity
         if ( name == "opacity" && !BrowserSupport.opacity()) {
