@@ -264,25 +264,24 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function getUrlFor(w: Window, url_: Url): Url {
-    // TODO: Cleanup!!!
-    var tryExtractUrl = function(w: Window): Url {
-      return normalizeOpt(url_).getOrElse(normalize.swallowWith(url_).lazy(w.location.href));
-    }
-    
-    var cur = w;
-    
-    while (cur != null) {
-      var url = tryExtractUrl(cur);
+    return if (url_.startsWith('about:')) {
+      var allWindows = [w].concat(Stax.unfold(w, function(w) {
+        var parentWindow = w.parent;
+        
+        return if (w == parentWindow) None;
+               else Some(parentWindow.entuple(parentWindow));
+      }).toArray());
       
-      if (!url.startsWith('about:')) {
-        return normalize(url);
-      }
-      
-      if (cur == cur.top) cur = null;
-      else cur = cur.parent;
+      allWindows.flatMap(function(w) {
+        try {
+          return normalizeOpt(w.location.href).toArray();
+        }
+        catch (e: Dynamic) {
+          return [];
+        }
+      }).first();
     }
-    
-    return url_;
+    else normalize(url_);
   }
 }
 
