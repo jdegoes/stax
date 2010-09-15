@@ -483,7 +483,7 @@ class Quirks {
         var style = elem.style;
         // IE uses filters for opacity
         trace(BrowserSupport.opacity());
-        if ( name == "opacity" && !BrowserSupport.opacity()) {
+        if ( name == "opacity" && BrowserSupport.opacity()) {
           trace('name is equal to opacity and browser supports this property');
           // IE has trouble with opacity if it does not have layout
           // Force it by setting the zoom level
