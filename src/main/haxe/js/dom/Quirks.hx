@@ -473,7 +473,6 @@ class Quirks {
    *  Sets new value of the css property.
    */
   public static function setCssProperty(elem: HTMLElement, name: String, value: String): HTMLElement{
-    trace('setting css property');
     if (elem == null || elem.nodeType == 3 || elem.nodeType == 8) { trace('elem is null'); return elem; }
     else{
       // ignore negative width and height values #1599
@@ -481,8 +480,8 @@ class Quirks {
         return elem;
       }
       else{
-        trace('assigning style');
         var style = elem.style;
+        trace('style assigned');
         // IE uses filters for opacity
         if ( name == "opacity" && !BrowserSupport.opacity()) {
           trace('name is equal to opacity and browser supports this property');
