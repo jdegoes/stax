@@ -489,7 +489,7 @@ class Quirks {
           untyped style.zoom = 1;
 
           // Set the alpha filter to set the opacity
-          var opacity = "alpha(opacity=" + value.toInt() * 100 + ")";
+          var opacity = "alpha(opacity=" + value.toFloat() * 100 + ")";
           trace(opacity);
           var filter = if (untyped style.filter != null) getComputedCssProperty(elem, "filter").getOrElseC("") else "";
           
