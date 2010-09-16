@@ -473,7 +473,7 @@ class Quirks {
    *  Sets new value of the css property.
    */
   public static function setCssProperty(elem: HTMLElement, name: String, value: String): HTMLElement{
-    if (elem == null || elem.nodeType == 3 || elem.nodeType == 8) { trace('elem is null'); return elem; }
+    if (elem == null || elem.nodeType == 3 || elem.nodeType == 8) { return elem; }
     else{
       // ignore negative width and height values #1599
       if ( (name == "width" || name == "height") && value.toFloat() < 0 ) {
@@ -490,7 +490,7 @@ class Quirks {
 
           // Set the alpha filter to set the opacity
           var opacity = "alpha(opacity=" + value.toFloat() * 100 + ")";
-          trace(opacity);
+
           var filter = if (untyped style.filter != null) getComputedCssProperty(elem, "filter").getOrElseC("") else "";
           
           var newFilter = if (AlphaPattern.match(filter)) AlphaPattern.replace(filter, opacity) else opacity;
