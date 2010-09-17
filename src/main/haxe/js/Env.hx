@@ -10,7 +10,6 @@ class Env {
   public static var window:       Window        = untyped __js__('window');
   public static var navigator:    Navigator     = untyped __js__('navigator');
   public static var history:      History       = untyped __js__('history');
-  public static var location:     Location      = untyped __js__('location');
   
   /** Top level values */
   public static var JInfinity : Dynamic  = untyped __js__('Infinity');
