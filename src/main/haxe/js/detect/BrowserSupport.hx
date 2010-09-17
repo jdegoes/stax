@@ -1063,10 +1063,10 @@ class BrowserSupport {
    * Determines if the opacity property is supported.
    */
   public static function opacity(): Bool {
-    return testSupport('<a style="opacity: 0.5;"></a>', 'a', function(e) {
-      var opacity = e.style.opacity;
+    return testSupport('<div></div>', 'div', function(e) {
+      var filter = untyped e.style.filter;
 
-      return opacity != null && ~/0.5/.match(opacity.toString());
+      return filter == null;
     });
   }
 
