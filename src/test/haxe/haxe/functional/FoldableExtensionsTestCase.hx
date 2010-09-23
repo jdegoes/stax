@@ -15,7 +15,9 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package haxe.functional;
-import haxe.data.collections.List;
+import haxe.data.collections.List; 
+import haxe.data.collections.Map;
+import haxe.data.collections.Set;
 
 import Prelude;
 import haxe.test.TestCase;
@@ -25,11 +27,27 @@ using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 class FoldableExtensionsTestCase extends TestCase {
-    public function testIntListMapToString() {
-      /*
-      var list = List.create().addAll([1,2,3]);
-      var slist = list.map(function(i) return i.toString());
-      assertEquals(["1", "2", "3"], slist.toArray()); 
-      */
-    }
+  public function testIntSetMapToString() {
+    var seta = Set.create().addAll([1,2,3]);
+    var setb = seta.map(function(i) return i.toString());
+    assertEquals(["1", "2", "3"], setb.toArray()); 
+  }
+  
+  public function testMapToList() {
+    var list = Map.create().set("a", "A").set("b", "B").toList();
+    assertIs(list, List);
+    assertEquals(2, list.size());
+  }
+  
+  public function testListToSet() {
+    var set = List.create().addAll([1, 2, 2, 3]).toSet();
+    assertIs(set, Set);
+    assertEquals(3, set.size());
+  }
+  
+  public function testSetToList() {
+    var list = Set.create().addAll([1, 2, 3]).toList();
+    assertIs(list, List);
+    assertEquals(3, list.size());
+  }
 }

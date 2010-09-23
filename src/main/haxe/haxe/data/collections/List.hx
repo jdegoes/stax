@@ -68,7 +68,7 @@ class List<T> implements Collection<List<T>, T> {
     _show   = show; 
   }
 
-  public function empty<C, T>(): Foldable<C, T> {
+  public function empty<C, D>(): Foldable<C, D> {
     return cast nil();
   }
 
@@ -247,13 +247,13 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   /** Override Foldable to provide higher performance: */
-  public function map(f: T -> T): List<T> {
-    return foldr(create(_order, _equal, _hash, _show), function(e, list) return list.cons(f(e)));
+  public function map<B>(f: T -> B): List<B> {
+    return foldr(create(), function(e, list) return list.cons(f(e)));
   }
 
   /** Override Foldable to provide higher performance: */
-  public function flatMap(f: T -> Iterable<T>): List<T> {
-    return foldr(create(_order, _equal, _hash, _show), function(e, list) return list.prependAll(f(e)));
+  public function flatMap<B>(f: T -> Iterable<B>): List<B> {
+    return foldr(create(), function(e, list) return list.prependAll(f(e)));
   }
 
   /** Override Foldable to provide higher performance: */

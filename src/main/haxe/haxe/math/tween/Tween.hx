@@ -28,7 +28,7 @@ class Tween {
   public static function linear(state1: Dynamic<Float>, state2: Dynamic<Float>, ?def = 0.0): Tweener {
     var combinedFields = Reflect.fields(state1).toSet().addAll(Reflect.fields(state2));
     
-    var data = combinedFields.mapTo(Set.create(), function(name: String): Tuple2<String, {start: Float, delta: Float}> {
+    var data = combinedFields.map(function(name: String): Tuple2<String, {start: Float, delta: Float}> {
       var start: Float = OptionExtensions.toOption(Reflect.field(state1, name)).getOrElseC(def);
       var end:   Float = OptionExtensions.toOption(Reflect.field(state2, name)).getOrElseC(def);
       

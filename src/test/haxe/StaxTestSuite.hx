@@ -15,6 +15,7 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 import PreludeTest;
+import haxe.functional.FoldableExtensionsTestCase;
 
 import Prelude;
 
@@ -27,7 +28,8 @@ import haxe.data.collections.MapTestCase;
 import haxe.data.collections.SetTestCase;
 import haxe.data.collections.ListTestCase;
 import haxe.data.transcode.JValueTestCase;
-import haxe.functional.PartialFunctionTestCase;
+import haxe.functional.PartialFunctionTestCase;         
+import haxe.functional.FoldableExtensionsTestCase;
 import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
@@ -66,7 +68,8 @@ class StaxTestSuite {
           new SetTestCase(),
           new ListTestCase(),
           new LoggerTestCase(),
-          new JsonTestCase(),
+          new JsonTestCase(),   
+          new FoldableExtensionsTestCase(),
           new PartialFunctionTestCase(),   
           new TweenTestCase(),
 #if !(neko || php || cpp)  

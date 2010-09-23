@@ -57,7 +57,7 @@ class Set<T> implements Collection<Set<T>, T> {
     return _map.containsKey(e);
   }
   
-  public function empty<C, T>(): Foldable<C, T> {
+  public function empty<C, D>(): Foldable<C, D> {
     return cast create();
   }
   

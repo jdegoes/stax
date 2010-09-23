@@ -106,7 +106,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return get;
   }
   
-  public function empty<C, T>(): Foldable<C, T> {
+  public function empty<C, D>(): Foldable<C, D> {
     return cast create();
   }
   

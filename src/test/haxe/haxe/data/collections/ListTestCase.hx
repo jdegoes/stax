@@ -210,6 +210,12 @@ class ListTestCase extends TestCase {
   assertNotEquals(0, newList().hashCode());
   assertNotEquals(0, newList([1,2]).hashCode());
   }
+  
+  public function testIntListMapToString() {
+    var list = List.create().addAll([1,2,3]);
+    var slist : Foldable<List<String>, String> = list.map(function(i) return i.toString());
+    assertEquals(["1", "2", "3"], slist.toArray()); 
+  }
      
 
   function newList<T>(?values : Array<T>) : List<T> {

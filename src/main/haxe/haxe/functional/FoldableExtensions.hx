@@ -15,10 +15,13 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package haxe.functional;
+import haxe.data.collections.Set;
+import haxe.data.collections.List;
 
 import Prelude;
 import PreludeExtensions;
-import haxe.functional.Foldable;
+import haxe.functional.Foldable; 
+import haxe.data.collections.Map;
 
 using PreludeExtensions;
 
@@ -69,10 +72,8 @@ class FoldableExtensions {
     });
   }
   
-  public static function map<A, B>(foldable: Foldable<A, B>, f: B -> B): A {
-    return foldable.foldl(cast foldable.empty(), function(a, b) {
-      return foldable.append(a, f(b));
-    });
+  public static function map<A, B, C, D>(src: Foldable<A, B>, f: B -> D) : Foldable<C, D> {
+    return mapTo(src, src.empty(), f);
   }
   
   public static function mapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> D): C {
@@ -81,14 +82,8 @@ class FoldableExtensions {
     });
   }
   
-  public static function flatMap<A, B>(foldable: Foldable<A, B>, f: B -> Foldable<A, B>): A {
-    return foldable.foldl(cast foldable.empty(), function(a, b) {
-      var fb = f(b);
-      
-      return fb.foldl(a, function(a, b) {
-        return fb.append(a, b);
-      });
-    });
+  public static function flatMap<A, B, C, D>(src: Foldable<A, B>, f: B -> Foldable<C, D>): C {
+    return flatMapTo(src, src.empty(), f);
   }
   
   public static function flatMapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> Foldable<C, D>): C {
@@ -348,6 +343,27 @@ class FoldableExtensions {
       if(null == show)
       show = Stax.getShowFor(b);
       return a + prefix + show(b);
+    });
+  }
+  
+  public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  
+    var dest = Map.create();
+    return foldable.foldl(dest, function(a, b) {
+      return dest.append(a, b);
+    });
+  }
+  
+  public static function toList<A, B>(foldable : Foldable<A, B>) : List<B> {  
+    var dest = List.create();
+    return foldable.foldl(dest, function(a, b) {
+      return dest.append(a, b);
+    });
+  }
+  
+  public static function toSet<A, B>(foldable : Foldable<A, B>) : Set<B> {  
+    var dest = Set.create();
+    return foldable.foldl(dest, function(a, b) {
+      return dest.append(a, b);
     });
   }
 }
