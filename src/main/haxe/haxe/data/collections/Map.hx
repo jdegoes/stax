@@ -106,8 +106,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return get;
   }
   
-  public function empty(): Map<K, V> {
-    return if (size() == 0) this; else Map.create(_keyOrder, _keyEqual, _keyHash, _keyShow, _valueOrder, _valueEqual, _valueHash, _valueShow);
+  public function empty<C, T>(): Foldable<C, T> {
+    return cast create();
   }
   
   public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {

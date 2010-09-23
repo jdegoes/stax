@@ -253,8 +253,12 @@ class StringExtensions {
   public static function hashCode(v: String) {
     var hash = 49157;
     
-    for (i in 0...v.length) {
-      hash += (v.charCodeAt(i) + 24593) * 49157;
+    for (i in 0...v.length) {       
+#if neko
+      hash += (24593 + v.charCodeAt(i)) * 49157;
+#else
+      hash += (24593 + untyped v.cca(i)) * 49157;
+#end
     }
     
     return hash;

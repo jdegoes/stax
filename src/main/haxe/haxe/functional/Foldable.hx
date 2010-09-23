@@ -22,7 +22,8 @@ package haxe.functional;
  */
 interface Foldable<A, B> {
   /** Creates an "empty" version of the foldable structure. */
-  function empty(): A;
+//  function empty(): A;        
+  function empty<C, T>() : Foldable<C, T>;  
   
   // function empty<C, D>(): Foldable<C, D> <- suggested by John
   

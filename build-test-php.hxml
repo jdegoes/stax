@@ -1,0 +1,5 @@
+# @tm-preview                          
+-cp ./src/main/haxe/
+-cp ./src/test/haxe/
+-php bin
+-main StaxTestSuite
