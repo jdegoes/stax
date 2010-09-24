@@ -5229,6 +5229,36 @@ haxe.data.collections.IterableExtensions.union = function(iter1,iter2) {
 		return a == b;
 	});
 }
+haxe.data.collections.IterableExtensions.partition = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.partition(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.partitionWhile = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.partitionWhile(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.count = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.count(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.countWhile = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.countWhile(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.elements = function(iter) {
+	return IterableExtensions.toArray(iter);
+}
+haxe.data.collections.IterableExtensions.appendAll = function(iter,i) {
+	return haxe.data.collections.IterableExtensions.appendAll(IterableExtensions.toArray(iter),i);
+}
+haxe.data.collections.IterableExtensions.isEmpty = function(iter) {
+	return !iter.iterator().hasNext();
+}
+haxe.data.collections.IterableExtensions.find = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.find(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.forAll = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.forAll(IterableExtensions.toArray(iter),f);
+}
+haxe.data.collections.IterableExtensions.forAny = function(iter,f) {
+	return haxe.data.collections.IterableExtensions.forAny(IterableExtensions.toArray(iter),f);
+}
 haxe.data.collections.IterableExtensions.prototype.__class__ = haxe.data.collections.IterableExtensions;
 haxe.functional.FoldableExtensions = function() { }
 haxe.functional.FoldableExtensions.__name__ = ["haxe","functional","FoldableExtensions"];
@@ -6350,23 +6380,14 @@ haxe.data.collections.ArrayExtensions.mkString = function(arr,sep,show) {
 		return (a + prefix) + show(b);
 	});
 }
-haxe.data.collections.ArrayExtensions.toMap = function(arr) {
-	var dest = haxe.data.collections.Map.create();
-	return ArrayExtensions.foldl(arr,dest,function(a,b) {
-		return dest.append(a,b);
-	});
-}
 haxe.data.collections.ArrayExtensions.toList = function(arr) {
-	var dest = haxe.data.collections.List.create();
-	return ArrayExtensions.foldl(arr,dest,function(a,b) {
-		return dest.append(a,b);
-	});
+	return haxe.data.collections.List.create().addAll(arr);
 }
 haxe.data.collections.ArrayExtensions.toSet = function(arr) {
-	var dest = haxe.data.collections.Set.create();
-	return ArrayExtensions.foldl(arr,dest,function(a,b) {
-		return dest.append(a,b);
-	});
+	return haxe.data.collections.Set.create().addAll(arr);
+}
+haxe.data.collections.ArrayExtensions.toMap = function(arr) {
+	return haxe.data.collections.Map.create().addAll(arr);
 }
 haxe.data.collections.ArrayExtensions.prototype.__class__ = haxe.data.collections.ArrayExtensions;
 haxe.io.http.HttpString = function() { }

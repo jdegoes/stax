@@ -20,6 +20,7 @@ import Prelude;
 
 //using haxe.functional.FoldableExtensions;
 using PreludeExtensions;
+using haxe.data.collections.IterableExtensions;
 
 class IterableExtensions {
   public static function size<T>(iterable: Iterable<T>): Int {
@@ -361,5 +362,44 @@ class IterableExtensions {
   public static function union<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
     return unionBy(iter1, iter2, function(a, b) { return a == b; });
   }
+   
+  public static function partition<T>(iter: Iterable<T>, f: T -> Bool): Tuple2<Iterable<T>, Iterable<T>> {
+    return cast iter.toArray().partition(f);
+  }
+  
+  public static function partitionWhile<T>(iter: Iterable<T>, f: T -> Bool): Tuple2<Iterable<T>, Iterable<T>> { 
+    return cast iter.toArray().partitionWhile(f);
+  }
 
+  public static function count<T>(iter: Iterable<T>, f: T -> Bool): Int {
+    return iter.toArray().count(f);
+  }
+  
+  public static function countWhile<T>(iter: Iterable<T>, f: T -> Bool): Int {
+    return iter.toArray().countWhile(f);
+  }
+  
+  public static function elements<T>(iter: Iterable<T>): Iterable<T> {
+    return iter.toArray();
+  }
+  
+  public static function appendAll<T>(iter: Iterable<T>, i: Iterable<T>): Iterable<T> {
+    return iter.toArray().appendAll(i);
+  }
+  
+  public static function isEmpty<T>(iter: Iterable<T>): Bool {
+    return !iter.iterator().hasNext();
+  }
+   
+  public static function find<T>(iter: Iterable<T>, f: T -> Bool): Option<T> {
+    return iter.toArray().find(f);
+  }
+  
+  public static function forAll<T>(iter: Iterable<T>, f: T -> Bool): Bool {
+    return iter.toArray().forAll(f);
+  }
+  
+  public static function forAny<T>(iter: Iterable<T>, f: T -> Bool): Bool {
+    return iter.toArray().forAny(f);
+  }
 }

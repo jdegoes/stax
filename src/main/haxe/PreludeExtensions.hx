@@ -1102,9 +1102,7 @@ class IterableExtensions {
   
   public static function toArray<T>(i: Iterable<T>) {
     var a = [];
-    
     for (e in i) a.push(e);
-
     return a;
   }
 }

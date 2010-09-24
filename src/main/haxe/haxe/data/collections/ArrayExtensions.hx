@@ -218,25 +218,15 @@ class ArrayExtensions {
     });
   }
   
-  public static function toMap<K, V>(arr : Array<Tuple2<K, V>>) : Map<K, V> {  
-    var dest = Map.create();
-    return arr.foldl(dest, function(a, b) {
-      return dest.append(a, b);
-    });
+  public static function toList<T>(arr : Array<T>) {
+    return haxe.data.collections.List.create().addAll(arr);
   }
   
-  public static function toList<T>(arr : Array<T>) : List<T> {  
-    var dest = List.create();
-    return arr.foldl(dest, function(a, b) {
-      return dest.append(a, b);
-    });
+  public static function toSet<T>(arr : Array<T>) {
+    return haxe.data.collections.Set.create().addAll(arr);
   }
   
-  public static function toSet<T>(arr : Array<T>) : Set<T> {  
-    var dest = Set.create();
-    return arr.foldl(dest, function(a, b) {
-      return dest.append(a, b);
-    });
-  }
-   
+  public static function toMap<K, V>(arr : Array<Tuple2<K, V>>) {
+    return haxe.data.collections.Map.create().addAll(arr);
+  } 
 }
