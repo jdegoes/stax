@@ -84,5 +84,21 @@ class FoldableExtensionsTestCase extends TestCase {
   public function testForAny() {
     assertFalse([1,2,3].toSet().forAny(function(v) return v > 3));
     assertTrue([1,2,3].toSet().forAny(function(v) return v < 2));
+  } 
+  
+  public function testNubBy() {
+    assertEquals([1,2,3].toList(), [1,2,2,3,1].toList().nub());
+  }                        
+  
+  public function testNub() {
+    assertEquals([1,2,3].toList(), [1,2,2,3,1].toList().nubBy(function(a,b) return a == b));
+  }
+  
+  public function testIntersectBy() {
+    assertEquals([2,3].toList(), [1,2,3].toList().intersectBy([2,3,4,5].toList(), function(a,b) return a == b));
+  }
+  
+  public function testIntersect() {
+    assertEquals([2,3].toList(), [1,2,3].toList().intersect([2,3,4,5].toList()));  
   }
 }

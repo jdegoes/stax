@@ -111,7 +111,7 @@ class ArrayExtensions {
     for(i in 1...arr.length)
       result.push(f(arr[i], accum));
     
-    return cast result;
+    return result;
   }
   
   public static function scanr1<T>(arr:Array<T>, f: T -> T -> T): Array<T> {
