@@ -1731,7 +1731,7 @@ typedef Document = {
     
     public function getElementsByTagNameNS(namespaceURI: DOMString, localName: DOMString): DomCollection<Node>;
     
-    public function getElementById(elementId: DOMString): HTMLElement;
+    public function getElementById(elementId: DOMString): Element;
     
     public function adoptNode(source: Node): Node;
     

@@ -223,7 +223,7 @@ class Quirks {
   /** Retrieves the rules comprising the specified CSS sheet.
    */
   public static function getCssRules(sheet: CSSStyleSheet): DomCollection<CSSRule> {
-    return if (untyped sheet.cssRules != null) sheet.cssRules;
+    return if (sheet.cssRules != null) sheet.cssRules;
            else untyped sheet.rules;
   }
 
