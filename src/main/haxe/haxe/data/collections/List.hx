@@ -68,9 +68,8 @@ class List<T> implements Collection<List<T>, T> {
     _show   = show; 
   }
 
-  public function empty(): List<T> {
-    return if (size() == 0) this;
-           else nil(_order, _equal, _hash, _show);
+  public function empty<C, D>(): Foldable<C, D> {
+    return cast nil();
   }
 
   /** Prepends an element to the list. This method is dramatically faster than
@@ -106,8 +105,8 @@ class List<T> implements Collection<List<T>, T> {
     return result;
   }
 
-  public function append(a: List<T>, b: T): List<T> {
-    return a.add(b);
+  public function append(b: T): List<T> {
+    return add(b);
   }
 
   public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {
@@ -155,7 +154,7 @@ class List<T> implements Collection<List<T>, T> {
    * the cons() method should be used to grow the list.
    */
   public function add(t: T): List<T> {
-    return foldr(empty().cons(t), function(b, a) {
+    return foldr(create(_order, _equal, _hash, _show).cons(t), function(b, a) {
       return a.cons(b);
     });
   }
@@ -167,7 +166,7 @@ class List<T> implements Collection<List<T>, T> {
 
     a.reverse();
 
-    var r = empty();
+    var r = create(_order, _equal, _hash, _show);
 
     for (e in a) r = r.cons(e);
 
@@ -248,24 +247,24 @@ class List<T> implements Collection<List<T>, T> {
   }
 
   /** Override Foldable to provide higher performance: */
-  public function map(f: T -> T): List<T> {
-    return foldr(empty(), function(e, list) return list.cons(f(e)));
+  public function map<B>(f: T -> B): List<B> {
+    return foldr(create(), function(e, list) return list.cons(f(e)));
   }
 
   /** Override Foldable to provide higher performance: */
-  public function flatMap(f: T -> Iterable<T>): List<T> {
-    return foldr(empty(), function(e, list) return list.prependAll(f(e)));
+  public function flatMap<B>(f: T -> Iterable<B>): List<B> {
+    return foldr(create(), function(e, list) return list.prependAll(f(e)));
   }
 
   /** Override Foldable to provide higher performance: */
   public function filter(f: T -> Bool): List<T> {
-    return foldr(empty(), function(e, list) return if (f(e)) list.cons(e) else list);
+    return foldr(create(_order, _equal, _hash, _show), function(e, list) return if (f(e)) list.cons(e) else list);
   }
 
   /** Returns a list that contains all the elements of this list in reverse
    * order */
   public function reverse(): List<T> {
-    return foldl(empty(), function(a, b) return a.cons(b));
+    return foldl(create(_order, _equal, _hash, _show), function(a, b) return a.cons(b));
   }
 
   /** Zips this list and the specified list into a list of tuples. */
@@ -298,7 +297,7 @@ class List<T> implements Collection<List<T>, T> {
   public function sort(): List<T> {
     var a = this.toArray();
     a.sort(order);
-    var result = empty();
+    var result = create(_order, _equal, _hash, _show);
 
     for (i in 0...a.length) {
       result = result.cons(a[a.length - 1 - i]);

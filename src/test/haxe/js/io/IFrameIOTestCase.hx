@@ -56,7 +56,7 @@ class IFrameIOTestCase extends TestCase {
   
   override public function afterAll(): Void {
   }
-  
+
   public function testSendOfTinyStringPacketIsReceived(): Void {
     var self = this;
     
@@ -80,7 +80,7 @@ class IFrameIOTestCase extends TestCase {
     
     assertTrue(true);
   }
-  
+
   public function XtestSendOfLargeStringPacketIsReceived(): Void {
     var string = "";
     

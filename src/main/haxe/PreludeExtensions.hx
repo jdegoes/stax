@@ -253,8 +253,12 @@ class StringExtensions {
   public static function hashCode(v: String) {
     var hash = 49157;
     
-    for (i in 0...v.length) {
-      hash += (v.charCodeAt(i) + 24593) * 49157;
+    for (i in 0...v.length) {       
+#if neko
+      hash += (24593 + v.charCodeAt(i)) * 49157;
+#else
+      hash += (24593 + untyped v.cca(i)) * 49157;
+#end
     }
     
     return hash;
@@ -363,22 +367,14 @@ class ArrayExtensions {
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
     var n: Array<T> = [];
     
-    for (e in a) {
+    for (e in a)
       if (f(e)) n.push(e);
-    }
     
     return n;
   }
   
   public static function size<T>(a: Array<T>): Int {
-    var count: Int = 0;
-    
-    if (a != []) {
-      for (e in a) {
-        ++count;
-      }
-    }
-    return count;
+    return a.length;
   }
   
   public static function indexOf<T>(a: Array<T>, t: T): Int {
@@ -1098,9 +1094,7 @@ class IterableExtensions {
   
   public static function toArray<T>(i: Iterable<T>) {
     var a = [];
-    
     for (e in i) a.push(e);
-
     return a;
   }
 }

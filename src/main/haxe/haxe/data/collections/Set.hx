@@ -57,13 +57,12 @@ class Set<T> implements Collection<Set<T>, T> {
     return _map.containsKey(e);
   }
   
-  public function empty(): Set<T> {    
-    var m : FriendMap<T> = _map;
-    return if (size() == 0) this; else Set.create(m._keyOrder, m._keyEqual, m._keyHash, m._keyShow);
+  public function empty<C, D>(): Foldable<C, D> {
+    return cast create();
   }
   
-  public function append(s: Set<T>, t: T): Set<T> {
-    return s.copyWithMod(s._map.set(t, t));
+  public function append(t: T): Set<T> {
+    return copyWithMod(_map.set(t, t));
   }
   
   public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {

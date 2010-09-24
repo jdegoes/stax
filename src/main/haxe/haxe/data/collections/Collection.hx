@@ -33,5 +33,5 @@ interface Collection<C, T> implements Foldable<C, T> {
   
   public function remove(t: T): C;
   
-  public function removeAll(t: Iterable<T>): C;
+  public function removeAll(t: Iterable<T>): C;       
 }
