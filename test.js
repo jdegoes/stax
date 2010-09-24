@@ -5396,14 +5396,6 @@ haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
 haxe.functional.FoldableExtensions.elements = function(foldable) {
 	return haxe.functional.FoldableExtensions.toArray(foldable);
 }
-haxe.functional.FoldableExtensions.toArray = function(foldable) {
-	var es = [];
-	foldable.foldl(foldable.empty(),function(a,b) {
-		es.push(b);
-		return a;
-	});
-	return es;
-}
 haxe.functional.FoldableExtensions.concat = function(foldable,rest) {
 	return rest.foldl(foldable,function(a,b) {
 		return foldable.append(a,b);
@@ -5566,6 +5558,14 @@ haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
 		return (a + prefix) + show(b);
 	});
 }
+haxe.functional.FoldableExtensions.toArray = function(foldable) {
+	var es = [];
+	foldable.foldl(foldable.empty(),function(a,b) {
+		es.push(b);
+		return a;
+	});
+	return es;
+}
 haxe.functional.FoldableExtensions.toMap = function(foldable) {
 	var dest = haxe.data.collections.Map.create();
 	return foldable.foldl(dest,function(a,b) {
@@ -5623,7 +5623,7 @@ StaxTestSuite.__name__ = ["StaxTestSuite"];
 StaxTestSuite.main = function() {
 	haxe.framework.Injector.forever(function(c) {
 		c.bind(haxe.time.ScheduledExecutor,haxe.time.ScheduledExecutorSystem);
-		var runner = (new haxe.test.Runner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.functional.FoldableExtensionsTestCase(),new haxe.functional.PartialFunctionTestCase(),new haxe.math.tween.TweenTestCase(),new haxe.time.ScheduledExecutorTestCase(),new haxe.net.UrlExtensionsTestCase(),new haxe.util.StringExtensionsTestCase(),new haxe.framework.InjectorTestCase(),new haxe.net.HttpHeaderExtensionsTestCase(),new haxe.math.geom.PointTestCase(),new haxe.util.OrderExtensionsTestCase(),new haxe.util.GuidTestCase(),new haxe.io.http.HttpStringTestCase(),new js.io.IFrameIOTestCase(),new haxe.io.http.HttpJValueJsonpTestCase(),new js.dom.HTMLElementExtensionsTestCase(),new js.dom.QuirksTestCase(),new haxe.util.ObjectExtensionsTestCase(),new haxe.data.transcode.TranscodeJValueExtensionsTestCase()]);
+		var runner = (new haxe.test.Runner()).addAll([new PreludeTestCase(),new haxe.data.transcode.JValueTestCase(),new haxe.data.collections.ArrayExtensionsTestCase(),new haxe.data.collections.MapTestCase(),new haxe.data.collections.SetTestCase(),new haxe.data.collections.ListTestCase(),new haxe.io.log.LoggerTestCase(),new haxe.text.json.JsonTestCase(),new haxe.functional.FoldableExtensionsTestCase(),new haxe.functional.PartialFunctionTestCase(),new haxe.math.tween.TweenTestCase(),new haxe.time.ScheduledExecutorTestCase(),new haxe.net.UrlExtensionsTestCase(),new haxe.util.StringExtensionsTestCase(),new haxe.framework.InjectorTestCase(),new haxe.net.HttpHeaderExtensionsTestCase(),new haxe.math.geom.PointTestCase(),new haxe.util.OrderExtensionsTestCase(),new haxe.util.GuidTestCase(),new haxe.io.http.HttpStringTestCase(),new js.io.IFrameIOTestCase(),new haxe.io.http.HttpJValueJsonpTestCase(),new js.dom.HTMLElementExtensionsTestCase(),new js.dom.QuirksTestCase(),new haxe.util.ObjectExtensionsTestCase(),new haxe.data.transcode.TranscodeJValueExtensionsTestCase()]);
 		haxe.test.ui.Report.create(runner);
 		runner.run();
 		return Unit.Unit;
@@ -6123,6 +6123,252 @@ haxe.Stack.makeStack = function(s) {
 	return m;
 }
 haxe.Stack.prototype.__class__ = haxe.Stack;
+haxe.data.collections.ArrayExtensions = function() { }
+haxe.data.collections.ArrayExtensions.__name__ = ["haxe","data","collections","ArrayExtensions"];
+haxe.data.collections.ArrayExtensions.partition = function(arr,f) {
+	return ArrayExtensions.foldl(arr,Tuple2.create([],[]),function(a,b) {
+		if(f(b)) a._1.push(b);
+		else a._2.push(b);
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.partitionWhile = function(arr,f) {
+	var partitioning = true;
+	return ArrayExtensions.foldl(arr,Tuple2.create([],[]),function(a,b) {
+		if(partitioning) {
+			if(f(b)) a._1.push(b);
+			else {
+				partitioning = false;
+				a._2.push(b);
+			}
+		}
+		else a._2.push(b);
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.mapTo = function(src,dest,f) {
+	return ArrayExtensions.foldl(src,ArrayExtensions.snapshot(dest),function(a,b) {
+		a.push(f(b));
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.flatMapTo = function(src,dest,f) {
+	return ArrayExtensions.foldl(src,dest,function(a,b) {
+		return ArrayExtensions.foldl(f(b),a,function(a1,b1) {
+			a1.push(b1);
+			return a1;
+		});
+	});
+}
+haxe.data.collections.ArrayExtensions.count = function(arr,f) {
+	return ArrayExtensions.foldl(arr,0,function(a,b) {
+		return a + ((f(b)?1:0));
+	});
+}
+haxe.data.collections.ArrayExtensions.countWhile = function(arr,f) {
+	var counting = true;
+	return ArrayExtensions.foldl(arr,0,function(a,b) {
+		return (!counting?a:(f(b)?a + 1:(function($this) {
+			var $r;
+			counting = false;
+			$r = a;
+			return $r;
+		}(this))));
+	});
+}
+haxe.data.collections.ArrayExtensions.scanl = function(arr,init,f) {
+	var accum = init;
+	var result = [init];
+	{
+		var _g = 0;
+		while(_g < arr.length) {
+			var e = arr[_g];
+			++_g;
+			result.push(f(e,accum));
+		}
+	}
+	return result;
+}
+haxe.data.collections.ArrayExtensions.scanr = function(arr,init,f) {
+	var a = ArrayExtensions.snapshot(arr);
+	a.reverse();
+	return haxe.data.collections.ArrayExtensions.scanl(a,init,f);
+}
+haxe.data.collections.ArrayExtensions.scanl1 = function(arr,f) {
+	var result = [];
+	if(0 == arr.length) return result;
+	var accum = arr[0];
+	result.push(accum);
+	{
+		var _g1 = 1, _g = arr.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			result.push(f(arr[i],accum));
+		}
+	}
+	return result;
+}
+haxe.data.collections.ArrayExtensions.scanr1 = function(arr,f) {
+	var a = ArrayExtensions.snapshot(arr);
+	a.reverse();
+	return haxe.data.collections.ArrayExtensions.scanl1(a,f);
+}
+haxe.data.collections.ArrayExtensions.elements = function(arr) {
+	return ArrayExtensions.snapshot(arr);
+}
+haxe.data.collections.ArrayExtensions.appendAll = function(arr,i) {
+	var acc = ArrayExtensions.snapshot(arr);
+	{ var $it0 = i.iterator();
+	while( $it0.hasNext() ) { var e = $it0.next();
+	acc.push(e);
+	}}
+	return acc;
+}
+haxe.data.collections.ArrayExtensions.isEmpty = function(arr) {
+	return arr.length == 0;
+}
+haxe.data.collections.ArrayExtensions.find = function(arr,f) {
+	return ArrayExtensions.foldl(arr,Option.None,function(a,b) {
+		return (function($this) {
+			var $r;
+			var $e = (a);
+			switch( $e[1] ) {
+			case 0:
+			{
+				$r = OptionExtensions.filter(OptionExtensions.toOption(b),f);
+			}break;
+			default:{
+				$r = a;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.forAll = function(arr,f) {
+	return ArrayExtensions.foldl(arr,true,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case true:{
+				$r = f(b);
+			}break;
+			case false:{
+				$r = false;
+			}break;
+			default:{
+				$r = null;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.forAny = function(arr,f) {
+	return ArrayExtensions.foldl(arr,false,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case false:{
+				$r = f(b);
+			}break;
+			case true:{
+				$r = true;
+			}break;
+			default:{
+				$r = null;
+			}break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.exists = function(arr,f) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.data.collections.ArrayExtensions.find(arr,f));
+		switch( $e[1] ) {
+		case 1:
+		var v = $e[2];
+		{
+			$r = true;
+		}break;
+		case 0:
+		{
+			$r = false;
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+haxe.data.collections.ArrayExtensions.existsP = function(arr,ref,f) {
+	var result = false;
+	{
+		var _g = 0;
+		while(_g < arr.length) {
+			var e = arr[_g];
+			++_g;
+			if(f(e,ref)) return true;
+		}
+	}
+	return false;
+}
+haxe.data.collections.ArrayExtensions.nubBy = function(arr,f) {
+	return ArrayExtensions.foldl(arr,[],function(a,b) {
+		return (haxe.data.collections.ArrayExtensions.existsP(a,b,f)?a:ArrayExtensions.append(a,b));
+	});
+}
+haxe.data.collections.ArrayExtensions.nub = function(arr) {
+	return haxe.data.collections.ArrayExtensions.nubBy(arr,function(a,b) {
+		return a == b;
+	});
+}
+haxe.data.collections.ArrayExtensions.intersectBy = function(arr1,arr2,f) {
+	return ArrayExtensions.foldl(arr1,[],function(a,b) {
+		return (haxe.data.collections.ArrayExtensions.existsP(arr2,b,f)?ArrayExtensions.append(a,b):a);
+	});
+}
+haxe.data.collections.ArrayExtensions.intersect = function(arr1,arr2) {
+	return haxe.data.collections.ArrayExtensions.intersectBy(arr1,arr2,function(a,b) {
+		return a == b;
+	});
+}
+haxe.data.collections.ArrayExtensions.mkString = function(arr,sep,show) {
+	if(sep == null) sep = ", ";
+	var isFirst = true;
+	return ArrayExtensions.foldl(arr,"",function(a,b) {
+		var prefix = (isFirst?(function($this) {
+			var $r;
+			isFirst = false;
+			$r = "";
+			return $r;
+		}(this)):sep);
+		if(null == show) show = Stax.getShowFor(b);
+		return (a + prefix) + show(b);
+	});
+}
+haxe.data.collections.ArrayExtensions.toMap = function(arr) {
+	var dest = haxe.data.collections.Map.create();
+	return ArrayExtensions.foldl(arr,dest,function(a,b) {
+		return dest.append(a,b);
+	});
+}
+haxe.data.collections.ArrayExtensions.toList = function(arr) {
+	var dest = haxe.data.collections.List.create();
+	return ArrayExtensions.foldl(arr,dest,function(a,b) {
+		return dest.append(a,b);
+	});
+}
+haxe.data.collections.ArrayExtensions.toSet = function(arr) {
+	var dest = haxe.data.collections.Set.create();
+	return ArrayExtensions.foldl(arr,dest,function(a,b) {
+		return dest.append(a,b);
+	});
+}
+haxe.data.collections.ArrayExtensions.prototype.__class__ = haxe.data.collections.ArrayExtensions;
 haxe.io.http.HttpString = function() { }
 haxe.io.http.HttpString.__name__ = ["haxe","io","http","HttpString"];
 haxe.io.http.HttpString.prototype.__class__ = haxe.io.http.HttpString;
@@ -13573,6 +13819,155 @@ js.UpdateStatus.prototype.__class__ = js.UpdateStatus;
 js.ErrorSeverity = function() { }
 js.ErrorSeverity.__name__ = ["js","ErrorSeverity"];
 js.ErrorSeverity.prototype.__class__ = js.ErrorSeverity;
+haxe.data.collections.ArrayExtensionsTestCase = function(p) { if( p === $_ ) return; {
+	haxe.test.TestCase.apply(this,[]);
+}}
+haxe.data.collections.ArrayExtensionsTestCase.__name__ = ["haxe","data","collections","ArrayExtensionsTestCase"];
+haxe.data.collections.ArrayExtensionsTestCase.__super__ = haxe.test.TestCase;
+for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.ArrayExtensionsTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testAppendAll = function() {
+	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.appendAll([1],[2,3]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 80, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testAppendAll"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testCount = function() {
+	this.assertEquals(3,haxe.data.collections.ArrayExtensions.count([1,2,3,4,5],function(v) {
+		return v % 2 != 0;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 51, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testCount"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testCountWhile = function() {
+	this.assertEquals(2,haxe.data.collections.ArrayExtensions.count([1,2,3,4,5],function(v) {
+		return v < 3;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 55, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testCountWhile"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testExists = function() {
+	this.assertFalse(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
+		return v == 4;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 104, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+	this.assertTrue(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
+		return v == 2;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 105, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testExistsP = function() {
+	var f = function(v,ref) {
+		return v == ref;
+	}
+	this.assertFalse(haxe.data.collections.ArrayExtensions.existsP([1,2,3],4,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+	this.assertTrue(haxe.data.collections.ArrayExtensions.existsP([1,2,3],2,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 111, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testFind = function() {
+	this.assertEquals(Option.None,haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
+		return v == 4;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 89, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+	this.assertEquals(Option.Some(2),haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
+		return v == 2;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 90, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testFlatMapTo = function() {
+	var r = haxe.data.collections.ArrayExtensions.flatMapTo(["2","3,4,5","6,7"],[1],function(v) {
+		return ArrayExtensions.map(v.split(","),function(i) {
+			return Std.parseInt(i);
+		});
+	});
+	this.assertEquals([1,2,3,4,5,6,7],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 47, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFlatMapTo"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testForAll = function() {
+	this.assertTrue(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
+		return v < 4;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 94, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+	this.assertFalse(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
+		return v < 2;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 95, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testForAny = function() {
+	this.assertFalse(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
+		return v > 3;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 99, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+	this.assertTrue(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
+		return v < 2;
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 100, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testIntersect = function() {
+	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersect([1,2,3],[2,3,4,5]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 127, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersect"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testIntersectBy = function() {
+	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersectBy([1,2,3],[2,3,4,5],function(a,b) {
+		return a == b;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 123, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersectBy"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testIsEmpty = function() {
+	this.assertTrue(haxe.data.collections.ArrayExtensions.isEmpty([]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 84, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+	this.assertFalse(haxe.data.collections.ArrayExtensions.isEmpty([1]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 85, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testMapTo = function() {
+	var r = haxe.data.collections.ArrayExtensions.mapTo([2,3],["1"],function(v) {
+		return "" + v;
+	});
+	this.assertEquals(["1","2","3"],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 40, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMapTo"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testMkString = function() {
+	this.assertEquals("A-B-C",haxe.data.collections.ArrayExtensions.mkString(["a","b","c"],"-",function(s) {
+		return s.toUpperCase();
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 131, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMkString"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testNub = function() {
+	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nubBy([1,2,2,3,1],function(a,b) {
+		return a == b;
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 119, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNub"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testNubBy = function() {
+	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nub([1,2,2,3,1]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 115, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNubBy"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testPartition = function() {
+	var t = haxe.data.collections.ArrayExtensions.partition([1,2,3,4,5,6],function(v) {
+		return v % 2 != 0;
+	});
+	this.assertEquals(Tuple2.create([1,3,5],[2,4,6]),t,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 30, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testPartition"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testPartitionWhile = function() {
+	var t = haxe.data.collections.ArrayExtensions.partitionWhile([1,2,3,4,5,6],function(v) {
+		return v < 4;
+	});
+	this.assertEquals(Tuple2.create([1,2,3],[4,5,6]),t,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 35, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testPartitionWhile"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanl = function() {
+	var r = haxe.data.collections.ArrayExtensions.scanl([1,2,3,4,5],1,function(a,b) {
+		return a + b;
+	});
+	this.assertEquals([1,2,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 60, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanl1 = function() {
+	var r = haxe.data.collections.ArrayExtensions.scanl1([1,2,3,4,5],function(a,b) {
+		return a + b;
+	});
+	this.assertEquals([1,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 71, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl1"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanr = function() {
+	var r = haxe.data.collections.ArrayExtensions.scanr([1,2,3,4,5],1,function(a,b) {
+		return a + b;
+	});
+	this.assertEquals([1,6,5,4,3,2],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 65, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanr1 = function() {
+	var r = haxe.data.collections.ArrayExtensions.scanr1([1,2,3,4,5],function(a,b) {
+		return a + b;
+	});
+	this.assertEquals([5,9,8,7,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 76, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr1"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testToList = function() {
+	var list = haxe.data.collections.ArrayExtensions.toList([1,2,3]);
+	this.assertIs(list,haxe.data.collections.List,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 142, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+	this.assertEquals(3,list.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 143, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testToMap = function() {
+	var map = haxe.data.collections.ArrayExtensions.toMap([Tuple2.create("a",1),Tuple2.create("b",2)]);
+	this.assertIs(map,haxe.data.collections.Map,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 136, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+	this.assertEquals(2,map.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 137, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testToSet = function() {
+	var set = haxe.data.collections.ArrayExtensions.toSet([1,2,2,3,1]);
+	this.assertIs(set,haxe.data.collections.Set,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 148, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+	this.assertEquals(3,set.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 149, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+}
+haxe.data.collections.ArrayExtensionsTestCase.prototype.__class__ = haxe.data.collections.ArrayExtensionsTestCase;
 Std = function() { }
 Std.__name__ = ["Std"];
 Std["is"] = function(v,t) {

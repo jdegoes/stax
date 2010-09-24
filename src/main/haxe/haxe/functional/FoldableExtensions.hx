@@ -217,14 +217,6 @@ class FoldableExtensions {
     return toArray(foldable);
   }
   
-  public static function toArray<A, B>(foldable: Foldable<A, B>): Array<B> {
-    var es: Array<B> = [];
-    
-    foldable.foldl(foldable.empty(), function(a, b) { es.push(b); return a; });
-
-    return es;
-  }
-  
   public static function concat<A, B>(foldable: Foldable<A, B>, rest: Foldable<A, B>): A {
     return rest.foldl(cast foldable, function(a, b) {
       return foldable.append(a, b);
@@ -344,6 +336,14 @@ class FoldableExtensions {
       show = Stax.getShowFor(b);
       return a + prefix + show(b);
     });
+  }
+  
+  public static function toArray<A, B>(foldable: Foldable<A, B>): Array<B> {
+    var es: Array<B> = [];
+    
+    foldable.foldl(foldable.empty(), function(a, b) { es.push(b); return a; });
+
+    return es;
   }
   
   public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  

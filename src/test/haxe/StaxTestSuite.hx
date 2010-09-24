@@ -23,7 +23,8 @@ import haxe.test.Runner;
 import haxe.test.ui.Report;
                    
 import haxe.text.json.JsonTestCase;
-import haxe.io.log.LoggerTestCase;
+import haxe.io.log.LoggerTestCase;        
+import haxe.data.collections.ArrayExtensionsTestCase;
 import haxe.data.collections.MapTestCase;
 import haxe.data.collections.SetTestCase;
 import haxe.data.collections.ListTestCase;
@@ -63,7 +64,8 @@ class StaxTestSuite {
 #end      
         var runner = (new Runner()).addAll([   
           new PreludeTestCase(),    
-          new JValueTestCase(),
+          new JValueTestCase(),   
+          new ArrayExtensionsTestCase(),
           new MapTestCase(),
           new SetTestCase(),
           new ListTestCase(),
