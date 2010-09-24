@@ -367,22 +367,14 @@ class ArrayExtensions {
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
     var n: Array<T> = [];
     
-    for (e in a) {
+    for (e in a)
       if (f(e)) n.push(e);
-    }
     
     return n;
   }
   
   public static function size<T>(a: Array<T>): Int {
-    var count: Int = 0;
-    
-    if (a != []) {
-      for (e in a) {
-        ++count;
-      }
-    }
-    return count;
+    return a.length;
   }
   
   public static function indexOf<T>(a: Array<T>, t: T): Int {

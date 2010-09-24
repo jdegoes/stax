@@ -18,8 +18,8 @@ package haxe.data.collections;
 
 import Prelude;
 
-//using haxe.functional.FoldableExtensions;
 using PreludeExtensions;
+import PreludeExtensions;
 using haxe.data.collections.IterableExtensions;
 
 class IterableExtensions {
@@ -32,9 +32,7 @@ class IterableExtensions {
   }
   
   public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
-    return foldl(iter, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
-      return if (f(b)) append(a, b); else a;
-    });
+    return ArrayExtensions.filter(iter.toArray(), f);
   }
   
   public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
@@ -45,43 +43,23 @@ class IterableExtensions {
     return folded;
   }
   
-  public static function concat<T, Z>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<Iterable<T>> {
-    var result = [];
-    
-    result.push(iter1);
-    result.push(iter2);
-    
-    return result;
+  public static function concat<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
+    return iter1.toArray().concat(iter2.toArray());
   }
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
-    var r = z;
-    
-    var a = iterable.toArray();
-    
-    for (i in 0...a.length) { 
-      var e = a[a.length - 1 - i];
-      
-      r = f(e, r);
-    }
-    
-    return r;
+    return ArrayExtensions.foldr(iterable.toArray(), z, f);
   }
   
   public static function headOption<T>(iter: Iterable<T>): Option<T> {
     var iterator = iter.iterator();
-    
-    if (iterator.hasNext()) {
-      for (e in iter) return Some(e);
-    }
-    
-    return None;
+    return if (iterator.hasNext()) Some(iterator.next());
+           else None;
   }
   
   public static function head<T>(iter: Iterable<T>): T {
     return switch(headOption(iter)) {
       case None: Stax.error('Iterable has no head');
-      
       case Some(h): h;
     }
   }
@@ -128,28 +106,17 @@ class IterableExtensions {
     }
   }
   
-  public static function exists<T>(iter: Iterable<T>, cmp: T -> T -> Bool, value: T): Bool {
-    var iterator = iter.iterator();
-    
-    while (iterator.hasNext()) {
-      var element = iterator.next();
-      
-      if (cmp(element, value)) { return true; };
-    }
-    
+  public static function exists<T>(iter: Iterable<T>, eq: T -> T -> Bool, value: T): Bool {
+    for (element in iter)
+      if (eq(element, value)) { return true; };
     return false;
   }
   
   public static function nub<T>(iter: Iterable<T>): Iterable<T> {
     var result = [];
-    
-    var iterator = iter.iterator();
-    
-    while (iterator.hasNext()) {
-      var element = iterator.next();
-      
+
+    for (element in iter)
       if (!exists(result, function(a, b) { return a == b; }, element)) { result.push(element); };
-    }
     
     return result;
   }
@@ -172,7 +139,6 @@ class IterableExtensions {
   public static function map<T, Z>(iter: Iterable<T>, f: T -> Z): Iterable<Z> {
     return foldl(iter, [], function(a, b) {
       a.push(f(b));
-      
       return a;
     });
   }
@@ -180,7 +146,6 @@ class IterableExtensions {
   public static function flatMap<T, Z>(iter: Iterable<T>, f: T -> Iterable<Z>): Iterable<Z> {
     return foldl(iter, [], function(a, b) {
       for (e in f(b)) a.push(e);
-      
       return a;
     });
   }
@@ -253,57 +218,34 @@ class IterableExtensions {
   }
   
   public static function scanl<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
-    var accum = init;
     var result = [init];
     
     for (e in iter) {
-      result.push(f(e, accum));
+      result.push(f(e, init));
     }
     
     return result;
   }
   
   public static function scanr<T>(iter:Iterable<T>, init: T, f: T -> T -> T): Iterable<T> {
-    var accum = init;
-    var result = [init];
-    
-    for (e in reversed(iter)) {
-      result.push(f(e, accum));
-    }
-    
-    return result;
+    return scanl(reversed(iter), init, f);
   }
   
   public static function scanl1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
     var iterator = iter.iterator();
-    var accum = null;
     var result = [];
-    
-    while (iterator.hasNext()) {
-      if (result[0] == null) {
-        
-        var first = iterator.next(); 
-        result.push(first); 
-        accum = first;
-      }
-      else result.push(f(iterator.next(), accum));
-    }
+    if(!iterator.hasNext())
+      return result;
+    var accum = iterator.next();
+    result.push(accum);
+    while (iterator.hasNext())
+      result.push(f(iterator.next(), accum));
     
     return cast result;
   }
   
   public static function scanr1<T>(iter:Iterable<T>, f: T -> T -> T): Iterable<T> {
-    var iterator = reversed(iter).iterator();
-    var init = iterator.next(); 
-    
-    var accum = init;
-    var result = [init];
-    
-    while (iterator.hasNext()) {
-      result.push(f(iterator.next(), accum));
-    }
-    
-    return result;
+    return scanl1(reversed(iter), f);
   }
   
   public static function existsP<T>(iter:Iterable<T>, ref: T, f: T -> T -> Bool): Bool {

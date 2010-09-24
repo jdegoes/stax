@@ -4903,9 +4903,7 @@ haxe.data.collections.IterableExtensions.size = function(iterable) {
 	return size;
 }
 haxe.data.collections.IterableExtensions.filter = function(iter,f) {
-	return haxe.data.collections.IterableExtensions.foldl(iter,[],function(a,b) {
-		return (f(b)?haxe.data.collections.IterableExtensions.append(a,b):a);
-	});
+	return ArrayExtensions.filter(IterableExtensions.toArray(iter),f);
 }
 haxe.data.collections.IterableExtensions.foldl = function(iter,seed,mapper) {
 	var folded = seed;
@@ -4918,33 +4916,14 @@ haxe.data.collections.IterableExtensions.foldl = function(iter,seed,mapper) {
 	return folded;
 }
 haxe.data.collections.IterableExtensions.concat = function(iter1,iter2) {
-	var result = [];
-	result.push(iter1);
-	result.push(iter2);
-	return result;
+	return IterableExtensions.toArray(iter1).concat(IterableExtensions.toArray(iter2));
 }
 haxe.data.collections.IterableExtensions.foldr = function(iterable,z,f) {
-	var r = z;
-	var a = IterableExtensions.toArray(iterable);
-	{
-		var _g1 = 0, _g = a.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			var e = a[(a.length - 1) - i];
-			r = f(e,r);
-		}
-	}
-	return r;
+	return ArrayExtensions.foldr(IterableExtensions.toArray(iterable),z,f);
 }
 haxe.data.collections.IterableExtensions.headOption = function(iter) {
 	var iterator = iter.iterator();
-	if(iterator.hasNext()) {
-		{ var $it0 = iter.iterator();
-		while( $it0.hasNext() ) { var e = $it0.next();
-		return Option.Some(e);
-		}}
-	}
-	return Option.None;
+	return (iterator.hasNext()?Option.Some(iterator.next()):Option.None);
 }
 haxe.data.collections.IterableExtensions.head = function(iter) {
 	return (function($this) {
@@ -5016,27 +4995,25 @@ haxe.data.collections.IterableExtensions.tail = function(iter) {
 		return $r;
 	}(this));
 }
-haxe.data.collections.IterableExtensions.exists = function(iter,cmp,value) {
-	var iterator = iter.iterator();
-	while(iterator.hasNext()) {
-		var element = iterator.next();
-		if(cmp(element,value)) {
-			return true;
-		}
+haxe.data.collections.IterableExtensions.exists = function(iter,eq,value) {
+	{ var $it0 = iter.iterator();
+	while( $it0.hasNext() ) { var element = $it0.next();
+	if(eq(element,value)) {
+		return true;
 	}
+	}}
 	return false;
 }
 haxe.data.collections.IterableExtensions.nub = function(iter) {
 	var result = [];
-	var iterator = iter.iterator();
-	while(iterator.hasNext()) {
-		var element = iterator.next();
-		if(!haxe.data.collections.IterableExtensions.exists(result,function(a,b) {
-			return a == b;
-		},element)) {
-			result.push(element);
-		}
+	{ var $it0 = iter.iterator();
+	while( $it0.hasNext() ) { var element = $it0.next();
+	if(!haxe.data.collections.IterableExtensions.exists(result,function(a,b) {
+		return a == b;
+	},element)) {
+		result.push(element);
 	}
+	}}
 	return result;
 }
 haxe.data.collections.IterableExtensions.at = function(iter,index) {
@@ -5126,50 +5103,29 @@ haxe.data.collections.IterableExtensions.or = function(iter) {
 	return false;
 }
 haxe.data.collections.IterableExtensions.scanl = function(iter,init,f) {
-	var accum = init;
 	var result = [init];
 	{ var $it0 = iter.iterator();
 	while( $it0.hasNext() ) { var e = $it0.next();
 	{
-		result.push(f(e,accum));
+		result.push(f(e,init));
 	}
 	}}
 	return result;
 }
 haxe.data.collections.IterableExtensions.scanr = function(iter,init,f) {
-	var accum = init;
-	var result = [init];
-	{ var $it0 = haxe.data.collections.IterableExtensions.reversed(iter).iterator();
-	while( $it0.hasNext() ) { var e = $it0.next();
-	{
-		result.push(f(e,accum));
-	}
-	}}
-	return result;
+	return haxe.data.collections.IterableExtensions.scanl(haxe.data.collections.IterableExtensions.reversed(iter),init,f);
 }
 haxe.data.collections.IterableExtensions.scanl1 = function(iter,f) {
 	var iterator = iter.iterator();
-	var accum = null;
 	var result = [];
-	while(iterator.hasNext()) {
-		if(result[0] == null) {
-			var first = iterator.next();
-			result.push(first);
-			accum = first;
-		}
-		else result.push(f(iterator.next(),accum));
-	}
+	if(!iterator.hasNext()) return result;
+	var accum = iterator.next();
+	result.push(accum);
+	while(iterator.hasNext()) result.push(f(iterator.next(),accum));
 	return result;
 }
 haxe.data.collections.IterableExtensions.scanr1 = function(iter,f) {
-	var iterator = haxe.data.collections.IterableExtensions.reversed(iter).iterator();
-	var init = iterator.next();
-	var accum = init;
-	var result = [init];
-	while(iterator.hasNext()) {
-		result.push(f(iterator.next(),accum));
-	}
-	return result;
+	return haxe.data.collections.IterableExtensions.scanl1(haxe.data.collections.IterableExtensions.reversed(iter),f);
 }
 haxe.data.collections.IterableExtensions.existsP = function(iter,ref,f) {
 	var result = false;
@@ -12077,18 +12033,7 @@ ArrayExtensions.filter = function(a,f) {
 	return n;
 }
 ArrayExtensions.size = function(a) {
-	var count = 0;
-	if(a != []) {
-		{
-			var _g = 0;
-			while(_g < a.length) {
-				var e = a[_g];
-				++_g;
-				++count;
-			}
-		}
-	}
-	return count;
+	return a.length;
 }
 ArrayExtensions.indexOf = function(a,t) {
 	var index = 0;
