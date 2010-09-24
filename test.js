@@ -5365,14 +5365,13 @@ haxe.functional.FoldableExtensions.countWhile = function(foldable,f) {
 }
 haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
 	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	var accum = init;
-	var result = [init];
+	var result = foldable.append(foldable.empty(),init);
 	{
 		var _g = 0;
 		while(_g < a.length) {
 			var e = a[_g];
 			++_g;
-			result.push(f(e,accum));
+			result = foldable.append(result,f(e,init));
 		}
 	}
 	return result;
@@ -5380,47 +5379,35 @@ haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
 haxe.functional.FoldableExtensions.scanr = function(foldable,init,f) {
 	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
-	var accum = init;
-	var result = [init];
+	var result = foldable.append(foldable.empty(),init);
 	{
 		var _g = 0;
 		while(_g < a.length) {
 			var e = a[_g];
 			++_g;
-			result.push(f(e,accum));
+			result = foldable.append(result,f(e,init));
 		}
 	}
 	return result;
 }
 haxe.functional.FoldableExtensions.scanl1 = function(foldable,f) {
-	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	var iterator = a.iterator();
-	var accum = null;
-	var result = [];
-	while(iterator.hasNext()) {
-		if(result[0] == null) {
-			var first = iterator.next();
-			result.push(first);
-			accum = first;
-		}
-		else result.push(f(iterator.next(),accum));
-	}
+	var iterator = haxe.functional.FoldableExtensions.toArray(foldable).iterator();
+	var result = foldable.empty();
+	if(!iterator.hasNext()) return result;
+	var accum = iterator.next();
+	result = foldable.append(result,accum);
+	while(iterator.hasNext()) result = foldable.append(result,f(iterator.next(),accum));
 	return result;
 }
 haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
 	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
 	var iterator = a.iterator();
-	var accum = null;
-	var result = [];
-	while(iterator.hasNext()) {
-		if(result[0] == null) {
-			var first = iterator.next();
-			result.push(first);
-			accum = first;
-		}
-		else result.push(f(iterator.next(),accum));
-	}
+	var result = foldable.empty();
+	if(!iterator.hasNext()) return result;
+	var accum = iterator.next();
+	result = foldable.append(result,accum);
+	while(iterator.hasNext()) result = foldable.append(result,f(iterator.next(),accum));
 	return result;
 }
 haxe.functional.FoldableExtensions.elements = function(foldable) {
@@ -5495,7 +5482,7 @@ haxe.functional.FoldableExtensions.forAll = function(foldable,f) {
 	});
 }
 haxe.functional.FoldableExtensions.forAny = function(foldable,f) {
-	return foldable.foldl(true,function(a,b) {
+	return foldable.foldl(false,function(a,b) {
 		return (function($this) {
 			var $r;
 			switch(a) {
@@ -13847,7 +13834,7 @@ haxe.data.collections.ArrayExtensionsTestCase.__name__ = ["haxe","data","collect
 haxe.data.collections.ArrayExtensionsTestCase.__super__ = haxe.test.TestCase;
 for(var k in haxe.test.TestCase.prototype ) haxe.data.collections.ArrayExtensionsTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testAppendAll = function() {
-	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.appendAll([1],[2,3]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 80, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testAppendAll"});
+	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.appendAll([1],[2,3]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 79, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testAppendAll"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testCount = function() {
 	this.assertEquals(3,haxe.data.collections.ArrayExtensions.count([1,2,3,4,5],function(v) {
@@ -13862,25 +13849,25 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testCountWhile = functio
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testExists = function() {
 	this.assertFalse(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
 		return v == 4;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 104, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 103, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
 	this.assertTrue(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
 		return v == 2;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 105, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 104, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testExistsP = function() {
 	var f = function(v,ref) {
 		return v == ref;
 	}
-	this.assertFalse(haxe.data.collections.ArrayExtensions.existsP([1,2,3],4,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
-	this.assertTrue(haxe.data.collections.ArrayExtensions.existsP([1,2,3],2,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 111, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+	this.assertFalse(haxe.data.collections.ArrayExtensions.existsP([1,2,3],4,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 109, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+	this.assertTrue(haxe.data.collections.ArrayExtensions.existsP([1,2,3],2,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testFind = function() {
 	this.assertEquals(Option.None,haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
 		return v == 4;
-	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 89, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 88, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
 	this.assertEquals(Option.Some(2),haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
 		return v == 2;
-	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 90, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 89, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testFlatMapTo = function() {
 	var r = haxe.data.collections.ArrayExtensions.flatMapTo(["2","3,4,5","6,7"],[1],function(v) {
@@ -13893,30 +13880,30 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testFlatMapTo = function
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testForAll = function() {
 	this.assertTrue(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
 		return v < 4;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 94, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 93, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
 	this.assertFalse(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
 		return v < 2;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 95, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 94, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testForAny = function() {
 	this.assertFalse(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
 		return v > 3;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 99, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 98, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
 	this.assertTrue(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
 		return v < 2;
-	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 100, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 99, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testIntersect = function() {
-	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersect([1,2,3],[2,3,4,5]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 127, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersect"});
+	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersect([1,2,3],[2,3,4,5]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 126, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersect"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testIntersectBy = function() {
 	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersectBy([1,2,3],[2,3,4,5],function(a,b) {
 		return a == b;
-	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 123, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersectBy"});
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 122, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersectBy"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testIsEmpty = function() {
-	this.assertTrue(haxe.data.collections.ArrayExtensions.isEmpty([]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 84, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
-	this.assertFalse(haxe.data.collections.ArrayExtensions.isEmpty([1]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 85, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+	this.assertTrue(haxe.data.collections.ArrayExtensions.isEmpty([]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 83, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+	this.assertFalse(haxe.data.collections.ArrayExtensions.isEmpty([1]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 84, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testMapTo = function() {
 	var r = haxe.data.collections.ArrayExtensions.mapTo([2,3],["1"],function(v) {
@@ -13927,15 +13914,15 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testMapTo = function() {
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testMkString = function() {
 	this.assertEquals("A-B-C",haxe.data.collections.ArrayExtensions.mkString(["a","b","c"],"-",function(s) {
 		return s.toUpperCase();
-	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 131, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMkString"});
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 130, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMkString"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testNub = function() {
 	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nubBy([1,2,2,3,1],function(a,b) {
 		return a == b;
-	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 119, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNub"});
+	}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 118, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNub"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testNubBy = function() {
-	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nub([1,2,2,3,1]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 115, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNubBy"});
+	this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nub([1,2,2,3,1]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 114, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNubBy"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testPartition = function() {
 	var t = haxe.data.collections.ArrayExtensions.partition([1,2,3,4,5,6],function(v) {
@@ -13959,7 +13946,7 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanl1 = function() 
 	var r = haxe.data.collections.ArrayExtensions.scanl1([1,2,3,4,5],function(a,b) {
 		return a + b;
 	});
-	this.assertEquals([1,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 71, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl1"});
+	this.assertEquals([1,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 70, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl1"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanr = function() {
 	var r = haxe.data.collections.ArrayExtensions.scanr([1,2,3,4,5],1,function(a,b) {
@@ -13971,22 +13958,22 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testScanr1 = function() 
 	var r = haxe.data.collections.ArrayExtensions.scanr1([1,2,3,4,5],function(a,b) {
 		return a + b;
 	});
-	this.assertEquals([5,9,8,7,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 76, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr1"});
+	this.assertEquals([5,9,8,7,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 75, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr1"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testToList = function() {
 	var list = haxe.data.collections.ArrayExtensions.toList([1,2,3]);
-	this.assertIs(list,haxe.data.collections.List,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 142, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
-	this.assertEquals(3,list.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 143, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+	this.assertIs(list,haxe.data.collections.List,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 141, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+	this.assertEquals(3,list.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 142, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testToMap = function() {
 	var map = haxe.data.collections.ArrayExtensions.toMap([Tuple2.create("a",1),Tuple2.create("b",2)]);
-	this.assertIs(map,haxe.data.collections.Map,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 136, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
-	this.assertEquals(2,map.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 137, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+	this.assertIs(map,haxe.data.collections.Map,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 135, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+	this.assertEquals(2,map.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 136, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testToSet = function() {
 	var set = haxe.data.collections.ArrayExtensions.toSet([1,2,2,3,1]);
-	this.assertIs(set,haxe.data.collections.Set,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 148, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
-	this.assertEquals(3,set.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 149, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+	this.assertIs(set,haxe.data.collections.Set,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 147, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+	this.assertEquals(3,set.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 148, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
 }
 haxe.data.collections.ArrayExtensionsTestCase.prototype.__class__ = haxe.data.collections.ArrayExtensionsTestCase;
 Std = function() { }
@@ -16129,6 +16116,14 @@ haxe.functional.FoldableExtensionsTestCase = function(p) { if( p === $_ ) return
 haxe.functional.FoldableExtensionsTestCase.__name__ = ["haxe","functional","FoldableExtensionsTestCase"];
 haxe.functional.FoldableExtensionsTestCase.__super__ = haxe.test.TestCase;
 for(var k in haxe.test.TestCase.prototype ) haxe.functional.FoldableExtensionsTestCase.prototype[k] = haxe.test.TestCase.prototype[k];
+haxe.functional.FoldableExtensionsTestCase.prototype.testForAny = function() {
+	this.assertFalse(haxe.functional.FoldableExtensions.forAny(IterableExtensions.toSet([1,2,3]),function(v) {
+		return v > 3;
+	}),null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 85, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testForAny"});
+	this.assertTrue(haxe.functional.FoldableExtensions.forAny(IterableExtensions.toSet([1,2,3]),function(v) {
+		return v < 2;
+	}),null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 86, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testForAny"});
+}
 haxe.functional.FoldableExtensionsTestCase.prototype.testIntSetMapToString = function() {
 	var seta = haxe.data.collections.Set.create().addAll([1,2,3]);
 	var setb = haxe.functional.FoldableExtensions.map(seta,function(i) {
@@ -16145,6 +16140,42 @@ haxe.functional.FoldableExtensionsTestCase.prototype.testMapToList = function() 
 	var list = IterableExtensions.toList(haxe.data.collections.Map.create().set("a","A").set("b","B"));
 	this.assertIs(list,haxe.data.collections.List,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 38, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testMapToList"});
 	this.assertEquals(2,list.size(),null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 39, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testMapToList"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testPartition = function() {
+	var t = haxe.functional.FoldableExtensions.partition(IterableExtensions.toSet([1,2,3,4,5,6]),function(v) {
+		return v % 2 != 0;
+	});
+	this.assertEquals(Tuple2.create(IterableExtensions.toSet([1,3,5]),IterableExtensions.toSet([2,4,6])),t,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 56, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testPartition"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testPartitionWhile = function() {
+	var t = haxe.functional.FoldableExtensions.partitionWhile(IterableExtensions.toSet([1,2,3,4,5,6]),function(v) {
+		return v < 4;
+	});
+	this.assertEquals(Tuple2.create(IterableExtensions.toSet([1,2,3]),IterableExtensions.toSet([4,5,6])),t,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 61, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testPartitionWhile"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testScanl = function() {
+	var r = haxe.functional.FoldableExtensions.scanl(IterableExtensions.toSet([1,2,3,4,5]),1,function(a,b) {
+		return a + b;
+	});
+	this.assertEquals(IterableExtensions.toSet([1,2,3,4,5,6]),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 66, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testScanl"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testScanl1 = function() {
+	var r = haxe.functional.FoldableExtensions.scanl1(IterableExtensions.toSet([1,2,3,4,5]),function(a,b) {
+		return a + b;
+	});
+	this.assertEquals(IterableExtensions.toSet([1,3,4,5,6]),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 76, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testScanl1"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testScanr = function() {
+	var r = haxe.functional.FoldableExtensions.scanr(IterableExtensions.toSet([1,2,3,4,5]),1,function(a,b) {
+		return a + b;
+	});
+	this.assertEquals(IterableExtensions.toSet([1,6,5,4,3,2]),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 71, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testScanr"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testScanr1 = function() {
+	var r = haxe.functional.FoldableExtensions.scanr1(IterableExtensions.toSet([1,2,3,4,5]),function(a,b) {
+		return a + b;
+	});
+	this.assertEquals(IterableExtensions.toSet([5,9,8,7,6]),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 81, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testScanr1"});
 }
 haxe.functional.FoldableExtensionsTestCase.prototype.testSetToList = function() {
 	var list = IterableExtensions.toList(haxe.data.collections.Set.create().addAll([1,2,3]));

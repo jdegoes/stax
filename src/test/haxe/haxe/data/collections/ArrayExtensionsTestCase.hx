@@ -63,7 +63,6 @@ class ArrayExtensionsTestCase extends TestCase {
   public function testScanr() {
     var r = [1,2,3,4,5].scanr(1, function(a, b) return a + b);
     assertEquals([1,6,5,4,3,2], r);
-
   }
   
   public function testScanl1() {

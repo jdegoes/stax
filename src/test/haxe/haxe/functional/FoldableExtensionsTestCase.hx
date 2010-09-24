@@ -50,4 +50,39 @@ class FoldableExtensionsTestCase extends TestCase {
     assertIs(list, List);
     assertEquals(3, list.size());
   }
+  
+  public function testPartition() {
+    var t = [1,2,3,4,5,6].toSet().partition(function(v) return v % 2 != 0);  
+    assertEquals(Tuple2.create([1,3,5].toSet(), [2,4,6].toSet()), t);
+  }
+  
+  public function testPartitionWhile() {
+    var t = [1,2,3,4,5,6].toSet().partitionWhile(function(v) return v < 4);
+    assertEquals(Tuple2.create([1,2,3].toSet(), [4,5,6].toSet()), t);
+  }
+  
+  public function testScanl() {
+    var r = [1,2,3,4,5].toSet().scanl(1, function(a, b) return a + b);
+    assertEquals([1,2,3,4,5,6].toSet(), r);
+  }         
+  
+  public function testScanr() {
+    var r = [1,2,3,4,5].toSet().scanr(1, function(a, b) return a + b);
+    assertEquals([1,6,5,4,3,2].toSet(), r);
+  }
+  
+  public function testScanl1() {
+    var r = [1,2,3,4,5].toSet().scanl1(function(a, b) return a + b);
+    assertEquals([1,3,4,5,6].toSet(), r);
+  }
+  
+  public function testScanr1() {
+    var r = [1,2,3,4,5].toSet().scanr1(function(a, b) return a + b);
+    assertEquals([5,9,8,7,6].toSet(), r);
+  }
+  
+  public function testForAny() {
+    assertFalse([1,2,3].toSet().forAny(function(v) return v > 3));
+    assertTrue([1,2,3].toSet().forAny(function(v) return v < 2));
+  }
 }

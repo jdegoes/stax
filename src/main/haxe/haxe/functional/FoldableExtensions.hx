@@ -147,12 +147,10 @@ class FoldableExtensions {
   public static function scanl<A, B>(foldable:Foldable<A, B>, init: B, f: B -> B -> B): A {
     var a = toArray(foldable);
     
-    var accum = init;
-    var result = [init];
+    var result = foldable.append(cast foldable.empty(), init);
     
-    for (e in a) {
-      result.push(f(e, accum));
-    }
+    for (e in a)
+      result = cast foldable.append(result, f(e, init));
     
     return cast result;
   }
@@ -162,53 +160,44 @@ class FoldableExtensions {
     
     a.reverse();
     
-    var accum = init;
-    var result = [init];
+    var result = foldable.append(cast foldable.empty(), init);
     
-    for (e in a) {
-      result.push(f(e, accum));
-    }
-    
+    for (e in a)
+      result = cast foldable.append(result, f(e, init));
+
     return cast result;
   }
   
   public static function scanl1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
-    var a = toArray(foldable);
-    var iterator = a.iterator();
-    var accum = null;
-    var result = [];
+    var iterator = toArray(foldable).iterator();
+    var result = foldable.empty();
     
-    while (iterator.hasNext()) {
-      if (result[0] == null) {
-        
-        var first = iterator.next(); 
-        result.push(first); 
-        accum = first;
-      }
-      else result.push(f(iterator.next(), accum));
-    }
+    if(!iterator.hasNext())
+      return cast result;
+    
+    var accum = iterator.next();
+    result = cast foldable.append(cast result, accum);
+    
+    while (iterator.hasNext())
+      result = cast foldable.append(cast result, f(iterator.next(), accum));
     
     return cast result;
   }
   
   public static function scanr1<A, B>(foldable:Foldable<A, B>, f: B -> B -> B): A {
     var a = toArray(foldable);
-    
     a.reverse();
-    
     var iterator = a.iterator();
-    var accum = null;
-    var result = [];
+    var result = foldable.empty();
     
-    while (iterator.hasNext()) {
-      if (result[0] == null) {
-        
-        var first = iterator.next(); 
-        result.push(first); 
-        accum = first;
-      }
-      else result.push(f(iterator.next(), accum));
-    }
+    if(!iterator.hasNext())
+      return cast result;
+    
+    var accum = iterator.next();
+    result = cast foldable.append(cast result, accum);
+    
+    while (iterator.hasNext())
+      result = cast foldable.append(cast result, f(iterator.next(), accum));
     
     return cast result;
   }
@@ -269,7 +258,7 @@ class FoldableExtensions {
   }
   
   public static function forAny<A, B>(foldable: Foldable<A, B>, f: B -> Bool): Bool {
-    return foldable.foldl(true, function(a, b) {
+    return foldable.foldl(false, function(a, b) {
       return switch (a) {
         case false: f(b);
         case true:  true;
