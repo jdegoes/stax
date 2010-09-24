@@ -25,7 +25,7 @@ interface Foldable<A, B> {
   function empty<C, D>() : Foldable<C, D>;  
   
   /** Append a value to the specified foldable and returns the result. */
-  function append(a: A, b: B): A;
+  function append(b: B): A;
   
   /** Left folds over the structure. */
   function foldl<T>(t: T, f: T -> B -> T): T;

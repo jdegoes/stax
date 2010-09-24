@@ -61,8 +61,8 @@ class Set<T> implements Collection<Set<T>, T> {
     return cast create();
   }
   
-  public function append(s: Set<T>, t: T): Set<T> {
-    return s.copyWithMod(s._map.set(t, t));
+  public function append(t: T): Set<T> {
+    return copyWithMod(_map.set(t, t));
   }
   
   public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {

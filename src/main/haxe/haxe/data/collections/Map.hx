@@ -110,8 +110,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return cast create();
   }
   
-  public function append(m: Map<K, V>, t: Tuple2<K, V>): Map<K, V> {
-    return m.add(t);
+  public function append(t: Tuple2<K, V>): Map<K, V> {
+    return add(t);
   }
   
   public function foldl<Z>(z: Z, f: Z -> Tuple2<K, V> -> Z): Z {

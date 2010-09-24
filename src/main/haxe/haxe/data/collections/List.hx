@@ -105,8 +105,8 @@ class List<T> implements Collection<List<T>, T> {
     return result;
   }
 
-  public function append(a: List<T>, b: T): List<T> {
-    return a.add(b);
+  public function append(b: T): List<T> {
+    return add(b);
   }
 
   public function foldl<Z>(z: Z, f: Z -> T -> Z): Z {

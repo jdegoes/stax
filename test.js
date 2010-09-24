@@ -957,8 +957,8 @@ haxe.data.collections.List.prototype.addAll = function(i) {
 		return a1.cons(b);
 	});
 }
-haxe.data.collections.List.prototype.append = function(a,b) {
-	return a.add(b);
+haxe.data.collections.List.prototype.append = function(b) {
+	return this.add(b);
 }
 haxe.data.collections.List.prototype.compare = function(other) {
 	return ArrayExtensions.compareWith(IterableExtensions.toArray(this),IterableExtensions.toArray(other),this.getOrder());
@@ -2422,8 +2422,8 @@ haxe.data.collections.Set.prototype.addAll = function(it) {
 	}}
 	return set;
 }
-haxe.data.collections.Set.prototype.append = function(s,t) {
-	return s.copyWithMod(s._map.set(t,t));
+haxe.data.collections.Set.prototype.append = function(t) {
+	return this.copyWithMod(this._map.set(t,t));
 }
 haxe.data.collections.Set.prototype.compare = function(other) {
 	return ArrayExtensions.compareWith(IterableExtensions.toArray(this),IterableExtensions.toArray(other),this.getOrder());
@@ -2637,8 +2637,8 @@ haxe.data.collections.Map.prototype.addAll = function(i) {
 	}}
 	return map;
 }
-haxe.data.collections.Map.prototype.append = function(m,t) {
-	return m.add(t);
+haxe.data.collections.Map.prototype.append = function(t) {
+	return this.add(t);
 }
 haxe.data.collections.Map.prototype.bucketFor = function(k) {
 	return (this.getKeyHash())(k) % this._buckets.length;
@@ -5278,23 +5278,23 @@ haxe.functional.FoldableExtensions.foldr = function(foldable,z,f) {
 }
 haxe.functional.FoldableExtensions.filter = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (f(b)?foldable.append(a,b):a);
+		return (f(b)?a.append(b):a);
 	});
 }
 haxe.functional.FoldableExtensions.partition = function(foldable,f) {
 	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
-		return (f(b)?Tuple2.create(foldable.append(a._1,b),a._2):Tuple2.create(a._1,foldable.append(a._2,b)));
+		return (f(b)?Tuple2.create(a._1.append(b),a._2):Tuple2.create(a._1,a._2.append(b)));
 	});
 }
 haxe.functional.FoldableExtensions.partitionWhile = function(foldable,f) {
 	var partitioning = true;
 	return foldable.foldl(Tuple2.create(foldable.empty(),foldable.empty()),function(a,b) {
-		return (partitioning?(f(b)?Tuple2.create(foldable.append(a._1,b),a._2):(function($this) {
+		return (partitioning?(f(b)?Tuple2.create(a._1.append(b),a._2):(function($this) {
 			var $r;
 			partitioning = false;
-			$r = Tuple2.create(a._1,foldable.append(a._2,b));
+			$r = Tuple2.create(a._1,a._2.append(b));
 			return $r;
-		}(this))):Tuple2.create(a._1,foldable.append(a._2,b)));
+		}(this))):Tuple2.create(a._1,a._2.append(b)));
 	});
 }
 haxe.functional.FoldableExtensions.map = function(src,f) {
@@ -5302,7 +5302,7 @@ haxe.functional.FoldableExtensions.map = function(src,f) {
 }
 haxe.functional.FoldableExtensions.mapTo = function(src,dest,f) {
 	return src.foldl(dest,function(a,b) {
-		return dest.append(a,f(b));
+		return a.append(f(b));
 	});
 }
 haxe.functional.FoldableExtensions.flatMap = function(src,f) {
@@ -5311,19 +5311,19 @@ haxe.functional.FoldableExtensions.flatMap = function(src,f) {
 haxe.functional.FoldableExtensions.flatMapTo = function(src,dest,f) {
 	return src.foldl(dest,function(a,b) {
 		return f(b).foldl(a,function(a1,b1) {
-			return dest.append(a1,b1);
+			return a1.append(b1);
 		});
 	});
 }
 haxe.functional.FoldableExtensions.take = function(foldable,n) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (n-- > 0?foldable.append(a,b):a);
+		return (n-- > 0?a.append(b):a);
 	});
 }
 haxe.functional.FoldableExtensions.takeWhile = function(foldable,f) {
 	var taking = true;
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (taking?(f(b)?foldable.append(a,b):(function($this) {
+		return (taking?(f(b)?a.append(b):(function($this) {
 			var $r;
 			taking = false;
 			$r = a;
@@ -5333,7 +5333,7 @@ haxe.functional.FoldableExtensions.takeWhile = function(foldable,f) {
 }
 haxe.functional.FoldableExtensions.drop = function(foldable,n) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (n-- > 0?a:foldable.append(a,b));
+		return (n-- > 0?a:a.append(b));
 	});
 }
 haxe.functional.FoldableExtensions.dropWhile = function(foldable,f) {
@@ -5342,9 +5342,9 @@ haxe.functional.FoldableExtensions.dropWhile = function(foldable,f) {
 		return (dropping?(f(b)?a:(function($this) {
 			var $r;
 			dropping = false;
-			$r = foldable.append(a,b);
+			$r = a.append(b);
 			return $r;
-		}(this))):foldable.append(a,b));
+		}(this))):a.append(b));
 	});
 }
 haxe.functional.FoldableExtensions.count = function(foldable,f) {
@@ -5365,13 +5365,13 @@ haxe.functional.FoldableExtensions.countWhile = function(foldable,f) {
 }
 haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
 	var a = haxe.functional.FoldableExtensions.toArray(foldable);
-	var result = foldable.append(foldable.empty(),init);
+	var result = foldable.empty().append(init);
 	{
 		var _g = 0;
 		while(_g < a.length) {
 			var e = a[_g];
 			++_g;
-			result = foldable.append(result,f(e,init));
+			result = result.append(f(e,init));
 		}
 	}
 	return result;
@@ -5379,13 +5379,13 @@ haxe.functional.FoldableExtensions.scanl = function(foldable,init,f) {
 haxe.functional.FoldableExtensions.scanr = function(foldable,init,f) {
 	var a = haxe.functional.FoldableExtensions.toArray(foldable);
 	a.reverse();
-	var result = foldable.append(foldable.empty(),init);
+	var result = foldable.empty().append(init);
 	{
 		var _g = 0;
 		while(_g < a.length) {
 			var e = a[_g];
 			++_g;
-			result = foldable.append(result,f(e,init));
+			result = result.append(f(e,init));
 		}
 	}
 	return result;
@@ -5395,8 +5395,8 @@ haxe.functional.FoldableExtensions.scanl1 = function(foldable,f) {
 	var result = foldable.empty();
 	if(!iterator.hasNext()) return result;
 	var accum = iterator.next();
-	result = foldable.append(result,accum);
-	while(iterator.hasNext()) result = foldable.append(result,f(iterator.next(),accum));
+	result = result.append(accum);
+	while(iterator.hasNext()) result = result.append(f(iterator.next(),accum));
 	return result;
 }
 haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
@@ -5406,8 +5406,8 @@ haxe.functional.FoldableExtensions.scanr1 = function(foldable,f) {
 	var result = foldable.empty();
 	if(!iterator.hasNext()) return result;
 	var accum = iterator.next();
-	result = foldable.append(result,accum);
-	while(iterator.hasNext()) result = foldable.append(result,f(iterator.next(),accum));
+	result = result.append(accum);
+	while(iterator.hasNext()) result = result.append(f(iterator.next(),accum));
 	return result;
 }
 haxe.functional.FoldableExtensions.elements = function(foldable) {
@@ -5415,18 +5415,18 @@ haxe.functional.FoldableExtensions.elements = function(foldable) {
 }
 haxe.functional.FoldableExtensions.concat = function(foldable,rest) {
 	return rest.foldl(foldable,function(a,b) {
-		return foldable.append(a,b);
+		return a.append(b);
 	});
 }
 haxe.functional.FoldableExtensions.append = function(foldable,e) {
-	return foldable.append(foldable,e);
+	return foldable.append(e);
 }
 haxe.functional.FoldableExtensions.appendAll = function(foldable,i) {
 	var acc = foldable;
 	{ var $it0 = i.iterator();
 	while( $it0.hasNext() ) { var e = $it0.next();
 	{
-		acc = acc.append(acc,e);
+		acc = acc.append(e);
 	}
 	}}
 	return acc;
@@ -5541,7 +5541,7 @@ haxe.functional.FoldableExtensions.contains = function(foldable,member) {
 }
 haxe.functional.FoldableExtensions.nubBy = function(foldable,f) {
 	return foldable.foldl(foldable.empty(),function(a,b) {
-		return (haxe.functional.FoldableExtensions.existsP(a,b,f)?a:foldable.append(a,b));
+		return (haxe.functional.FoldableExtensions.existsP(a,b,f)?a:a.append(b));
 	});
 }
 haxe.functional.FoldableExtensions.nub = function(foldable) {
@@ -5586,19 +5586,19 @@ haxe.functional.FoldableExtensions.toArray = function(foldable) {
 haxe.functional.FoldableExtensions.toMap = function(foldable) {
 	var dest = haxe.data.collections.Map.create();
 	return foldable.foldl(dest,function(a,b) {
-		return dest.append(a,b);
+		return a.append(b);
 	});
 }
 haxe.functional.FoldableExtensions.toList = function(foldable) {
 	var dest = haxe.data.collections.List.create();
 	return foldable.foldl(dest,function(a,b) {
-		return dest.append(a,b);
+		return a.append(b);
 	});
 }
 haxe.functional.FoldableExtensions.toSet = function(foldable) {
 	var dest = haxe.data.collections.Set.create();
 	return foldable.foldl(dest,function(a,b) {
-		return dest.append(a,b);
+		return a.append(b);
 	});
 }
 haxe.functional.FoldableExtensions.prototype.__class__ = haxe.functional.FoldableExtensions;
