@@ -5545,9 +5545,9 @@ haxe.functional.FoldableExtensions.nubBy = function(foldable,f) {
 	});
 }
 haxe.functional.FoldableExtensions.nub = function(foldable) {
-	return haxe.functional.FoldableExtensions.nubBy(foldable,function(a,b) {
-		return a == b;
-	});
+	var it = haxe.functional.FoldableExtensions.iterator(foldable);
+	var first = (it.hasNext()?it.next():null);
+	return haxe.functional.FoldableExtensions.nubBy(foldable,Stax.getEqualFor(first));
 }
 haxe.functional.FoldableExtensions.intersectBy = function(foldable1,foldable2,f) {
 	return foldable1.foldl(foldable1.empty(),function(a,b) {
@@ -5555,11 +5555,9 @@ haxe.functional.FoldableExtensions.intersectBy = function(foldable1,foldable2,f)
 	});
 }
 haxe.functional.FoldableExtensions.intersect = function(foldable1,foldable2) {
-	return foldable1.foldl(foldable1.empty(),function(a,b) {
-		return (haxe.functional.FoldableExtensions.existsP(foldable2,b,function(a1,b1) {
-			return a1 == b1;
-		})?haxe.functional.FoldableExtensions.append(a,b):a);
-	});
+	var it = haxe.functional.FoldableExtensions.iterator(foldable1);
+	var first = (it.hasNext()?it.next():null);
+	return haxe.functional.FoldableExtensions.intersectBy(foldable1,foldable2,Stax.getEqualFor(first));
 }
 haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
 	if(sep == null) sep = ", ";
@@ -6339,9 +6337,7 @@ haxe.data.collections.ArrayExtensions.nubBy = function(arr,f) {
 	});
 }
 haxe.data.collections.ArrayExtensions.nub = function(arr) {
-	return haxe.data.collections.ArrayExtensions.nubBy(arr,function(a,b) {
-		return a == b;
-	});
+	return haxe.data.collections.ArrayExtensions.nubBy(arr,Stax.getEqualFor(arr[0]));
 }
 haxe.data.collections.ArrayExtensions.intersectBy = function(arr1,arr2,f) {
 	return ArrayExtensions.foldl(arr1,[],function(a,b) {
@@ -6349,9 +6345,7 @@ haxe.data.collections.ArrayExtensions.intersectBy = function(arr1,arr2,f) {
 	});
 }
 haxe.data.collections.ArrayExtensions.intersect = function(arr1,arr2) {
-	return haxe.data.collections.ArrayExtensions.intersectBy(arr1,arr2,function(a,b) {
-		return a == b;
-	});
+	return haxe.data.collections.ArrayExtensions.intersectBy(arr1,arr2,Stax.getEqualFor(arr1[0]));
 }
 haxe.data.collections.ArrayExtensions.mkString = function(arr,sep,show) {
 	if(sep == null) sep = ", ";

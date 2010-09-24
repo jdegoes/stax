@@ -194,7 +194,7 @@ class ArrayExtensions {
   }
   
   public static function nub<T>(arr:Array<T>): Array<T> {
-    return nubBy(arr, function (a, b) { return a == b; });
+    return nubBy(arr, Stax.getEqualFor(arr[0]));
   }
   
   public static function intersectBy<T>(arr1: Array<T>, arr2: Array<T>, f: T -> T -> Bool): Array<T> {
@@ -204,7 +204,7 @@ class ArrayExtensions {
   }
   
   public static function intersect<T>(arr1: Array<T>, arr2: Array<T>): Array<T> {
-    return intersectBy(arr1, arr2, function(a, b) return a == b);
+    return intersectBy(arr1, arr2, Stax.getEqualFor(arr1[0]));
   }
   
   public static function mkString<T>(arr: Array<T>, ?sep: String = ', ', ?show: T -> String): String {
