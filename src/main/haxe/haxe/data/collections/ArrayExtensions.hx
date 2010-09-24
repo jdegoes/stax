@@ -218,6 +218,15 @@ class ArrayExtensions {
     });
   }
   
+  public static function groupBy<T, K>(arr: Array<T>, grouper: T -> K) : Map<K, Array<T>> { 
+    return arr.foldl(Map.create(), function(map, e) {
+      var key = grouper(e);
+      var result = map.getOrElse(key, function() return []);
+      result.push(e);
+      return map.set(key, result);
+    });
+  }
+  
   public static function toList<T>(arr : Array<T>) {
     return haxe.data.collections.List.create().addAll(arr);
   }

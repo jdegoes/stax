@@ -344,4 +344,8 @@ class IterableExtensions {
   public static function forAny<T>(iter: Iterable<T>, f: T -> Bool): Bool {
     return iter.toArray().forAny(f);
   }
+  
+  public static function groupBy<T, K>(iter: Iterable<T>, grouper: T -> K) : Map<K, Iterable<T>> { 
+    return iter.toArray().groupBy(grouper);
+  }
 }

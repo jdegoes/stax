@@ -5215,6 +5215,9 @@ haxe.data.collections.IterableExtensions.forAll = function(iter,f) {
 haxe.data.collections.IterableExtensions.forAny = function(iter,f) {
 	return haxe.data.collections.IterableExtensions.forAny(IterableExtensions.toArray(iter),f);
 }
+haxe.data.collections.IterableExtensions.groupBy = function(iter,grouper) {
+	return haxe.data.collections.IterableExtensions.groupBy(IterableExtensions.toArray(iter),grouper);
+}
 haxe.data.collections.IterableExtensions.prototype.__class__ = haxe.data.collections.IterableExtensions;
 haxe.functional.FoldableExtensions = function() { }
 haxe.functional.FoldableExtensions.__name__ = ["haxe","functional","FoldableExtensions"];
@@ -5527,6 +5530,14 @@ haxe.functional.FoldableExtensions.mkString = function(foldable,sep,show) {
 		}(this)):sep);
 		if(null == show) show = Stax.getShowFor(b);
 		return (a + prefix) + show(b);
+	});
+}
+haxe.functional.FoldableExtensions.groupBy = function(foldable,grouper) {
+	var def = foldable.empty();
+	return foldable.foldl(haxe.data.collections.Map.create(),function(map,e) {
+		var key = grouper(e);
+		var result = map.getOrElseC(key,def);
+		return map.set(key,result.append(e));
 	});
 }
 haxe.functional.FoldableExtensions.toArray = function(foldable) {
@@ -6315,6 +6326,16 @@ haxe.data.collections.ArrayExtensions.mkString = function(arr,sep,show) {
 		}(this)):sep);
 		if(null == show) show = Stax.getShowFor(b);
 		return (a + prefix) + show(b);
+	});
+}
+haxe.data.collections.ArrayExtensions.groupBy = function(arr,grouper) {
+	return ArrayExtensions.foldl(arr,haxe.data.collections.Map.create(),function(map,e) {
+		var key = grouper(e);
+		var result = map.getOrElse(key,function() {
+			return [];
+		});
+		result.push(e);
+		return map.set(key,result);
 	});
 }
 haxe.data.collections.ArrayExtensions.toList = function(arr) {
@@ -13832,6 +13853,22 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype.testForAny = function() 
 		return v < 2;
 	}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 99, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
 }
+haxe.data.collections.ArrayExtensionsTestCase.prototype.testGroupBy = function() {
+	var arr = [1,2,3,4,5,6,7,8,9,10];
+	var primes = [7,5,3,2];
+	var r = haxe.data.collections.ArrayExtensions.groupBy(arr,function(v) {
+		{
+			var _g = 0;
+			while(_g < primes.length) {
+				var p = primes[_g];
+				++_g;
+				if(v % p == 0) return p;
+			}
+		}
+		return 1;
+	});
+	this.assertEquals(haxe.data.collections.Map.create().set(1,[1]).set(2,[2,4,8]).set(3,[3,6,9]).set(5,[5,10]).set(7,[7]),r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 160, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testGroupBy"});
+}
 haxe.data.collections.ArrayExtensionsTestCase.prototype.testIntersect = function() {
 	this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersect([1,2,3],[2,3,4,5]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 126, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersect"});
 }
@@ -16078,6 +16115,22 @@ haxe.functional.FoldableExtensionsTestCase.prototype.testIntersectBy = function(
 		return a == b;
 	}),null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 98, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testIntersectBy"});
 }
+haxe.functional.FoldableExtensionsTestCase.prototype.testListGroupBy = function() {
+	var list = haxe.functional.FoldableExtensions.appendAll(haxe.data.collections.List.create(),[1,2,3,4,5,6,7,8,9,10]);
+	var primes = [7,5,3,2];
+	var r = haxe.functional.FoldableExtensions.groupBy(list,function(v) {
+		{
+			var _g = 0;
+			while(_g < primes.length) {
+				var p = primes[_g];
+				++_g;
+				if(v % p == 0) return p;
+			}
+		}
+		return 1;
+	});
+	this.assertEquals(haxe.data.collections.Map.create().set(1,IterableExtensions.toList([1])).set(2,IterableExtensions.toList([2,4,8])).set(3,IterableExtensions.toList([3,6,9])).set(5,IterableExtensions.toList([5,10])).set(7,IterableExtensions.toList([7])),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 114, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testListGroupBy"});
+}
 haxe.functional.FoldableExtensionsTestCase.prototype.testListToSet = function() {
 	var set = IterableExtensions.toSet(haxe.data.collections.List.create().addAll([1,2,2,3]));
 	this.assertIs(set,haxe.data.collections.Set,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 44, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testListToSet"});
@@ -16131,6 +16184,22 @@ haxe.functional.FoldableExtensionsTestCase.prototype.testScanr1 = function() {
 		return a + b;
 	});
 	this.assertEquals(IterableExtensions.toSet([5,9,8,7,6]),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 81, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testScanr1"});
+}
+haxe.functional.FoldableExtensionsTestCase.prototype.testSetGroupBy = function() {
+	var set = haxe.functional.FoldableExtensions.appendAll(haxe.data.collections.Set.create(),[1,2,3,4,5,6,7,8,9,10]);
+	var primes = [7,5,3,2];
+	var r = haxe.functional.FoldableExtensions.groupBy(set,function(v) {
+		{
+			var _g = 0;
+			while(_g < primes.length) {
+				var p = primes[_g];
+				++_g;
+				if(v % p == 0) return p;
+			}
+		}
+		return 1;
+	});
+	this.assertEquals(haxe.data.collections.Map.create().set(1,IterableExtensions.toSet([1])).set(2,IterableExtensions.toSet([2,4,8])).set(3,IterableExtensions.toSet([3,6,9])).set(5,IterableExtensions.toSet([5,10])).set(7,IterableExtensions.toSet([7])),r,null,null,{ fileName : "FoldableExtensionsTestCase.hx", lineNumber : 135, className : "haxe.functional.FoldableExtensionsTestCase", methodName : "testSetGroupBy"});
 }
 haxe.functional.FoldableExtensionsTestCase.prototype.testSetToList = function() {
 	var list = IterableExtensions.toList(haxe.data.collections.Set.create().addAll([1,2,3]));

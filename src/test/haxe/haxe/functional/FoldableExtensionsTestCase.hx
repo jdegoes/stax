@@ -100,5 +100,52 @@ class FoldableExtensionsTestCase extends TestCase {
   
   public function testIntersect() {
     assertEquals([2,3].toList(), [1,2,3].toList().intersect([2,3,4,5].toList()));  
+  } 
+   
+  public function testListGroupBy() {
+    var list = List.create().appendAll([1,2,3,4,5,6,7,8,9,10]);
+    var primes = [7, 5, 3, 2];
+    var r = list.groupBy(function(v) {
+      for(p in primes)
+        if(v % p == 0)
+          return p;
+      return 1;
+    });
+    assertEquals(
+      Map.create()
+      .set(1, [1].toList())
+      .set(2, [2,4,8].toList())
+      .set(3, [3,6,9].toList())
+      .set(5, [5, 10].toList())
+      .set(7, [7].toList())
+      ,
+      r
+    );
+  } 
+  
+  public function testSetGroupBy() {
+    var set = Set.create().appendAll([1,2,3,4,5,6,7,8,9,10]);
+    var primes = [7, 5, 3, 2];
+    var r = set.groupBy(function(v) {
+      for(p in primes)
+        if(v % p == 0)
+          return p;
+      return 1;
+    });
+    assertEquals(
+      Map.create()
+      .set(1, [1].toSet())
+      .set(2, [2,4,8].toSet())
+      .set(3, [3,6,9].toSet())
+      .set(5, [5, 10].toSet())
+      .set(7, [7].toSet())
+      ,
+      r
+    );
   }
+} 
+
+typedef Foo = {
+  var barProp1:Int;
+  var barProp2:Array<String>;
 }

@@ -147,4 +147,25 @@ class ArrayExtensionsTestCase extends TestCase {
     assertIs(set, haxe.data.collections.Set);
     assertEquals(3, set.size());
   }
+  
+  public function testGroupBy() {
+    var arr = [1,2,3,4,5,6,7,8,9,10];
+    var primes = [7, 5, 3, 2];
+    var r = arr.groupBy(function(v) {
+      for(p in primes)
+        if(v % p == 0)
+          return p;
+      return 1;
+    });
+    assertEquals(
+      Map.create()
+      .set(1, [1])
+      .set(2, [2,4,8])
+      .set(3, [3,6,9])
+      .set(5, [5, 10])
+      .set(7, [7])
+      ,
+      r
+    );
+  }
 }
