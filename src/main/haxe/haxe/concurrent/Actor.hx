@@ -40,6 +40,14 @@ interface Actor<T, S> {
   public function send(data: T): Future<S>;
 }
 
+typedef Coalescer = {
+   /** Determines if the two elements commute (that is, if the actor can receive them out of order) */
+   commutes: T -> T -> Bool,
+   
+   /** Tries to coalesce the two elements into a single element */
+   coalesce: T -> T -> Option<T>
+}
+
 interface ActorFactory<T, S> {
   /** Creates an actor using a function that will be called to handle every 
    * message the actor receives. The function should not enclose any variables
@@ -52,10 +60,10 @@ interface ActorFactory<T, S> {
    * @param coalescer An optional function to coalesce adjacent messages in 
    *                  the actor's queue.
    */
-  public function create<X>(handler: X -> T -> Tuple2<X, Future<S>>, ?coalescer: T -> T -> T): Actor<T, S>;
+  public function create<X>(handler: X -> T -> Tuple2<X, Future<S>>, ?coalescer: Coalescer): Actor<T, S>;
   
   /** Creates a stateless actor (an actor that requires no initial state, and 
    * does not produce any state.
    */
-  public function createStateless(loop: T -> Future<S>, ?coalescer: T -> T -> T): Actor<T, S>;
+  public function createStateless(loop: T -> Future<S>, ?coalescer: Coalescer): Actor<T, S>;
 }
