@@ -174,7 +174,7 @@ class Quirks {
     var doc: HTMLDocument = cast el.ownerDocument;
 
     var id = el.getAttribute('id').toOption().filter(function(id) return id != '').getOrElse(function() {
-      return Guid.generate().withEffect(function(guid) {
+      return ('id-' + Guid.generate()).withEffect(function(guid) {
         el.setAttribute('id', guid);
       });
     });
