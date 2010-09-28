@@ -24,11 +24,15 @@ import haxe.data.collections.List;
 
 using PreludeExtensions;
 
-class Mock<T> implements Dynamic<T>{
+class Mock<T> {
   var _expects: Map<String, Array<Dynamic>>;
+  var _target: T;
   
-  private function new() {  
+  public var target (getTarget, null): T;
+  
+  private function new(c: Class<T>) {  
     _expects = Map.create();
+    _target  = Type.createEmptyInstance(c);
   }
   
   public function expect1<P1, R>(name: String, f: Function<P1, R>, times: Int = 1): Void {
@@ -92,23 +96,23 @@ class Mock<T> implements Dynamic<T>{
   }
   
   public function allow1<P1, R>(name: String, f: Function<P1, R>): Void {
-    Reflect.setField(this, name, f);
+    Reflect.setField(_target, name, f);
   }
   
   public function allow2<P1, P2, R>(name: String, f: Function2<P1, P2, R>): Void {
-    Reflect.setField(this, name, f);
+    Reflect.setField(_target, name, f);
   }
   
   public function allow3<P1, P2, P3, R>(name: String, f: Function3<P1, P2, P3, R>): Void {
-    Reflect.setField(this, name, f);
+    Reflect.setField(_target, name, f);
   }
   
   public function allow4<P1, P2, P3, P4, R>(name: String, f: Function4<P1, P2, P3, P4, R>): Void {
-    Reflect.setField(this, name, f);
+    Reflect.setField(_target, name, f);
   }
   
   public function allow5<P1, P2, P3, P4, P5, R>(name: String, f: Function5<P1, P2, P3, P4, P5, R>): Void {
-    Reflect.setField(this, name, f);
+    Reflect.setField(_target, name, f);
   }
     
   public function verifyAllExpectations(): Void {
@@ -121,8 +125,8 @@ class Mock<T> implements Dynamic<T>{
     }
   }
   
-  public function asTarget(): T {
-    return cast this;
+  private function getTarget(): T {
+    return cast _target;
   }
   
   private function internal_add(name: String, f: Dynamic): Void {
@@ -145,8 +149,8 @@ class Mock<T> implements Dynamic<T>{
     }
   }
   
-  public static function internal_create<T>(): Mock<T> {
-    return new Mock<T>();
+  public static function internal_create<T>(c: Class<T>): Mock<T> {
+    return new Mock<T>(c);
   }
 }
 
@@ -165,12 +169,13 @@ class MockTestCase extends TestCase {
     _runningTest = true;
   }
   
-  public function newMock<T>(): Mock<T> {
-    var mock = Mock.internal_create();
+  public function newMock<T>(c: Class<T>): Mock<T> {
+    var mock = Mock.internal_create(c);
     
     if (_runningTest) {
       _localMocks.push(mock);
-    } else {
+    } 
+    else {
       _globalMocks.push(mock);
     }
     
@@ -186,7 +191,8 @@ class MockTestCase extends TestCase {
       _localMocks = [];
       
       _runningTest = false;
-    } catch (e: Dynamic) {
+    }
+    catch (e: Dynamic) {
       _runningTest = false;
       
       throw e;
