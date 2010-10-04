@@ -50,14 +50,14 @@ class HTMLDocumentExtensions {
   public static function newIframeWindow(doc: HTMLDocument, width: Int, height: Int): HTMLIFrameElement {
     var iframe = newIframe(doc, width, height);
     
-    iframe.setAttribute('frameborder',   '0');
-    iframe.setAttribute('marginwidth',   '0');
-    iframe.setAttribute('marginheight',  '0');
+    iframe.setAttribute('frameBorder',   '0');
+    iframe.setAttribute('marginWidth',   '0');
+    iframe.setAttribute('marginHeight',  '0');
     iframe.setAttribute('vspace',        '0');
     iframe.setAttribute('hspace',        '0');
     iframe.setAttribute('scrolling',     'no');
-    iframe.setAttribute('noresize',      'noresize');
-    iframe.setAttribute('allowtransparency', 'true');
+    iframe.setAttribute('noResize',      'noResize');
+    iframe.setAttribute('allowTransparency', 'true');
     
     iframe.style.margin            = '0';
     iframe.style.padding           = '0';

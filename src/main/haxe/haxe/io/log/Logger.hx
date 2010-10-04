@@ -137,10 +137,10 @@ class LogHandlers {
     (function(text) {
       if (flash.external.ExternalInterface.available) {
         switch (level) {
-          case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (console != null && console.debug) console.debug(text);})', text);
-          case Info:                flash.external.ExternalInterface.call('(function(text){if (console != null && console.warn) console.warn(text);})', text);
-          case Warning:             flash.external.ExternalInterface.call('(function(text){if (console != null && console.warn) console.warn(text);})', text);
-          case Error, Fatal, None:  flash.external.ExternalInterface.call('(function(text){if (console != null && console.error) console.error(text);})', text);
+          case All, Debug:          flash.external.ExternalInterface.call('(function(text){if (typeof console != "undefined" && console.debug) console.debug(text);})', text);
+          case Info:                flash.external.ExternalInterface.call('(function(text){if (typeof console != "undefined" && console.warn) console.warn(text);})', text);
+          case Warning:             flash.external.ExternalInterface.call('(function(text){if (typeof console != "undefined" && console.warn) console.warn(text);})', text);
+          case Error, Fatal, None:  flash.external.ExternalInterface.call('(function(text){if (typeof console != "undefined" && console.error) console.error(text);})', text);
         }
       }
     })(format(text, p));

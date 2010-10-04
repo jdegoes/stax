@@ -396,6 +396,9 @@ class ArrayExtensions {
     
     return n;
   }
+  public static function then<T, S>(a1: Array<T>, a2: Array<S>): Array<S> {
+    return a2;
+  }
   
   public static function flatMap<T, S>(a: Array<T>, f: T -> Iterable<S>): Array<S> {
     var n: Array<S> = [];
@@ -586,6 +589,12 @@ class Function1Extensions {
       return d;
     }
   }
+  public static function thenDo<P1>(f1: P1 -> Void, f2: P1 -> Void): P1 -> Void {
+    return function(p1) {
+      f1(p1);
+      f2(p1);
+    }
+  }
   public static function returning<P1, R1, R2>(f: Function<P1, R1>, thunk: Thunk<R2>): Function<P1, R2> {
     return function(p1) {
       f(p1);
@@ -628,6 +637,12 @@ class Function2Extensions {
       }
       catch (e: Dynamic) { }
       return d;
+    }
+  }
+  public static function thenDo<P1, P2>(f1: P1 -> P2 -> Void, f2: P1 -> P2 -> Void): P1 -> P2 -> Void {
+    return function(p1, p2) {
+      f1(p1, p2);
+      f2(p1, p2);
     }
   }
   public static function returning<P1, P2, R1, R2>(f: Function2<P1, P2, R1>, thunk: Thunk<R2>): Function2<P1, P2, R2> {
@@ -683,6 +698,12 @@ class Function3Extensions {
       return d;
     }
   }
+  public static function thenDo<P1, P2, P3>(f1: P1 -> P2 -> P3 -> Void, f2: P1 -> P2 -> P3 -> Void): P1 -> P2 -> P3 -> Void {
+    return function(p1, p2, p3) {
+      f1(p1, p2, p3);
+      f2(p1, p2, p3);
+    }
+  }
   public static function returning<P1, P2, P3, R1, R2>(f: Function3<P1, P2, P3, R1>, thunk: Thunk<R2>): Function3<P1, P2, P3, R2> {
     return function(p1, p2, p3) {
       f(p1, p2, p3);
@@ -731,6 +752,12 @@ class Function4Extensions {
       }
       catch (e: Dynamic) { }
       return def;
+    }
+  }
+  public static function thenDo<P1, P2, P3, P4>(f1: P1 -> P2 -> P3 -> P4 -> Void, f2: P1 -> P2 -> P3 -> P4 -> Void): P1 -> P2 -> P3 -> P4 -> Void {
+    return function(p1, p2, p3, p4) {
+      f1(p1, p2, p3, p4);
+      f2(p1, p2, p3, p4);
     }
   }
   public static function returning<P1, P2, P3, P4, R1, R2>(f: Function4<P1, P2, P3, P4, R1>, thunk: Thunk<R2>): Function4<P1, P2, P3, P4, R2> {
@@ -783,6 +810,12 @@ class Function5Extensions {
       }
       catch (e: Dynamic) { }
       return def;
+    }
+  }
+  public static function thenDo<P1, P2, P3, P4, P5>(f1: P1 -> P2 -> P3 -> P4 -> P5 -> Void, f2: P1 -> P2 -> P3 -> P4 -> P5 -> Void): P1 -> P2 -> P3 -> P4 -> P5 -> Void {
+    return function(p1, p2, p3, p4, p5) {
+      f1(p1, p2, p3, p4, p5);
+      f2(p1, p2, p3, p4, p5);
     }
   }
   public static function returning<P1, P2, P3, P4, P5, R1, R2>(f: Function5<P1, P2, P3, P4, P5, R1>, thunk: Thunk<R2>): Function5<P1, P2, P3, P4, P5, R2> {
@@ -844,6 +877,9 @@ class OptionExtensions {
       case None: None;
       case Some(v): Some(f(v));
     }
+  }
+  public static function then<T, S>(o1: Option<T>, o2: Option<S>): Option<S> {
+    return o2;
   }
   public static function foreach<T>(o: Option<T>, f: T -> Void): Void {
     return switch (o) {

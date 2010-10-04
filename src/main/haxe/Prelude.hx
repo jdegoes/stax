@@ -214,6 +214,10 @@ class Future<T> {
 
     return fut;
   }
+  
+  public function then<S>(f: Future<S>): Future<S> {
+    return f;
+  }
 
   /** Maps the result of this future to another future, and returns a future
    * of the result of that future. Useful when chaining together multiple
