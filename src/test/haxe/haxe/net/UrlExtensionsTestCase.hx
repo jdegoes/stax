@@ -69,6 +69,7 @@ class UrlExtensionsTestCase extends TestCase {
     assertEquals('ftp://:923/home/smith/budget.wk1?foo=bar#top', p.withoutHostname().toUrl());
     assertEquals('eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutProtocol().toUrl());
     assertEquals('ftp://eau.ww.eesd.gov.calgary:923/home/smith/?foo=bar#top', p.withoutFile().toUrl());
+    assertEquals('ftp://gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutSubdomains().toUrl());
     
     assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
   }

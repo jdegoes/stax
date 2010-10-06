@@ -112,6 +112,15 @@ class UrlExtensions {
     return withSearch(parsed, '');
   }
   
+  public static function withoutSubdomains(parsed: ParsedUrl): ParsedUrl {
+    var Pattern = ~/([^.]+\.[^.]+)$/;
+    
+    return if (Pattern.match(parsed.hostname)) {
+      withHostname(parsed, Pattern.matched(1));
+    }
+    else parsed;
+  }
+  
   public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
     return withHash(parsed, '');
   }
