@@ -225,11 +225,16 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
     
     listener = function(event) {
       if (event.origin == originUrl || event.origin == 'null') {
+        log.debug('Received data from right domain: ' + event.data);
+        
         var data = Json.decodeObject(event.data);
         
         if (!f(data)) {
           Quirks.removeEventListener(self.bindTarget, 'message', listener, false);
         }
+      }
+      else {
+        log.warning('Received data but from wrong domain: expected: ' + originUrl + ', but found: ' + event.origin);
       }
     }
     
