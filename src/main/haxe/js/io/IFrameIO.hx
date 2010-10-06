@@ -217,7 +217,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   override public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
     var originUrl = getUrlFor(originWindow, originUrl_);
     
-    //log.debug('originUrl = ' + originUrl + ', originUrl_ = ' + originUrl_);
+    log.debug('originUrl = ' + originUrl + ', originUrl_ = ' + originUrl_);
 
     var listener: EventListener<Dynamic> = null;
     
@@ -240,6 +240,8 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
 
   override public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
     var targetUrl = getUrlFor(targetWindow, targetUrl_);
+    
+    log.debug('targetUrl = ' + targetUrl + ', targetUrl_ = ' + targetUrl_);
     
     if (targetUrl.startsWith('file:')) targetUrl = '*';
     
