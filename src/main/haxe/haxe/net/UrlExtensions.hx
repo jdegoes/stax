@@ -80,6 +80,21 @@ class UrlExtensions {
     return formUrl(parsed.protocol, parsed.hostname, parsed.port, parsed.pathname, search, parsed.hash);
   }
   
+  public static function withSubdomains(parsed: ParsedUrl, subdomains: String): ParsedUrl {
+    var Pattern = ~/([^.]+\.[^.]+)$/;
+    
+    var replaceSubdomains = function(oldHostname: String, subdomains: String): String {
+      return if (Pattern.match(oldHostname)) {
+        var prefix = subdomains + (if (subdomains.endsWith('.') || subdomains.length == 0) '' else '.');
+        
+        prefix + Pattern.matched(1);
+      } 
+      else oldHostname;
+    }
+    
+    return formUrl(parsed.protocol, replaceSubdomains(parsed.hostname, subdomains), parsed.port, parsed.pathname, parsed.search, parsed.hash);
+  }
+  
   public static function withHash(parsed: ParsedUrl, hash: String): ParsedUrl {
     return formUrl(parsed.protocol, parsed.hostname, parsed.port, parsed.pathname, parsed.search, hash);
   }
@@ -113,12 +128,7 @@ class UrlExtensions {
   }
   
   public static function withoutSubdomains(parsed: ParsedUrl): ParsedUrl {
-    var Pattern = ~/([^.]+\.[^.]+)$/;
-    
-    return if (Pattern.match(parsed.hostname)) {
-      withHostname(parsed, Pattern.matched(1));
-    }
-    else parsed;
+    return withSubdomains(parsed, '');
   }
   
   public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
