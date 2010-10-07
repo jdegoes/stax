@@ -261,7 +261,7 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function normalizeOpt(url: Url): Option<Url> {
-    //log.debug('normalizeOpt url = ' + url);
+    log.debug('before url = ' + url);
     
     return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().withoutSearch().toUrl());
   }
@@ -272,6 +272,8 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   
   private static function getUrlFor(w: Window, url_: Url): Url {
     return if (url_.startsWith('about:')) {
+      log.debug('url is about:self, must try to determine actual url');
+      
       var allWindows = [w].concat(Stax.unfold(w, function(w) {
         var parentWindow = w.parent;
         

@@ -72,6 +72,10 @@ class UrlExtensionsTestCase extends TestCase {
     assertEquals('ftp://gov.calgary:923/home/smith/budget.wk1?foo=bar#top', p.withoutSubdomains().toUrl());
     
     assertEquals('ftp://eau.ww.eesd.gov.calgary:923', p.withoutSearch().withoutHash().withoutPathname().toUrl());
+    
+    var p2 = 'http://co121w.col121.mail.live.com/mail/home.mvc?n=1025401125&livecom=1';
+    
+    assertEquals('http://co121w.col121.mail.live.com', p2.toParsedUrl().get().withoutHash().withoutPathname().withoutSearch().toUrl());
   }
   
   public function testCanParseFileProtocol() {
