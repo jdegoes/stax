@@ -52,6 +52,12 @@ class UrlExtensionsTestCase extends TestCase {
     assertEquals('?foo=bar', p.search);
   }
   
+  public function testParseUrl3() {
+    var url = 'http://co121w.col121.mail.live.com/?rru=home&livecom=1';
+    
+    assertEquals(url, url.toParsedUrl().get().toUrl());
+  }
+  
   public function testExtractSearchForLocalFile() {
     assertEquals('?foo', 'ad-display.js?foo'.extractSearch());
   }
@@ -76,6 +82,10 @@ class UrlExtensionsTestCase extends TestCase {
     var p2 = 'http://co121w.col121.mail.live.com/mail/home.mvc?n=1025401125&livecom=1';
     
     assertEquals('http://co121w.col121.mail.live.com', p2.toParsedUrl().get().withoutHash().withoutPathname().withoutSearch().toUrl());
+    
+    var p3 = 'http://co121w.col121.mail.live.com/?rru=home&livecom=1';
+    
+    assertEquals('http://co121w.col121.mail.live.com', p3.toParsedUrl().get().withoutHash().withoutPathname().withoutSearch().toUrl());
   }
   
   public function testCanParseFileProtocol() {

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>src/main/haxe/js/dom/HTMLDocumentExtensions.hx</string>
+	<string>src/main/haxe/js/io/IFrameIO.hx</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -21,19 +21,65 @@
 	<integer>434</integer>
 	<key>metaData</key>
 	<dict>
+		<key>src/main/haxe/Dom.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>2868</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>2707</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>20</integer>
+				<key>line</key>
+				<integer>2868</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>38</integer>
+				<key>line</key>
+				<integer>2868</integer>
+			</dict>
+		</dict>
 		<key>src/main/haxe/Prelude.hx</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>31</integer>
 				<key>line</key>
-				<integer>209</integer>
+				<integer>978</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>192</integer>
+			<integer>690</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>978</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>31</integer>
+				<key>line</key>
+				<integer>978</integer>
+			</dict>
 		</dict>
 		<key>src/main/haxe/PreludeExtensions.hx</key>
 		<dict>
@@ -283,6 +329,20 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
+		<key>src/main/haxe/haxe/net/UrlExtensions.hx</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>137</integer>
+		</dict>
 		<key>src/main/haxe/haxe/util/StringExtensions.hx</key>
 		<dict>
 			<key>caret</key>
@@ -337,7 +397,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>17</integer>
+			<integer>15</integer>
 		</dict>
 		<key>src/main/haxe/js/dom/Quirks.hx</key>
 		<dict>
@@ -358,14 +418,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>50</integer>
+				<integer>38</integer>
 				<key>line</key>
-				<integer>293</integer>
+				<integer>246</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>281</integer>
+			<integer>251</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>30</integer>
+				<key>line</key>
+				<integer>246</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>42</integer>
+				<key>line</key>
+				<integer>246</integer>
+			</dict>
 		</dict>
 		<key>src/test/haxe/haxe/data/collections/ListTestCase.hx</key>
 		<dict>
@@ -400,14 +476,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>25</integer>
+				<integer>135</integer>
 				<key>line</key>
-				<integer>66</integer>
+				<integer>77</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>49</integer>
+			<integer>47</integer>
 		</dict>
 		<key>src/test/haxe/haxe/util/StringExtensionsTestCase.hx</key>
 		<dict>
@@ -473,6 +549,9 @@
 		<string>src/main/haxe/haxe/functional/FoldableExtensions.hx</string>
 		<string>src/main/haxe/haxe/data/collections/Map.hx</string>
 		<string>src/main/haxe/js/io/IFrameIO.hx</string>
+		<string>src/main/haxe/haxe/net/UrlExtensions.hx</string>
+		<string>src/test/haxe/haxe/net/UrlExtensionsTestCase.hx</string>
+		<string>src/main/haxe/Dom.hx</string>
 		<string>src/main/haxe/js/dom/Quirks.hx</string>
 		<string>src/main/haxe/haxe/io/log/Logger.hx</string>
 		<string>src/main/haxe/Prelude.hx</string>
