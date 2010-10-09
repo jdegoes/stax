@@ -334,57 +334,46 @@ class Quirks {
   /** Retrieves the dimensions of the viewport (inner window of the browser,
    * for top-level windows).
    */
-  public static function getViewportSize(): { dx: Int, dy: Int } {
+  public static function getViewportSize(?win_: Window): { dx: Int, dy: Int } {
+    var win = win_.toOption().getOrElseC(Env.window);
+    var doc = win.document;
+    
     return if (Env.window.innerWidth != null) {
-      dx: Env.window.innerWidth,
-      dy: Env.window.innerHeight
+      dx: win.innerWidth,
+      dy: win.innerHeight
     }
-    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientWidth != null && untyped Env.document.documentElement.clientWidth != 0) {
-      dx: untyped Env.document.documentElement.clientWidth,
-      dy: untyped Env.document.documentElement.clientHeight
+    else if (untyped doc.documentElement != null && untyped doc.documentElement.clientWidth != null && untyped doc.documentElement.clientWidth != 0) {
+      dx: untyped doc.documentElement.clientWidth,
+      dy: untyped doc.documentElement.clientHeight
     }
     else {
-      dx: untyped Env.document.body.clientWidth,
-      dy: untyped Env.document.body.clientHeight
+      dx: untyped doc.body.clientWidth,
+      dy: untyped doc.body.clientHeight
     }
   }
 
   /** Retrieves the scroll of the page, in pixels. */
-  public static function getPageScroll(): { x: Int, y: Int } {
+  public static function getPageScroll(?win_: Window): { x: Int, y: Int } {
+    var win = win_.toOption().getOrElseC(Env.window);
+    var doc = win.document;
+    
     var xScroll: Int = 0;
     var yScroll: Int = 0;
 
     if (untyped Env.window.pageYOffset != null) {
-      yScroll = untyped Env.window.pageYOffset;
-      xScroll = untyped Env.window.pageXOffset;
+      yScroll = untyped win.pageYOffset;
+      xScroll = untyped win.pageXOffset;
     }
-    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.scrollTop != null) {
-      yScroll = untyped Env.document.documentElement.scrollTop;
-      xScroll = untyped Env.document.documentElement.scrollLeft;
+    else if (untyped doc.documentElement != null && untyped doc.documentElement.scrollTop != null) {
+      yScroll = untyped doc.documentElement.scrollTop;
+      xScroll = untyped doc.documentElement.scrollLeft;
     }
     else if (Env.document.body != null) {
-      yScroll = untyped Env.document.body.scrollTop;
-      xScroll = untyped Env.document.body.scrollLeft;
+      yScroll = untyped doc.body.scrollTop;
+      xScroll = untyped doc.body.scrollLeft;
     }
 
     return { x: xScroll, y: yScroll };
-  }
-
-  /** Retrieves the height of the page, in pixels. */
-  public static function getPageHeight(): Int {
-    var windowHeight: Int = 0;
-
-    if (untyped Env.window.innerHeight != null) {
-      windowHeight = untyped Env.window.innerHeight;
-    }
-    else if (untyped Env.document.documentElement != null && untyped Env.document.documentElement.clientHeight != null) {
-      windowHeight = untyped Env.document.documentElement.clientHeight;
-    }
-    else if (Env.document.body != null) {
-      windowHeight = untyped Env.document.body.clientHeight;
-    }
-
-    return windowHeight;
   }
 
   /** Determines if the specified element has the specified attribute.
