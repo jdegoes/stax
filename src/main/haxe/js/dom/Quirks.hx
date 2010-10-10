@@ -77,13 +77,13 @@ class Quirks {
 
   public static function getIframeDocument(iframe: HTMLIFrameElement): HTMLDocument {
     if (iframe.contentDocument != null) {
-      return untyped iframe.contentDocument;
+      return iframe.contentDocument;
+    }
+    else if (iframe.contentWindow != null) {
+      return iframe.contentWindow.document;
     }
     else if (untyped iframe.document != null) {
       return untyped iframe.document;
-    }
-    else if (iframe.contentWindow != null) {
-      return untyped iframe.contentWindow.document;
     }
     else { throw "Cannot find iframe content document for " + iframe; return null; }
   }
