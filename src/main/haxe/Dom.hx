@@ -17702,7 +17702,7 @@ typedef Window = {
     public var top              (default, null): Window;
     public var window           (default, null): WindowProxy;
     public var self             (default, null): WindowProxy;
-    public var document         (default, null): Document;
+    public var document         (default, null): HTMLDocument;
     public var name:            DOMString;
     public var location         (default, null): Location;
     public var history          (default, null): History;
@@ -17885,7 +17885,7 @@ typedef WindowProxy = {
     public var top              (default, null): Window;
     public var window           (default, null): WindowProxy;
     public var self             (default, null): WindowProxy;
-    public var document         (default, null): Document;
+    public var document         (default, null): HTMLDocument;
     public var name:            DOMString;
     public var location         (default, null): Location;
     public var history          (default, null): History;
@@ -18067,7 +18067,7 @@ typedef Frame = {
     public var top              (default, null): Window;
     public var window           (default, null): WindowProxy;
     public var self             (default, null): WindowProxy;
-    public var document         (default, null): Document;
+    public var document         (default, null): HTMLDocument;
     public var name:            DOMString;
     public var location         (default, null): Location;
     public var history          (default, null): History;
