@@ -15575,7 +15575,7 @@ typedef HTMLIFrameElement = {
     public var scrolling:       DOMString;
     public var src:             DOMString;
     public var width:           DOMString;
-    public var contentDocument  (default, null): Document;
+    public var contentDocument  (default, null): HTMLDocument;
     public var contentWindow    (default, null): Window;
     
             
