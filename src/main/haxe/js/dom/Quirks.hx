@@ -179,9 +179,7 @@ class Quirks {
       });
     });
 
-    if (doc.styleSheets.length <= 0) {
-      addCssStylesheet(doc, '');
-    }
+    addCssStylesheet(doc, '');
 
     var lastStyleSheet: CSSStyleSheet = cast doc.styleSheets[doc.styleSheets.length - 1];
 
