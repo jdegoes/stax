@@ -86,6 +86,15 @@ interface InjectorConfig {
  *  }
  * );
  * </pre>
+ * Interfaces can specify a default implementation by adding the following metadata to the interface itself:
+ * <pre>
+ * @DefaultImplementation("full.path.to.ImplementationClass")
+ * </pre>
+ * By default the BindingType is OneToMany but you can specify the desired type as the second parameter:
+ * <pre>
+ * @DefaultImplementation("full.path.to.ImplementationClass", "OneToOne")
+ * </pre>
+ * Note that due to limitations in the metadata system both the arguments must be passed as String values.
  */
 class Injector {
   /** Injects an implementation of the specified interface. The implementation 
