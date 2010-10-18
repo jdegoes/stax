@@ -122,7 +122,7 @@ class InjectorTestCase extends TestCase {
   
   public function testAutoInjectionHasLowerPrecedence() {
     Injector.enter(function(c) {
-//      Assert.is(IAutoinjected.inject(), Autoinjected);
+      Assert.is(IAutoinjected.inject(), Autoinjected);
       c.bind(IAutoinjected, NotAutoinjected, OneToOne);
       Assert.is(IAutoinjected.inject(), NotAutoinjected);
       return Unit;
