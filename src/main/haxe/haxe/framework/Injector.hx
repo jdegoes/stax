@@ -20,6 +20,7 @@ import Prelude;
 
 import haxe.PosInfos;
 
+import PreludeExtensions;
 using PreludeExtensions;
 
 enum BindingType {
@@ -110,6 +111,7 @@ class Injector {
 }
 
 private typedef Bindings = {
+  defaultBindings: Hash<Option<Void -> Dynamic>>,
   globalBindings:  Hash<Void -> Dynamic>,
   packageBindings: Hash<Hash<Void -> Dynamic>>,
   moduleBindings:  Hash<Hash<Void -> Dynamic>>,
@@ -134,6 +136,7 @@ private class InjectorImpl {
   
   public static function forever<T>(f: InjectorConfig -> T): T {
     state.unshift({
+      defaultBindings: new Hash(),
       globalBindings:  new Hash(),
       packageBindings: new Hash(),
       moduleBindings:  new Hash(),
@@ -145,6 +148,7 @@ private class InjectorImpl {
   
   public static function enter<T>(f: InjectorConfig -> T): T {
     state.unshift({
+      defaultBindings: new Hash(),
       globalBindings:  new Hash(),
       packageBindings: new Hash(),
       moduleBindings:  new Hash(),
@@ -250,7 +254,28 @@ private class InjectorImpl {
     var moduleName  = moduleOf(pos);
     var packageName = packageOf(pos);
   
-    return getClassBinding(c, className).orElse(getModuleBinding.lazy(c, moduleName)).orElse(getPackageBinding.lazy(c, packageName)).orElse(getGlobalBinding.lazy(c));
+    return getClassBinding(c, className).orElse(getModuleBinding.lazy(c, moduleName)).orElse(getPackageBinding.lazy(c, packageName)).orElse(getGlobalBinding.lazy(c)).orElse(getDefaultImplementationBinding.lazy(c));
+  }
+  
+  private static function getDefaultImplementationBinding(c: Class<Dynamic>): Option<Void -> Dynamic> {
+    if(existsDefaultBinding(c))
+      return getDefaultBinding(c);
+    var f = OptionExtensions.toOption(haxe.rtti.Meta.getType(c))
+      .flatMap(function(m : Dynamic) { 
+        return OptionExtensions.toOption((Reflect.hasField(m, "DefaultImplementation") ? Reflect.field(m, "DefaultImplementation") : null)); })
+      .flatMap(function(p : Array<String>) {
+        var cls = null;
+        return if(null == p || null == p[0] || null == (cls = Type.resolveClass(p[0]))) None else Some(Tuple2.create(cls, null != p[1] ? Type.createEnum(BindingType, p[1], []) : null)); })
+      .flatMap(function(p : Tuple2<Class<Dynamic>, BindingType>) {
+        return switch(bindingTypeDef(p._2)) {
+          case OneToOne:
+            factoryFor(p._1).toOption();
+          case OneToMany:
+            factoryFor(p._1).memoize().toOption();
+        };
+      });
+    addDefaultBinding(c, f);
+    return f;    
   }
 
   private static function getGlobalBinding(c: Class<Dynamic>): Option<Void -> Dynamic> {
@@ -276,6 +301,18 @@ private class InjectorImpl {
   private static function addGlobalBinding(c: Class<Dynamic>, f: Void -> Dynamic) {
     state.first().globalBindings.set(Type.getClassName(c), f);
   }
+  
+  private static function existsDefaultBinding(c : Class<Dynamic>) {
+    return state.first().defaultBindings.exists(Type.getClassName(c));
+  }
+  
+  private static function addDefaultBinding(c : Class<Dynamic>, f: Option<Void -> Dynamic>) {
+    state.first().defaultBindings.set(Type.getClassName(c), f);
+  }
+  
+  private static function getDefaultBinding(c : Class<Dynamic>) : Option<Void->Dynamic> {
+    return state.first().defaultBindings.get(Type.getClassName(c));
+  }
 
   private static function getSpecificBinding(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, c: Class<Dynamic>, specific: String): Option<Void -> Dynamic> {
     for (bindings in state) {
@@ -286,7 +323,7 @@ private class InjectorImpl {
       if (!result.isEmpty()) {
         return result;
       }
-    }
+    }   
   
     return None;
   }

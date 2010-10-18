@@ -99,4 +99,55 @@ class InjectorTestCase extends TestCase {
       return Unit;
     });
   }
+  
+  public function testAutoInjectionOneToOneFromMetadata() {
+    Injector.enter(function(c) {
+      var i1 = IAutoinjected.inject();
+      var i2 = IAutoinjected.inject();
+      Assert.is(i1, Autoinjected);
+      Assert.isTrue(i1 != i2);
+      return Unit;
+    });
+  }
+  
+  public function testAutoInjectionOneToManyFromMetadata() {
+    Injector.enter(function(c) {
+      var i1 = IAutoinjectedMany.inject();
+      var i2 = IAutoinjectedMany.inject();
+      Assert.is(i1, AutoinjectedMany);
+      Assert.isTrue(i1 == i2);
+      return Unit;
+    });
+  }
+  
+  public function testAutoInjectionHasLowerPrecedence() {
+    Injector.enter(function(c) {
+//      Assert.is(IAutoinjected.inject(), Autoinjected);
+      c.bind(IAutoinjected, NotAutoinjected, OneToOne);
+      Assert.is(IAutoinjected.inject(), NotAutoinjected);
+      return Unit;
+    });
+  }
+}
+
+@DefaultImplementation("haxe.framework.Autoinjected", "OneToOne")
+interface IAutoinjected {
+	
+}
+
+class Autoinjected implements IAutoinjected {
+  public function new();
+}
+
+class NotAutoinjected implements IAutoinjected {
+  public function new();
+} 
+
+@DefaultImplementation("haxe.framework.AutoinjectedMany", "OneToMany")
+interface IAutoinjectedMany {
+	
+}
+
+class AutoinjectedMany implements IAutoinjectedMany {
+  public function new();
 }
