@@ -16,6 +16,7 @@
 */
 package haxe.time;
 
+@DefaultImplementation("haxe.time.SystemClock", "OneToMany")
 interface Clock {
   public function now(): Date;
 }

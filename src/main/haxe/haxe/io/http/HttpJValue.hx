@@ -38,6 +38,9 @@ using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 using haxe.net.HttpHeaderExtensions;
 
+#if js
+@DefaultImplementation("haxe.io.http.HttpJValueAsync", "OneToMany")
+#end
 interface HttpJValue implements Http<JValue> {
 }
 
@@ -48,10 +51,6 @@ class HttpJValueAsync extends HttpTransformer<String, JValue>, implements HttpJV
     super(new HttpStringAsync(), Json.encode, Json.decode);
   }
 }
-
-#end
-
-#if js
 
 class HttpJValueJsonp implements HttpJValue {
   static var Responders   = {};

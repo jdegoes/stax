@@ -34,6 +34,9 @@ using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
 using haxe.net.HttpHeaderExtensions;
 
+#if js
+@DefaultImplementation("haxe.io.http.HttpStringAsync", "OneToMany")
+#end
 interface HttpString implements Http<String> {
 }
 
