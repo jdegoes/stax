@@ -85,9 +85,9 @@ class StaxTestSuite {
           new GuidTestCase()
           #if js
           , new HttpStringTestCase() // This one should be cross-platform, eventually
-//          , new IFrameIOTestCase()      
+          , new IFrameIOTestCase()      
           , new HttpJValueJsonpTestCase()
-//          , new HTMLElementExtensionsTestCase()
+          , new HTMLElementExtensionsTestCase()
           , new QuirksTestCase()
           , new ObjectExtensionsTestCase()
           , new TranscodeJValueExtensionsTestCase()

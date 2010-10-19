@@ -5,7 +5,7 @@ import haxe.test.TestCase;
 import haxe.reactive.Reactive;
 import haxe.data.collections.List;
 import haxe.data.collections.Collection;
-import haxe.reactive.SignalCollection;
+import haxe.reactive.SignalCollectionExtensions;
 import haxe.reactive.SignalSignal;
 import haxe.reactive.SignalFloat;
 import haxe.reactive.SignalInt;
@@ -2345,106 +2345,107 @@ class ReactiveTestCase extends TestCase {
   public function testSignalCollectionTake(): Void {
     var signal: Signal<List<Int>> = Signals.constant([1, 2, 3, 4, 5].toList());
     
-    var taken = SignalCollection.take(signal, 3).valueNow();
+    var taken = SignalCollectionExtensions.take(signal, 3).valueNow();
     
     assertEquals([1, 2, 3], taken);
   }
   
   public function testSignalCollectionDrop(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5]));
     
-    var dropped = SignalCollection.drop(signal, 3).valueNow();
+    var dropped = SignalCollectionExtensions.drop(signal, 3).valueNow();
     
     assertEquals([4, 5], dropped);
   }
+*/
   
   public function testSignalCollectionConcat(): Void {
-    var signal: Signal<Collection<Dynamic, Int>> =  Signals.constant([1, 2, 3, 4, 5]);
-    var signal2: Signal<Collection<Dynamic, Int>> = Signals.constant([6, 7, 8]);
+    var signal  = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6, 7, 8]));
+
+    var concated = SignalCollectionExtensions.concatS(signal, signal2).valueNow();
     
-    var concated = SignalCollection.concatS(signal, signal2).valueNow();
-    
-    assertEquals([1, 2, 3, 4, 5, 6, 7, 8], concated);
+    assertEquals([1, 2, 3, 4, 5, 6, 7, 8], concated.toArray());
   }
   
   public function testSignalCollectionJoin(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5]));
     
-    var joined = SignalCollection.join(signal, " ; ").valueNow();
+    var joined = SignalCollectionExtensions.join(signal, " ; ").valueNow();
     
     assertEquals("1 ; 2 ; 3 ; 4 ; 5", joined);
   }
 
   public function testSignalCollectionSize(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5]));
     
-    var size = SignalCollection.size(signal).valueNow();
+    var size = SignalCollectionExtensions.size(signal).valueNow();
     
     assertEquals(5, size);
   }
   
   public function testSignalCollectionZip(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
+    var signal1 = Signals.constant([1, 2, 3, 4, 5].toList());
+    var signal2 = Signals.constant([6, 7, 8].toList());
     
-    var zipped = SignalCollection.zipS(signal1, signal2).valueNow();
+    var zipped = SignalCollectionExtensions.zipS(signal1, signal2).valueNow();
     
-    assertEquals([tuple2(1, 6), tuple2(2, 7), tuple2(3, 8)], zipped);
+    assertEquals([Tuple2.create(1, 6), Tuple2.create(2, 7), Tuple2.create(3, 8)], zipped.toArray());
   }
-  
+/*F 
   public function testSignalCollectionZip3(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,  7, 8]));
+    var signal3 = Signals.constant(toCollection([99, 8, 13]));
     
-    var zipped = SignalCollection.zip3B(signal1, signal2, signal3).valueNow();
+    var zipped = SignalCollectionExtensions.zip3B(signal1, signal2, signal3).valueNow();
     
     assertEquals([tuple3(1, 6, 99), tuple3(2, 7, 8), tuple3(3, 8, 13)], zipped);
   }
   
   public function testSignalCollectionZip4(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 1, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,  7, 1, 8]));
+    var signal3 = Signals.constant(toCollection([99, 8, 13]));
+    var signal4 = Signals.constant(toCollection([12, 13, 14, 15]));
     
-    var zipped = SignalCollection.zip4B(signal1, signal2, signal3, signal4).valueNow();
+    var zipped = SignalCollectionExtensions.zip4B(signal1, signal2, signal3, signal4).valueNow();
     
     assertEquals([tuple4(1, 6, 99, 12), tuple4(2, 7, 8, 13), tuple4(3, 1, 13, 14)], zipped);
-  }
+  } 
   
   public function testSignalCollectionZip5(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,   2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99,  8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
-    var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
+    var signal1 = Signals.constant(toCollection([1,   2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,   7, 1, 8]));
+    var signal3 = Signals.constant(toCollection([99,  8, 13]));
+    var signal4 = Signals.constant(toCollection([12, 13, 14, 15]));
+    var signal5 = Signals.constant(toCollection([6,   7, 1, 8]));
     
-    var zipped = SignalCollection.zip5B(signal1, signal2, signal3, signal4, signal5).valueNow();
+    var zipped = SignalCollectionExtensions.zip5B(signal1, signal2, signal3, signal4, signal5).valueNow();
     
     assertEquals([tuple5(1, 6, 99, 12, 6), tuple5(2, 7, 8, 13, 7), tuple5(3, 1, 13, 14, 1)], zipped);
   }
-  
+*/  
   public function testSignalCollectionAppend(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5]));
+    var signal = Signals.constant(toCollection([3, 4, 5]));
     
-    var append = SignalCollection.append(signal, 4).valueNow();
+    var append = SignalCollectionExtensions.append(signal, 4).valueNow();
     
-    assertEquals([3, 4, 5, 4], append);
+    assertEquals([3, 4, 5, 4], append.toArray());
   }
-  
+/*F  
   public function testSignalCollectionCons(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5]));
+    var signal = Signals.constant(toCollection([3, 4, 5]));
     
-    var cons = SignalCollection.cons(signal, 4).valueNow();
+    var cons = SignalCollectionExtensions.cons(signal, 4).valueNow();
     
-    assertEquals([4, 3, 4, 5], cons);
+    assertEquals([4, 3, 4, 5], cons.toArray());
   }
-  
+ 
   public function testSignalCollectionHeadOpt(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
+    var signal = Signals.constant(toCollection([]));
     
-    var headOpt = SignalCollection.headOpt(signal);
+    var headOpt = SignalCollectionExtensions.headOpt(signal);
     
     assertOptionEquals(None, headOpt.valueNow());
     
@@ -2454,21 +2455,21 @@ class ReactiveTestCase extends TestCase {
   }
   
   public function testSignalCollectionSlice(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
+    var signal = Signals.constant(toCollection([]));
     
-    var slice = SignalCollection.slice(signal, 2, 5);
+    var slice = SignalCollectionExtensions.slice(signal, 2, 5);
     
     assertEquals([], slice.valueNow());
     
     signal.sendSignal(toCollection([1, 1, 7, 9, 8, 7]));
     
-    assertEquals([7, 9, 8], slice.valueNow());
+    assertEquals([7, 9, 8], slice.valueNow().toArray());
   }
-  
+ 
   public function testSignalCollectionLastOpt(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([]));
+    var signal = Signals.constant(toCollection([]));
     
-    var lastOpt = SignalCollection.lastOpt(signal);
+    var lastOpt = SignalCollectionExtensions.lastOpt(signal);
     
     assertOptionEquals(None, lastOpt.valueNow());
     
@@ -2478,493 +2479,493 @@ class ReactiveTestCase extends TestCase {
   }
 
   public function testSignalCollectionCountWhile(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 7, 8, 3, 99]));
+    var signal = Signals.constant(toCollection([1, 2, 7, 8, 3, 99]));
     
-    var countWhile = SignalCollection.countWhile(signal, function(v) { return v < 8; });
+    var countWhile = SignalCollectionExtensions.countWhile(signal, function(v) { return v < 8; });
     
     assertEquals(3, countWhile.valueNow());
   }
-  
+ 
   public function testSignalCollectionDropWhile(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([100, 75, 50, 25]));
+    var signal = Signals.constant(toCollection([100, 75, 50, 25]));
     
-    var dropWhile = SignalCollection.dropWhile(signal, function(v) { return v > 50; });
+    var dropWhile = SignalCollectionExtensions.dropWhile(signal, function(v) { return v > 50; });
     
-    assertEquals([50, 25], dropWhile.valueNow());
+    assertEquals([50, 25], dropWhile.valueNow().toArray());
   }
-  
+ 
   public function testSignalCollectionTakeWhile(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([100, 75, 50, 25]));
+    var signal = Signals.constant(toCollection([100, 75, 50, 25]));
     
-    var takeWhile = SignalCollection.takeWhile(signal, function(v) { return v >= 50; });
+    var takeWhile = SignalCollectionExtensions.takeWhile(signal, function(v) { return v >= 50; });
     
-    assertEquals([100, 75, 50], takeWhile.valueNow());
+    assertEquals([100, 75, 50], takeWhile.valueNow().toArray());
   }
-  
+*/  
   public function testSignalCollectionCount(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    var signal = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
     
-    var count = SignalCollection.count(signal, function(v) { return v > 40; });
+    var count = SignalCollectionExtensions.count(signal, function(v) { return v > 40; });
     
     assertEquals(2, count.valueNow());
   }
   
   public function testSignalCollectionAll(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    var signal = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
     
-    var all = SignalCollection.all(signal, function(v) { return v > 40; });
-    var all2 = SignalCollection.all(signal, function(v) { return v > 9; });
+    var all = SignalCollectionExtensions.all(signal, function(v) { return v > 40; });
+    var all2 = SignalCollectionExtensions.all(signal, function(v) { return v > 9; });
     
     assertEquals(false, all.valueNow());
     assertEquals(true, all2.valueNow());
   }
   
   public function testSignalCollectionAny(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    var signal = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
     
-    var any = SignalCollection.any(signal, function(v) { return v > 40; });
-    var any2 = SignalCollection.any(signal, function(v) { return v > 50; });
+    var any = SignalCollectionExtensions.any(signal, function(v) { return v > 40; });
+    var any2 = SignalCollectionExtensions.any(signal, function(v) { return v > 50; });
     
     assertEquals(true, any.valueNow());
     assertEquals(false, any2.valueNow());
   }
   
   public function testSignalCollectionForEach(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
+    var signal = Signals.constant(toCollection([10, 15, 25, 30, 40, 45, 50]));
     var self = this;
     
-    var forEach = SignalCollection.forEach(signal, function(v) { self.incrementCounter(); });
+    var forEach = SignalCollectionExtensions.forEach(signal, function(v) { self.incrementCounter(); });
     
     assertEquals(7, getCounter());
     resetCounter();
   }
   
   public function testSignalCollectionMap(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50]));
+    var signal = Signals.constant(toCollection([10, 15, 45, 50]));
     
-    var map = SignalCollection.map(signal, function(v) { return ++v; });
+    var map = SignalCollectionExtensions.map(signal, function(v) { return ++v; });
     
-    assertEquals([11, 16, 46, 51], map.valueNow());
+    assertEquals([11, 16, 46, 51], map.valueNow().toArray());
   }
-  
+/*F  
   public function testSignalCollectionMap2(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+    var signal1 = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+    var signal2 = Signals.constant(toCollection([10, 15, 45, 50, 13]));
     
-    var map = SignalCollection.map2B(signal1, signal2, function(v1, v2) { return v1 - v2; });
+    var map = SignalCollectionExtensions.map2B(signal1, signal2, function(v1, v2) { return v1 - v2; });
     
-    assertEquals([0, 0, 0, 0, 62], map.valueNow());
+    assertEquals([0, 0, 0, 0, 62], map.valueNow().toArray());
   }
   
   public function testSignalCollectionMap3(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
+    var signal1 = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+    var signal2 = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+    var signal3 = Signals.constant(toCollection([14, 24, 20, 18]));
     
-    var map = SignalCollection.map3B(signal1, signal2, signal3, function(v1, v2, v3) { return v1 - v2 + v3; });
+    var map = SignalCollectionExtensions.map3B(signal1, signal2, signal3, function(v1, v2, v3) { return v1 - v2 + v3; });
     
-    assertEquals([14, 24, 20, 18], map.valueNow());
+    assertEquals([14, 24, 20, 18], map.valueNow().toArray());
   }
   
   public function testSignalCollectionMap4(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2,   4,  4,  2]));
+    var signal1 = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+    var signal2 = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+    var signal3 = Signals.constant(toCollection([14, 24, 20, 18]));
+    var signal4 = Signals.constant(toCollection([2,   4,  4,  2]));
     
-    var map = SignalCollection.map4B(signal1, signal2, signal3, signal4, function(v1, v2, v3, v4) { return (v1 - v2 + v3) / v4; });
+    var map = SignalCollectionExtensions.map4B(signal1, signal2, signal3, signal4, function(v1, v2, v3, v4) { return (v1 - v2 + v3) / v4; });
     
-    assertEquals([7, 6, 5, 9.0], map.valueNow());
+    assertEquals([7, 6, 5, 9.0], map.valueNow().toArray());
   }
   
   public function testSignalCollectionMap5(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 75]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([10, 15, 45, 50, 13]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([14, 24, 20, 18]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2,   4,  4,  2]));
-    var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([10, 8, 3]));
+    var signal1 = Signals.constant(toCollection([10, 15, 45, 50, 75]));
+    var signal2 = Signals.constant(toCollection([10, 15, 45, 50, 13]));
+    var signal3 = Signals.constant(toCollection([14, 24, 20, 18]));
+    var signal4 = Signals.constant(toCollection([2,   4,  4,  2]));
+    var signal5 = Signals.constant(toCollection([10, 8, 3]));
     
-    var map = SignalCollection.map5B(signal1, signal2, signal3, signal4, signal5, function(v1, v2, v3, v4, v5) { return ((v1 - v2 + v3) / v4) - v5; });
+    var map = SignalCollectionExtensions.map5B(signal1, signal2, signal3, signal4, signal5, function(v1, v2, v3, v4, v5) { return ((v1 - v2 + v3) / v4) - v5; });
     
-    assertEquals([-3, -2, 2.0], map.valueNow());
+    assertEquals([-3, -2, 2.0], map.valueNow().toArray());
   }
-  
+*/  
   public function testSignalCollectionPartition(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
     var filter = function(v) { return v < 4; };
     
-    var partition = SignalCollection.partition(signal, filter);
+    var partition = SignalCollectionExtensions.partition(signal, filter);
     
-    assertEquals([1, 2, 3, 3], partition.valueNow()._1);
-    assertEquals([4, 5, 6, 7, 4], partition.valueNow()._2);
+    assertEquals([1, 2, 3, 3], partition.valueNow()._1.toArray());
+    assertEquals([4, 5, 6, 7, 4], partition.valueNow()._2.toArray());
   }
-  
+/*F  
   public function testSignalCollectionPartitionWhile(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
     var filter = function(v) { return v <= 5; };
     
-    var partitionWhile = SignalCollection.partitionWhile(signal, filter);
+    var partitionWhile = SignalCollectionExtensions.partitionWhile(signal, filter);
     
-    assertEquals([1, 2, 3, 4, 5], partitionWhile.valueNow()._1);
-    assertEquals([6, 7, 3, 4], partitionWhile.valueNow()._2);
+    assertEquals([1, 2, 3, 4, 5], partitionWhile.valueNow()._1.toArray());
+    assertEquals([6, 7, 3, 4], partitionWhile.valueNow()._2.toArray());
   }
   
   public function testSignalCollectionTranspose(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
+    var signal1 = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6, 7, 8]));
     
-    var transposeped = SignalCollection.transposeS(signal1, signal2).valueNow();
+    var transposeped = SignalCollectionExtensions.transposeS(signal1, signal2).valueNow();
     
     assertEquals([tuple2(1, 6), tuple2(2, 7), tuple2(3, 8)], transposeped);
   }
   
   public function testSignalCollectionTranspose3(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,  7, 8]));
+    var signal3 = Signals.constant(toCollection([99, 8, 13]));
     
-    var transposeped = SignalCollection.transpose3B(signal1, signal2, signal3).valueNow();
+    var transposeped = SignalCollectionExtensions.transpose3B(signal1, signal2, signal3).valueNow();
     
     assertEquals([tuple3(1, 6, 99), tuple3(2, 7, 8), tuple3(3, 8, 13)], transposeped);
   }
   
   public function testSignalCollectionTranspose4(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 1, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,  7, 1, 8]));
+    var signal3 = Signals.constant(toCollection([99, 8, 13]));
+    var signal4 = Signals.constant(toCollection([12, 13, 14, 15]));
     
-    var transposeped = SignalCollection.transpose4B(signal1, signal2, signal3, signal4).valueNow();
+    var transposeped = SignalCollectionExtensions.transpose4B(signal1, signal2, signal3, signal4).valueNow();
     
     assertEquals([tuple4(1, 6, 99, 12), tuple4(2, 7, 8, 13), tuple4(3, 1, 13, 14)], transposeped);
   }
   
   public function testSignalCollectionTranspose5(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,   2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99,  8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([12, 13, 14, 15]));
-    var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([6,   7, 1, 8]));
+    var signal1 = Signals.constant(toCollection([1,   2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,   7, 1, 8]));
+    var signal3 = Signals.constant(toCollection([99,  8, 13]));
+    var signal4 = Signals.constant(toCollection([12, 13, 14, 15]));
+    var signal5 = Signals.constant(toCollection([6,   7, 1, 8]));
     
-    var transposeped = SignalCollection.transpose5B(signal1, signal2, signal3, signal4, signal5).valueNow();
+    var transposeped = SignalCollectionExtensions.transpose5B(signal1, signal2, signal3, signal4, signal5).valueNow();
     
     assertEquals([tuple5(1, 6, 99, 12, 6), tuple5(2, 7, 8, 13, 7), tuple5(3, 1, 13, 14, 1)], transposeped);
   }
-  
+*/  
   public function testSignalCollectionFilter(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
     var f = function(v) { return v < 4; };
     
-    var filter = SignalCollection.filter(signal, f);
+    var filter = SignalCollectionExtensions.filter(signal, f);
     
-    assertEquals([1, 2, 3, 3], filter.valueNow());
+    assertEquals([1, 2, 3, 3], filter.valueNow().toArray());
   }
-  
+/*F  
   public function testSignalCollectionFilterWhile(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 4, 5, 6, 7, 3, 4]));
     var f = function(v) { return v <= 5; };
     
-    var filterWhile = SignalCollection.filterWhile(signal, f);
+    var filterWhile = SignalCollectionExtensions.filterWhile(signal, f);
     
     assertEquals([1, 2, 3, 4, 5], filterWhile.valueNow());
   }
   
   public function testSignalCollectionFlatMap(): Void {
     var self = this;
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 3, 4]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 3, 4]));
     var f = function(v) { return self.singleton(v).cons(v * 10); };
     
-    var flatMap = SignalCollection.flatMap(signal, f);
+    var flatMap = SignalCollectionExtensions.flatMap(signal, f);
     
-    assertEquals([10, 1, 20, 2, 30, 3, 30, 3, 40, 4], flatMap.valueNow());
+    assertEquals([10, 1, 20, 2, 30, 3, 30, 3, 40, 4], flatMap.valueNow().toArray());
   }
   
   public function testSignalCollectionFlatMap2(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6, 7, 8]));
+    var signal1 = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6, 7, 8]));
     
     var self = this;
     var mapper = function(v1, v2) { return self.singleton(v1).cons(v2 *2); };
-    var flatMapped = SignalCollection.flatMap2B(signal1, signal2, mapper).valueNow();
+    var flatMapped = SignalCollectionExtensions.flatMap2B(signal1, signal2, mapper).valueNow();
     
-    assertEquals([12, 1, 14, 2, 16, 3], flatMapped);
+    assertEquals([12, 1, 14, 2, 16, 3], flatMapped.toArray();
   }
   
   public function testSignalCollectionFlatMap3(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([6,  7, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([99, 8, 13]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([6,  7, 8]));
+    var signal3 = Signals.constant(toCollection([99, 8, 13]));
     
     var self = this;
     var mapper = function(v1, v2, v3) { return self.singleton(v2).cons(v1 + v3); };
-    var flatMapped = SignalCollection.flatMap3B(signal1, signal2, signal3, mapper).valueNow();
+    var flatMapped = SignalCollectionExtensions.flatMap3B(signal1, signal2, signal3, mapper).valueNow();
     
-    assertEquals([100, 6, 10, 7, 16, 8], flatMapped);
+    assertEquals([100, 6, 10, 7, 16, 8], flatMapped.toArray();
   }
   
   public function testSignalCollectionFlatMap4(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([9,  14, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([12, 8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2, 2]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([9,  14, 8]));
+    var signal3 = Signals.constant(toCollection([12, 8, 13]));
+    var signal4 = Signals.constant(toCollection([2, 2]));
     
     var self = this;
     var mapper = function(v1, v2, v3, v4) { return self.singleton(v2).cons(v1 + v3).append(v4); };
-    var flatMapped = SignalCollection.flatMap4B(signal1, signal2, signal3, signal4, mapper).valueNow();
+    var flatMapped = SignalCollectionExtensions.flatMap4B(signal1, signal2, signal3, signal4, mapper).valueNow();
     
-    assertEquals([13, 9, 2, 10, 14, 2], flatMapped);
+    assertEquals([13, 9, 2, 10, 14, 2], flatMapped.toArray();
   }
   
   public function testSignalCollectionFlatMap5(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1,  2, 3, 5, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([9,  15, 8]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([12, 8, 13]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([2, 2]));
-    var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([12, 24]));
+    var signal1 = Signals.constant(toCollection([1,  2, 3, 5, 5]));
+    var signal2 = Signals.constant(toCollection([9,  15, 8]));
+    var signal3 = Signals.constant(toCollection([12, 8, 13]));
+    var signal4 = Signals.constant(toCollection([2, 2]));
+    var signal5 = Signals.constant(toCollection([12, 24]));
     
     var self = this;
     var mapper = function(v1, v2, v3, v4, v5) { return self.singleton(v2).cons(v1 + v3).append(v4 * v5); };
-    var flatMapped = SignalCollection.flatMap5B(signal1, signal2, signal3, signal4, signal5, mapper).valueNow();
+    var flatMapped = SignalCollectionExtensions.flatMap5B(signal1, signal2, signal3, signal4, signal5, mapper).valueNow();
     
-    assertEquals([13, 9, 24, 10, 15, 48], flatMapped);
+    assertEquals([13, 9, 24, 10, 15, 48], flatMapped.toArray();
   }
-  
+*/  
   public function testSignalCollectionFoldr(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var f = function(v1, v2) { return v1 + " : " + Std.string(v2); };
+    var signal = Signals.constant(toCollection([1, 3, 4]));
+    var f = function(v1 : Int, v2) { return v2 + " : " + v1; };
     
-    var foldr = SignalCollection.foldr(signal, "foo", f);
+    var foldr = SignalCollectionExtensions.foldr(signal, "foo", f);
     
     assertEquals("foo : 4 : 3 : 1", foldr.valueNow());
   }
-  
+ 
   public function testSignalCollectionFoldl(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var f = function(v1, v2) { return v1 + " : " + Std.string(v2); };
+    var signal = Signals.constant(toCollection([1, 3, 4]));
+    var f = function(v1, v2 : Int) { return v1 + " : " + v2; };
     
-    var foldl = SignalCollection.foldl(signal, "foo", f);
+    var foldl = SignalCollectionExtensions.foldl(signal, "foo", f);
     
     assertEquals("foo : 1 : 3 : 4", foldl.valueNow());
   }
-  
+/*F  
   public function testSignalCollectionFoldl2(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
+    var signal1 = Signals.constant(toCollection([1, 3, 4]));
+    var signal2 = Signals.constant(toCollection([4, 5, 6, 7]));
     
     var f = function(v1, v2, v3) { return v1 + " : " + Std.string(v2 + v3); };
     
-    var foldl2B = SignalCollection.foldl2B(signal1, signal2, "foo", f);
+    var foldl2B = SignalCollectionExtensions.foldl2B(signal1, signal2, "foo", f);
     
     assertEquals("foo : 5 : 8 : 10", foldl2B.valueNow());
   }
   
   public function testSignalCollectionFoldl3(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
+    var signal1 = Signals.constant(toCollection([1, 3, 4]));
+    var signal2 = Signals.constant(toCollection([4, 5, 6, 7]));
+    var signal3 = Signals.constant(toCollection([1, 2, 3]));
     
     var f = function(v1, v2, v3, v4) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string(v4); };
     
-    var foldl3B = SignalCollection.foldl3B(signal1, signal2, signal3, "foo", f);
+    var foldl3B = SignalCollectionExtensions.foldl3B(signal1, signal2, signal3, "foo", f);
     
     assertEquals("foo : 5 : 1 : 8 : 2 : 10 : 3", foldl3B.valueNow());
   }
   
   public function testSignalCollectionFoldl4(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([10, 10]));
+    var signal1 = Signals.constant(toCollection([1, 3, 4]));
+    var signal2 = Signals.constant(toCollection([4, 5, 6, 7]));
+    var signal3 = Signals.constant(toCollection([1, 2, 3]));
+    var signal4 = Signals.constant(toCollection([10, 10]));
     
     var f = function(v1, v2, v3, v4, v5) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string(v4 * v5); };
     
-    var foldl4B = SignalCollection.foldl4B(signal1, signal2, signal3, signal4, "foo", f);
+    var foldl4B = SignalCollectionExtensions.foldl4B(signal1, signal2, signal3, signal4, "foo", f);
     
     assertEquals("foo : 5 : 10 : 8 : 20", foldl4B.valueNow());
   }
   
   public function testSignalCollectionFoldl5(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 4]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([4, 5, 6, 7]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3]));
-    var signal4: Signal<Collection<Int>> = Signals.constant(toCollection([10, 10]));
-    var signal5: Signal<Collection<Int>> = Signals.constant(toCollection([2, 4]));
+    var signal1 = Signals.constant(toCollection([1, 3, 4]));
+    var signal2 = Signals.constant(toCollection([4, 5, 6, 7]));
+    var signal3 = Signals.constant(toCollection([1, 2, 3]));
+    var signal4 = Signals.constant(toCollection([10, 10]));
+    var signal5 = Signals.constant(toCollection([2, 4]));
     
     var f = function(v1, v2, v3, v4, v5, v6) { return v1 + " : " + Std.string(v2 + v3) + " : " + Std.string((v4 * v5) - v6); };
     
-    var foldl5B = SignalCollection.foldl5B(signal1, signal2, signal3, signal4, signal5, "foo", f);
+    var foldl5B = SignalCollectionExtensions.foldl5B(signal1, signal2, signal3, signal4, signal5, "foo", f);
     
     assertEquals("foo : 5 : 8 : 8 : 16", foldl5B.valueNow());
   }
-  
+*/  
   public function testSignalCollectionToArray(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([40, 45, 50]));
+    var signal = Signals.constant(toCollection([40, 45, 50]));
     
-    var toArray = SignalCollection.toArray(signal);
+    var toArray = SignalCollectionExtensions.toArray(signal);
     
     assertEquals([40, 45, 50], toArray.valueNow());
     assertTrue(Std.is(toArray.valueNow(), Array));
   }
   
   public function testSignalCollectionScanl(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 5]));
+    var signal = Signals.constant(toCollection([1, 3, 5]));
     
     var f = function(v1, v2) { return v1 + v2; };
     
-    var scanl = SignalCollection.scanl(signal, 1, f);
+    var scanl = SignalCollectionExtensions.scanl(signal, 1, f);
     
-    assertEquals([1, 2, 5, 10], scanl.valueNow());
+    assertEquals([1, 2, 4, 6], scanl.valueNow().toArray());
   }
   
   public function testSignalCollectionScanr(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 3, 5]));
+    var signal = Signals.constant(toCollection([1, 3, 5]));
     
     var f = function(v1, v2) { return v1 + v2; };
     
-    var scanr = SignalCollection.scanr(signal, 1, f);
+    var scanr = SignalCollectionExtensions.scanr(signal, 1, f);
     
-    assertEquals([1, 6, 9, 10], scanr.valueNow());
+    assertEquals([1, 6, 4, 2], scanr.valueNow().toArray());
   }
-  
+/*F  
   public function testSignalCollectionScanrP(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 5]));
     
     var f = function(v1, v2) { return v1 + v2; };
     
-    var scanrP = SignalCollection.scanrP(signal, f);
+    var scanrP = SignalCollectionExtensions.scanrP(signal, f);
     
-    assertEquals([8, 10], scanrP.valueNow());
+    assertEquals([8, 10], scanrP.valueNow().toArray());
   }
   
   public function testSignalCollectionScanlP(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 5]));
     
     var f = function(v1, v2) { return v1 + v2; };
     
-    var scanlP = SignalCollection.scanlP(signal, f);
+    var scanlP = SignalCollectionExtensions.scanlP(signal, f);
     
-    assertEquals([5, 10], scanlP.valueNow());
+    assertEquals([5, 10], scanlP.valueNow().toArray());
   }
   
   public function testSignalCollectionGroupBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 3, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
     
     var f = function(v1, v2) { return v1 == v2 * 2; };
     
-    var groupBy = SignalCollection.groupBy(signal, f);
+    var groupBy = SignalCollectionExtensions.groupBy(signal, f);
     
     assertEquals([[4, 2], [3], [5], [10, 5], [16, 8, 4, 2], [2], [3]], colPump(groupBy.valueNow()));
   }
   
   public function testSignalCollectionGroup(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 2, 3]));
     
-    var group = SignalCollection.group(signal);
+    var group = SignalCollectionExtensions.group(signal);
     
     assertEquals([[4], [2], [3], [5, 5, 5], [10], [5], [16], [8], [4], [2, 2], [3]], colPump(group.valueNow()));
   }
   
   public function testSignalCollectionMember(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 7, 3]));
     
-    var member =  SignalCollection.member(signal, 7);
-    var member2 = SignalCollection.member(signal, 1);
+    var member =  SignalCollectionExtensions.member(signal, 7);
+    var member2 = SignalCollectionExtensions.member(signal, 1);
     
     assertTrue(member.valueNow());
     assertFalse(member2.valueNow());
   }
-  
+
   public function testSignalCollectionExists(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 7, 3]));
     
-    var exists =  SignalCollection.exists(signal, function(v) { return v < 10; });
-    var exists2 = SignalCollection.exists(signal, function(v) { return v > 7; });
+    var exists =  SignalCollectionExtensions.exists(signal, function(v) { return v < 10; });
+    var exists2 = SignalCollectionExtensions.exists(signal, function(v) { return v > 7; });
     
     assertTrue(exists.valueNow());
     assertFalse(exists2.valueNow());
   }
   
   public function testSignalCollectionFind(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 7, 3]));
     
-    var find =  SignalCollection.find(signal, function(v) { return v < 10; });
-    var find2 = SignalCollection.find(signal, function(v) { return v > 7; });
+    var find =  SignalCollectionExtensions.find(signal, function(v) { return v < 10; });
+    var find2 = SignalCollectionExtensions.find(signal, function(v) { return v > 7; });
    
     assertOptionEquals(Some(4), find.valueNow());
     assertOptionEquals(None, find2.valueNow());
   }
   
   public function testSignalCollectionExistsP(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 7, 3]));
+    var signal = Signals.constant(toCollection([4, 2, 7, 3]));
     
-    var existsP =  SignalCollection.existsP(signal, 5, function(v1, ref) { return v1 < ref; });
-    var existsP2 = SignalCollection.existsP(signal, 1, function(v1, ref) { return v1 < ref; });
+    var existsP =  SignalCollectionExtensions.existsP(signal, 5, function(v1, ref) { return v1 < ref; });
+    var existsP2 = SignalCollectionExtensions.existsP(signal, 1, function(v1, ref) { return v1 < ref; });
     
     assertTrue(existsP.valueNow());
     assertFalse(existsP2.valueNow());
   }
   
   public function testSignalCollectionNubBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
+    var signal = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
     
-    var nubBy =  SignalCollection.nubBy(signal, function(v1, v2) { return  if (v1 == v2 || v1 == v2 * 2) true else false; });
+    var nubBy =  SignalCollectionExtensions.nubBy(signal, function(v1, v2) { return  if (v1 == v2 || v1 == v2 * 2) true else false; });
     
     assertEquals([4, 3, 5, 10, 16], nubBy.valueNow());
   }
   
   public function testSignalCollectionNub(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
+    var signal = Signals.constant(toCollection([4, 2, 3, 5, 5, 5, 10, 5, 16, 8, 4, 2, 5, 2, 3, 5]));
     
-    var nub =  SignalCollection.nub(signal);
+    var nub =  SignalCollectionExtensions.nub(signal);
     
     assertEquals([4, 2, 3, 5, 10, 16, 8], nub.valueNow());
   }
   
   public function testSignalCollectionIntersect(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([4, 2, 2, 5, 2, 3, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
+    var signal1 = Signals.constant(toCollection([4, 2, 2, 5, 2, 3, 5]));
+    var signal2 = Signals.constant(toCollection([1, 2, 3, 4]));
     
-    var intersectS =  SignalCollection.intersectS(signal1, signal2);
+    var intersectS =  SignalCollectionExtensions.intersectS(signal1, signal2);
     
     assertEquals([4, 2, 2, 2, 3], intersectS.valueNow());
   }
-  
+ 
   public function testSignalCollectionIntersectBy(): Void {
-    var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-    var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 8, 8, 2, 2, 3, 4]));
+    var signal1 = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+    var signal2 = Signals.constant(toCollection([1.0, 2, 8, 8, 2, 2, 3, 4]));
     
-    var intersectByS =  SignalCollection.intersectByS(signal1, signal2, function(v1, v2) { return v2 / 2 == v1; });
+    var intersectByS =  SignalCollectionExtensions.intersectByS(signal1, signal2, function(v1, v2) { return v2 / 2 == v1; });
     
-    assertEquals([4.0, 2, 2, 8, 2], intersectByS.valueNow());
+    assertEquals([4.0, 2, 2, 8, 2], intersectByS.valueNow().toArray());
   }
   
   public function testSignalCollectionUnionBy(): Void {
-    var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-    var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 3, 4]));
+    var signal1 = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+    var signal2 = Signals.constant(toCollection([1.0, 2, 3, 4]));
     
-    var unionByS =  SignalCollection.unionByS(signal1, signal2, function(v1, v2) { return v1 / 2 == v2; });
+    var unionByS =  SignalCollectionExtensions.unionByS(signal1, signal2, function(v1, v2) { return v1 / 2 == v2; });
     
-    assertEquals([4.0, 2, 2, 8, 2, 3, 5, 3], unionByS.valueNow());
+    assertEquals([4.0, 2, 2, 8, 2, 3, 5, 3], unionByS.valueNow().toArray());
   }
   
   public function testSignalCollectionUnion(): Void {
-    var signal1: Signal<Collection<Float>> = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
-    var signal2: Signal<Collection<Float>> = Signals.constant(toCollection([1.0, 2, 3, 4]));
+    var signal1 = Signals.constant(toCollection([4.0, 2, 2, 8, 2, 3, 5]));
+    var signal2 = Signals.constant(toCollection([1.0, 2, 3, 4]));
     
-    var unionS =  SignalCollection.unionS(signal1, signal2);
+    var unionS =  SignalCollectionExtensions.unionS(signal1, signal2);
     
-    assertEquals([4.0, 2, 2, 8, 2, 3, 5, 1], unionS.valueNow());
+    assertEquals([4.0, 2, 2, 8, 2, 3, 5, 1], unionS.valueNow().toArray());
   }
   
   public function testSignalCollectionIsPrefixOf(): Void {
-    var signal0: Signal<Collection<Int>> = Signals.constant(toCollection([]));
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
+    var signal0 = Signals.constant(toCollection([]));
+    var signal1 = Signals.constant(toCollection([2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4]));
+    var signal3 = Signals.constant(toCollection([1, 2, 3, 4]));
     
-    var isPrefixOf =  SignalCollection.isPrefixOfS(signal1, signal2);
-    var isPrefixOf2 = SignalCollection.isPrefixOfS(signal2, signal3);
-    var isPrefixOf3 = SignalCollection.isPrefixOfS(signal0, signal3);
+    var isPrefixOf =  SignalCollectionExtensions.isPrefixOfS(signal1, signal2);
+    var isPrefixOf2 = SignalCollectionExtensions.isPrefixOfS(signal2, signal3);
+    var isPrefixOf3 = SignalCollectionExtensions.isPrefixOfS(signal0, signal3);
     
     assertTrue(isPrefixOf.valueNow());
     assertFalse(isPrefixOf2.valueNow());
@@ -2972,14 +2973,14 @@ class ReactiveTestCase extends TestCase {
   }
   
   public function testSignalCollectionIsSuffixOf(): Void {
-    var signal0: Signal<Collection<Int>> = Signals.constant(toCollection([]));
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5]));
-    var signal3: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4]));
+    var signal0 = Signals.constant(toCollection([]));
+    var signal1 = Signals.constant(toCollection([2, 3, 4, 5]));
+    var signal2 = Signals.constant(toCollection([2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5]));
+    var signal3 = Signals.constant(toCollection([1, 2, 3, 4]));
     
-    var isSuffixOf =  SignalCollection.isSuffixOfS(signal1, signal3);
-    var isSuffixOf2 = SignalCollection.isSuffixOfS(signal1, signal2);
-    var isSuffixOf3 = SignalCollection.isSuffixOfS(signal0, signal3);
+    var isSuffixOf =  SignalCollectionExtensions.isSuffixOfS(signal1, signal3);
+    var isSuffixOf2 = SignalCollectionExtensions.isSuffixOfS(signal1, signal2);
+    var isSuffixOf3 = SignalCollectionExtensions.isSuffixOfS(signal0, signal3);
     
     assertFalse(isSuffixOf.valueNow());
     assertTrue(isSuffixOf2.valueNow());
@@ -2987,168 +2988,167 @@ class ReactiveTestCase extends TestCase {
   }
   
   public function testSignalCollectionDelete(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 4, 5, 3, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 4, 5, 3, 4, 5]));
     
-    var delete = SignalCollection.delete(signal, 5);
+    var delete = SignalCollectionExtensions.delete(signal, 5);
     
     assertEquals([2, 3, 4, 3, 4, 5], delete.valueNow());
   }
   
   public function testSignalCollectionDeleteBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
     var cmp = function(v1, v2) { return v2 / 2 == v1; }
     
-    var deleteBy = SignalCollection.deleteBy(signal, 4, cmp);
+    var deleteBy = SignalCollectionExtensions.deleteBy(signal, 4, cmp);
     
     assertEquals([3, 4, 5, 3, 2, 4, 5], deleteBy.valueNow());
   }
   
   public function testSignalCollectionFindIndicesOf(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([3, 4, 5, 2, 3, 2, 4, 5]));
     var cmp = function(v) { return v < 4; };
     
-    var findIndicesOf = SignalCollection.findIndicesOf(signal, cmp);
+    var findIndicesOf = SignalCollectionExtensions.findIndicesOf(signal, cmp);
     
     assertEquals([0, 3, 4, 5], findIndicesOf.valueNow());
   }
   
   public function testSignalCollectionFindIndexOf(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 2, 4, 5]));
     var cmp = function(v) { return v == 5; };
     var cmp2 = function(v) { return v == 7; };
     
-    var findIndexOf = SignalCollection.findIndexOf(signal, cmp);
-    var findIndexOf2 = SignalCollection.findIndexOf(signal, cmp2);
+    var findIndexOf = SignalCollectionExtensions.findIndexOf(signal, cmp);
+    var findIndexOf2 = SignalCollectionExtensions.findIndexOf(signal, cmp2);
     
-    assertOptionEquals(Some(4), findIndexOf.valueNow());
-    assertOptionEquals(None, findIndexOf2.valueNow());
+    assertEquals(Some(4), findIndexOf.valueNow());
+    assertEquals(None, findIndexOf2.valueNow());
   }
   
   public function testSignalCollectionIndexOf(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 2, 4, 5]));
     
-    var indexOf = SignalCollection.indexOf(signal, 4);
-    var indexOf2 = SignalCollection.indexOf(signal, 10);
+    var indexOf = SignalCollectionExtensions.indexOf(signal, 4);
+    var indexOf2 = SignalCollectionExtensions.indexOf(signal, 10);
     
     assertOptionEquals(Some(3), indexOf.valueNow());
     assertOptionEquals(None, indexOf2.valueNow());
   }
   
   public function testSignalCollectionIndicesOf(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 2, 4, 5]));
     
-    var indicesOf = SignalCollection.indicesOf(signal, 2);
-    var indicesOf2 = SignalCollection.indicesOf(signal, 10);
+    var indicesOf = SignalCollectionExtensions.indicesOf(signal, 2);
+    var indicesOf2 = SignalCollectionExtensions.indicesOf(signal, 10);
     
-    assertEquals([0, 2], indicesOf.valueNow());
-    assertEquals([], indicesOf2.valueNow());
+    assertEquals([0, 2], indicesOf.valueNow().toArray());
+    assertEquals([], indicesOf2.valueNow().toArray());
   }
   
   public function testSignalCollectionReplaceBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 2, 4, 5]));
     
     var f = function(v) { return v == 2; };
     
-    var replaceBy = SignalCollection.replaceBy(signal, 99, f);
+    var replaceBy = SignalCollectionExtensions.replaceBy(signal, 99, f);
     
     assertEquals([99, 3, 99, 4, 5], replaceBy.valueNow());
   }
   
   public function testSignalCollectionSnapshot(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([2, 3, 2, 4, 5]));
+    var signal = Signals.constant(toCollection([2, 3, 2, 4, 5]));
     
-    var snapshot = SignalCollection.snapshot(signal);
+    var snapshot = SignalCollectionExtensions.snapshot(signal);
     
     assertEquals([2, 3, 2, 4, 5], snapshot.valueNow());
     
     signal.sendSignal(toCollection([]));
     
-    assertEquals([], snapshot.valueNow());
+    assertEquals([], snapshot.valueNow().toArray());
   }
   
   public function testSignalCollectionInsertBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 5, 6]));
+    var signal = Signals.constant(toCollection([1, 2, 3, 5, 6]));
     
     var f = function(v1, v2) { return  v1 < v2; };
     
-    var insertBy = SignalCollection.insertBy(signal, 4, f);
+    var insertBy = SignalCollectionExtensions.insertBy(signal, 4, f);
     
     assertEquals([1, 2, 3, 4, 5, 6], insertBy.valueNow());
   }
   
   public function testSignalCollectionSort(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 6, 4, 8, 8, 7, 3, 2, 2, 0, 9, 7, 2]));
+    var signal = Signals.constant(toCollection([1, 6, 4, 8, 8, 7, 3, 2, 2, 0, 9, 7, 2]));
     
     var f = function(v1, v2) { return  v1 < v2; };
     
-    var sort = SignalCollection.sort(signal, f);
+    var sort = SignalCollectionExtensions.sort(signal, f);
     
     assertEquals([0, 1, 2, 2, 2, 3, 4, 6, 7, 7, 8, 8, 9], sort.valueNow());
   }
   
   public function testSignalCollectionDeleteFirstBy(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([1, 6, 4, 8, 8]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([8, 1, 9, 3, 2]));
+    var signal1 = Signals.constant(toCollection([1, 6, 4, 8, 8]));
+    var signal2 = Signals.constant(toCollection([8, 1, 9, 3, 2]));
     
-    var f = function(v1, v2) { return  Filter.isEqual(v1, v2); };
+    var f = function(v1, v2) { return  v1.equals(v2); };
     
-    var deleteFirstBy = SignalCollection.deleteFirstByS(signal1, signal2, f);
+    var deleteFirstBy = SignalCollectionExtensions.deleteFirstByS(signal1, signal2, f);
     
     assertEquals([6, 4, 8], deleteFirstBy.valueNow());
   }
   
   public function testSignalCollectionTails(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
+    var signal = Signals.constant(toCollection([1, 0, 9, 7, 2]));
     
-    var tails = SignalCollection.tails(signal);
+    var tails = SignalCollectionExtensions.tails(signal);
     
     assertEquals([[1, 0, 9, 7, 2], [0, 9, 7, 2], [9, 7, 2], [7, 2], [2], []], colPump(tails.valueNow()));
   }
   
   public function testSignalCollectionWrap(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
+    var signal = Signals.constant(toCollection([1, 0, 9, 7, 2]));
     
-    var wrap = SignalCollection.wrap(signal);
+    var wrap = SignalCollectionExtensions.wrap(signal);
     
     assertEquals([[1, 0, 9, 7, 2]], colPump(wrap.valueNow()));
   }
   
   public function testSignalCollectionToString(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([1, 0, 9, 7, 2]));
+    var signal = Signals.constant(toCollection([1, 0, 9, 7, 2]));
     
-    var toString = SignalCollection.toString(signal);
+    var toString = SignalCollectionExtensions.toString(signal);
     
     assertEquals("Collection(1, 0, 9, 7, 2)", toString.valueNow());
   }
   
   public function testSignalCollectionInstances(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([7, 1, 0, 9, 7, 2]));
+    var signal = Signals.constant(toCollection([7, 1, 0, 9, 7, 2]));
     
-    var instances = SignalCollection.instances(signal, 7);
+    var instances = SignalCollectionExtensions.instances(signal, 7);
     
     assertEquals(2, instances.valueNow());
   }
   
   public function testSignalCollectionInstancesBy(): Void {
-    var signal: Signal<Collection<Int>> = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6]));
+    var signal = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6]));
     
     var f = function(v1, v2) { return v2 * 2 == v1; };
     
-    var instancesBy = SignalCollection.instancesBy(signal, 3, f);
+    var instancesBy = SignalCollectionExtensions.instancesBy(signal, 3, f);
     
     assertEquals(3, instancesBy.valueNow());
   }
   
   public function testSignalCollectionMinus(): Void {
-    var signal1: Signal<Collection<Int>> = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6, 2]));
-    var signal2: Signal<Collection<Int>> = Signals.constant(toCollection([1, 2, 3, 4, 5]));
+    var signal1 = Signals.constant(toCollection([6, 1, 0, 9, 6, 2, 6, 2]));
+    var signal2 = Signals.constant(toCollection([1, 2, 3, 4, 5]));
     
-    var minus = SignalCollection.minusS(signal1, signal2);
+    var minus = SignalCollectionExtensions.minusS(signal1, signal2);
     
     assertEquals([6, 0, 9, 6, 6], minus.valueNow());
   }
-  
-*/    
+*/      
     
     
     
@@ -3331,14 +3331,17 @@ class ReactiveTestCase extends TestCase {
             throw "Expected to find timeout with millis = " + millis + ", but did not";
         }
     }
-/*F    
-    private function toCollection<C, S>(iter: Iterable<S>): Collection<C, S> {
-         return new StrictCollectionAdapter<S>(iter);
-     }
-     
-     private function singleton<C, S>(e: S): Collection<C, S> {
-        return toCollection([e]);
+    
+    static function toCollection<T>(values : Array<T>) : Collection<List<T>, T> {
+      return values.toList();
     }
+    
+    private function singleton<S>(e: S): Collection<List<S>, S> {
+      return toCollection([e]);
+    }
+/*F 
+     
+     
      
      private function tuple2<A, B>(a: A, b: B): Tuple2<A, B> {
         return new Tuple2<A, B>(a, b);
