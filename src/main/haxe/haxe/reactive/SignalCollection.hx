@@ -37,7 +37,7 @@ class SignalCollection {
     }
     
     public static function size<C, T>(b: Signal<Collection<C, T>>): Signal<Int> {
-        return b.map(function(c) { return c.size; });
+        return b.map(function(c) { return c.size(); });
     }
     
     public static function zipS<C, T, B>(b1: Signal<List<T>>, b2: Signal<List<B>>): Signal<List<Tuple2<T, B>>> {

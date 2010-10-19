@@ -34,6 +34,7 @@ import haxe.functional.FoldableExtensionsTestCase;
 import haxe.time.ScheduledExecutorTestCase;
 import haxe.net.UrlExtensionsTestCase;
 import haxe.net.HttpHeaderExtensionsTestCase;
+import haxe.reactive.ReactiveTestCase;
 import haxe.util.StringExtensionsTestCase;
 import haxe.util.GuidTestCase;
 import haxe.util.ObjectExtensionsTestCase;
@@ -74,7 +75,8 @@ class StaxTestSuite {
 #if !(neko || php || cpp)  
           new ScheduledExecutorTestCase(),
 #end
-          new UrlExtensionsTestCase(),
+          new UrlExtensionsTestCase(),   
+          new ReactiveTestCase(),
           new StringExtensionsTestCase(),
           new InjectorTestCase(),
           new HttpHeaderExtensionsTestCase(),
@@ -83,9 +85,9 @@ class StaxTestSuite {
           new GuidTestCase()
           #if js
           , new HttpStringTestCase() // This one should be cross-platform, eventually
-          , new IFrameIOTestCase()      
+//          , new IFrameIOTestCase()      
           , new HttpJValueJsonpTestCase()
-          , new HTMLElementExtensionsTestCase()
+//          , new HTMLElementExtensionsTestCase()
           , new QuirksTestCase()
           , new ObjectExtensionsTestCase()
           , new TranscodeJValueExtensionsTestCase()
