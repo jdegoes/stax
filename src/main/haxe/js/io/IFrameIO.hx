@@ -142,11 +142,6 @@ private class AbstractIFrameIO implements IFrameIO {
     
     var future: Future<Dynamic> = new Future();
     
-    send({
-      __requestId:  requestId,
-      __data:       requestData
-    }, targetUrl, targetWindow);
-    
     receiveWhile(function(message) {
       return if (message.__responseId != null && message.__responseId == requestId) {
         future.deliver(message.__data);
@@ -155,7 +150,12 @@ private class AbstractIFrameIO implements IFrameIO {
       }
       else true;
     }, targetUrl, targetWindow);
-    
+
+    send({
+      __requestId:  requestId,
+      __data:       requestData
+    }, targetUrl, targetWindow);
+        
     return future;
   }
 }
