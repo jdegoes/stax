@@ -406,15 +406,15 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
         var frag = tuple._2;
                 
         // Send this chunk via the hash tag:        
-        win.location.href = frag.to + '#' + frag.toMap().toQueryString().substr(1);
+        win.location.href = frag.to + '#&' + frag.toMap().toQueryString().substr(1);
     }
   }
   
   private function receiver(): Void {
     var hash = bindTarget.location.hash;
     
-    if (hash.length > 1) {
-      var query = '?' + hash.substr(1);
+    if (hash.length > 2) {
+      var query = '?' + hash.substr(2);
       
       var unknown: Dynamic = query.toQueryParameters().toObject();
       
@@ -449,14 +449,14 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       }
       
       // Don't want to receive this chunk again:
-      bindTarget.location.hash = '#';
+      bindTarget.location.hash = '#&';
     }
     else {
       var self = this;
       
       // We did not receive a chunk, so let's look for missing fragments:
       var fragmentRequests = findMissingFragments();
-      
+
       if (fragmentRequests.size() > 0) {
         var encoded: List<Tuple2<Window, AddressableFragment>> = fragmentRequests.flatMapTo(List.nil(), function(request: AddressableFragment): List<Tuple2<Window, AddressableFragment>> {
           var win = self.originUrlToWindow.get(request.to);
