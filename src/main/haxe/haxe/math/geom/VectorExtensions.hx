@@ -43,6 +43,10 @@ class Vector2dIntExtensions {
       dy: v.dy * factor
     }
   }
+
+  public static inline function dot(v1: Vector2d<Int>, v2: Vector2d<Int>): Int {
+    return v1.dx * v2.dx + v1.dy * v2.dy;
+  }
   
   public static inline function map(v: Vector2d<Int>, f: Int -> Int, g: Int -> Int): Vector2d<Int> {
     return {
@@ -90,6 +94,10 @@ class Vector2dFloatExtensions {
       dx: v.dx * factor,
       dy: v.dy * factor
     }
+  }
+
+  public static inline function dot(v1: Vector2d<Float>, v2: Vector2d<Float>): Float {
+    return v1.dx * v2.dx + v1.dy * v2.dy;
   }
   
   public static inline function map(v: Vector2d<Float>, f: Float -> Float, g: Float -> Float): Vector2d<Float> {

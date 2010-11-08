@@ -217,16 +217,12 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   override public function receiveWhile(f: Dynamic -> Bool, originUrl_: String, ?originWindow: Window): IFrameIO {
     var originUrl = getUrlFor(originWindow, originUrl_);
     
-    log.debug('originUrl = ' + originUrl + ', originUrl_ = ' + originUrl_);
-
     var listener: EventListener<Dynamic> = null;
     
     var self = this;
     
     listener = function(event) {
       if (event.origin == originUrl || event.origin == 'null') {
-        log.debug('Received data from right domain: ' + event.data);
-        
         var data = Json.decodeObject(event.data);
         
         if (!f(data)) {
@@ -246,8 +242,6 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   override public function send(data: Dynamic, targetUrl_: String, targetWindow: Window): IFrameIO {
     var targetUrl = getUrlFor(targetWindow, targetUrl_);
     
-    log.debug('targetUrl = ' + targetUrl + ', targetUrl_ = ' + targetUrl_);
-    
     if (targetUrl.startsWith('file:')) targetUrl = '*';
     
     try {
@@ -261,8 +255,6 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   }
   
   private static function normalizeOpt(url: Url): Option<Url> {
-    log.debug('before url = ' + url);
-    
     return url.toParsedUrl().map(function(p) return p.withoutHash().withoutPathname().withoutSearch().toUrl());
   }
   
@@ -272,8 +264,6 @@ class IFrameIOPostMessage extends AbstractIFrameIO, implements IFrameIO {
   
   private static function getUrlFor(w: Window, url_: Url): Url {
     return if (url_.startsWith('about:')) {
-      log.debug('url is about:self, must try to determine actual url');
-      
       var allWindows = [w].concat(Stax.unfold(w, function(w) {
         var parentWindow = w.parent;
         
