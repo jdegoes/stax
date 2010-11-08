@@ -15853,7 +15853,7 @@ typedef MessageEvent = {
   public var defaultPrevented (default, null): Bool;
   public var trusted          (default, null): Bool;
   
-  public function stopPropagatio(): Void;
+  public function stopPropagation(): Void;
   
   public function preventDefault(): Void;
   
@@ -15883,7 +15883,7 @@ typedef StorageEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16053,7 +16053,7 @@ typedef WheelEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16104,7 +16104,7 @@ typedef TextEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16181,7 +16181,7 @@ typedef KeyboardEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16244,7 +16244,7 @@ typedef CompositionEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16378,7 +16378,7 @@ typedef MouseWheelEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16423,7 +16423,7 @@ typedef Event = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16451,7 +16451,7 @@ typedef CustomEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16506,7 +16506,7 @@ typedef FocusEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16554,7 +16554,7 @@ typedef UIEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16651,7 +16651,7 @@ typedef MouseEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16682,7 +16682,7 @@ typedef PopStateEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16706,7 +16706,7 @@ typedef BeforeUnloadEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16737,7 +16737,7 @@ typedef PageTransitionEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16770,7 +16770,7 @@ typedef HashChangeEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16890,7 +16890,7 @@ typedef DragEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -16977,7 +16977,7 @@ typedef MutationEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -17050,7 +17050,7 @@ typedef MutationNameEvent = {
     public var defaultPrevented (default, null): Bool;
     public var trusted          (default, null): Bool;
     
-    public function stopPropagatio(): Void;
+    public function stopPropagation(): Void;
     
     public function preventDefault(): Void;
     
@@ -18288,7 +18288,7 @@ typedef UndoManagerEvent = {
   public var defaultPrevented (default, null): Bool;
   public var trusted          (default, null): Bool;
   
-  public function stopPropagatio(): Void;
+  public function stopPropagation(): Void;
   
   public function preventDefault(): Void;
   
