@@ -309,7 +309,18 @@ class Stream<T> {
      */
     public function sendEvent(value: Dynamic): Stream<T> {
         propagatePulse(new Pulse(Stamp.nextStamp(), value));
-        
+        return this;
+    }
+
+    /**
+     * A typed version of sendEvent.
+	 * Sends an event now. This function should not be used except to create
+     * "pure" streams.
+     *
+     * @param value The value to send.
+     */
+    public function sendEventTyped(value: T): Stream<T> {
+        propagatePulse(new Pulse(Stamp.nextStamp(), value));
         return this;
     }
     
@@ -859,17 +870,18 @@ class Stream<T> {
     }
     
     /**
-     * Zips elements of supplied streams together and returns an
-     * Stream of Tuple2 containing the zipped elements.
+     * Zips elements of supplied streams together using a function and returns a
+     * Stream of the resulting elements.
      *
-     * [1, 2, 3].zip[1, 2, 3] == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
+     * [1, 2, 3].zipWith([1, 2, 3], Tuple2.create) == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
      *
-     * @param as  The stream with which to zip 'this'.
+     * @param as  The stream with which to zipWith 'this'.
+     * @param f  The function that will be used to get the result from the inputs streams ('this' and as).
      *
-     * @return     A Tuple slice containing an element from each 
-     *             stream
+     * @return     The Stream of the result of the application of the function on using both stream elements as input.
+	 * 
      */
-    public function zip<A>(as: Stream<A>): Stream<Tuple2<T, A>> { 
+    public function zipWith<A, R>(as: Stream<A>, f : T -> A -> R): Stream<R> { 
         var testStamp = -1;
         
         var value1: T = null;
@@ -886,11 +898,26 @@ class Stream<T> {
         );
          
         return Streams.create(
-            function(pulse: Pulse<A>): Propagation<Tuple2<T, A>> { 
-                return if (testStamp == pulse.stamp) propagate(pulse.withValue(Tuple2.create(value1, pulse.value))); else doNotPropagate;
+            function(pulse: Pulse<A>): Propagation<R> { 
+                return if (testStamp == pulse.stamp) propagate(pulse.withValue(f(value1, pulse.value))); else doNotPropagate;
             },
             [as]
         );
+    }
+
+    /**
+     * Zips elements of supplied streams together and returns an
+     * Stream of Tuple2 containing the zipped elements.
+     *
+     * [1, 2, 3].zip[1, 2, 3] == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
+     *
+     * @param as  The stream with which to zip 'this'.
+     *
+     * @return     A Tuple slice containing an element from each 
+     *             stream
+     */
+    public function zip<A>(as: Stream<A>): Stream < Tuple2 < T, A >> {
+		return zipWith(as, Tuple2.create);
     }
     
     /**
@@ -1246,6 +1273,33 @@ class Signal<T> {
     }
     
     /**
+     * Zips elements of supplied streams together using a function and returns a
+     * Signal of the resulting elements.
+     *
+     * [1, 2, 3].zipWith([1, 2, 3], Tuple2.create) == [Tuple2[1, 1], Tuple2[2, 2], Tuple2[3, 3]]
+     *
+     * @param as  The signal with which to zipWith 'this'.
+     * @param f  The function that will be used to get the result from the inputs signals ('this' and as).
+     *
+     * @return     The Signal of the result of the application of the function on using both stream elements as input.
+	 * 
+     */
+    public function zipWith<A, R>(b2: Signal<A>, f : T -> A -> R): Signal<R> { 
+        var self = this;
+        
+        var applyF = function() {
+            return f(self.valueNow(), b2.valueNow());
+        }
+        
+        return Streams.create(
+            function(pulse: Pulse<Dynamic>): Propagation<R> {
+                return propagate(pulse.withValue(applyF()));
+            },
+            [this, b2].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
+        ).startsWith(applyF());
+	}
+	
+    /**
      * Zips elements of supplied Signals together and returns a
      * Signal of Tuple2 containing the zipped elements.
      *
@@ -1256,19 +1310,8 @@ class Signal<T> {
      * @return     A Signal Tuple slice containing an element from each 
      *             supplied Signal
      */
-    public function zip<B>(b2: Signal<B>): Signal<Tuple2<T, B>> {
-        var self = this;
-        
-        var createTuple = function() {
-            return Tuple2.create(self.valueNow(), b2.valueNow());
-        }
-        
-        return Streams.create(
-            function(pulse: Pulse<Dynamic>): Propagation<Tuple2<T, B>> {
-                return propagate(pulse.withValue(createTuple()));
-            },
-            [this, b2].map(function(b) { return cast(b.changes(), Stream<Dynamic>); })
-        ).startsWith(createTuple());
+    public function zip<B>(b2: Signal<B>): Signal < Tuple2 < T, B >> {
+		return zipWith(b2, Tuple2.create);
     }
     
     /**
