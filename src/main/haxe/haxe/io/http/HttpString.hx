@@ -100,7 +100,7 @@ class HttpStringAsync implements HttpString {
   }
   
   private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
-    return OptionExtensions.toOption(_headers).getOrElseC(Map.create()).set("Content-Type", contentType);
+    return OptionExtensions.toOption(_headers).getOrElseC(Map.create().set("Content-Type", contentType));
   }
 }
 
