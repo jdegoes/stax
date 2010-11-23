@@ -66,8 +66,13 @@ class HttpStringAsync implements HttpString {
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
+    try {
+      future.ifCanceled(request.abort.swallow());
+    }
+    catch(e) {
+      future.ifCanceled(request.abort);
+    }
     
-    future.ifCanceled(request.abort.swallow());
     
     request.onreadystatechange = function() {
       var toBody = function(text: String): Option<String> { return if (text == null || text.length == 0) None; else Some(text); }
