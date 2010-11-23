@@ -69,7 +69,7 @@ class HttpStringAsync implements HttpString {
     try {
       future.ifCanceled(request.abort.swallow());
     }
-    catch(e) {
+    catch(e: Dynamic) {
       future.ifCanceled(request.abort);
     }
     
