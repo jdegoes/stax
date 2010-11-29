@@ -162,6 +162,50 @@ class Env {
     ');
     return getFunc(className, tag, elm);
   }
+  
+  public static function setCookie(name:String, value: String, ?expires: Int, ?path: String, ?domain: String, secure: Bool): Void {
+    var now = Date.now();
+    var secure = if(secure == true) "secure"; else "";
+    var myCookie = (
+      asCookiePair(name, value, false) + 
+      getCookieExpiration(expires) + 
+      asCookiePair("path", path, true, "/") +
+      asCookiePair("domain", domain, true) + 
+      secure
+    );
+    document.cookie = myCookie;
+  }
+  
+  public static function getCookie(name:String): String {
+    var cookieArray = getCookies();
+    var result: String = null;
+    for (i in 0...cookieArray.length) {
+      if (StringTools.startsWith(cookieArray[i], name)) {
+         result = cookieArray[i].split("=")[1];
+      }
+    }
+    return result;
+  }
+  
+  public static function getCookies(): Array<String> {
+    return document.cookie.split(";");
+  }
+  
+  private static function getCookieExpiration(expires: Int): String {
+    return if (expires != null) {
+      var result = Date.fromTime(Date.now().getTime() + (expires * 1000 * 60 * 60 * 24));
+      ";expires=" + Std.string(untyped result.toGMTString());
+    } else "";
+  }
+  
+  private static function asCookiePair(n: String, v: String, ?withSemi: Bool = true, ?ifNull: String): String {
+    var suffix = if(withSemi) ";" else "";
+    return if (v != null) {
+      suffix + n + "=" + v; 
+    } else if (ifNull != null) {
+      suffix + n + "=" + ifNull;  
+    } else "";
+  }
 }
 
 class XmlHttpRequestState {
