@@ -100,7 +100,7 @@ class Env {
             return returnElements;
           };
         }
-        else if (document.evaluate) {
+        else if (document.evaluate) { 
           getElementsByClassName = function (className, tag, elm) {
             tag = tag || "*";
             elm = elm || document;
@@ -125,6 +125,25 @@ class Env {
               returnElements.push(node);
             }
             return returnElements;
+          };
+        }
+        else if (document.getElementsByTagName("*")) { 
+          getElementsByClassName = function(className, tag, elm) {
+            var result = new Array;
+            var tag = tag || "*";
+            var elm = elm || document;
+            
+            var elements = elm.getElementsByTagName(tag);
+               
+            for(var i=0;i<elements.length;i++){
+              var pattern = new RegExp(className, "i");
+              
+              if(pattern.test(elements[i].className)){
+                 result.push(elements[i]);
+              }
+            }
+            
+            return result;
           };
         }
         else {
@@ -427,11 +446,3 @@ class ErrorSeverity {
   public static var SEVERITY_ERROR                 :Int = 2;
   public static var SEVERITY_FATAL_ERROR           :Int = 3;
 }
-
-
-
-
-
-
-
-
