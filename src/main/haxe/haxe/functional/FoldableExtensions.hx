@@ -76,7 +76,7 @@ class FoldableExtensions {
     return mapTo(src, src.empty(), f);
   }
   
-  public static function mapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> D): C {
+  @:keep public static function mapTo<A, B, C, D>(src: Foldable<A, B>, dest: Foldable<C, D>, f: B -> D): C {
     return cast src.foldl(dest, function(a, b) {
       return cast a.append(f(b));
     });

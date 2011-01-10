@@ -23,8 +23,8 @@ using haxe.text.json.JValueExtensions;
 using PreludeExtensions;
 
 class Json {
-  public static var encodeObject = encode.compose(fromObject);
-  public static var decodeObject = toObject.compose(decode);
+  @:keep public static var encodeObject = encode.compose(fromObject);
+  @:keep public static var decodeObject = toObject.compose(decode);
 
   public static function toObject(v: JValue): Dynamic {
     switch (v) {

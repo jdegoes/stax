@@ -25,7 +25,7 @@ class StringExtensions {
   static var SepAlphaPattern        = ~/(-|_)([a-z])/g;
   static var AlphaUpperAlphaPattern = ~/-([a-z])([A-Z])/g;
 
-  public static function chunk(str: String, len: Int): List<String> {
+  @:keep public static function chunk(str: String, len: Int): List<String> {
     var start = 0;
     var end   = (start + len).min(str.length);
     
