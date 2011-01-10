@@ -976,7 +976,7 @@ class Stax {
     return function(a: A) { return a; }
   }
 
-  @:keep public static function unfold<T, R>(initial: T, unfolder: T -> Option<Tuple2<T, R>>): Iterable<R> {
+  public static function unfold<T, R>(initial: T, unfolder: T -> Option<Tuple2<T, R>>): Iterable<R> {
     return {
       iterator: function(): Iterator<R> {
         var _next: Option<R> = None;

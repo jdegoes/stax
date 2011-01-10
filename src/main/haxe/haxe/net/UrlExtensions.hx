@@ -56,7 +56,7 @@ class UrlExtensions {
   
   /** Converts a parsed url into a Url in standard string form.
    */
-  @:keep public static function toUrl(parsed: ParsedUrl): Url {
+  public static function toUrl(parsed: ParsedUrl): Url {
     return parsed.href;
   }
   
@@ -119,11 +119,11 @@ class UrlExtensions {
     return withPort(parsed, '');
   }
   
-  @:keep public static function withoutPathname(parsed: ParsedUrl): ParsedUrl {
+  public static function withoutPathname(parsed: ParsedUrl): ParsedUrl {
     return withPathname(parsed, '');
   }
   
-  @:keep public static function withoutSearch(parsed: ParsedUrl): ParsedUrl {
+  public static function withoutSearch(parsed: ParsedUrl): ParsedUrl {
     return withSearch(parsed, '');
   }
   
@@ -131,7 +131,7 @@ class UrlExtensions {
     return withSubdomains(parsed, '');
   }
   
-  @:keep public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
+  public static function withoutHash(parsed: ParsedUrl): ParsedUrl {
     return withHash(parsed, '');
   }
   

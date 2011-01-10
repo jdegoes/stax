@@ -263,7 +263,7 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return Set.create(_keyOrder, _keyEqual, _keyHash, _keyShow).addAll(keys());
   }
   
-  @:keep public function values(): Iterable<V> {
+  public function values(): Iterable<V> {
     var self = this;
     
     return {

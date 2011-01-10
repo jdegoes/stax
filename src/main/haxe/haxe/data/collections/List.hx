@@ -30,7 +30,7 @@ using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 /** A classic immutable list built from cons and nil elements. */
-@:keep class List<T> implements Collection<List<T>, T> {
+class List<T> implements Collection<List<T>, T> {
   public var head (getHead, null): T;
   public var tail (getTail, null): List<T>;
 
@@ -287,7 +287,7 @@ using haxe.functional.FoldableExtensions;
    *
    * @param f Called with every two consecutive elements to retrieve a list of gaps.
    */
-  @:keep public function gaps<G>(f: T -> T -> List<G>, ?equal: EqualFunction<G>): List<G> {
+  public function gaps<G>(f: T -> T -> List<G>, ?equal: EqualFunction<G>): List<G> {
     return zip(drop(1)).flatMapTo(List.nil(equal), function(tuple) return f(tuple._1, tuple._2));
   }
 

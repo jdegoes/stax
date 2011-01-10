@@ -560,7 +560,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
   }
 }
 
-@:keep private class MessageKey {  
+private class MessageKey {  
   public var messageId     (default, null): Int;
   public var from          (default, null): String;
   public var to            (default, null): String;
