@@ -110,7 +110,7 @@ class Quirks {
     }
   }
 
-  public static function removeEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
+  @:keep public static function removeEventListener(target: EventTarget, type: DOMString, listener: EventListener<Dynamic>, useCapture: Bool): Void untyped {
     if (target.removeEventListener != null) {
       target.removeEventListener(type, listener, useCapture);
     }

@@ -63,7 +63,7 @@ class DynamicExtensions {
       return t;
     }
   }
-  public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
+  @:keep public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
     var map: Map<String, T> = Map.create();
     
     for (field in Reflect.fields(d)) {
@@ -138,7 +138,7 @@ class IntExtensions {
     }
   }
   
-  public static function until(start: Int, end: Int): Iterable<Int> {
+  @:keep public static function until(start: Int, end: Int): Iterable<Int> {
     return to(start, end - 1);
   }  
   public static function compare(v1: Int, v2: Int) : Int {
@@ -1116,7 +1116,7 @@ class IterableExtensions {
     return s + suffix;
   }
   
-  public static function toList<T>(i: Iterable<T>) {
+  @:keep public static function toList<T>(i: Iterable<T>) {
     return haxe.data.collections.List.create().addAll(i);
   }
   
