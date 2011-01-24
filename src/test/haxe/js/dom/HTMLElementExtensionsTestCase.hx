@@ -432,6 +432,14 @@ class HTMLElementExtensionsTestCase extends TestCase {
       removeTestElement('test');
     }
     
+    private function testThatHasClassWorks(): Void {
+      var div = createTestElement('div', 'test');
+      div.setAttribute("class", "foo");
+      
+      assertTrue(div.hasClass("foo"));
+      removeTestElement('test');
+    }
+    
     
     
     
