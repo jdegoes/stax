@@ -92,12 +92,13 @@ class HTMLDocumentExtensions {
     return doc.getElementById(s);
   }
   
-  public static function getId(doc: HTMLDocument, a: Array<String>): HTMLElement {
-    var result = [];
+  public static function getIds(doc: HTMLDocument, a: Array<String>): Array<HTMLElement> {
+    var result: Array<HTMLElement> = [];
     
     for (i in 0...a.length) {
-      result.push(getId(a[i]));
+      result.push(getId(doc, a[i]));
     }
+    
     return result;
   }
   
