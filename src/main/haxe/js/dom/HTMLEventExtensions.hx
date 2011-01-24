@@ -23,7 +23,7 @@ import PreludeExtensions;
 using PreludeExtensions;
 
 class HTMLEventExtensions {
-  public function cancelBubbling(e: EventListener<Dynamic>): Void {
+  public static function cancelBubbling(e: EventListener<Dynamic>): Void {
     var cancelBubble = untyped e.cancelBubble;
     if (cancelBubble != null) {
       untyped e.cancelBubble = true;
@@ -33,7 +33,7 @@ class HTMLEventExtensions {
     }
   }
   
-  private function getRelatedTarget(event: EventListener<Dynamic>): HTMLElement {
+  public static function getRelatedTarget(event: EventListener<Dynamic>): HTMLElement {
     var ms: HTMLElement  = untyped event.toElement;
     var net: HTMLElement = untyped event.relatedTarget;
     return if (ms != null) { 
