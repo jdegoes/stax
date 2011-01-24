@@ -23,17 +23,17 @@ import PreludeExtensions;
 using PreludeExtensions;
 
 class HTMLEventExtensions {
-  public function cancelBubbling(e: MouseEvent): Void {
+  public function cancelBubbling(e: EventListener<Dynamic>): Void {
     var cancelBubble = untyped e.cancelBubble;
     if (cancelBubble != null) {
       untyped e.cancelBubble = true;
     }
     else {
-      e.stopPropagation();
+      untyped e.stopPropagation();
     }
   }
   
-  private function getRelatedTarget(event: MouseEvent): HTMLElement {
+  private function getRelatedTarget(event: EventListener<Dynamic>): HTMLElement {
     var ms: HTMLElement  = untyped event.toElement;
     var net: HTMLElement = untyped event.relatedTarget;
     return if (ms != null) { 
