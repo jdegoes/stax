@@ -28,6 +28,13 @@ class HTMLElementExtensions {
     return e.getAttribute('class').split(" ").exists(function(e) { return e == name; });
   }
   
+  public static function removeElement(e: HTMLElement): Void {
+    var parent = e.parentNode;
+    if (!isNull(parent)) {
+      parent.removeChild(e);
+    }
+  }
+  
 
 // ************************  As Element Functions
   
