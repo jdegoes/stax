@@ -92,6 +92,15 @@ class HTMLDocumentExtensions {
     return doc.getElementById(s);
   }
   
+  public static function getId(doc: HTMLDocument, a: Array<String>): HTMLElement {
+    var result = [];
+    
+    for (i in 0...a.length) {
+      result.push(getId(a[i]));
+    }
+    return result;
+  }
+  
   public static function getTags(doc: HTMLDocument, s: String): Array<HTMLElement> {
     return OptionExtensions.getOrElseC(OptionExtensions.toOption( cast doc.getElementsByTagName(s)), []);
   }
