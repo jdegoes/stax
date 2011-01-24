@@ -22,91 +22,24 @@ import PreludeExtensions;
 
 using PreludeExtensions;
 
-/** 
- * Comm]on elements.
- */
-class HTMLDocumentExtensions {
-  public static function newElement(document: HTMLDocument, eType: String, ?atts: Array<Tuple2<String, String>> = null,  ?style: String = ""): HTMLElement {
-    var element = document.createElement(eType);
-    
-    for (i in 0...atts.length) {
-      element.setAttribute(atts[i]._1, atts[i]._2);
+class HTMLEventExtensions {
+  public function cancelBubbling(e: MouseEvent): Void {
+    var cancelBubble = untyped e.cancelBubble;
+    if (cancelBubble != null) {
+      untyped e.cancelBubble = true;
     }
-    
-    element.style.cssText = style;
-    return element;
-  }
-  
-  public static function newImage(doc: HTMLDocument): HTMLImageElement {
-    return cast doc.createElement('IMG');
-  }
-  
-  public static function newDiv(doc: HTMLDocument): HTMLDivElement {
-    return cast doc.createElement('DIV');
-  }
-  
-  public static function newIframe(doc: HTMLDocument, ?width: Int, ?height: Int): HTMLIFrameElement {
-    var iframe: HTMLIFrameElement = cast doc.createElement('IFRAME');
-    
-    width.toOption().zip(height.toOption()).map(function(t) {
-      iframe.setAttribute('width',   width.toString());
-      iframe.setAttribute('height',  height.toString());
-    });
-    
-    return iframe;
-  }
-  
-  /** Creates a new iframe intended to be used as a window. This iframe will 
-   * not have borders, will not allow resizing, will not have any margin or
-   * padding, and will be transparent (depending on the body).
-   */
-  public static function newIframeWindow(doc: HTMLDocument, width: Int, height: Int): HTMLIFrameElement {
-    var iframe = newIframe(doc, width, height);
-    
-    iframe.setAttribute('frameBorder',   '0');
-    iframe.setAttribute('marginWidth',   '0');
-    iframe.setAttribute('marginHeight',  '0');
-    iframe.setAttribute('vspace',        '0');
-    iframe.setAttribute('hspace',        '0');
-    iframe.setAttribute('scrolling',     'no');
-    iframe.setAttribute('noResize',      'noResize');
-    iframe.setAttribute('allowTransparency', 'true');
-    
-    iframe.style.margin            = '0';
-    iframe.style.padding           = '0';
-    iframe.style.border            = 'none';
-    iframe.style.borderLeftStyle   = 'none';
-    iframe.style.borderRightStyle  = 'none';
-    iframe.style.borderTopStyle    = 'none';
-    iframe.style.borderBottomStyle = 'none';
-    iframe.style.backgroundColor   = 'transparent';
-    
-    return iframe;
-  }
-  
-  public static function newIframeInvisible(doc: HTMLDocument): HTMLIFrameElement {
-    return newIframeWindow(doc, 0, 0);
-  }
-  
-  public static function getId(doc: HTMLDocument, s: String): HTMLElement {
-    return doc.getElementById(s);
-  }
-  
-  public static function getIds(doc: HTMLDocument, a: Array<String>): Array<HTMLElement> {
-    var result: Array<HTMLElement> = [];
-    
-    for (i in 0...a.length) {
-      result.push(getId(doc, a[i]));
+    else {
+      e.stopPropagation();
     }
-    
-    return result;
   }
   
-  public static function getTags(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionExtensions.getOrElseC(OptionExtensions.toOption( cast doc.getElementsByTagName(s)), []);
-  }
-  
-  public static function getClasses(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionExtensions.getOrElseC(OptionExtensions.toOption(Env.getElementsByClass(s)), []);
+  private function getRelatedTarget(event: MouseEvent): HTMLElement {
+    var ms: HTMLElement  = untyped event.toElement;
+    var net: HTMLElement = untyped event.relatedTarget;
+    return if (ms != null) { 
+      ms; 
+    } else if (net != null) {
+      net;
+    } else null;
   }
 }
