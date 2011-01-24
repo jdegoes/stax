@@ -21,6 +21,7 @@ import Dom;
 import js.Env;
 import js.dom.Quirks;
 using  js.dom.HTMLElementExtensions;
+using  js.dom.HTMLDocumentExtensions;
 
 import haxe.unit.TestCase;
 import haxe.unit.TestRunner;
@@ -2035,6 +2036,7 @@ class DomTest extends TestCase {
     
     assertEquals(classes.length, 4);
   }
+
   
   private function alertObject(obj) {
       untyped __js__('
