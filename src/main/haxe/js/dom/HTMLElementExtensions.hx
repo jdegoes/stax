@@ -1,5 +1,5 @@
 /*
- HaXe library written by John A. De Goes <john@socialmedia.com>
+ HaXe library written by Paul M. De Goes <paul@socialmedia.com> and John A. De Goes <john@socialmedia.com>
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -18,9 +18,26 @@ package js.dom;
 import Prelude;
 import Dom;
 
+using haxe.data.collections.ArrayExtensions;
 using PreludeExtensions;
+using js.dom.HTMLDocumentExtensions;
 
 class HTMLElementExtensions {
+  
+  public static function hasClass(e: HTMLElement, name: String): Bool {
+    return e.getAttribute('class').split(" ").exists(function(e) { return e == name; });
+  }
+  
+  public static function removeElement(e: HTMLElement): Void {
+    var parent = e.parentNode;
+    if (!isNull(parent)) {
+      parent.removeChild(e);
+    }
+  }
+  
+
+// ************************  As Element Functions
+  
   public static inline function asIframe(e: HTMLElement): HTMLIFrameElement {
     return asIframeOption(e).get();
   }
@@ -251,16 +268,8 @@ class HTMLElementExtensions {
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  // ************************
+// ************************ As Element Option Functions
+
   public static inline function asIframeOption(e: HTMLElement): Option<HTMLIFrameElement> {
     return if (e.nodeName == 'IFRAME') Some(cast e); else None;
   }

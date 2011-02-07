@@ -449,7 +449,7 @@ private class HasHash
 }
 @DataClass private class DynamicComparableDescending
 {  
-  @DataField({order:FieldOrder.Descending})
+  @DataField({order: -1})
 	var v : Int;
 	public function new(v : Int) this.v = v 
 }           

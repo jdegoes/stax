@@ -1,5 +1,5 @@
 /*
- HaXe library written by John A. De Goes <john@socialmedia.com>
+ HaXe library written by Paul M. De Goes <paul@socialmedia.com> and John A. De Goes <john@socialmedia.com>
 
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -17,6 +17,8 @@ package js.dom;
 
 import Dom;
 import js.Env;
+import Prelude;
+import PreludeExtensions;
 
 using PreludeExtensions;
 
@@ -24,6 +26,17 @@ using PreludeExtensions;
  * Comm]on elements.
  */
 class HTMLDocumentExtensions {
+  public static function newElement(document: HTMLDocument, eType: String, ?atts: Array<Tuple2<String, String>> = null,  ?style: String = ""): HTMLElement {
+    var element = document.createElement(eType);
+    
+    for (i in 0...atts.length) {
+      element.setAttribute(atts[i]._1, atts[i]._2);
+    }
+    
+    element.style.cssText = style;
+    return element;
+  }
+  
   public static function newImage(doc: HTMLDocument): HTMLImageElement {
     return cast doc.createElement('IMG');
   }
@@ -73,5 +86,27 @@ class HTMLDocumentExtensions {
   
   public static function newIframeInvisible(doc: HTMLDocument): HTMLIFrameElement {
     return newIframeWindow(doc, 0, 0);
+  }
+  
+  public static function getId(doc: HTMLDocument, s: String): HTMLElement {
+    return doc.getElementById(s);
+  }
+  
+  public static function getIds(doc: HTMLDocument, a: Array<String>): Array<HTMLElement> {
+    var result: Array<HTMLElement> = [];
+    
+    for (i in 0...a.length) {
+      result.push(getId(doc, a[i]));
+    }
+    
+    return result;
+  }
+  
+  public static function getTags(doc: HTMLDocument, s: String): Array<HTMLElement> {
+    return OptionExtensions.getOrElseC(OptionExtensions.toOption( cast doc.getElementsByTagName(s)), []);
+  }
+  
+  public static function getClasses(doc: HTMLDocument, s: String): Array<HTMLElement> {
+    return OptionExtensions.getOrElseC(OptionExtensions.toOption(Env.getElementsByClass(s)), []);
   }
 }
