@@ -21,6 +21,7 @@ import Dom;
 using haxe.data.collections.ArrayExtensions;
 using PreludeExtensions;
 using js.dom.HTMLDocumentExtensions;
+using js.dom.DomCollectionExtensions;
 
 class HTMLElementExtensions {
   
@@ -33,6 +34,10 @@ class HTMLElementExtensions {
     if (!isNull(parent)) {
       parent.removeChild(e);
     }
+  }
+  
+  public static function getTags(e: HTMLElement, tagName: String): Array<HTMLElement> {
+    return e.getElementsByTagName(tagName).asArray();
   }
   
 
