@@ -31,13 +31,13 @@ class HTMLElementExtensions {
   
   public static function removeElement(e: HTMLElement): Void {
     var parent = e.parentNode;
-    if (!isNull(parent)) {
+    if (parent != null) {
       parent.removeChild(e);
     }
   }
   
   public static function getTags(e: HTMLElement, tagName: String): Array<HTMLElement> {
-    return e.getElementsByTagName(tagName).asArray();
+    return e.getElementsByTagName(tagName).toArray();
   }
   
 
