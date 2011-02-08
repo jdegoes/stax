@@ -21,7 +21,7 @@ import Dom;
 using haxe.data.collections.ArrayExtensions;
 using PreludeExtensions;
 using js.dom.HTMLDocumentExtensions;
-using js.dom.DomCollectionExtensions;
+using js.dom.DomExtensions.DomCollectionExtensions;
 
 class HTMLElementExtensions {
   
