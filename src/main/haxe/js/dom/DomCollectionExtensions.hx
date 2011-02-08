@@ -24,7 +24,7 @@ using js.dom.HTMLDocumentExtensions;
 
 class DomCollectionExtensions {
 
-  asArray(c: DomCollection<HTMLElement>): Array<HTMLElement> {
+  public static function asArray(c: DomCollection<HTMLElement>): Array<HTMLElement> {
     var result: Array<HTMLElement> = cast c;
     return result;
   }
