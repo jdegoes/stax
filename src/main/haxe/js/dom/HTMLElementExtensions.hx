@@ -42,6 +42,7 @@ class HTMLElementExtensions {
   
   public static function append(e: HTMLElement, child: HTMLElement): HTMLElement {
     e.appendChild(child);
+    return e;
   }
   
   public static function setAttr(e: HTMLElement, attGet: String, attSet: String): HTMLElement {
