@@ -40,6 +40,19 @@ class HTMLElementExtensions {
     return e.getElementsByTagName(tagName).toArray();
   }
   
+  public static function append(e: HTMLElement, child: HTMLElement): HTMLElement {
+    e.appendChild(child);
+  }
+  
+  public static function setAttr(e: HTMLElement, attGet: String, attSet: String): HTMLElement {
+    e.setAttribute(attGet, attSet);
+    return e;
+  }
+  
+  public static function getAttr(e: HTMLElement, attGet: String): String {
+    e.getAttribute(attGet);
+  }
+  
 
 // ************************  As Element Functions
   
