@@ -51,7 +51,7 @@ class HTMLElementExtensions {
   }
   
   public static function getAttr(e: HTMLElement, attGet: String): String {
-    e.getAttribute(attGet);
+    return e.getAttribute(attGet);
   }
   
 
