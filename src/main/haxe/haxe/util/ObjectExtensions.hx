@@ -16,6 +16,7 @@
 package haxe.util;
 
 import Prelude;
+import Type;
 
 using PreludeExtensions;
 
@@ -125,13 +126,12 @@ class ObjectExtensions {
   }
   
   public static function extractFieldValues(obj: Dynamic, field: String): Array<Dynamic> {
-    var self = this;
     return Reflect.fields(obj).foldl([], function(a, fieldName): Array<Dynamic> {
       var value = Reflect.field(obj, fieldName);
       return if (fieldName == field) {
         a.append(value);
       } else if (Type.typeof(value) == TObject) {
-        a.concat(self.extractValue(value, field));
+        a.concat(ObjectExtensions.extractFieldValues(value, field));
       } else a;
     });
   }
