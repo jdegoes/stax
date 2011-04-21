@@ -124,6 +124,18 @@ class ObjectExtensions {
     return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
   }
   
+  public function extractFieldValues(obj: Dynamic, field: String): Array<Dynamic> {
+    var self = this;
+    return Reflect.fields(obj).foldl([], function(a, fieldName): Array<Dynamic> {
+      var value = Reflect.field(obj, fieldName);
+      return if (fieldName == field) {
+        a.append(value);
+      } else if (Type.typeof(value) == TObject) {
+        a.concat(self.extractValue(value, field));
+      } else a;
+    });
+  }
+  
   public static function extractAll<T>(d: Dynamic<T>): Array<Tuple2<String, T>> {
     return Reflect.fields(d).map(function(name) return name.entuple(Reflect.field(d, name)));
   }
