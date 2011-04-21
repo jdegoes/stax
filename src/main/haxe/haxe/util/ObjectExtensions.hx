@@ -124,7 +124,7 @@ class ObjectExtensions {
     return if (Reflect.hasField(d, k)) Some(Reflect.field(d, k)); else None;
   }
   
-  public function extractFieldValues(obj: Dynamic, field: String): Array<Dynamic> {
+  public static function extractFieldValues(obj: Dynamic, field: String): Array<Dynamic> {
     var self = this;
     return Reflect.fields(obj).foldl([], function(a, fieldName): Array<Dynamic> {
       var value = Reflect.field(obj, fieldName);
