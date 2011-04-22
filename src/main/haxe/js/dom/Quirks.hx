@@ -271,49 +271,48 @@ class Quirks {
   /** Retrieves the computed value for a particular CSS property.
    */
   public static function getComputedCssProperty(elem: HTMLElement, name: String): Option<String> {
-    return (if (BrowserSupport.getComputedStyle()) {
-      elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
-        return defaultView.getComputedStyle(elem, null).toOption();
-      }).flatMap(function(computedStyle: CSSStyleDeclaration): Option<String> {
-        return computedStyle.getPropertyValue(name).toOption().filter(function(style) return style != '');
-      }).orElse(function() {
-        return if (name == 'opacity') Some('1'); else None;
-      }).getOrElseC('');
-    }
-    else if (untyped elem.currentStyle != null) {
-      if (name == 'opacity' && !BrowserSupport.opacity()) {
-        if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
-          (OpacityPattern.matched(1).toFloat() / 100.0).toString();
-        }
-        else "1";
-      }
-      else {
-        var style = untyped elem.currentStyle[name];
+   return (if (BrowserSupport.getComputedStyle()) {
+     elem.ownerDocument.defaultView.toOption().flatMap(function(defaultView) {
+       return defaultView.getComputedStyle(elem, null).toOption();
+     }).flatMap(function(computedStyle: CSSStyleDeclaration): Option<String> {
+       return computedStyle.getPropertyValue(name).toOption().filter(function(style) return style != '');
+     }).orElse(function() {
+       return if (name == 'opacity') Some('1'); else None;
+     }).getOrElseC('');
+   }
+   else if (untyped elem.currentStyle != null) {
+     if (name == 'opacity' && !BrowserSupport.opacity()) {
+       if (OpacityPattern.match(untyped elem.currentStyle.filter)) {
+         (OpacityPattern.matched(1).toFloat() / 100.0).toString();
+       }
+       else "1";
+     }
+     else {
+       var style = untyped elem.currentStyle[name];
+       // From the awesome hack by Dean Edwards
+       // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
+       if (NumberPattern.match(style) && !NumberPixelPattern.match(style)) {
+         // Remember the original values
+         var oldLeft   = elem.style.left;
+         var oldRtLeft = untyped elem.runtimeStyle.left;
 
-        // From the awesome hack by Dean Edwards
-        // http://erik.eae.net/archives/2007/07/27/18.54.15/#comment-102291
-        if (NumberPattern.match(style) && !NumberPixelPattern.match(style)) {
-          // Remember the original values
-          var oldLeft   = elem.style.left;
-          var oldRtLeft = untyped elem.runtimeStyle.left;
+         // Put in the new values to get a computed value out
+         untyped elem.runtimeStyle.left = elem.currentStyle.left;
 
-          // Put in the new values to get a computed value out
-          untyped elem.runtimeStyle.left = elem.currentStyle.left;
+         elem.style.left = (name == "font-size") ? "1em" : style;
 
-          elem.style.left = (name == "font-size") ? "1em" : style;
-
-          (untyped elem.style.pixelLeft + "px").withEffect(function() untyped {
-            // Revert the changed values
-            elem.style.left        = oldLeft;
-            elem.runtimeStyle.left = oldRtLeft;
-          });
-        }
-        else style;
-      }
-    }
-    else '').into(function(computedStyle) {
-      return if (computedStyle == '') None; else computedStyle.toOption();
-    });
+         DynamicExtensions.withEffect(untyped elem.style.pixelLeft + "px", function(t) untyped {
+           // Revert the changed values
+           elem.style.left        = oldLeft;
+           elem.runtimeStyle.left = oldRtLeft;
+         });
+       }
+       else style;
+     }
+   }
+   else '').into(function(computedStyle) {
+     return if (computedStyle == '') None; else computedStyle.toOption();
+   });
   }
 
   /** Retrieves a particular CSS property.
