@@ -54,6 +54,11 @@ class HTMLElementExtensions {
     return e.getAttribute(attGet);
   }
   
+  public static function setClass(e: HTMLElement, className: String):HTMLElement {
+    e.className = className;
+    return e;
+  }
+  
 
 // ************************  As Element Functions
   
