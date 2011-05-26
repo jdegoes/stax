@@ -28,12 +28,14 @@ using PreludeExtensions;
 class HTMLDocumentExtensions {
   public static function newElement(document: HTMLDocument, eType: String, ?atts: Array<Tuple2<String, String>> = null,  ?style: String = ""): HTMLElement {
     var element = document.createElement(eType);
-    
-    for (i in 0...atts.length) {
-      element.setAttribute(atts[i]._1, atts[i]._2);
-    }
-    
-    element.style.cssText = style;
+    if (atts != null) {
+			for (i in 0...atts.length) {
+				element.setAttribute(atts[i]._1, atts[i]._2);
+			}			
+		}
+    if (style != null) {
+			element.style.cssText = style;			
+		}
     return element;
   }
   
