@@ -396,6 +396,13 @@ class ArrayExtensions {
     
     return n;
   }
+  public static function mapWithIndex<T, S>(a: Array<T>, f: T -> Int -> S): Array<S> {
+    var n: Array<S> = [];
+    var i = 0;
+    for (e in a) n.push(f(e, i++));
+    
+    return n;
+  }
   public static function then<T, S>(a1: Array<T>, a2: Array<S>): Array<S> {
     return a2;
   }
@@ -431,17 +438,37 @@ class ArrayExtensions {
   }
   
   public static function zip<A, B>(a: Array<A>, b: Array<B>): Array<Tuple2<A, B>> {
+		return zipWith(a, b, Tuple2.create);
+  }
+
+  public static function zipWith<A, B, C>(a: Array<A>, b: Array<B>, f : A -> B -> C): Array<C> {
     var len = Math.floor(Math.min(a.length, b.length));
     
-    var r: Array<Tuple2<A, B>> = [];
+    var r: Array<C> = [];
     
     for (i in 0...len) {
-      r.push(Tuple2.create(a[i], b[i]));
+      r.push(f(a[i], b[i]));
     }
     
     return r;
   }
-  
+
+  public static function zipWithIndex<A>(a: Array<A>): Array<Tuple2<A, Int>> {
+		return zipWithIndexWith(a, Tuple2.create);
+  }
+
+  public static function zipWithIndexWith<A, B>(a: Array<A>, f : A -> Int -> B): Array<B> {
+    var len = Math.floor(Math.min(a.length, b.length));
+    
+    var r: Array<B> = [];
+    
+    for (i in 0...len) {
+      r.push(f(a[i], i));
+    }
+    
+    return r;
+  }
+	
   public static function append<T>(a: Array<T>, t: T): Array<T> {
     var copy = snapshot(a);
     
@@ -478,6 +505,12 @@ class ArrayExtensions {
   
   public static function foreach<T>(a: Array<T>, f: T -> Void): Array<T> {
     for (e in a) f(e);
+    
+    return a;
+  }  
+  public static function foreachWithIndex<T>(a: Array<T>, f: T -> Int -> Void): Array<T> {
+    var i = 0;
+		for (e in a) f(e, i++);
     
     return a;
   }  
@@ -878,6 +911,7 @@ class OptionExtensions {
       case Some(v): Some(f(v));
     }
   }
+	
   public static function then<T, S>(o1: Option<T>, o2: Option<S>): Option<S> {
     return o2;
   }
@@ -915,7 +949,7 @@ class OptionExtensions {
       }
     }
   }
-  
+
   public static function get<T>(o: Option<T>): T {
     return switch (o) {
       case None: Stax.error("Error: Option is empty");
