@@ -1096,7 +1096,7 @@ class Stream<T> {
         
         return Streams.create(
             function(pulse: Pulse<T>): Propagation<T> {
-                return if (pulse.value != lastEvent) {
+                return if (lastEvent==null || !eq(pulse.value, lastEvent)) {
                            lastEvent = pulse.value;
                            
                            propagate(pulse);
@@ -1246,11 +1246,7 @@ class Signal<T> {
      *              of the supplied function. 
      */
     public function lift<Z>(f: T -> Z): Signal<Z> {
-        return changes().map(
-            function(a) {
-                return f(a);
-            }
-        ).startsWith(f(valueNow()));
+        return changes().map(f).startsWith(f(valueNow()));
     }
     
     /**
@@ -1501,6 +1497,16 @@ class Signal<T> {
      */
     public function sendSignal(value: Dynamic): Void {
         changes().sendEvent(value);
+    }
+
+    /**
+     * Sends an event to the underlying Stream that will be immediately 
+     * propagated with a new timestamp.
+     *
+     * @param   value   the value to send Into the Stream.
+     */
+    public function sendSignalTyped(value: T): Void {
+        changes().sendEventTyped(value);
     }
 }
 
