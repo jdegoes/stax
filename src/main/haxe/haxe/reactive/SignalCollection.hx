@@ -68,14 +68,18 @@ class SignalCollection {
         return b.map(function(c) { return cast c.foreach(f); });
     }
     
-    public static function map<C, T>(b: Signal<Collection<C, T>>, f: T -> T): Signal<Collection<C, T>> {
-        return b.map(function(c) { return cast c.map(f); });
+    public static function map < C, D, T, U > (b: Signal < Collection < C, T >> , f: T -> U): Signal < Collection < D, U >> {
+				return b.map(function(c) { return cast c.map(f); } );
     }
-    
+
+    public static function mapTo<C, T, D, Z>(b: Signal<Collection<C, T>>, t: Collection<D, Z>, f: T -> Z): Signal<Collection<D, Z>> {
+        return b.map(function(c) { return cast c.mapTo(t, f); });
+    }
+/*
     public static function mapTo<C, T, Z>(b: Signal<Collection<C, T>>, t: Collection<C, Z>, f: T -> Z): Signal<Collection<C, Z>> {
         return b.map(function(c) { return cast c.mapTo(t, f); });
     }
-    
+*/   
     public static function partition<C, T>(b: Signal<Collection<C, T>>, filter: T -> Bool): Signal<Tuple2<Collection<C, T>, Collection<C, T>>> {
         return b.map(function(c) { return cast c.partition(filter); });
     }
