@@ -458,7 +458,7 @@ class ArrayExtensions {
   }
 
   public static function zipWithIndexWith<A, B>(a: Array<A>, f : A -> Int -> B): Array<B> {
-    var len = Math.floor(Math.min(a.length, b.length));
+    var len = Math.floor(Math.min(a.length, this.length));
     
     var r: Array<B> = [];
     
