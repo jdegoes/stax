@@ -314,6 +314,9 @@ class ArrayExtensions {
     return r;
   }
   
+  public static function mapper < A, B > (src: Array<A>, f: A -> B): Array<B>
+		return src.map(f)
+	
   public static function compare<T>(v1: Array<T>, v2: Array<T>) {
       return compareWith(v1, v2, Stax.getOrderFor(v1[0]));
   } 
@@ -897,7 +900,7 @@ class OptionExtensions {
   public static function toOption<T>(t: T): Option<T> {
     return if (t == null) None; else Some(t);
   }
-  
+	  
   public static function toArray<T>(o: Option<T>): Array<T> {
     return switch (o) {
       case None:    [];
@@ -971,9 +974,9 @@ class OptionExtensions {
   
   public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<T, S> {
     return switch (o1) {
-      case None: EitherExtensions.toRight(thunk());
+      case None: EitherExtensions.toLeft(thunk());
       
-      case Some(v): EitherExtensions.toLeft(v);
+      case Some(v): EitherExtensions.toRight(v);
     }
   }
   
