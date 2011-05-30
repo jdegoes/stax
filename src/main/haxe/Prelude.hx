@@ -430,6 +430,9 @@ class Tuple2<A, B> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
 
+	public static function first<A, B>(t : Tuple2<A, B>) return t._1
+	public static function second<A, B>(t : Tuple2<A, B>) return t._2
+	
   function new(first: A, second: B) {
     super([first, second]);
 
@@ -451,7 +454,7 @@ class Tuple2<A, B> extends AbstractProduct {
   public function compare(other : Tuple2<A, B>): Int {
     return productCompare(other);
   }
-
+		
   public function equals(other : Tuple2<A, B>): Bool {
     return productEquals(other);
   }
@@ -482,6 +485,10 @@ class Tuple3<A, B, C> extends AbstractProduct {
     this._1 = first; this._2 = second; this._3 = third;
   }
 
+	public static function first<A, B, C>(t : Tuple3<A, B, C>) return t._1
+	public static function second<A, B, C>(t : Tuple3<A, B, C>) return t._2
+	public static function third<A, B, C>(t : Tuple3<A, B, C>) return t._3
+	
   override private function getProductPrefix(): String {
     return "Tuple3";
   }
@@ -529,6 +536,11 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;
   }
 
+	public static function first<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._1
+	public static function second<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._2
+	public static function third<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._3
+	public static function fourth<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._4
+	
   override private function getProductPrefix(): String {
     return "Tuple4";
   }
@@ -577,6 +589,12 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;
   }
 
+	public static function first<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._1
+	public static function second<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._2
+	public static function third<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._3
+	public static function fourth<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._4
+	public static function fifth<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._5
+	
   override private function getProductPrefix(): String {
     return "Tuple5";
   }
