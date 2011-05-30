@@ -26,15 +26,18 @@ class ObjectExtensions {
   public static function copy(d: Object, shallow: Bool = true): Object {
     return copyTo(d, {}, shallow);
   }
+
+  public static function copyTyped<T>(d: T, shallow: Bool = true): T {
+    return cast copyTo(d, {}, shallow);
+  }
   
   public static function copyTo(src: Object, dest: Object, shallow: Bool = true): Object {
-    var safecopy = function(d: Dynamic): Dynamic {
+    function safecopy(d: Dynamic): Dynamic
       return switch (Type.typeof(d)) {
         case TObject: copy(d, shallow);
         
         default: d;
       }
-    }
     
     for (field in Reflect.fields(src)) {
       var value = Reflect.field(src, field);
