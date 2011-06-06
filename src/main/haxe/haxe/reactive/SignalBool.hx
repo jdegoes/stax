@@ -48,12 +48,11 @@ class SignalBool {
      * @return              If a Signal from condition == true
      *                      Signal thenE, else Signal elseE
      */
-    public static function ifTrue<T>(condition: Signal<Bool>, thenS: Signal<T>, elseS: Signal<T>): Signal<T> {
-        return condition.map(
-            function(b) {
-                return if (b) thenS.valueNow(); else elseS.valueNow();
-            }
-        );
+    public static function ifTrue<T>(condition: Signal<Bool>, thenS: Signal<T>, elseS: Signal<T>): Signal<T> {			
+			return
+				StreamBool.ifTrue(condition.changes(), thenS.changes(), elseS.changes()).startsWith(
+					if (condition.valueNow()) thenS.valueNow() else elseS.valueNow()
+				);			
     }
     
     /**
