@@ -734,7 +734,7 @@ class Assert {
   * @param timeout: Optional timeout value in milliseconds.
   */
   public static dynamic function createEvent<EventArg>(f : EventArg->Void, ?timeout : Int) {
-    return function(e){};
+    return function(e:EventArg){};
   }
   
   static function typeToString(t : Dynamic)
