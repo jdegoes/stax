@@ -316,7 +316,10 @@ class ArrayExtensions {
   
   public static function mapper < A, B > (src: Array<A>, f: A -> B): Array<B>
 		return src.map(f)
-	
+
+  public static function proj < A, B > (f: A -> B) return function (src: Array<A>): Array<B>
+		return src.map(f)
+
   public static function compare<T>(v1: Array<T>, v2: Array<T>) {
       return compareWith(v1, v2, Stax.getOrderFor(v1[0]));
   } 
@@ -461,7 +464,7 @@ class ArrayExtensions {
   }
 
   public static function zipWithIndexWith<A, B>(a: Array<A>, f : A -> Int -> B): Array<B> {
-    var len = Math.floor(Math.min(a.length, this.length));
+    var len = a.length;
     
     var r: Array<B> = [];
     
@@ -541,6 +544,22 @@ class ArrayExtensions {
     
     return r;
   }
+
+	public static function splitAt<T>(srcArr : Array<T>, index : Int) : Tuple2 < Array<T>, Array<T> > return
+		srcArr.slice(0, index).entuple(srcArr.slice(index))
+
+	public static function sliceBy<T>(srcArr : Array<T>, sizeSrc : Array<Int>) : Array<Array<T>> return {
+		var slices = [];		
+		var restIndex = 0;
+		for (size in sizeSrc) {
+			var newRestIndex = restIndex + size;
+			var slice = srcArr.slice(restIndex, newRestIndex);
+			slices.push(slice);
+			restIndex = newRestIndex;
+		}
+		return slices;
+	}
+	
   public static function decompose<T>(v: Array<T>): JValue {
     return if (v.size() != 0){
       var d = TranscodeJValue.getDecomposerFor(Type.typeof(v[0]));
@@ -549,7 +568,7 @@ class ArrayExtensions {
     else{
       JArray([]);
     }
-  }
+  }	
   public static function extract<T>(c: Class<Array<Dynamic>>, v: JValue, e: JExtractorFunction<T>): Array<T> {
     return switch(v) {
       case JArray(v): v.map(e);
@@ -928,7 +947,7 @@ class OptionExtensions {
   public static function filter<T>(o: Option<T>, f: T -> Bool): Option<T> {
     return switch (o) {
       case None: None;
-      case Some(v): if (f(v)) Some(v) else None;
+      case Some(v): if (f(v)) o else None;
     }
   }
   
@@ -943,13 +962,21 @@ class OptionExtensions {
     }
   }
   
-  public static function zip<T, S>(o1: Option<T>, o2: Option<S>): Option<Tuple2<T, S>> {
+  public static function zip<T, S>(o1: Option<T>, o2: Option<S>) {
     return switch (o1) {
       case None: None;
-      case Some(v1): switch (o2) {
-        case None: None;
-        case Some(v2): Some(v1.entuple(v2));
-      }
+      case Some(v1): o2.map(v1.entuple);
+    }
+  }
+
+  public static function zipWith<T, S, V>(o1: Option<T>, o2: Option<S>, f : T -> S -> V) : Option<V> {
+    return switch (o1) {
+      case None: None;
+      case Some(v1):
+				switch (o2) {
+					case None : None;
+					case Some(v2) : Some(f(v1, v2));
+				}
     }
   }
 
@@ -972,15 +999,14 @@ class OptionExtensions {
     return OptionExtensions.orElse(o1, o2.toThunk());
   }
   
-  public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<T, S> {
+  public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<S, T> {
     return switch (o1) {
       case None: EitherExtensions.toLeft(thunk());
-      
       case Some(v): EitherExtensions.toRight(v);
     }
   }
   
-  public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<T, S> {
+  public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<S, T> {
     return OptionExtensions.orEither(o1, c.toThunk());
   }
   
@@ -998,9 +1024,16 @@ class OptionExtensions {
   public static function isEmpty<T>(o: Option<T>): Bool {
     return switch(o) {
       case None:    true;
-      case Some(v): false;
+      case Some(_): false;
     }
   }
+  public static function isDefined<T>(o: Option<T>): Bool {
+    return switch(o) {
+      case None:    false;
+      case Some(_): true;
+    }
+  }
+	
   public static function decompose<T>(v: Option<T>): JValue {
     return v.map(function(v) {return TranscodeJValue.getDecomposerFor(Type.typeof(v))(v);}).getOrElse(JNull.toThunk());
   }
