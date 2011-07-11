@@ -430,6 +430,10 @@ class Tuple2<A, B> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
 
+	public function apply<C>(f : A -> B -> C ) : C
+		return f(_1, _2)
+
+		
 	public static function first<A, B>(t : Tuple2<A, B>) return t._1
 	public static function second<A, B>(t : Tuple2<A, B>) return t._2
 	
@@ -485,6 +489,9 @@ class Tuple3<A, B, C> extends AbstractProduct {
     this._1 = first; this._2 = second; this._3 = third;
   }
 
+	public function apply<D>(f : A -> B -> C -> D ) : D
+		return f(_1, _2, _3)
+
 	public static function first<A, B, C>(t : Tuple3<A, B, C>) return t._1
 	public static function second<A, B, C>(t : Tuple3<A, B, C>) return t._2
 	public static function third<A, B, C>(t : Tuple3<A, B, C>) return t._3
@@ -535,6 +542,9 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
 
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;
   }
+	
+	public function apply<E>(f : A -> B -> C -> D -> E) : E
+		return f(_1, _2, _3, _4)
 
 	public static function first<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._1
 	public static function second<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._2
@@ -589,6 +599,9 @@ class Tuple5<A, B, C, D, E> extends AbstractProduct {
     this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;
   }
 
+	public function apply<F>(f : A -> B -> C -> D -> E -> F) : F
+		return f(_1, _2, _3, _4, _5)
+	
 	public static function first<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._1
 	public static function second<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._2
 	public static function third<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._3
@@ -801,7 +814,7 @@ class Stax {
           _createEqualImpl(DateExtensions.equals);
         case "Array":
           _createEqualImpl(ArrayExtensions.equals);
-        default:                 
+        default:    
           if(_hasMetaDataClass(c)) {  
             var fields = _fieldsWithMeta(c, "equalHash");
             _createEqualImpl(function(a, b) {         
