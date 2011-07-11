@@ -55,14 +55,42 @@ class ArrayExtensions {
     });
   }
 
+  public static function flatten<T>(arrs: Array<Array<T>>): Array<T> return {
+		var res : Array<T> = [];
+		for (arr in arrs) {
+			for (e in arr) {
+				res.push(e);
+			}
+		}
+		return res;
+	}
+  
+	public static function interleave<T>(alls: Array<Array<T>>): Array<T> {
+		var res = [];		
+		if (alls.length > 0) {
+			var length = {
+				var minLength = alls[0].length.toFloat();
+				for (e in alls)
+					minLength = Math.min(minLength, e.length.toFloat());
+				minLength.toInt();
+			}
+			var i = 0;
+			while (i < length) {
+				for (arr in alls)
+					res.push(arr[i]);
+				i++;
+			}
+		}
+		return res;
+	}
+	
   public static function flatMapTo<A, B>(src: Array<A>, dest: Array<B>, f: A -> Array<B>): Array<B> {
     return src.foldl(dest, function(a, b) {
-      return f(b).foldl(a, function(a, b) {
-        a.push(b);
-        return a;
-      });
+			for (e  in f(b))
+				a.push(e);
+			return a;
     });
-  }      
+  }
 
   public static function count<T>(arr: Array<T>, f: T -> Bool): Int {
     return arr.foldl(0, function(a, b) {
