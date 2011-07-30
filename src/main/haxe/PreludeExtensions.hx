@@ -972,7 +972,7 @@ class OptionExtensions {
     return OptionExtensions.orElse(o1, o2.toThunk());
   }
   
-  public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<T, S> {
+  public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<S, T> {
     return switch (o1) {
       case None: EitherExtensions.toLeft(thunk());
       
@@ -980,7 +980,7 @@ class OptionExtensions {
     }
   }
   
-  public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<T, S> {
+  public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<S, T> {
     return OptionExtensions.orEither(o1, c.toThunk());
   }
   
