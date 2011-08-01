@@ -55,7 +55,7 @@ class ArrayExtensions {
     });
   }
 
-  public static function flatten<T>(arrs: Array<Array<T>>): Array<T> return {
+  public static function flatten<T>(arrs: Array<Array<T>>): Array<T> {
 		var res : Array<T> = [];
 		for (arr in arrs) {
 			for (e in arr) {

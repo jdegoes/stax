@@ -395,13 +395,13 @@ class ArrayExtensions {
     return -1;
   }
   
-  public static function map<T, S>(a: Array<T>, f: T -> S): Array<S> {
+  inline public static function map<T, S>(a: Array<T>, f: T -> S): Array<S> {
     var n: Array<S> = [];
     
     for (e in a) n.push(f(e));
     
     return n;
-  }
+  } 
   public static function mapWithIndex<T, S>(a: Array<T>, f: T -> Int -> S): Array<S> {
     var n: Array<S> = [];
     var i = 0;
@@ -557,7 +557,7 @@ class ArrayExtensions {
 			slices.push(slice);
 			restIndex = newRestIndex;
 		}
-		return slices;
+		slices;
 	}
 	
   public static function decompose<T>(v: Array<T>): JValue {
