@@ -165,13 +165,19 @@ class ArrayExtensions {
     return arr.length == 0;
   }
    
-  public static function find<T>(arr: Array<T>, f: T -> Bool): Option<T> {
-    return arr.foldl(None, function(a, b) {
-      return switch (a) {
-        case None: b.toOption().filter(f);
-        default: a;
-      }
-    });
+  public static function find<T>(arr: Array<T>, f: T -> Bool): Option<T>
+    return arr.foldl(
+		None,
+		function(a, b) return
+			switch (a) {
+				case None: b.toOption().filter(f);
+				default: a;
+		  }
+    )
+
+  public static function findIndexOf<T>(arr: Array<T>, obj: T): Option<Int> {
+	var index = arr.indexOf(obj);
+	return if (index == -1) None else Some(index);
   }
   
   public static function forAll<T>(arr: Array<T>, f: T -> Bool): Bool {
