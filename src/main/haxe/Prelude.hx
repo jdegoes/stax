@@ -426,7 +426,7 @@ private class AbstractProduct implements Product {
   }
 }
 
-class Tuple2<A, B> extends AbstractProduct {
+class Tuple2< A, B> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
 
@@ -478,7 +478,7 @@ class Tuple2<A, B> extends AbstractProduct {
   }
 }
 
-class Tuple3<A, B, C> extends AbstractProduct {
+class Tuple3< A, B, C> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
   public var _3 (default, null): C;
@@ -531,7 +531,7 @@ class Tuple3<A, B, C> extends AbstractProduct {
   }
 }
 
-class Tuple4<A, B, C, D> extends AbstractProduct {
+class Tuple4< A, B, C, D> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
   public var _3 (default, null): C;
@@ -586,7 +586,7 @@ class Tuple4<A, B, C, D> extends AbstractProduct {
   }
 }
 
-class Tuple5<A, B, C, D, E> extends AbstractProduct {
+class Tuple5< A, B, C, D, E> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
   public var _3 (default, null): C;
