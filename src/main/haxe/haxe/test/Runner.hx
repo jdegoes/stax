@@ -181,7 +181,7 @@ class Runner {
       var afterAll = findMethodByName(test, 'afterAll');
       
       var runAfterAll = function() {
-        --totalTestsHolder[0];
+        totalTestsHolder[0] = totalTestsHolder[0] - 1;
         
         if (totalTestsHolder[0] == 0) {
           afterAll();

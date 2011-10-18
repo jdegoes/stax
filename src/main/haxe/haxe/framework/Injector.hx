@@ -39,6 +39,11 @@ typedef Binder<T, S> = {
   function bindF(interf: Class<T>, f: Void -> T, ?b: BindingType): S;
 }
 
+typedef Bindable<T> = {
+ bindToF : Class<T> -> (Void -> T) -> BindingType -> Void , 
+ bindTo : Class<T> -> Class<Dynamic> -> BindingType -> Void 
+}	
+
 /** An interface used to configure dependencies. */
 interface InjectorConfig {
   /** Binds the interface to the specified implementation class.
@@ -182,18 +187,18 @@ private class InjectorImpl {
 
   /** Globally binds the interface to the specified implementation.
    */
-  public static function bindTo<T, S>(interf: Class<T>, impl: Class<S>, ?bindingType: BindingType) {
+  public static function bindTo<T, S>(interf: Class<T>, impl: Class<S>, ?bindingType: BindingType):Dynamic {
     return globally().bindTo(interf, impl, bindingType);
   }
 
   /** Globally binds the interface to the specified factory.
    */
-  public static function bindToF<T>(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
+  public static function bindToF<T>(interf: Class<T>, f: Void -> T, bindingType: BindingType):Dynamic {
     return globally().bindToF(interf, f, bindingType);
   }
 
-  public static function globally<T>() {
-    var internalBind = function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
+  public static function globally<T>():Bindable<T> {
+    var internalBind = function(interf: Class<T>, f: Void -> T, bindingType: BindingType) {
       switch (bindingTypeDef(bindingType)) {
         case OneToOne:
           addGlobalBinding(interf, f);
@@ -206,7 +211,7 @@ private class InjectorImpl {
     return {
       bindToF: internalBind,
     
-      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, ?bindingType: BindingType) {
+      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, bindingType: BindingType) {
         internalBind(interf, factoryFor(impl), bindingType);
       },
     }
@@ -214,41 +219,41 @@ private class InjectorImpl {
 
   public static function inClass<T>(c: Class<Dynamic>) {
     return {
-      bindToF: function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
+      bindToF: function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType):Void {
         bindForSpecificF(classBindingsExtractor, interf, Type.getClassName(c), f, bindingType);
       },
     
-      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, ?bindingType: BindingType) {
+      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, ?bindingType: BindingType):Void {
         bindForSpecificF(classBindingsExtractor, interf, Type.getClassName(c), factoryFor(impl), bindingType);
       }
     }
   }
 
-  public static function inModule<T>(moduleName: String) {
+  public static function inModule<T>(moduleName: String):Bindable<T> {
     return {
-      bindToF: function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
+      bindToF: function(interf: Class<T>, f: Void -> T, bindingType: BindingType):Void {
         bindForSpecificF(moduleBindingsExtractor, interf, moduleName, f, bindingType);
       },
     
-      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, ?bindingType: BindingType) {
+      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, bindingType: BindingType):Void {
         bindForSpecificF(moduleBindingsExtractor, interf, moduleName, factoryFor(impl), bindingType);
       }
     }
   }
 
-  public static function inPackage<T>(packageName: String) {
+  public static function inPackage<T>(packageName: String):Bindable<T> {
     return {
-      bindToF: function(interf: Class<T>, f: Void -> T, ?bindingType: BindingType) {
+      bindToF: function(interf: Class<T>, f: Void -> T, bindingType: BindingType) {
         bindForSpecificF(packageBindingsExtractor, interf, packageName, f, bindingType);
       },
     
-      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, ?bindingType: BindingType) {
+      bindTo: function(interf: Class<T>, impl: Class<Dynamic>, bindingType: BindingType) {
         bindForSpecificF(packageBindingsExtractor, interf, packageName, factoryFor(impl), bindingType);
       }
     }
   }
 
-  private static function bindForSpecificF<T>(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, interf: Class<T>, specific: String, f: Void -> T, bindingType: BindingType) {
+  private static function bindForSpecificF<T>(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, interf: Class<T>, specific: String, f: Void -> T, bindingType: BindingType):Void {
     switch (bindingTypeDef(bindingType)) {
       case OneToOne:
         addSpecificBinding(extractor(state.first()), interf, specific, f);
@@ -307,15 +312,15 @@ private class InjectorImpl {
     return getSpecificBinding(packageBindingsExtractor, c, packageName);
   }
 
-  private static function addGlobalBinding(c: Class<Dynamic>, f: Void -> Dynamic) {
+  private static function addGlobalBinding(c: Class<Dynamic>, f: Void -> Dynamic):Void {
     state.first().globalBindings.set(Type.getClassName(c), f);
   }
   
-  private static function existsDefaultBinding(c : Class<Dynamic>) {
+  private static function existsDefaultBinding(c : Class<Dynamic>):Bool {
     return state.first().defaultBindings.exists(Type.getClassName(c));
   }
   
-  private static function addDefaultBinding(c : Class<Dynamic>, f: Option<Void -> Dynamic>) {
+  private static function addDefaultBinding(c : Class<Dynamic>, f: Option<Void -> Dynamic>):Void {
     state.first().defaultBindings.set(Type.getClassName(c), f);
   }
   
