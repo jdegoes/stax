@@ -43,9 +43,8 @@ class IterableExtensions {
     return folded;
   }
   
-  public static function concat<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
-    return iter1.toArray().concat(iter2.toArray());
-  }
+  public static function concat<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T>
+    return iter1.toArray().concat(iter2.toArray())
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
     return ArrayExtensions.foldr(iterable.toArray(), z, f);
@@ -149,7 +148,21 @@ class IterableExtensions {
       return a;
     });
   }
-  
+
+  public static function flatten<T>(iter: Iterable<Iterable<T>>): Iterable<T> {
+		var empty : Iterable<T> = [];
+		return foldl(iter, empty, concat);
+  }
+
+  public static function interleave<T>(iter: Iterable<Iterable<T>>): Iterable<T> {
+		var alls = iter.map(function (it) return it.iterator()).toArray();
+		var res = [];		
+		while (haxe.data.collections.ArrayExtensions.forAll(alls, function (iter) return iter.hasNext())) { //alls.forAll(function (iter) return iter.hasNext()))  <- stack overflow!!
+			alls.foreach(function (iter) res.push(iter.next()));
+		}
+		return res;
+  }
+
   public static function zip<T1, T2>(iter1: Iterable<T1>, iter2: Iterable<T2>): Iterable<Tuple2<T1, T2>> {
     var i1 = iter1.iterator();
     var i2 = iter2.iterator();
