@@ -938,7 +938,7 @@ class OptionExtensions {
     return o2;
   }
   public static function foreach<T>(o: Option<T>, f: T -> Void): Void {
-    return switch (o) {
+    switch (o) {
       case None:
       case Some(v): f(v);
     }
@@ -1048,6 +1048,12 @@ class OptionExtensions {
 
 class EitherExtensions {
 
+  public static function leftOr < A, B > (a: A, b : B): Either < A, B > return
+    if(a!=null) Left(a) else Right(b)
+
+  public static function rightOr < A, B > (a: A, b : B): Either < B, A > return
+    if(a!=null) Right(a) else Left(b)
+  
   public static function leftOrRight < A, B > (a: A, b : B): Option < Either < A, B >> return
     if (a != null) Some(Left(a)); else {
       if (b != null) Some(Right(b)); else None;
