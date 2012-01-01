@@ -515,8 +515,13 @@ class ArrayExtensions {
 
     return false;
   }
+<<<<<<< HEAD
 
   public static function foreach<T>(a: Array<T>, f: T -> Void): Array<T> {
+=======
+  
+  public static function forEach<T>(a: Array<T>, f: T -> Void): Array<T> {
+>>>>>>> foreach to forEach ( because forAny, forAll ), added to IterableExtensions.
     for (e in a) f(e);
 
     return a;

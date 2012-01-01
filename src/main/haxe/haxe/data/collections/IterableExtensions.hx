@@ -158,7 +158,7 @@ class IterableExtensions {
 		var alls = iter.map(function (it) return it.iterator()).toArray();
 		var res = [];		
 		while (haxe.data.collections.ArrayExtensions.forAll(alls, function (iter) return iter.hasNext())) { //alls.forAll(function (iter) return iter.hasNext()))  <- stack overflow!!
-			alls.foreach(function (iter) res.push(iter.next()));
+			alls.forEach(function (iter) res.push(iter.next()));
 		}
 		return res;
   }
@@ -349,7 +349,9 @@ class IterableExtensions {
   public static function find<T>(iter: Iterable<T>, f: T -> Bool): Option<T> {
     return iter.toArray().find(f);
   }
-  
+  public static function forEach<T>(iter : Iterable<T>, f : T-> Void ):Void {
+    for (e in iter) f(e);
+	}
   public static function forAll<T>(iter: Iterable<T>, f: T -> Bool): Bool {
     return iter.toArray().forAll(f);
   }
