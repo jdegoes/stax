@@ -329,7 +329,7 @@ interface Product {
   public function productElement(n: Int): Dynamic;
 }
 
-private class AbstractProduct implements Product {
+class AbstractProduct implements Product {
   public var productPrefix (getProductPrefix, null): String;
 
   public var productArity (getProductArity, null): Int;
@@ -451,16 +451,21 @@ class Tuple2< A, B> extends AbstractProduct {
     return 2;
   }
 
+<<<<<<< HEAD
   public function entuple<C>(c: C): Tuple3<A, B, C> {
     return Tuple3.create(_1, _2, c);
   }
 
   public static function bothEqual<T>(a : Tuple2<T, T>) : Bool return a._1 == a._2
   
+=======
+>>>>>>> Moved Tuple4 and Tuple5 to Tuples.hx
   public function compare(other : Tuple2<A, B>): Int {
     return productCompare(other);
   }
-		
+	public function entuple<C>(c: C): Tuple3<A, B, C> {
+    return Tuple3.create(_1, _2, c);
+  }	
   public function equals(other : Tuple2<A, B>): Bool {
     return productEquals(other);
   }
@@ -479,7 +484,6 @@ class Tuple2< A, B> extends AbstractProduct {
     }
   }
 }
-
 class Tuple3< A, B, C> extends AbstractProduct {
   public var _1 (default, null): A;
   public var _2 (default, null): B;
@@ -506,10 +510,6 @@ class Tuple3< A, B, C> extends AbstractProduct {
     return 3;
   }
 
-  public function entuple<D>(d: D): Tuple4<A, B, C, D> {
-    return Tuple4.create(_1, _2, _3, d);
-  }
-
   public function compare(other : Tuple3<A, B, C>): Int {
     return productCompare(other);
   }
@@ -532,115 +532,6 @@ class Tuple3< A, B, C> extends AbstractProduct {
     }
   }
 }
-
-class Tuple4< A, B, C, D> extends AbstractProduct {
-  public var _1 (default, null): A;
-  public var _2 (default, null): B;
-  public var _3 (default, null): C;
-  public var _4 (default, null): D;
-
-  function new(first: A, second: B, third: C, fourth: D) {
-    super([first, second, third, fourth]);
-
-    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth;
-  }
-	
-	public function apply<E>(f : A -> B -> C -> D -> E) : E
-		return f(_1, _2, _3, _4)
-
-	public static function first<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._1
-	public static function second<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._2
-	public static function third<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._3
-	public static function fourth<A, B, C, D>(t : Tuple4<A, B, C, D>) return t._4
-	
-  override private function getProductPrefix(): String {
-    return "Tuple4";
-  }
-
-  override private function getProductArity(): Int {
-    return 4;
-  }
-
-  public function entuple<E>(e: E): Tuple5<A, B, C, D, E> {
-    return Tuple5.create(_1, _2, _3, _4, e);
-  }
-
-  public function compare(other : Tuple4<A, B, C, D>): Int {
-    return productCompare(other);
-  }
-
-  public function equals(other : Tuple4<A, B, C, D>): Bool {
-    return productEquals(other);
-  }
-
-  public static function create<A, B, C, D>(a: A, b: B, c: C, d: D): Tuple4<A, B, C, D> {
-    return new Tuple4<A, B, C, D>(a, b, c, d);
-  }
-  public function decompose(): JValue {
-    return productDecompose();
-  }
-  public static function extract<A, B, C, D>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>): Tuple4<A, B, C, D> {
-    return switch(v) {
-      case JArray(v): Tuple4.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
-}
-
-class Tuple5< A, B, C, D, E> extends AbstractProduct {
-  public var _1 (default, null): A;
-  public var _2 (default, null): B;
-  public var _3 (default, null): C;
-  public var _4 (default, null): D;
-  public var _5 (default, null): E;
-
-  function new(first: A, second: B, third: C, fourth: D, fifth: E) {
-    super([first, second, third, fourth, fifth]);
-
-    this._1 = first; this._2 = second; this._3 = third; this._4 = fourth; this._5 = fifth;
-  }
-
-	public function apply<F>(f : A -> B -> C -> D -> E -> F) : F
-		return f(_1, _2, _3, _4, _5)
-	
-	public static function first<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._1
-	public static function second<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._2
-	public static function third<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._3
-	public static function fourth<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._4
-	public static function fifth<A, B, C, D, E>(t : Tuple5<A, B, C, D, E>) return t._5
-	
-  override private function getProductPrefix(): String {
-    return "Tuple5";
-  }
-
-  override private function getProductArity(): Int {
-    return 5;
-  }
-
-  public function compare(other : Tuple5<A, B, C, D, E>): Int {
-    return productCompare(other);
-  }
-
-  public function equals(other : Tuple5<A, B, C, D, E>): Bool {
-    return productEquals(other);
-  }
-
-  public static function create<A, B, C, D, E>(a: A, b: B, c: C, d: D, e: E): Tuple5<A, B, C, D, E> {
-    return new Tuple5<A, B, C, D, E>(a, b, c, d, e);
-  }
-  public function decompose(): JValue {
-    return productDecompose();
-  }
-  public static function extract<A, B, C, D, E>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>, e5: JExtractorFunction<E>): Tuple5<A, B, C, D, E> {
-    return switch(v) {
-      case JArray(v): Tuple5.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]), e5(v[4]));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
-}
-
 typedef OrderFunction<T>  = Function2<T, T, Int>;
 typedef EqualFunction<T>  = Function2<T, T, Bool>;
 typedef ShowFunction<T>   = Function<T, String>;

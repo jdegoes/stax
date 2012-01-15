@@ -484,7 +484,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       var domain = extractDomain(fragments[0].from);
     
       if (receivers.exists(domain)) {
-        receivers.get(domain).foreach(function(r) r(message));
+        receivers.get(domain).forEach(function(r) r(message));
       }
     
       fragmentsReceived.removeByKey(messageKey);

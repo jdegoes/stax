@@ -1,5 +1,6 @@
 package haxe.reactive;
 
+import Tuples;
 import Prelude;
 import haxe.test.TestCase;
 import haxe.reactive.Reactive;

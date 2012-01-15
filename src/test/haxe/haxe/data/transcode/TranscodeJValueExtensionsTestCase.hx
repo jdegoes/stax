@@ -3,6 +3,7 @@ package haxe.data.transcode;
 import Prelude;
 
 import Type;
+import Tuples;
 import Prelude;
 import haxe.test.TestCase;
 import haxe.text.json.JValue;

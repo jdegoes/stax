@@ -15,6 +15,7 @@
 */
 package haxe.reactive;
 
+import Tuples;
 import Prelude;
 import PreludeExtensions;
 import haxe.reactive.Streams;
