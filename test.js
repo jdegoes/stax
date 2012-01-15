@@ -6531,6 +6531,7 @@ haxe.functional.PartialFunction5.prototype = {
 	,toFunction: null
 	,__class__: haxe.functional.PartialFunction5
 }
+<<<<<<< HEAD
 haxe.util.GuidTestCase = $hxClasses["haxe.util.GuidTestCase"] = function() {
 	haxe.test.TestCase.call(this);
 }
@@ -6688,11 +6689,368 @@ haxe.reactive.Signals.cond = function(conditions,elseS) {
 		case 1:
 			var h = $e[2];
 			$r = haxe.reactive.SignalBool.ifTrue(h._1,h._2,haxe.reactive.Signals.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseS));
+=======
+var Stax = $hxClasses["Stax"] = function() { }
+Stax.__name__ = ["Stax"];
+Stax._createOrderImpl = function(impl) {
+	return function(a,b) {
+		return a == b || a == null && b == null?0:a == null?-1:b == null?1:impl(a,b);
+	};
+}
+Stax.getOrderFor = function(t) {
+	return Stax.getOrderForType(Type["typeof"](t));
+}
+Stax.getOrderForType = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 3:
+			$r = Stax._createOrderImpl(BoolExtensions.compare);
+			break;
+		case 1:
+			$r = Stax._createOrderImpl(IntExtensions.compare);
+			break;
+		case 2:
+			$r = Stax._createOrderImpl(FloatExtensions.compare);
+			break;
+		case 8:
+			$r = function(a,b) {
+				return a == b?0:a > b?1:-1;
+			};
+			break;
+		case 4:
+			$r = Stax._createOrderImpl(function(a,b) {
+				var _g = 0, _g1 = Reflect.fields(a);
+				while(_g < _g1.length) {
+					var key = _g1[_g];
+					++_g;
+					var va = Reflect.field(a,key);
+					var v1 = (Stax.getOrderFor(va))(va,Reflect.field(b,key));
+					if(0 != v1) return v1;
+				}
+				return 0;
+			});
+			break;
+		case 6:
+			var c = $e[2];
+			$r = (function($this) {
+				var $r;
+				switch(Type.getClassName(c)) {
+				case "String":
+					$r = Stax._createOrderImpl(StringExtensions.compare);
+					break;
+				case "Date":
+					$r = Stax._createOrderImpl(DateExtensions.compare);
+					break;
+				case "Array":
+					$r = Stax._createOrderImpl(ArrayExtensions.compare);
+					break;
+				default:
+					$r = Stax._hasMetaDataClass(c)?(function($this) {
+						var $r;
+						var i = 0;
+						var fields = ArrayExtensions.sortWith(ArrayExtensions.filter(ArrayExtensions.map(Type.getInstanceFields(c),function(v1) {
+							var fieldMeta = Stax._getMetaDataField(c,v1);
+							var weight = fieldMeta != null && Reflect.hasField(fieldMeta,"order")?Reflect.field(fieldMeta,"order"):1;
+							return Tuple3.create(v1,weight,fieldMeta != null && Reflect.hasField(fieldMeta,"index")?Reflect.field(fieldMeta,"index"):i++);
+						}),function(v1) {
+							return v1._2 != 0;
+						}),function(a,b) {
+							var c1 = a._3 - b._3;
+							if(c1 != 0) return c1;
+							return StringExtensions.compare(a._1,b._1);
+						});
+						$r = Stax._createOrderImpl(function(a,b) {
+							var values = ArrayExtensions.map(ArrayExtensions.filter(fields,function(v1) {
+								return !Reflect.isFunction(Reflect.field(a,v1._1));
+							}),function(v1) {
+								return Tuple3.create(Reflect.field(a,v1._1),Reflect.field(b,v1._1),v1._2);
+							});
+							var _g = 0;
+							while(_g < values.length) {
+								var value = values[_g];
+								++_g;
+								var c1 = (Stax.getOrderFor(value._1))(value._1,value._2) * value._3;
+								if(c1 != 0) return c1;
+							}
+							return 0;
+						});
+						return $r;
+					}($this)):Type.getInstanceFields(c).remove("compare")?Stax._createOrderImpl(function(a,b) {
+						return a.compare(b);
+					}):Stax.error("class " + Type.getClassName(c) + " is not comparable");
+				}
+				return $r;
+			}($this));
+			break;
+		case 7:
+			var e = $e[2];
+			$r = Stax._createOrderImpl(function(a,b) {
+				var v1 = a[1] - b[1];
+				if(0 != v1) return v1;
+				var pa = a.slice(2);
+				var pb = b.slice(2);
+				var _g1 = 0, _g = pa.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					var v2 = (Stax.getOrderFor(pa[i]))(pa[i],pb[i]);
+					if(v2 != 0) return v2;
+				}
+				return 0;
+			});
+			break;
+		case 0:
+			$r = Stax._createOrderImpl(function(a,b) {
+				return Stax.error("at least one of the arguments should be null");
+			});
+			break;
+		case 5:
+			$r = Stax.error("unable to compare on a function");
 			break;
 		}
 		return $r;
 	}(this));
 }
+Stax._hasMetaDataClass = function(c) {
+	var m = haxe.rtti.Meta.getType(c);
+	return null != m && Reflect.hasField(m,"DataClass");
+}
+Stax._getMetaDataField = function(c,f) {
+	var m = haxe.rtti.Meta.getFields(c);
+	if(null == m || !Reflect.hasField(m,f)) return null;
+	var fm = Reflect.field(m,f);
+	if(!Reflect.hasField(fm,"DataField")) return null;
+	return Reflect.field(fm,"DataField").copy().pop();
+}
+Stax._fieldsWithMeta = function(c,name) {
+	var i = 0;
+	return ArrayExtensions.map(ArrayExtensions.sortWith(ArrayExtensions.filter(ArrayExtensions.map(Type.getInstanceFields(c),function(v) {
+		var fieldMeta = Stax._getMetaDataField(c,v);
+		var inc = fieldMeta == null || !Reflect.hasField(fieldMeta,name) || Reflect.field(fieldMeta,name);
+		return Tuple3.create(v,inc,fieldMeta != null && Reflect.hasField(fieldMeta,"index")?Reflect.field(fieldMeta,"index"):i++);
+	}),function(v) {
+		return v._2;
+	}),function(a,b) {
+		var c1 = a._3 - b._3;
+		if(c1 != 0) return c1;
+		return StringExtensions.compare(a._1,b._1);
+	}),function(v) {
+		return v._1;
+	});
+}
+Stax._createEqualImpl = function(impl) {
+	return function(a,b) {
+		return a == b || a == null && b == null?true:a == null || b == null?false:impl(a,b);
+	};
+}
+Stax.getEqualFor = function(t) {
+	return Stax.getEqualForType(Type["typeof"](t));
+}
+Stax.getEqualForType = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 3:
+			$r = Stax._createEqualImpl(BoolExtensions.equals);
+			break;
+		case 1:
+			$r = Stax._createEqualImpl(IntExtensions.equals);
+			break;
+		case 2:
+			$r = Stax._createEqualImpl(FloatExtensions.equals);
+			break;
+		case 8:
+			$r = function(a,b) {
+				return a == b;
+			};
+			break;
+		case 4:
+			$r = Stax._createEqualImpl(function(a,b) {
+				var _g = 0, _g1 = Reflect.fields(a);
+				while(_g < _g1.length) {
+					var key = _g1[_g];
+					++_g;
+					var va = Reflect.field(a,key);
+					if(!(Stax.getEqualFor(va))(va,Reflect.field(b,key))) return false;
+				}
+				return true;
+			});
+			break;
+		case 6:
+			var c = $e[2];
+			$r = (function($this) {
+				var $r;
+				switch(Type.getClassName(c)) {
+				case "String":
+					$r = Stax._createEqualImpl(StringExtensions.equals);
+					break;
+				case "Date":
+					$r = Stax._createEqualImpl(DateExtensions.equals);
+					break;
+				case "Array":
+					$r = Stax._createEqualImpl(ArrayExtensions.equals);
+					break;
+				default:
+					$r = Stax._hasMetaDataClass(c)?(function($this) {
+						var $r;
+						var fields = Stax._fieldsWithMeta(c,"equalHash");
+						$r = Stax._createEqualImpl(function(a,b) {
+							var values = ArrayExtensions.map(fields,function(v1) {
+								return Tuple2.create(Reflect.field(a,v1),Reflect.field(b,v1));
+							});
+							var _g = 0;
+							while(_g < values.length) {
+								var value = values[_g];
+								++_g;
+								if(Reflect.isFunction(value._1)) continue;
+								if(!(Stax.getEqualFor(value._1))(value._1,value._2)) return false;
+							}
+							return true;
+						});
+						return $r;
+					}($this)):Type.getInstanceFields(c).remove("equals")?Stax._createEqualImpl(function(a,b) {
+						return a.equals(b);
+					}):Stax.error("class " + Type.getClassName(c) + " has not equals method");
+				}
+				return $r;
+			}($this));
+			break;
+		case 7:
+			var e = $e[2];
+			$r = Stax._createEqualImpl(function(a,b) {
+				if(0 != a[1] - b[1]) return false;
+				var pa = a.slice(2);
+				var pb = b.slice(2);
+				var _g1 = 0, _g = pa.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(!(Stax.getEqualFor(pa[i]))(pa[i],pb[i])) return false;
+				}
+				return true;
+			});
+			break;
+		case 0:
+			$r = Stax._createEqualImpl(function(a,b) {
+				return Stax.error("at least one of the arguments should be null");
+			});
+			break;
+		case 5:
+			$r = Stax._createEqualImpl(Reflect.compareMethods);
+			break;
+		}
+		return $r;
+	}(this));
+}
+Stax._createShowImpl = function(impl) {
+	return function(v) {
+		return null == v?"null":impl(v);
+	};
+}
+Stax.getShowFor = function(t) {
+	return Stax.getShowForType(Type["typeof"](t));
+}
+Stax.getShowForType = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 3:
+			$r = Stax._createShowImpl(BoolExtensions.toString);
+			break;
+		case 1:
+			$r = Stax._createShowImpl(IntExtensions.toString);
+			break;
+		case 2:
+			$r = Stax._createShowImpl(FloatExtensions.toString);
+			break;
+		case 8:
+			$r = Stax._createShowImpl(function(v1) {
+				return "<unknown>";
+			});
+			break;
+		case 4:
+			$r = Stax._createShowImpl(function(v1) {
+				var buf = [];
+				var _g = 0, _g1 = Reflect.fields(v1);
+				while(_g < _g1.length) {
+					var k = _g1[_g];
+					++_g;
+					var i = Reflect.field(v1,k);
+					buf.push(k + ":" + (Stax.getShowFor(i))(i));
+				}
+				return "{" + buf.join(",") + "}";
+			});
+			break;
+		case 6:
+			var c = $e[2];
+			$r = (function($this) {
+				var $r;
+				switch(Type.getClassName(c)) {
+				case "String":
+					$r = Stax._createShowImpl(StringExtensions.toString);
+					break;
+				case "Array":
+					$r = Stax._createShowImpl(ArrayExtensions.toString);
+					break;
+				default:
+					$r = Stax._hasMetaDataClass(c)?(function($this) {
+						var $r;
+						var fields = Stax._fieldsWithMeta(c,"show");
+						$r = Stax._createShowImpl(function(v1) {
+							var values = ArrayExtensions.map(ArrayExtensions.filter(ArrayExtensions.map(fields,function(f) {
+								return Reflect.field(v1,f);
+							}),function(v2) {
+								return !Reflect.isFunction(v2);
+							}),function(v2) {
+								return (Stax.getShowFor(v2))(v2);
+							});
+							return IterableExtensions.mkString(values,null,Type.getClassName(c) + "(",")",", ");
+						});
+						return $r;
+					}($this)):Type.getInstanceFields(c).remove("toString")?Stax._createShowImpl(function(v1) {
+						return Reflect.field(v1,"toString").apply(v1,[]);
+					}):Stax._createShowImpl(function(v1) {
+						return Type.getClassName(Type.getClass(v1));
+					});
+				}
+				return $r;
+			}($this));
+			break;
+		case 7:
+			var e = $e[2];
+			$r = Stax._createShowImpl(function(v1) {
+				var buf = v1[0];
+				var params = v1.slice(2);
+				if(params.length == 0) return buf; else {
+					buf += "(";
+					var _g = 0;
+					while(_g < params.length) {
+						var p = params[_g];
+						++_g;
+						buf += (Stax.getShowFor(p))(p);
+					}
+					return buf + ")";
+				}
+			});
+			break;
+		case 0:
+			$r = function(v1) {
+				return "null";
+			};
+>>>>>>> Rearranging for minimal code import
+			break;
+		case 5:
+			$r = Stax._createShowImpl(function(v1) {
+				return "<function>";
+			});
+			break;
+		}
+		return $r;
+	}(this));
+}
+<<<<<<< HEAD
 haxe.reactive.Signals.zipN = function(signals) {
 	var zipValueNow = function() {
 		return haxe.data.collections.IterableExtensions.map(signals,function(b) {
@@ -6797,30 +7155,205 @@ haxe.Stack.makeStack = function(s) {
 }
 haxe.Stack.prototype = {
 	__class__: haxe.Stack
+=======
+Stax._createHashImpl = function(impl) {
+	return function(v) {
+		if(null == v) return 0; else return impl(v);
+	};
 }
-haxe.io.http.HttpString = $hxClasses["haxe.io.http.HttpString"] = function() { }
-haxe.io.http.HttpString.__name__ = ["haxe","io","http","HttpString"];
-haxe.io.http.HttpString.__interfaces__ = [haxe.io.http.Http];
-haxe.io.http.HttpString.prototype = {
-	__class__: haxe.io.http.HttpString
+Stax.getHashFor = function(t) {
+	return Stax.getHashForType(Type["typeof"](t));
 }
-haxe.io.http.HttpStringAsync = $hxClasses["haxe.io.http.HttpStringAsync"] = function() {
+Stax.getHashForType = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 3:
+			$r = Stax._createHashImpl(BoolExtensions.hashCode);
+			break;
+		case 1:
+			$r = Stax._createHashImpl(IntExtensions.hashCode);
+			break;
+		case 2:
+			$r = Stax._createHashImpl(FloatExtensions.hashCode);
+			break;
+		case 8:
+			$r = Stax._createHashImpl(function(v1) {
+				return Stax.error("can't retrieve hascode for TUnknown: " + v1);
+			});
+			break;
+		case 4:
+			$r = Stax._createHashImpl(function(v1) {
+				var s = (Stax.getShowFor(v1))(v1);
+				return (Stax.getHashFor(s))(s);
+			});
+			break;
+		case 6:
+			var c = $e[2];
+			$r = (function($this) {
+				var $r;
+				switch(Type.getClassName(c)) {
+				case "String":
+					$r = Stax._createHashImpl(StringExtensions.hashCode);
+					break;
+				case "Date":
+					$r = Stax._createHashImpl(DateExtensions.hashCode);
+					break;
+				case "Array":
+					$r = Stax._createHashImpl(ArrayExtensions.hashCode);
+					break;
+				default:
+					$r = (function($this) {
+						var $r;
+						var fields = Type.getInstanceFields(c);
+						$r = Stax._hasMetaDataClass(c)?(function($this) {
+							var $r;
+							var fields1 = Stax._fieldsWithMeta(c,"equalHash");
+							$r = Stax._createHashImpl(function(v1) {
+								var className = Type.getClassName(c);
+								var values = ArrayExtensions.filter(ArrayExtensions.map(fields1,function(f) {
+									return Reflect.field(v1,f);
+								}),function(v2) {
+									return !Reflect.isFunction(v2);
+								});
+								return ArrayExtensions.foldl(values,9901 * StringExtensions.hashCode(className),function(v2,e) {
+									return v2 + 333667 * ((Stax.getHashFor(e))(e) + 197192);
+								});
+							});
+							return $r;
+						}($this)):Type.getInstanceFields(c).remove("hashCode")?Stax._createHashImpl(function(v1) {
+							return Reflect.field(v1,"hashCode").apply(v1,[]);
+						}):Stax.error("class does not have a hashCode method");
+						return $r;
+					}($this));
+				}
+				return $r;
+			}($this));
+			break;
+		case 7:
+			var e = $e[2];
+			$r = Stax._createHashImpl(function(v1) {
+				var hash = StringExtensions.hashCode(v1[0]) * 6151;
+				var _g = 0, _g1 = v1.slice(2);
+				while(_g < _g1.length) {
+					var i = _g1[_g];
+					++_g;
+					hash += (Stax.getHashFor(i))(i) * 6151;
+				}
+				return hash;
+			});
+			break;
+		case 5:
+			$r = Stax._createHashImpl(function(v1) {
+				return Stax.error("function can't provide a hash code");
+			});
+			break;
+		case 0:
+			$r = function(v1) {
+				return 0;
+			};
+			break;
+		default:
+			$r = function(v1) {
+				return -1;
+			};
+		}
+		return $r;
+	}(this));
 }
-haxe.io.http.HttpStringAsync.__name__ = ["haxe","io","http","HttpStringAsync"];
-haxe.io.http.HttpStringAsync.__interfaces__ = [haxe.io.http.HttpString];
-haxe.io.http.HttpStringAsync.prototype = {
-	get: function(url,params,headers) {
-		return this.custom("GET",url,null,params,headers);
+Stax.noop1 = function() {
+	return function(a) {
+	};
+}
+Stax.noop2 = function() {
+	return function(a,b) {
+	};
+}
+Stax.noop3 = function() {
+	return function(a,b,c) {
+	};
+}
+Stax.noop4 = function() {
+	return function(a,b,c,d) {
+	};
+}
+Stax.noop5 = function() {
+	return function(a,b,c,d,e) {
+	};
+}
+Stax.identity = function() {
+	return function(a) {
+		return a;
+	};
+}
+Stax.unfold = function(initial,unfolder) {
+	return { iterator : function() {
+		var _next = Option.None;
+		var _progress = initial;
+		var precomputeNext = function() {
+			var $e = (unfolder(_progress));
+			switch( $e[1] ) {
+			case 0:
+				_progress = null;
+				_next = Option.None;
+				break;
+			case 1:
+				var tuple = $e[2];
+				_progress = tuple._1;
+				_next = Option.Some(tuple._2);
+				break;
+			}
+		};
+		precomputeNext();
+		return { hasNext : function() {
+			return !OptionExtensions.isEmpty(_next);
+		}, next : function() {
+			var n = OptionExtensions.get(_next);
+			precomputeNext();
+			return n;
+		}};
+	}};
+}
+Stax.error = function(msg) {
+	throw msg;
+	return null;
+>>>>>>> Rearranging for minimal code import
+}
+Stax.prototype = {
+	__class__: Stax
+}
+haxe.util.GuidTestCase = $hxClasses["haxe.util.GuidTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.util.GuidTestCase.__name__ = ["haxe","util","GuidTestCase"];
+haxe.util.GuidTestCase.__super__ = haxe.test.TestCase;
+haxe.util.GuidTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testNonNull: function() {
+		this.assertNotNull(haxe.util.Guid.generate(),null,{ fileName : "GuidTestCase.hx", lineNumber : 31, className : "haxe.util.GuidTestCase", methodName : "testNonNull"});
 	}
-	,post: function(url,data,params,headers) {
-		return this.custom("POST",url,data,params,this.makeHeader(headers,"application/x-www-form-urlencoded"));
+	,testUnique: function() {
+		this.assertFalse(haxe.util.Guid.generate() == haxe.util.Guid.generate(),null,{ fileName : "GuidTestCase.hx", lineNumber : 35, className : "haxe.util.GuidTestCase", methodName : "testUnique"});
 	}
-	,put: function(url,data,params,headers) {
-		return this.custom("PUT",url,data,params,this.makeHeader(headers,"application/x-www-form-urlencoded"));
+	,__class__: haxe.util.GuidTestCase
+});
+haxe.data.collections.SetTestCase = $hxClasses["haxe.data.collections.SetTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.data.collections.SetTestCase.__name__ = ["haxe","data","collections","SetTestCase"];
+haxe.data.collections.SetTestCase.__super__ = haxe.test.TestCase;
+haxe.data.collections.SetTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testSizeGrowsWhenAddingUniqueElements: function() {
+		var s = this.set();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertEquals(i,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 33, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+			s = s.add(i);
+		}
+		this.assertEquals(100,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 38, className : "haxe.data.collections.SetTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
 	}
-	,'delete': function(url,params,headers) {
-		return this.custom("DELETE",url,null,params,headers);
-	}
+<<<<<<< HEAD
 	,custom: function(method,_url,data,_params,_headers) {
 		var url = _params != null?haxe.net.UrlExtensions.addQueryParameters(_url,stax.OptionOps.getOrElseC(stax.OptionOps.toOption(_params),haxe.data.collections.Map.create())):_url;
 		var future = new stax.Future();
@@ -6849,10 +7382,68 @@ haxe.io.http.HttpStringAsync.prototype = {
 			haxe.functional.FoldableExtensions.foreach(headers,function(header) {
 				request.setRequestHeader(header._1,header._2);
 			});
-		});
-		request.send(data);
-		return future;
+=======
+	,testSizeDoesNotGrowWhenAddingDuplicateElements: function() {
+		var s = this.set().add(0);
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			s = s.add(0);
+		}
+		this.assertEquals(1,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 46, className : "haxe.data.collections.SetTestCase", methodName : "testSizeDoesNotGrowWhenAddingDuplicateElements"});
 	}
+	,testSizeShrinksWhenRemovingElements: function() {
+		var s = this.defaultSet();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertEquals(100 - i,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 53, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+			s = s.remove(i);
+		}
+		this.assertEquals(0,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 58, className : "haxe.data.collections.SetTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+	}
+	,testContainsElements: function() {
+		var s = this.set();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertFalse(s.contains(i),null,{ fileName : "SetTestCase.hx", lineNumber : 65, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
+			s = s.add(i);
+			this.assertTrue(s.contains(i),null,{ fileName : "SetTestCase.hx", lineNumber : 69, className : "haxe.data.collections.SetTestCase", methodName : "testContainsElements"});
+		}
+	}
+	,testAddingSameElementDoesNotChangeSet: function() {
+		var s = this.defaultSet();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			var oldM = s;
+			s = s.add(i);
+			this.assertEquals(oldM,s,null,null,{ fileName : "SetTestCase.hx", lineNumber : 81, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
+			this.assertEquals(100,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 82, className : "haxe.data.collections.SetTestCase", methodName : "testAddingSameElementDoesNotChangeSet"});
+		}
+	}
+	,testCanIterateThroughElements: function() {
+		var s = this.defaultSet();
+		var count = 4950;
+		var iterated = 0;
+		var $it0 = s.iterator();
+		while( $it0.hasNext() ) {
+			var k = $it0.next();
+			count -= k;
+			++iterated;
+		}
+		this.assertEquals(100,iterated,null,null,{ fileName : "SetTestCase.hx", lineNumber : 98, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
+		this.assertEquals(0,count,null,null,{ fileName : "SetTestCase.hx", lineNumber : 99, className : "haxe.data.collections.SetTestCase", methodName : "testCanIterateThroughElements"});
+	}
+	,testFilter: function() {
+		var s = haxe.functional.FoldableExtensions.filter(this.defaultSet(),function(e) {
+			return e < 50;
+>>>>>>> Rearranging for minimal code import
+		});
+		this.assertEquals(50,s.size(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 105, className : "haxe.data.collections.SetTestCase", methodName : "testFilter"});
+	}
+<<<<<<< HEAD
 	,makeHeader: function(_headers,contentType) {
 		return stax.OptionOps.getOrElseC(stax.OptionOps.toOption(_headers),haxe.data.collections.Map.create().set("Content-Type",contentType));
 	}
@@ -7993,11 +8584,1002 @@ Reflect.fields = function(o) {
 			t = o.__proto__;
 		} catch( e ) {
 			t = null;
+=======
+	,testEquals: function() {
+		this.assertTrue(this.set().equals(this.set()),null,{ fileName : "SetTestCase.hx", lineNumber : 109, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+		this.assertTrue(this.set([1,2,3]).equals(this.set([1,2,3])),null,{ fileName : "SetTestCase.hx", lineNumber : 110, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+		this.assertTrue(this.set([2,1]).equals(this.set([1,2])),null,{ fileName : "SetTestCase.hx", lineNumber : 111, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+		this.assertFalse(this.set().equals(this.set([1])),null,{ fileName : "SetTestCase.hx", lineNumber : 112, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+		this.assertFalse(this.set([2]).equals(this.set([1])),null,{ fileName : "SetTestCase.hx", lineNumber : 113, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+		this.assertFalse(this.set([1,2]).equals(this.set([1,3])),null,{ fileName : "SetTestCase.hx", lineNumber : 114, className : "haxe.data.collections.SetTestCase", methodName : "testEquals"});
+	}
+	,testCompare: function() {
+		this.assertTrue(this.set().compare(this.set()) == 0,null,{ fileName : "SetTestCase.hx", lineNumber : 118, className : "haxe.data.collections.SetTestCase", methodName : "testCompare"});
+		this.assertTrue(this.set([1,2,3]).compare(this.set([1,2,3])) == 0,null,{ fileName : "SetTestCase.hx", lineNumber : 119, className : "haxe.data.collections.SetTestCase", methodName : "testCompare"});
+		this.assertTrue(this.set().compare(this.set([1])) < 0,null,{ fileName : "SetTestCase.hx", lineNumber : 120, className : "haxe.data.collections.SetTestCase", methodName : "testCompare"});
+		this.assertTrue(this.set([2]).compare(this.set([1])) > 0,null,{ fileName : "SetTestCase.hx", lineNumber : 121, className : "haxe.data.collections.SetTestCase", methodName : "testCompare"});
+		this.assertTrue(this.set([1,2]).compare(this.set([1,3])) < 0,null,{ fileName : "SetTestCase.hx", lineNumber : 122, className : "haxe.data.collections.SetTestCase", methodName : "testCompare"});
+	}
+	,testToString: function() {
+		this.assertEquals("Set []",this.set().toString(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 126, className : "haxe.data.collections.SetTestCase", methodName : "testToString"});
+		this.assertEquals("Set [1, 2, 3]",this.set([1,2,3]).toString(),null,null,{ fileName : "SetTestCase.hx", lineNumber : 127, className : "haxe.data.collections.SetTestCase", methodName : "testToString"});
+	}
+	,testHashCode: function() {
+		this.assertNotEquals(0,this.set().hashCode(),null,{ fileName : "SetTestCase.hx", lineNumber : 131, className : "haxe.data.collections.SetTestCase", methodName : "testHashCode"});
+		this.assertNotEquals(0,this.set([1,2]).hashCode(),null,{ fileName : "SetTestCase.hx", lineNumber : 132, className : "haxe.data.collections.SetTestCase", methodName : "testHashCode"});
+	}
+	,defaultSet: function() {
+		var s = this.set();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			s = s.add(i);
+		}
+		return s;
+	}
+	,set: function(values) {
+		var s = haxe.data.collections.Set.create();
+		if(null != values) s = s.addAll(values);
+		return s;
+	}
+	,__class__: haxe.data.collections.SetTestCase
+});
+haxe.test.ui.Report = $hxClasses["haxe.test.ui.Report"] = function() { }
+haxe.test.ui.Report.__name__ = ["haxe","test","ui","Report"];
+haxe.test.ui.Report.create = function(runner,displaySuccessResults,headerDisplayMode) {
+	var report;
+	report = new haxe.test.ui.text.HtmlReport(runner,null,true);
+	if(null == displaySuccessResults) report.displaySuccessResults = haxe.test.ui.common.SuccessResultsDisplayMode.ShowSuccessResultsWithNoErrors; else report.displaySuccessResults = displaySuccessResults;
+	if(null == headerDisplayMode) report.displayHeader = haxe.test.ui.common.HeaderDisplayMode.ShowHeaderWithResults; else report.displayHeader = headerDisplayMode;
+	return report;
+}
+haxe.test.ui.Report.prototype = {
+	__class__: haxe.test.ui.Report
+}
+haxe.reactive.Signals = $hxClasses["haxe.reactive.Signals"] = function() {
+}
+haxe.reactive.Signals.__name__ = ["haxe","reactive","Signals"];
+haxe.reactive.Signals.constant = function(value) {
+	return haxe.reactive.Streams.identity().startsWith(value);
+}
+haxe.reactive.Signals.cond = function(conditions,elseS) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.data.collections.IterableExtensions.headOption(conditions));
+		switch( $e[1] ) {
+		case 0:
+			$r = elseS;
+			break;
+		case 1:
+			var h = $e[2];
+			$r = haxe.reactive.SignalBool.ifTrue(h._1,h._2,haxe.reactive.Signals.cond(haxe.data.collections.IterableExtensions.tail(conditions),elseS));
+			break;
+		}
+		return $r;
+	}(this));
+}
+haxe.reactive.Signals.zipN = function(signals) {
+	var zipValueNow = function() {
+		return haxe.data.collections.IterableExtensions.map(signals,function(b) {
+			return b.valueNow();
+		});
+	};
+	return haxe.reactive.Streams.create(function(pulse) {
+		return haxe.reactive.Propagation.propagate(pulse.withValue(zipValueNow()));
+	},haxe.data.collections.IterableExtensions.map(signals,function(b) {
+		return b.changes();
+	})).startsWith(zipValueNow());
+}
+haxe.reactive.Signals.sample = function(time) {
+	return haxe.reactive.Streams.timer(time).startsWith(Std["int"](haxe.reactive.External.now()));
+}
+haxe.reactive.Signals.sampleS = function(time) {
+	return haxe.reactive.Streams.timerS(time).startsWith(Std["int"](haxe.reactive.External.now()));
+}
+haxe.reactive.Signals.prototype = {
+	__class__: haxe.reactive.Signals
+}
+haxe.StackItem = $hxClasses["haxe.StackItem"] = { __ename__ : ["haxe","StackItem"], __constructs__ : ["CFunction","Module","FilePos","Method","Lambda"] }
+haxe.StackItem.CFunction = ["CFunction",0];
+haxe.StackItem.CFunction.toString = $estr;
+haxe.StackItem.CFunction.__enum__ = haxe.StackItem;
+haxe.StackItem.Module = function(m) { var $x = ["Module",1,m]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; }
+haxe.StackItem.FilePos = function(s,file,line) { var $x = ["FilePos",2,s,file,line]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; }
+haxe.StackItem.Method = function(classname,method) { var $x = ["Method",3,classname,method]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; }
+haxe.StackItem.Lambda = function(v) { var $x = ["Lambda",4,v]; $x.__enum__ = haxe.StackItem; $x.toString = $estr; return $x; }
+haxe.Stack = $hxClasses["haxe.Stack"] = function() { }
+haxe.Stack.__name__ = ["haxe","Stack"];
+haxe.Stack.callStack = function() {
+	return haxe.Stack.makeStack("$s");
+}
+haxe.Stack.exceptionStack = function() {
+	return haxe.Stack.makeStack("$e");
+}
+haxe.Stack.toString = function(stack) {
+	var b = new StringBuf();
+	var _g = 0;
+	while(_g < stack.length) {
+		var s = stack[_g];
+		++_g;
+		b.b[b.b.length] = "\nCalled from ";
+		haxe.Stack.itemToString(b,s);
+	}
+	return b.b.join("");
+}
+haxe.Stack.itemToString = function(b,s) {
+	var $e = (s);
+	switch( $e[1] ) {
+	case 0:
+		b.b[b.b.length] = "a C function";
+		break;
+	case 1:
+		var m = $e[2];
+		b.b[b.b.length] = "module ";
+		b.b[b.b.length] = m == null?"null":m;
+		break;
+	case 2:
+		var line = $e[4], file = $e[3], s1 = $e[2];
+		if(s1 != null) {
+			haxe.Stack.itemToString(b,s1);
+			b.b[b.b.length] = " (";
+		}
+		b.b[b.b.length] = file == null?"null":file;
+		b.b[b.b.length] = " line ";
+		b.b[b.b.length] = line == null?"null":line;
+		if(s1 != null) b.b[b.b.length] = ")";
+		break;
+	case 3:
+		var meth = $e[3], cname = $e[2];
+		b.b[b.b.length] = cname == null?"null":cname;
+		b.b[b.b.length] = ".";
+		b.b[b.b.length] = meth == null?"null":meth;
+		break;
+	case 4:
+		var n = $e[2];
+		b.b[b.b.length] = "local function #";
+		b.b[b.b.length] = n == null?"null":n;
+		break;
+	}
+}
+haxe.Stack.makeStack = function(s) {
+	var a = (function($this) {
+		var $r;
+		try {
+			$r = eval(s);
+		} catch( e ) {
+			$r = [];
+		}
+		return $r;
+	}(this));
+	var m = new Array();
+	var _g1 = 0, _g = a.length - (s == "$s"?2:0);
+	while(_g1 < _g) {
+		var i = _g1++;
+		var d = a[i].split("::");
+		m.unshift(haxe.StackItem.Method(d[0],d[1]));
+	}
+	return m;
+}
+haxe.Stack.prototype = {
+	__class__: haxe.Stack
+}
+haxe.data.collections.ArrayExtensions = $hxClasses["haxe.data.collections.ArrayExtensions"] = function() { }
+haxe.data.collections.ArrayExtensions.__name__ = ["haxe","data","collections","ArrayExtensions"];
+haxe.data.collections.ArrayExtensions.partition = function(arr,f) {
+	return ArrayExtensions.foldl(arr,Tuple2.create([],[]),function(a,b) {
+		if(f(b)) a._1.push(b); else a._2.push(b);
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.partitionWhile = function(arr,f) {
+	var partitioning = true;
+	return ArrayExtensions.foldl(arr,Tuple2.create([],[]),function(a,b) {
+		if(partitioning) {
+			if(f(b)) a._1.push(b); else {
+				partitioning = false;
+				a._2.push(b);
+			}
+		} else a._2.push(b);
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.mapTo = function(src,dest,f) {
+	return ArrayExtensions.foldl(src,ArrayExtensions.snapshot(dest),function(a,b) {
+		a.push(f(b));
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.flatten = function(arrs) {
+	var res = [];
+	var _g = 0;
+	while(_g < arrs.length) {
+		var arr = arrs[_g];
+		++_g;
+		var _g1 = 0;
+		while(_g1 < arr.length) {
+			var e = arr[_g1];
+			++_g1;
+			res.push(e);
+		}
+	}
+	return res;
+}
+haxe.data.collections.ArrayExtensions.interleave = function(alls) {
+	var res = [];
+	if(alls.length > 0) {
+		var length = (function($this) {
+			var $r;
+			var minLength = IntExtensions.toFloat(alls[0].length);
+			{
+				var _g = 0;
+				while(_g < alls.length) {
+					var e = alls[_g];
+					++_g;
+					minLength = Math.min(minLength,IntExtensions.toFloat(e.length));
+				}
+			}
+			$r = FloatExtensions.toInt(minLength);
+			return $r;
+		}(this));
+		var i = 0;
+		while(i < length) {
+			var _g = 0;
+			while(_g < alls.length) {
+				var arr = alls[_g];
+				++_g;
+				res.push(arr[i]);
+			}
+			i++;
+		}
+	}
+	return res;
+}
+haxe.data.collections.ArrayExtensions.flatMapTo = function(src,dest,f) {
+	return ArrayExtensions.foldl(src,dest,function(a,b) {
+		var _g = 0, _g1 = f(b);
+		while(_g < _g1.length) {
+			var e = _g1[_g];
+			++_g;
+			a.push(e);
+		}
+		return a;
+	});
+}
+haxe.data.collections.ArrayExtensions.count = function(arr,f) {
+	return ArrayExtensions.foldl(arr,0,function(a,b) {
+		return a + (f(b)?1:0);
+	});
+}
+haxe.data.collections.ArrayExtensions.countWhile = function(arr,f) {
+	var counting = true;
+	return ArrayExtensions.foldl(arr,0,function(a,b) {
+		return !counting?a:f(b)?a + 1:(function($this) {
+			var $r;
+			counting = false;
+			$r = a;
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.scanl = function(arr,init,f) {
+	var accum = init;
+	var result = [init];
+	var _g = 0;
+	while(_g < arr.length) {
+		var e = arr[_g];
+		++_g;
+		result.push(f(e,accum));
+	}
+	return result;
+}
+haxe.data.collections.ArrayExtensions.scanr = function(arr,init,f) {
+	var a = ArrayExtensions.snapshot(arr);
+	a.reverse();
+	return haxe.data.collections.ArrayExtensions.scanl(a,init,f);
+}
+haxe.data.collections.ArrayExtensions.scanl1 = function(arr,f) {
+	var result = [];
+	if(0 == arr.length) return result;
+	var accum = arr[0];
+	result.push(accum);
+	var _g1 = 1, _g = arr.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		result.push(f(arr[i],accum));
+	}
+	return result;
+}
+haxe.data.collections.ArrayExtensions.scanr1 = function(arr,f) {
+	var a = ArrayExtensions.snapshot(arr);
+	a.reverse();
+	return haxe.data.collections.ArrayExtensions.scanl1(a,f);
+}
+haxe.data.collections.ArrayExtensions.elements = function(arr) {
+	return ArrayExtensions.snapshot(arr);
+}
+haxe.data.collections.ArrayExtensions.appendAll = function(arr,i) {
+	var acc = ArrayExtensions.snapshot(arr);
+	var $it0 = i.iterator();
+	while( $it0.hasNext() ) {
+		var e = $it0.next();
+		acc.push(e);
+	}
+	return acc;
+}
+haxe.data.collections.ArrayExtensions.isEmpty = function(arr) {
+	return arr.length == 0;
+}
+haxe.data.collections.ArrayExtensions.find = function(arr,f) {
+	return ArrayExtensions.foldl(arr,Option.None,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch( (a)[1] ) {
+			case 0:
+				$r = OptionExtensions.filter(OptionExtensions.toOption(b),f);
+				break;
+			default:
+				$r = a;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.findIndexOf = function(arr,obj) {
+	var index = ArrayExtensions.indexOf(arr,obj);
+	return index == -1?Option.None:Option.Some(index);
+}
+haxe.data.collections.ArrayExtensions.forAll = function(arr,f) {
+	return ArrayExtensions.foldl(arr,true,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case true:
+				$r = f(b);
+				break;
+			case false:
+				$r = false;
+				break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.forAny = function(arr,f) {
+	return ArrayExtensions.foldl(arr,false,function(a,b) {
+		return (function($this) {
+			var $r;
+			switch(a) {
+			case false:
+				$r = f(b);
+				break;
+			case true:
+				$r = true;
+				break;
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.data.collections.ArrayExtensions.exists = function(arr,f) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.data.collections.ArrayExtensions.find(arr,f));
+		switch( $e[1] ) {
+		case 1:
+			var v = $e[2];
+			$r = true;
+			break;
+		case 0:
+			$r = false;
+			break;
+		}
+		return $r;
+	}(this));
+}
+haxe.data.collections.ArrayExtensions.existsP = function(arr,ref,f) {
+	var result = false;
+	var _g = 0;
+	while(_g < arr.length) {
+		var e = arr[_g];
+		++_g;
+		if(f(e,ref)) return true;
+	}
+	return false;
+}
+haxe.data.collections.ArrayExtensions.nubBy = function(arr,f) {
+	return ArrayExtensions.foldl(arr,[],function(a,b) {
+		return haxe.data.collections.ArrayExtensions.existsP(a,b,f)?a:ArrayExtensions.append(a,b);
+	});
+}
+haxe.data.collections.ArrayExtensions.nub = function(arr) {
+	return haxe.data.collections.ArrayExtensions.nubBy(arr,Stax.getEqualFor(arr[0]));
+}
+haxe.data.collections.ArrayExtensions.intersectBy = function(arr1,arr2,f) {
+	return ArrayExtensions.foldl(arr1,[],function(a,b) {
+		return haxe.data.collections.ArrayExtensions.existsP(arr2,b,f)?ArrayExtensions.append(a,b):a;
+	});
+}
+haxe.data.collections.ArrayExtensions.intersect = function(arr1,arr2) {
+	return haxe.data.collections.ArrayExtensions.intersectBy(arr1,arr2,Stax.getEqualFor(arr1[0]));
+}
+haxe.data.collections.ArrayExtensions.mkString = function(arr,sep,show) {
+	if(sep == null) sep = ", ";
+	var isFirst = true;
+	return ArrayExtensions.foldl(arr,"",function(a,b) {
+		var prefix = isFirst?(function($this) {
+			var $r;
+			isFirst = false;
+			$r = "";
+			return $r;
+		}(this)):sep;
+		if(null == show) show = Stax.getShowFor(b);
+		return a + prefix + show(b);
+	});
+}
+haxe.data.collections.ArrayExtensions.groupBy = function(arr,grouper) {
+	return ArrayExtensions.foldl(arr,haxe.data.collections.Map.create(),function(map,e) {
+		var key = grouper(e);
+		var result = map.getOrElse(key,function() {
+			return [];
+		});
+		result.push(e);
+		return map.set(key,result);
+	});
+}
+haxe.data.collections.ArrayExtensions.toList = function(arr) {
+	return haxe.data.collections.List.create().addAll(arr);
+}
+haxe.data.collections.ArrayExtensions.toSet = function(arr) {
+	return haxe.data.collections.Set.create().addAll(arr);
+}
+haxe.data.collections.ArrayExtensions.toMap = function(arr) {
+	return haxe.data.collections.Map.create().addAll(arr);
+}
+haxe.data.collections.ArrayExtensions.prototype = {
+	__class__: haxe.data.collections.ArrayExtensions
+}
+haxe.io.http.HttpString = $hxClasses["haxe.io.http.HttpString"] = function() { }
+haxe.io.http.HttpString.__name__ = ["haxe","io","http","HttpString"];
+haxe.io.http.HttpString.__interfaces__ = [haxe.io.http.Http];
+haxe.io.http.HttpString.prototype = {
+	__class__: haxe.io.http.HttpString
+}
+haxe.io.http.HttpStringAsync = $hxClasses["haxe.io.http.HttpStringAsync"] = function() {
+}
+haxe.io.http.HttpStringAsync.__name__ = ["haxe","io","http","HttpStringAsync"];
+haxe.io.http.HttpStringAsync.__interfaces__ = [haxe.io.http.HttpString];
+haxe.io.http.HttpStringAsync.prototype = {
+	get: function(url,params,headers) {
+		return this.custom("GET",url,null,params,headers);
+	}
+	,post: function(url,data,params,headers) {
+		return this.custom("POST",url,data,params,this.makeHeader(headers,"application/x-www-form-urlencoded"));
+	}
+	,put: function(url,data,params,headers) {
+		return this.custom("PUT",url,data,params,this.makeHeader(headers,"application/x-www-form-urlencoded"));
+	}
+	,'delete': function(url,params,headers) {
+		return this.custom("DELETE",url,null,params,headers);
+	}
+	,custom: function(method,_url,data,_params,_headers) {
+		var url = _params != null?haxe.net.UrlExtensions.addQueryParameters(_url,OptionExtensions.getOrElseC(OptionExtensions.toOption(_params),haxe.data.collections.Map.create())):_url;
+		var future = new Future();
+		var request = js.dom.Quirks.createXMLHttpRequest();
+		future.ifCanceled(function() {
+			try {
+				request.abort();
+			} catch( e ) {
+			}
+		});
+		request.onreadystatechange = function() {
+			var toBody = function(text) {
+				return text == null || text.length == 0?Option.None:Option.Some(text);
+			};
+			if(request.readyState == js.XmlHttpRequestState.DONE) {
+				var responseHeaders = request.getAllResponseHeaders() == null?"":request.getAllResponseHeaders();
+				future.deliver({ body : toBody(request.responseText), headers : haxe.net.HttpHeaderExtensions.toHttpHeaders(responseHeaders), code : haxe.net.HttpResponseCodeExtensions.toHttpResponseCode(request.status)});
+			}
+		};
+		try {
+			request.open(method,url,true);
+		} catch( e ) {
+			future.cancel();
+		}
+		OptionExtensions.map(OptionExtensions.toOption(_headers),function(headers) {
+			haxe.functional.FoldableExtensions.foreach(headers,function(header) {
+				request.setRequestHeader(header._1,header._2);
+			});
+		});
+		request.send(data);
+		return future;
+	}
+	,makeHeader: function(_headers,contentType) {
+		return OptionExtensions.getOrElseC(OptionExtensions.toOption(_headers),haxe.data.collections.Map.create().set("Content-Type",contentType));
+	}
+	,__class__: haxe.io.http.HttpStringAsync
+}
+js.Lib = $hxClasses["js.Lib"] = function() { }
+js.Lib.__name__ = ["js","Lib"];
+js.Lib.isIE = null;
+js.Lib.isOpera = null;
+js.Lib.document = null;
+js.Lib.window = null;
+js.Lib.alert = function(v) {
+	alert(js.Boot.__string_rec(v,""));
+}
+js.Lib.eval = function(code) {
+	return eval(code);
+}
+js.Lib.setErrorHandler = function(f) {
+	js.Lib.onerror = f;
+}
+js.Lib.prototype = {
+	__class__: js.Lib
+}
+var FloatExtensions = $hxClasses["FloatExtensions"] = function() { }
+FloatExtensions.__name__ = ["FloatExtensions"];
+FloatExtensions.round = function(v) {
+	return Math.round(v);
+}
+FloatExtensions.ceil = function(v) {
+	return Math.ceil(v);
+}
+FloatExtensions.floor = function(v) {
+	return Math.floor(v);
+}
+FloatExtensions.max = function(v1,v2) {
+	return v2 > v1?v2:v1;
+}
+FloatExtensions.min = function(v1,v2) {
+	return v2 < v1?v2:v1;
+}
+FloatExtensions.toInt = function(v) {
+	return Std["int"](v);
+}
+FloatExtensions.compare = function(v1,v2) {
+	return v1 < v2?-1:v1 > v2?1:0;
+}
+FloatExtensions.equals = function(v1,v2) {
+	return v1 == v2;
+}
+FloatExtensions.toString = function(v) {
+	return "" + v;
+}
+FloatExtensions.hashCode = function(v) {
+	return Std["int"](v * 98317);
+}
+FloatExtensions.decompose = function(v) {
+	return haxe.text.json.JValue.JNumber(v);
+}
+FloatExtensions.extract = function(c,v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 2:
+			var v1 = $e[2];
+			$r = v1;
+			break;
+		case 3:
+			var v1 = $e[2];
+			$r = StringExtensions.toFloat(v1);
+			break;
+		default:
+			$r = Stax.error("Expected Float but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+FloatExtensions.prototype = {
+	__class__: FloatExtensions
+}
+if(!haxe.math.tween) haxe.math.tween = {}
+haxe.math.tween.TweenerExtensions = $hxClasses["haxe.math.tween.TweenerExtensions"] = function() { }
+haxe.math.tween.TweenerExtensions.__name__ = ["haxe","math","tween","TweenerExtensions"];
+haxe.math.tween.TweenerExtensions.startWith = function(tweener,easing) {
+	return function(t) {
+		return tweener(easing(t));
+	};
+}
+haxe.math.tween.TweenerExtensions.endWith = function(tweener,easing) {
+	return haxe.math.tween.TweenerExtensions.startWith(tweener,function(t) {
+		return 1.0 - easing(1.0 - t);
+	});
+}
+haxe.math.tween.TweenerExtensions.animate = function(tweener,duration,frequency_,cb) {
+	if(frequency_ == null) frequency_ = 0;
+	var executor = haxe.framework.Injector.inject(haxe.time.ScheduledExecutor,{ fileName : "TweenExtensions.hx", lineNumber : 51, className : "haxe.math.tween.TweenerExtensions", methodName : "animate"});
+	var frequency = frequency_ > 0?frequency_:haxe.math.tween.TweenerExtensions.DefaultFrequency;
+	return executor.repeat(frequency,function(millis) {
+		var t = millis / duration;
+		cb(tweener(t));
+		return millis + frequency;
+	},frequency,FloatExtensions.ceil(duration / frequency));
+}
+haxe.math.tween.TweenerExtensions.prototype = {
+	__class__: haxe.math.tween.TweenerExtensions
+}
+var ValueType = $hxClasses["ValueType"] = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] }
+ValueType.TNull = ["TNull",0];
+ValueType.TNull.toString = $estr;
+ValueType.TNull.__enum__ = ValueType;
+ValueType.TInt = ["TInt",1];
+ValueType.TInt.toString = $estr;
+ValueType.TInt.__enum__ = ValueType;
+ValueType.TFloat = ["TFloat",2];
+ValueType.TFloat.toString = $estr;
+ValueType.TFloat.__enum__ = ValueType;
+ValueType.TBool = ["TBool",3];
+ValueType.TBool.toString = $estr;
+ValueType.TBool.__enum__ = ValueType;
+ValueType.TObject = ["TObject",4];
+ValueType.TObject.toString = $estr;
+ValueType.TObject.__enum__ = ValueType;
+ValueType.TFunction = ["TFunction",5];
+ValueType.TFunction.toString = $estr;
+ValueType.TFunction.__enum__ = ValueType;
+ValueType.TClass = function(c) { var $x = ["TClass",6,c]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; }
+ValueType.TEnum = function(e) { var $x = ["TEnum",7,e]; $x.__enum__ = ValueType; $x.toString = $estr; return $x; }
+ValueType.TUnknown = ["TUnknown",8];
+ValueType.TUnknown.toString = $estr;
+ValueType.TUnknown.__enum__ = ValueType;
+var Type = $hxClasses["Type"] = function() { }
+Type.__name__ = ["Type"];
+Type.getClass = function(o) {
+	if(o == null) return null;
+	if(o.__enum__ != null) return null;
+	return o.__class__;
+}
+Type.getEnum = function(o) {
+	if(o == null) return null;
+	return o.__enum__;
+}
+Type.getSuperClass = function(c) {
+	return c.__super__;
+}
+Type.getClassName = function(c) {
+	var a = c.__name__;
+	return a.join(".");
+}
+Type.getEnumName = function(e) {
+	var a = e.__ename__;
+	return a.join(".");
+}
+Type.resolveClass = function(name) {
+	var cl = $hxClasses[name];
+	if(cl == null || cl.__name__ == null) return null;
+	return cl;
+}
+Type.resolveEnum = function(name) {
+	var e = $hxClasses[name];
+	if(e == null || e.__ename__ == null) return null;
+	return e;
+}
+Type.createInstance = function(cl,args) {
+	if(args.length <= 3) return new cl(args[0],args[1],args[2]);
+	if(args.length > 8) throw "Too many arguments";
+	return new cl(args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
+}
+Type.createEmptyInstance = function(cl) {
+	function empty() {}; empty.prototype = cl.prototype;
+	return new empty();
+}
+Type.createEnum = function(e,constr,params) {
+	var f = Reflect.field(e,constr);
+	if(f == null) throw "No such constructor " + constr;
+	if(Reflect.isFunction(f)) {
+		if(params == null) throw "Constructor " + constr + " need parameters";
+		return f.apply(e,params);
+	}
+	if(params != null && params.length != 0) throw "Constructor " + constr + " does not need parameters";
+	return f;
+}
+Type.createEnumIndex = function(e,index,params) {
+	var c = e.__constructs__[index];
+	if(c == null) throw index + " is not a valid enum constructor index";
+	return Type.createEnum(e,c,params);
+}
+Type.getInstanceFields = function(c) {
+	var a = [];
+	for(var i in c.prototype) a.push(i);
+	a.remove("__class__");
+	a.remove("__properties__");
+	return a;
+}
+Type.getClassFields = function(c) {
+	var a = Reflect.fields(c);
+	a.remove("__name__");
+	a.remove("__interfaces__");
+	a.remove("__properties__");
+	a.remove("__super__");
+	a.remove("prototype");
+	return a;
+}
+Type.getEnumConstructs = function(e) {
+	var a = e.__constructs__;
+	return a.copy();
+}
+Type["typeof"] = function(v) {
+	switch(typeof(v)) {
+	case "boolean":
+		return ValueType.TBool;
+	case "string":
+		return ValueType.TClass(String);
+	case "number":
+		if(Math.ceil(v) == v % 2147483648.0) return ValueType.TInt;
+		return ValueType.TFloat;
+	case "object":
+		if(v == null) return ValueType.TNull;
+		var e = v.__enum__;
+		if(e != null) return ValueType.TEnum(e);
+		var c = v.__class__;
+		if(c != null) return ValueType.TClass(c);
+		return ValueType.TObject;
+	case "function":
+		if(v.__name__ != null) return ValueType.TObject;
+		return ValueType.TFunction;
+	case "undefined":
+		return ValueType.TNull;
+	default:
+		return ValueType.TUnknown;
+	}
+}
+Type.enumEq = function(a,b) {
+	if(a == b) return true;
+	try {
+		if(a[0] != b[0]) return false;
+		var _g1 = 2, _g = a.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(!Type.enumEq(a[i],b[i])) return false;
+		}
+		var e = a.__enum__;
+		if(e != b.__enum__ || e == null) return false;
+	} catch( e ) {
+		return false;
+	}
+	return true;
+}
+Type.enumConstructor = function(e) {
+	return e[0];
+}
+Type.enumParameters = function(e) {
+	return e.slice(2);
+}
+Type.enumIndex = function(e) {
+	return e[1];
+}
+Type.allEnums = function(e) {
+	var all = [];
+	var cst = e.__constructs__;
+	var _g = 0;
+	while(_g < cst.length) {
+		var c = cst[_g];
+		++_g;
+		var v = Reflect.field(e,c);
+		if(!Reflect.isFunction(v)) all.push(v);
+	}
+	return all;
+}
+Type.prototype = {
+	__class__: Type
+}
+if(!js.dom) js.dom = {}
+js.dom.HTMLDocumentExtensionsTestCase = $hxClasses["js.dom.HTMLDocumentExtensionsTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+	this._doc = js.Env.document;
+	this._testElements = js.dom.HTMLDocumentExtensions.newElement(this._doc,"div",[Tuple2.create("id","testElements")]);
+	this._doc.getElementsByTagName("body")[0].appendChild(this._testElements);
+}
+js.dom.HTMLDocumentExtensionsTestCase.__name__ = ["js","dom","HTMLDocumentExtensionsTestCase"];
+js.dom.HTMLDocumentExtensionsTestCase.__super__ = haxe.test.TestCase;
+js.dom.HTMLDocumentExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	_doc: null
+	,_testElements: null
+	,testThatNewElementWorks: function() {
+		var e = js.dom.HTMLDocumentExtensions.newElement(this._doc,"img",[Tuple2.create("id","foo"),Tuple2.create("src","http://thenextweb.com/apps/files/2010/03/google_logo.jpg")],"width: 300px; height: 100px; position: relative;");
+		this.asTestElement(e);
+		this.assertTrue(e != null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 48, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatNewElementWorks"});
+		this.assertEquals(e.getAttribute("src"),"http://thenextweb.com/apps/files/2010/03/google_logo.jpg",null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 49, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatNewElementWorks"});
+		this.assertEquals(e.getAttribute("id"),"foo",null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 50, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatNewElementWorks"});
+		this.clearTestElements();
+	}
+	,testThatGetIdWorks: function() {
+		var e = this.asTestElement(js.dom.HTMLDocumentExtensions.newElement(this._doc,"div",[Tuple2.create("id","getIdElem")]));
+		this.assertTrue(js.dom.HTMLDocumentExtensions.getId(this._doc,"getIdElem") != null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 58, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetIdWorks"});
+	}
+	,testThatGetTagsWorks: function() {
+		var e = js.dom.HTMLDocumentExtensions.getTags(this._doc,"body")[0];
+		this.assertEquals(e.nodeName.toLowerCase(),"body",null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 64, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetTagsWorks"});
+	}
+	,testThatGetClassesWorks: function() {
+		var e1 = this.asTestElement(js.dom.HTMLDocumentExtensions.newElement(this._doc,"div",[Tuple2.create("class","test-elem bob")]));
+		var e2 = this.asTestElement(js.dom.HTMLDocumentExtensions.newElement(this._doc,"div",[Tuple2.create("class","test-elem foo fang")]));
+		var e3 = this.asTestElement(js.dom.HTMLDocumentExtensions.newElement(this._doc,"div",[Tuple2.create("class","foo test-elem")]));
+		var body = js.dom.HTMLDocumentExtensions.getTags(this._doc,"body")[0];
+		e1.appendChild(e2);
+		e2.appendChild(e3);
+		this.asTestElement(e1);
+		this.assertEquals(js.dom.HTMLDocumentExtensions.getClasses(this._doc,"bob").length,1,null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 80, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetClassesWorks"});
+		this.assertEquals(js.dom.HTMLDocumentExtensions.getClasses(this._doc,"test-elem").length,3,null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 81, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetClassesWorks"});
+		this.assertEquals(js.dom.HTMLDocumentExtensions.getClasses(this._doc,"foo").length,2,null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 82, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetClassesWorks"});
+		this.assertEquals(js.dom.HTMLDocumentExtensions.getClasses(this._doc,"blat").length,0,null,null,{ fileName : "HTMLDocumentExtensionsTestCase.hx", lineNumber : 83, className : "js.dom.HTMLDocumentExtensionsTestCase", methodName : "testThatGetClassesWorks"});
+		this.clearTestElements();
+	}
+	,asTestElement: function(e) {
+		this._testElements.appendChild(e);
+		return e;
+	}
+	,clearTestElements: function() {
+		this._testElements.innerHTML = "";
+	}
+	,__class__: js.dom.HTMLDocumentExtensionsTestCase
+});
+var Future = $hxClasses["Future"] = function() {
+	this._listeners = [];
+	this._result = null;
+	this._isSet = false;
+	this._isCanceled = false;
+	this._cancelers = [];
+	this._canceled = [];
+}
+Future.__name__ = ["Future"];
+Future.dead = function() {
+	return DynamicExtensions.withEffect(new Future(),function(future) {
+		future.cancel();
+	});
+}
+Future.create = function() {
+	return new Future();
+}
+Future.prototype = {
+	_listeners: null
+	,_result: null
+	,_isSet: null
+	,_isCanceled: null
+	,_cancelers: null
+	,_canceled: null
+	,deliver: function(t) {
+		return this._isCanceled?this:this._isSet?Stax.error("Future already delivered"):(function($this) {
+			var $r;
+			$this._result = t;
+			$this._isSet = true;
+			{
+				var _g = 0, _g1 = $this._listeners;
+				while(_g < _g1.length) {
+					var l = _g1[_g];
+					++_g;
+					l($this._result);
+				}
+			}
+			$this._listeners = [];
+			$r = $this;
+			return $r;
+		}(this));
+	}
+	,allowCancelOnlyIf: function(f) {
+		if(!this.isDone()) this._cancelers.push(f);
+		return this;
+	}
+	,ifCanceled: function(f) {
+		if(this.isCanceled()) f(); else if(!this.isDone()) this._canceled.push(f);
+		return this;
+	}
+	,cancel: function() {
+		return this.isDone()?false:this.isCanceled()?true:(function($this) {
+			var $r;
+			var r = true;
+			{
+				var _g = 0, _g1 = $this._cancelers;
+				while(_g < _g1.length) {
+					var canceller = _g1[_g];
+					++_g;
+					r = r && canceller();
+				}
+			}
+			if(r) $this.forceCancel();
+			$r = r;
+			return $r;
+		}(this));
+	}
+	,isDone: function() {
+		return this.isDelivered() || this.isCanceled();
+	}
+	,isDelivered: function() {
+		return this._isSet;
+	}
+	,isCanceled: function() {
+		return this._isCanceled;
+	}
+	,deliverTo: function(f) {
+		if(this.isCanceled()) return this; else if(this.isDelivered()) f(this._result); else this._listeners.push(f);
+		return this;
+	}
+	,map: function(f) {
+		var fut = new Future();
+		this.deliverTo(function(t) {
+			fut.deliver(f(t));
+		});
+		this.ifCanceled(function() {
+			fut.forceCancel();
+		});
+		return fut;
+	}
+	,then: function(f) {
+		return f;
+	}
+	,flatMap: function(f) {
+		var fut = new Future();
+		this.deliverTo(function(t) {
+			f(t).deliverTo(function(s) {
+				fut.deliver(s);
+			}).ifCanceled(function() {
+				fut.forceCancel();
+			});
+		});
+		this.ifCanceled(function() {
+			fut.forceCancel();
+		});
+		return fut;
+	}
+	,filter: function(f) {
+		var fut = new Future();
+		this.deliverTo(function(t) {
+			if(f(t)) fut.deliver(t); else fut.forceCancel();
+		});
+		this.ifCanceled(function() {
+			fut.forceCancel();
+		});
+		return fut;
+	}
+	,zip: function(f2) {
+		var zipped = new Future();
+		var f1 = this;
+		var deliverZip = function() {
+			if(f1.isDelivered() && f2.isDelivered()) zipped.deliver(Tuple2.create(OptionExtensions.get(f1.value()),OptionExtensions.get(f2.value())));
+		};
+		f1.deliverTo(function(v) {
+			deliverZip();
+		});
+		f2.deliverTo(function(v) {
+			deliverZip();
+		});
+		zipped.allowCancelOnlyIf(function() {
+			return f1.cancel() || f2.cancel();
+		});
+		f1.ifCanceled(function() {
+			zipped.forceCancel();
+		});
+		f2.ifCanceled(function() {
+			zipped.forceCancel();
+		});
+		return zipped;
+	}
+	,value: function() {
+		return this._isSet?Option.Some(this._result):Option.None;
+	}
+	,toOption: function() {
+		return this.value();
+	}
+	,toArray: function() {
+		return OptionExtensions.toArray(this.value());
+	}
+	,forceCancel: function() {
+		if(!this._isCanceled) {
+			this._isCanceled = true;
+			var _g = 0, _g1 = this._canceled;
+			while(_g < _g1.length) {
+				var canceled = _g1[_g];
+				++_g;
+				canceled();
+			}
+>>>>>>> Rearranging for minimal code import
 		}
 		if(t != null) o.__proto__ = null;
 		for(var i in o) if( i != "__proto__" ) a.push(i);
 		if(t != null) o.__proto__ = t;
 	}
+<<<<<<< HEAD
 	return a;
 }
 Reflect.isFunction = function(f) {
@@ -12124,6 +13706,3830 @@ haxe.test.Assert.sameAs = function(expected,value,status) {
 			}
 			return true;
 		}
+=======
+	,__class__: Future
+}
+if(!haxe.framework) haxe.framework = {}
+haxe.framework.BindingType = $hxClasses["haxe.framework.BindingType"] = { __ename__ : ["haxe","framework","BindingType"], __constructs__ : ["OneToOne","OneToMany"] }
+haxe.framework.BindingType.OneToOne = ["OneToOne",0];
+haxe.framework.BindingType.OneToOne.toString = $estr;
+haxe.framework.BindingType.OneToOne.__enum__ = haxe.framework.BindingType;
+haxe.framework.BindingType.OneToMany = ["OneToMany",1];
+haxe.framework.BindingType.OneToMany.toString = $estr;
+haxe.framework.BindingType.OneToMany.__enum__ = haxe.framework.BindingType;
+haxe.framework.InjectorConfig = $hxClasses["haxe.framework.InjectorConfig"] = function() { }
+haxe.framework.InjectorConfig.__name__ = ["haxe","framework","InjectorConfig"];
+haxe.framework.InjectorConfig.prototype = {
+	bind: null
+	,bindF: null
+	,inClass: null
+	,inModule: null
+	,inPackage: null
+	,__class__: haxe.framework.InjectorConfig
+}
+haxe.framework.Injector = $hxClasses["haxe.framework.Injector"] = function() { }
+haxe.framework.Injector.__name__ = ["haxe","framework","Injector"];
+haxe.framework.Injector.inject = function(interf,pos) {
+	return haxe.framework._Injector.InjectorImpl.inject(interf,pos);
+}
+haxe.framework.Injector.enter = function(f) {
+	return haxe.framework._Injector.InjectorImpl.enter(f);
+}
+haxe.framework.Injector.forever = function(f) {
+	return haxe.framework._Injector.InjectorImpl.forever(f);
+}
+haxe.framework.Injector.prototype = {
+	__class__: haxe.framework.Injector
+}
+if(!haxe.framework._Injector) haxe.framework._Injector = {}
+haxe.framework._Injector.InjectorImpl = $hxClasses["haxe.framework._Injector.InjectorImpl"] = function() { }
+haxe.framework._Injector.InjectorImpl.__name__ = ["haxe","framework","_Injector","InjectorImpl"];
+haxe.framework._Injector.InjectorImpl.classBindingsExtractor = function(b) {
+	return b.classBindings;
+}
+haxe.framework._Injector.InjectorImpl.moduleBindingsExtractor = function(b) {
+	return b.moduleBindings;
+}
+haxe.framework._Injector.InjectorImpl.packageBindingsExtractor = function(b) {
+	return b.packageBindings;
+}
+haxe.framework._Injector.InjectorImpl.inject = function(interf,pos) {
+	var binding = haxe.framework._Injector.InjectorImpl.getMostSpecificBinding(interf,pos);
+	var factory = OptionExtensions.getOrElse(binding,Function1Extensions.lazy(Stax.error,"No binding defined for " + Type.getClassName(interf)));
+	return factory();
+}
+haxe.framework._Injector.InjectorImpl.forever = function(f) {
+	haxe.framework._Injector.InjectorImpl.state.unshift({ defaultBindings : new Hash(), globalBindings : new Hash(), packageBindings : new Hash(), moduleBindings : new Hash(), classBindings : new Hash()});
+	return f(new haxe.framework._Injector.InjectorConfigImpl());
+}
+haxe.framework._Injector.InjectorImpl.enter = function(f) {
+	haxe.framework._Injector.InjectorImpl.state.unshift({ defaultBindings : new Hash(), globalBindings : new Hash(), packageBindings : new Hash(), moduleBindings : new Hash(), classBindings : new Hash()});
+	var result = null;
+	try {
+		result = f(new haxe.framework._Injector.InjectorConfigImpl());
+		haxe.framework._Injector.InjectorImpl.state.shift();
+	} catch( e ) {
+		haxe.framework._Injector.InjectorImpl.state.shift();
+		throw e;
+	}
+	return result;
+}
+haxe.framework._Injector.InjectorImpl.bindTo = function(interf,impl,bindingType) {
+	return haxe.framework._Injector.InjectorImpl.globally().bindTo(interf,impl,bindingType);
+}
+haxe.framework._Injector.InjectorImpl.bindToF = function(interf,f,bindingType) {
+	return haxe.framework._Injector.InjectorImpl.globally().bindToF(interf,f,bindingType);
+}
+haxe.framework._Injector.InjectorImpl.globally = function() {
+	var internalBind = function(interf,f,bindingType) {
+		switch( (haxe.framework._Injector.InjectorImpl.bindingTypeDef(bindingType))[1] ) {
+		case 0:
+			haxe.framework._Injector.InjectorImpl.addGlobalBinding(interf,f);
+			break;
+		case 1:
+			haxe.framework._Injector.InjectorImpl.addGlobalBinding(interf,DynamicExtensions.memoize(f));
+			break;
+		}
+	};
+	return { bindToF : internalBind, bindTo : function(interf,impl,bindingType) {
+		internalBind(interf,haxe.framework._Injector.InjectorImpl.factoryFor(impl),bindingType);
+	}};
+}
+haxe.framework._Injector.InjectorImpl.inClass = function(c) {
+	return { bindToF : function(interf,f,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.classBindingsExtractor,interf,Type.getClassName(c),f,bindingType);
+	}, bindTo : function(interf,impl,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.classBindingsExtractor,interf,Type.getClassName(c),haxe.framework._Injector.InjectorImpl.factoryFor(impl),bindingType);
+	}};
+}
+haxe.framework._Injector.InjectorImpl.inModule = function(moduleName) {
+	return { bindToF : function(interf,f,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.moduleBindingsExtractor,interf,moduleName,f,bindingType);
+	}, bindTo : function(interf,impl,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.moduleBindingsExtractor,interf,moduleName,haxe.framework._Injector.InjectorImpl.factoryFor(impl),bindingType);
+	}};
+}
+haxe.framework._Injector.InjectorImpl.inPackage = function(packageName) {
+	return { bindToF : function(interf,f,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.packageBindingsExtractor,interf,packageName,f,bindingType);
+	}, bindTo : function(interf,impl,bindingType) {
+		haxe.framework._Injector.InjectorImpl.bindForSpecificF(haxe.framework._Injector.InjectorImpl.packageBindingsExtractor,interf,packageName,haxe.framework._Injector.InjectorImpl.factoryFor(impl),bindingType);
+	}};
+}
+haxe.framework._Injector.InjectorImpl.bindForSpecificF = function(extractor,interf,specific,f,bindingType) {
+	switch( (haxe.framework._Injector.InjectorImpl.bindingTypeDef(bindingType))[1] ) {
+	case 0:
+		haxe.framework._Injector.InjectorImpl.addSpecificBinding(extractor(ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state)),interf,specific,f);
+		break;
+	case 1:
+		haxe.framework._Injector.InjectorImpl.addSpecificBinding(extractor(ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state)),interf,specific,DynamicExtensions.memoize(f));
+		break;
+	}
+}
+haxe.framework._Injector.InjectorImpl.getMostSpecificBinding = function(c,pos) {
+	var className = haxe.framework._Injector.InjectorImpl.classOf(pos);
+	var moduleName = haxe.framework._Injector.InjectorImpl.moduleOf(pos);
+	var packageName = haxe.framework._Injector.InjectorImpl.packageOf(pos);
+	return OptionExtensions.orElse(OptionExtensions.orElse(OptionExtensions.orElse(OptionExtensions.orElse(haxe.framework._Injector.InjectorImpl.getClassBinding(c,className),Function2Extensions.lazy(haxe.framework._Injector.InjectorImpl.getModuleBinding,c,moduleName)),Function2Extensions.lazy(haxe.framework._Injector.InjectorImpl.getPackageBinding,c,packageName)),Function1Extensions.lazy(haxe.framework._Injector.InjectorImpl.getGlobalBinding,c)),Function1Extensions.lazy(haxe.framework._Injector.InjectorImpl.getDefaultImplementationBinding,c));
+}
+haxe.framework._Injector.InjectorImpl.getDefaultImplementationBinding = function(c) {
+	if(haxe.framework._Injector.InjectorImpl.existsDefaultBinding(c)) return haxe.framework._Injector.InjectorImpl.getDefaultBinding(c);
+	var f = OptionExtensions.flatMap(OptionExtensions.flatMap(OptionExtensions.flatMap(OptionExtensions.toOption(haxe.rtti.Meta.getType(c)),function(m) {
+		return OptionExtensions.toOption(Reflect.hasField(m,"DefaultImplementation")?Reflect.field(m,"DefaultImplementation"):null);
+	}),function(p) {
+		var cls = null;
+		return null == p || null == p[0] || null == (cls = Type.resolveClass(p[0]))?Option.None:Option.Some(Tuple2.create(cls,null != p[1]?Type.createEnum(haxe.framework.BindingType,p[1],[]):null));
+	}),function(p) {
+		return (function($this) {
+			var $r;
+			switch( (haxe.framework._Injector.InjectorImpl.bindingTypeDef(p._2))[1] ) {
+			case 0:
+				$r = OptionExtensions.toOption(haxe.framework._Injector.InjectorImpl.factoryFor(p._1));
+				break;
+			case 1:
+				$r = OptionExtensions.toOption(DynamicExtensions.memoize(haxe.framework._Injector.InjectorImpl.factoryFor(p._1)));
+				break;
+			}
+			return $r;
+		}(this));
+	});
+	haxe.framework._Injector.InjectorImpl.addDefaultBinding(c,f);
+	return f;
+}
+haxe.framework._Injector.InjectorImpl.getGlobalBinding = function(c) {
+	var className = Type.getClassName(c);
+	return ArrayExtensions.foldl(haxe.framework._Injector.InjectorImpl.state,Option.None,function(a,b) {
+		return OptionExtensions.orElseC(a,OptionExtensions.toOption(b.globalBindings.get(className)));
+	});
+}
+haxe.framework._Injector.InjectorImpl.getClassBinding = function(c,className) {
+	return haxe.framework._Injector.InjectorImpl.getSpecificBinding(haxe.framework._Injector.InjectorImpl.classBindingsExtractor,c,className);
+}
+haxe.framework._Injector.InjectorImpl.getModuleBinding = function(c,moduleName) {
+	return haxe.framework._Injector.InjectorImpl.getSpecificBinding(haxe.framework._Injector.InjectorImpl.moduleBindingsExtractor,c,moduleName);
+}
+haxe.framework._Injector.InjectorImpl.getPackageBinding = function(c,packageName) {
+	return haxe.framework._Injector.InjectorImpl.getSpecificBinding(haxe.framework._Injector.InjectorImpl.packageBindingsExtractor,c,packageName);
+}
+haxe.framework._Injector.InjectorImpl.addGlobalBinding = function(c,f) {
+	ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state).globalBindings.set(Type.getClassName(c),f);
+}
+haxe.framework._Injector.InjectorImpl.existsDefaultBinding = function(c) {
+	return ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state).defaultBindings.exists(Type.getClassName(c));
+}
+haxe.framework._Injector.InjectorImpl.addDefaultBinding = function(c,f) {
+	ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state).defaultBindings.set(Type.getClassName(c),f);
+}
+haxe.framework._Injector.InjectorImpl.getDefaultBinding = function(c) {
+	return ArrayExtensions.first(haxe.framework._Injector.InjectorImpl.state).defaultBindings.get(Type.getClassName(c));
+}
+haxe.framework._Injector.InjectorImpl.getSpecificBinding = function(extractor,c,specific) {
+	var _g = 0, _g1 = haxe.framework._Injector.InjectorImpl.state;
+	while(_g < _g1.length) {
+		var bindings = _g1[_g];
+		++_g;
+		var binding = extractor(bindings);
+		var result = OptionExtensions.flatMap(OptionExtensions.toOption(binding.get(Type.getClassName(c))),function(h) {
+			return OptionExtensions.toOption(h.get(specific));
+		});
+		if(!OptionExtensions.isEmpty(result)) return result;
+	}
+	return Option.None;
+}
+haxe.framework._Injector.InjectorImpl.addSpecificBinding = function(bindings,c,specific,f) {
+	var h = bindings.get(Type.getClassName(c));
+	if(h == null) {
+		h = new Hash();
+		bindings.set(Type.getClassName(c),h);
+	}
+	h.set(specific,f);
+}
+haxe.framework._Injector.InjectorImpl.classOf = function(pos) {
+	return pos.className;
+}
+haxe.framework._Injector.InjectorImpl.packageOf = function(pos) {
+	return pos.className.substr(0,pos.className.lastIndexOf("."));
+}
+haxe.framework._Injector.InjectorImpl.moduleOf = function(pos) {
+	var className = haxe.framework._Injector.InjectorImpl.classOf(pos);
+	var packageName = haxe.framework._Injector.InjectorImpl.packageOf(pos);
+	var moduleName = packageName + "." + pos.fileName.substr(0,pos.fileName.lastIndexOf("."));
+	return moduleName;
+}
+haxe.framework._Injector.InjectorImpl.factoryFor = function(impl) {
+	return function() {
+		return Type.createInstance(impl,[]);
+	};
+}
+haxe.framework._Injector.InjectorImpl.bindingTypeDef = function(bindingType) {
+	return OptionExtensions.getOrElseC(OptionExtensions.toOption(bindingType),haxe.framework.BindingType.OneToMany);
+}
+haxe.framework._Injector.InjectorImpl.prototype = {
+	__class__: haxe.framework._Injector.InjectorImpl
+}
+haxe.framework._Injector.InjectorConfigImpl = $hxClasses["haxe.framework._Injector.InjectorConfigImpl"] = function() {
+}
+haxe.framework._Injector.InjectorConfigImpl.__name__ = ["haxe","framework","_Injector","InjectorConfigImpl"];
+haxe.framework._Injector.InjectorConfigImpl.__interfaces__ = [haxe.framework.InjectorConfig];
+haxe.framework._Injector.InjectorConfigImpl.prototype = {
+	bind: function(interf,impl,b) {
+		haxe.framework._Injector.InjectorImpl.globally().bindTo(interf,impl,b);
+		return this;
+	}
+	,bindF: function(interf,f,b) {
+		haxe.framework._Injector.InjectorImpl.globally().bindToF(interf,f,b);
+		return this;
+	}
+	,inClass: function(c) {
+		var self = this;
+		return { bind : function(interf,impl,b) {
+			haxe.framework._Injector.InjectorImpl.inClass(c).bindTo(interf,impl,b);
+			return self;
+		}, bindF : function(interf,f,b) {
+			haxe.framework._Injector.InjectorImpl.inClass(c).bindToF(interf,f,b);
+			return self;
+		}};
+	}
+	,inPackage: function(p) {
+		var self = this;
+		return { bind : function(interf,impl,b) {
+			haxe.framework._Injector.InjectorImpl.inPackage(p).bindTo(interf,impl,b);
+			return self;
+		}, bindF : function(interf,f,b) {
+			haxe.framework._Injector.InjectorImpl.inPackage(p).bindToF(interf,f,b);
+			return self;
+		}};
+	}
+	,inModule: function(m) {
+		var self = this;
+		return { bind : function(interf,impl,b) {
+			haxe.framework._Injector.InjectorImpl.inModule(m).bindTo(interf,impl,b);
+			return self;
+		}, bindF : function(interf,f,b) {
+			haxe.framework._Injector.InjectorImpl.inModule(m).bindToF(interf,f,b);
+			return self;
+		}};
+	}
+	,__class__: haxe.framework._Injector.InjectorConfigImpl
+}
+var Reflect = $hxClasses["Reflect"] = function() { }
+Reflect.__name__ = ["Reflect"];
+Reflect.hasField = function(o,field) {
+	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
+	var arr = Reflect.fields(o);
+	var $it0 = arr.iterator();
+	while( $it0.hasNext() ) {
+		var t = $it0.next();
+		if(t == field) return true;
+	}
+	return false;
+}
+Reflect.field = function(o,field) {
+	var v = null;
+	try {
+		v = o[field];
+	} catch( e ) {
+	}
+	return v;
+}
+Reflect.setField = function(o,field,value) {
+	o[field] = value;
+}
+Reflect.getProperty = function(o,field) {
+	var tmp;
+	return o == null?null:o.__properties__ && (tmp = o.__properties__["get_" + field])?o[tmp]():o[field];
+}
+Reflect.setProperty = function(o,field,value) {
+	var tmp;
+	if(o.__properties__ && (tmp = o.__properties__["set_" + field])) o[tmp](value); else o[field] = value;
+}
+Reflect.callMethod = function(o,func,args) {
+	return func.apply(o,args);
+}
+Reflect.fields = function(o) {
+	if(o == null) return new Array();
+	var a = new Array();
+	if(o.hasOwnProperty) {
+		for(var i in o) if( o.hasOwnProperty(i) ) a.push(i);
+	} else {
+		var t;
+		try {
+			t = o.__proto__;
+		} catch( e ) {
+			t = null;
+		}
+		if(t != null) o.__proto__ = null;
+		for(var i in o) if( i != "__proto__" ) a.push(i);
+		if(t != null) o.__proto__ = t;
+	}
+	return a;
+}
+Reflect.isFunction = function(f) {
+	return typeof(f) == "function" && f.__name__ == null;
+}
+Reflect.compare = function(a,b) {
+	return a == b?0:a > b?1:-1;
+}
+Reflect.compareMethods = function(f1,f2) {
+	if(f1 == f2) return true;
+	if(!Reflect.isFunction(f1) || !Reflect.isFunction(f2)) return false;
+	return f1.scope == f2.scope && f1.method == f2.method && f1.method != null;
+}
+Reflect.isObject = function(v) {
+	if(v == null) return false;
+	var t = typeof(v);
+	return t == "string" || t == "object" && !v.__enum__ || t == "function" && v.__name__ != null;
+}
+Reflect.deleteField = function(o,f) {
+	if(!Reflect.hasField(o,f)) return false;
+	delete(o[f]);
+	return true;
+}
+Reflect.copy = function(o) {
+	var o2 = { };
+	var _g = 0, _g1 = Reflect.fields(o);
+	while(_g < _g1.length) {
+		var f = _g1[_g];
+		++_g;
+		o2[f] = Reflect.field(o,f);
+	}
+	return o2;
+}
+Reflect.makeVarArgs = function(f) {
+	return function() {
+		var a = new Array();
+		var _g1 = 0, _g = arguments.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			a.push(arguments[i]);
+		}
+		return f(a);
+	};
+}
+Reflect.prototype = {
+	__class__: Reflect
+}
+haxe.data.collections.ListTestCase = $hxClasses["haxe.data.collections.ListTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.data.collections.ListTestCase.__name__ = ["haxe","data","collections","ListTestCase"];
+haxe.data.collections.ListTestCase.__super__ = haxe.test.TestCase;
+haxe.data.collections.ListTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testSizeGrowsWhenAddingUniqueElements: function() {
+		var l = this.newList();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertEquals(i,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 34, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+			l = l.add(i);
+		}
+		this.assertEquals(100,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 39, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingUniqueElements"});
+	}
+	,testSizeGrowsWhenAddingDuplicateElements: function() {
+		var l = this.newList().add(0);
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			l = l.add(0);
+		}
+		this.assertEquals(101,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 47, className : "haxe.data.collections.ListTestCase", methodName : "testSizeGrowsWhenAddingDuplicateElements"});
+	}
+	,testSizeShrinksWhenRemovingElements: function() {
+		var l = this.defaultList();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertEquals(100 - i,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 54, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+			l = l.remove(i);
+		}
+		this.assertEquals(0,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 59, className : "haxe.data.collections.ListTestCase", methodName : "testSizeShrinksWhenRemovingElements"});
+	}
+	,testContainsElements: function() {
+		var l = this.newList();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			this.assertFalse(l.contains(i),null,{ fileName : "ListTestCase.hx", lineNumber : 66, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
+			l = l.add(i);
+			this.assertTrue(l.contains(i),null,{ fileName : "ListTestCase.hx", lineNumber : 70, className : "haxe.data.collections.ListTestCase", methodName : "testContainsElements"});
+		}
+	}
+	,testCanIterateThroughElements: function() {
+		var l = this.defaultList();
+		var count = 4950;
+		var iterated = 0;
+		var $it0 = l.iterator();
+		while( $it0.hasNext() ) {
+			var k = $it0.next();
+			count -= k;
+			++iterated;
+		}
+		this.assertEquals(100,iterated,null,null,{ fileName : "ListTestCase.hx", lineNumber : 86, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
+		this.assertEquals(0,count,null,null,{ fileName : "ListTestCase.hx", lineNumber : 87, className : "haxe.data.collections.ListTestCase", methodName : "testCanIterateThroughElements"});
+	}
+	,testFilter: function() {
+		var l = this.defaultList().filter(function(e) {
+			return e < 50;
+		});
+		this.assertEquals(50,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 93, className : "haxe.data.collections.ListTestCase", methodName : "testFilter"});
+	}
+	,testSort: function() {
+		var ul = this.newList().addAll([9,2,1,100]);
+		var ol = this.newList().addAll([1,2,9,100]);
+		this.assertListEquals(ol,ul.sort(),{ fileName : "ListTestCase.hx", lineNumber : 100, className : "haxe.data.collections.ListTestCase", methodName : "testSort"});
+	}
+	,testSortWith: function() {
+		var ul = this.newList().addAll([9,2,1,100]);
+		var ol = this.newList().addAll([1,9,2,100]);
+		var oddsfirst = function(a,b) {
+			if(a == b) return 0;
+			var aeven = a % 2 == 0;
+			var beven = b % 2 == 0;
+			if(aeven && beven || !aeven && !beven) return a - b; else if(aeven) return 1; else return -1;
+		};
+		this.assertListEquals(ol,ul.withOrderFunction(oddsfirst).sort(),{ fileName : "ListTestCase.hx", lineNumber : 119, className : "haxe.data.collections.ListTestCase", methodName : "testSortWith"});
+	}
+	,testReverse: function() {
+		var l = this.newList().addAll([9,2,1,100]);
+		var rl = this.newList().addAll([100,1,2,9]);
+		this.assertListEquals(rl,l.reverse(),{ fileName : "ListTestCase.hx", lineNumber : 126, className : "haxe.data.collections.ListTestCase", methodName : "testReverse"});
+	}
+	,testFoldr: function() {
+		this.assertEquals(4950,this.defaultList().foldr(0,function(b,a) {
+			return a + b;
+		}),null,null,{ fileName : "ListTestCase.hx", lineNumber : 130, className : "haxe.data.collections.ListTestCase", methodName : "testFoldr"});
+	}
+	,testLast: function() {
+		this.assertEquals(99,this.defaultList().getLast(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 136, className : "haxe.data.collections.ListTestCase", methodName : "testLast"});
+	}
+	,testLastOption: function() {
+		var $e = (this.defaultList().getLastOption());
+		switch( $e[1] ) {
+		case 1:
+			var v = $e[2];
+			this.assertEquals(99,v,null,null,{ fileName : "ListTestCase.hx", lineNumber : 141, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
+			break;
+		default:
+			this.assertTrue(false,null,{ fileName : "ListTestCase.hx", lineNumber : 143, className : "haxe.data.collections.ListTestCase", methodName : "testLastOption"});
+		}
+	}
+	,testHead: function() {
+		this.assertEquals(0,this.defaultList().getHead(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 148, className : "haxe.data.collections.ListTestCase", methodName : "testHead"});
+	}
+	,testHeadOption: function() {
+		var $e = (this.defaultList().getHeadOption());
+		switch( $e[1] ) {
+		case 1:
+			var v = $e[2];
+			this.assertEquals(0,v,null,null,{ fileName : "ListTestCase.hx", lineNumber : 153, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
+			break;
+		default:
+			this.assertTrue(false,null,{ fileName : "ListTestCase.hx", lineNumber : 155, className : "haxe.data.collections.ListTestCase", methodName : "testHeadOption"});
+		}
+	}
+	,testZip: function() {
+		var l = this.defaultList().zip(this.defaultList().drop(1));
+		var i1 = 0, i2 = 1;
+		var $it0 = l.iterator();
+		while( $it0.hasNext() ) {
+			var z = $it0.next();
+			this.assertEquals(z,DynamicExtensions.entuple(i1,i2),null,null,{ fileName : "ListTestCase.hx", lineNumber : 165, className : "haxe.data.collections.ListTestCase", methodName : "testZip"});
+			++i1;
+			++i2;
+		}
+		this.assertEquals(99,l.size(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 170, className : "haxe.data.collections.ListTestCase", methodName : "testZip"});
+	}
+	,testEquals: function() {
+		this.assertTrue(this.newList().equals(this.newList()),null,{ fileName : "ListTestCase.hx", lineNumber : 174, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		this.assertTrue(this.newList([1,2,3]).equals(this.newList([1,2,3])),null,{ fileName : "ListTestCase.hx", lineNumber : 175, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		this.assertFalse(this.newList([1,2,3]).equals(this.newList([2,2,3])),null,{ fileName : "ListTestCase.hx", lineNumber : 176, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		this.assertFalse(this.newList([1,2,3]).equals(this.newList([1])),null,{ fileName : "ListTestCase.hx", lineNumber : 177, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		var list = haxe.data.collections.List.create(null,function(a,b) {
+			return Math.abs(a - b) < 0.25;
+		}).addAll([1.0,2.1]);
+		this.assertTrue(list.equals(this.newList([0.9,2.0])),null,{ fileName : "ListTestCase.hx", lineNumber : 181, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		this.assertFalse(list.equals(this.newList([0.9,2.4])),null,{ fileName : "ListTestCase.hx", lineNumber : 182, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+		this.assertFalse(list.equals(this.newList([0.7,2.0])),null,{ fileName : "ListTestCase.hx", lineNumber : 183, className : "haxe.data.collections.ListTestCase", methodName : "testEquals"});
+	}
+	,testCompare: function() {
+		this.assertTrue(this.newList().compare(this.newList()) == 0,null,{ fileName : "ListTestCase.hx", lineNumber : 187, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		this.assertTrue(this.newList([1,2,3]).compare(this.newList([1,2,3])) == 0,null,{ fileName : "ListTestCase.hx", lineNumber : 188, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		this.assertTrue(this.newList([1,2,3]).compare(this.newList([2,2,3])) < 0,null,{ fileName : "ListTestCase.hx", lineNumber : 190, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		this.assertTrue(this.newList([1,2,3]).compare(this.newList([1])) > 0,null,{ fileName : "ListTestCase.hx", lineNumber : 191, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		var list = haxe.data.collections.List.create(function(a,b) {
+			return Math.abs(a - b) < 0.25?0:a > b?1:-1;
+		}).addAll([1.0,2.1]);
+		this.assertTrue(list.compare(this.newList([0.9,2.0])) == 0,null,{ fileName : "ListTestCase.hx", lineNumber : 195, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		this.assertTrue(list.compare(this.newList([0.9,2.4])) < 0,null,{ fileName : "ListTestCase.hx", lineNumber : 196, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+		this.assertTrue(list.compare(this.newList([0.7,2.0])) > 0,null,{ fileName : "ListTestCase.hx", lineNumber : 197, className : "haxe.data.collections.ListTestCase", methodName : "testCompare"});
+	}
+	,testToString: function() {
+		this.assertEquals("List []",this.newList().toString(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 201, className : "haxe.data.collections.ListTestCase", methodName : "testToString"});
+		this.assertEquals("List [a, b]",this.newList(["a","b"]).toString(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 202, className : "haxe.data.collections.ListTestCase", methodName : "testToString"});
+		var list = haxe.data.collections.List.create(null,null,null,function(a) {
+			return "\"" + a + "\"";
+		}).addAll(["a","b"]);
+		this.assertEquals("List [\"a\", \"b\"]",list.toString(),null,null,{ fileName : "ListTestCase.hx", lineNumber : 206, className : "haxe.data.collections.ListTestCase", methodName : "testToString"});
+	}
+	,testHashCode: function() {
+		this.assertNotEquals(0,this.newList().hashCode(),null,{ fileName : "ListTestCase.hx", lineNumber : 210, className : "haxe.data.collections.ListTestCase", methodName : "testHashCode"});
+		this.assertNotEquals(0,this.newList([1,2]).hashCode(),null,{ fileName : "ListTestCase.hx", lineNumber : 211, className : "haxe.data.collections.ListTestCase", methodName : "testHashCode"});
+	}
+	,testIntListMapToString: function() {
+		var list = haxe.data.collections.List.create().addAll([1,2,3]);
+		var slist = list.map(function(i) {
+			return IntExtensions.toString(i);
+		});
+		this.assertEquals(["1","2","3"],haxe.functional.FoldableExtensions.toArray(slist),null,null,{ fileName : "ListTestCase.hx", lineNumber : 217, className : "haxe.data.collections.ListTestCase", methodName : "testIntListMapToString"});
+	}
+	,newList: function(values) {
+		var list = haxe.data.collections.List.create();
+		if(null != values) return list.addAll(values); else return list;
+	}
+	,assertListEquals: function(l1,l2,pos) {
+		this.assertTrue(l1.equals(l2),null,pos);
+		this.assertTrue((Stax.getEqualFor(l1))(l1,l2),null,pos);
+	}
+	,defaultList: function() {
+		var l = this.newList();
+		var _g = 0;
+		while(_g < 100) {
+			var i = _g++;
+			l = l.add(i);
+		}
+		return l;
+	}
+	,__class__: haxe.data.collections.ListTestCase
+});
+if(!haxe.functional._PartialFunctionExtensions) haxe.functional._PartialFunctionExtensions = {}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl = $hxClasses["haxe.functional._PartialFunctionExtensions.PartialFunction1Impl"] = function(def) {
+	this._def = def;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction1Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.__interfaces__ = [haxe.functional.PartialFunction1];
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction1Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.prototype = {
+	_def: null
+	,isDefinedAt: function(a) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a)) return true;
+		}
+		return false;
+	}
+	,orElse: function(that) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([Tuple2.create(that.isDefinedAt.$bind(that),that.call.$bind(that))]));
+	}
+	,orAlways: function(f) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple(function(a) {
+			return true;
+		},f)]));
+	}
+	,orAlwaysC: function(z) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(this._def.concat([DynamicExtensions.entuple(function(a) {
+			return true;
+		},function(a) {
+			return z();
+		})]));
+	}
+	,call: function(a) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a)) return d._2(a);
+		}
+		return Stax.error("Function undefined at " + a);
+	}
+	,toFunction: function() {
+		var self = this;
+		return function(a) {
+			return self.isDefinedAt(a)?Option.Some(self.call(a)):Option.None;
+		};
+	}
+	,__class__: haxe.functional._PartialFunctionExtensions.PartialFunction1Impl
+}
+haxe.functional.PartialFunction1ImplExtensions = $hxClasses["haxe.functional.PartialFunction1ImplExtensions"] = function() { }
+haxe.functional.PartialFunction1ImplExtensions.__name__ = ["haxe","functional","PartialFunction1ImplExtensions"];
+haxe.functional.PartialFunction1ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction1Impl.create(def);
+}
+haxe.functional.PartialFunction1ImplExtensions.prototype = {
+	__class__: haxe.functional.PartialFunction1ImplExtensions
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl = $hxClasses["haxe.functional._PartialFunctionExtensions.PartialFunction2Impl"] = function(def) {
+	this._def = def;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction2Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.__interfaces__ = [haxe.functional.PartialFunction2];
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction2Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.prototype = {
+	_def: null
+	,isDefinedAt: function(a,b) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b)) return true;
+		}
+		return false;
+	}
+	,orElse: function(that) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([Tuple2.create(that.isDefinedAt.$bind(that),that.call.$bind(that))]));
+	}
+	,orAlways: function(f) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b) {
+			return true;
+		},f)]));
+	}
+	,orAlwaysC: function(z) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b) {
+			return true;
+		},function(a,b) {
+			return z();
+		})]));
+	}
+	,call: function(a,b) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b)) return d._2(a,b);
+		}
+		return Stax.error("Function undefined at (" + a + ", " + b + ")");
+	}
+	,toFunction: function() {
+		var self = this;
+		return function(a,b) {
+			return self.isDefinedAt(a,b)?Option.Some(self.call(a,b)):Option.None;
+		};
+	}
+	,__class__: haxe.functional._PartialFunctionExtensions.PartialFunction2Impl
+}
+haxe.functional.PartialFunction2ImplExtensions = $hxClasses["haxe.functional.PartialFunction2ImplExtensions"] = function() { }
+haxe.functional.PartialFunction2ImplExtensions.__name__ = ["haxe","functional","PartialFunction2ImplExtensions"];
+haxe.functional.PartialFunction2ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction2Impl.create(def);
+}
+haxe.functional.PartialFunction2ImplExtensions.prototype = {
+	__class__: haxe.functional.PartialFunction2ImplExtensions
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl = $hxClasses["haxe.functional._PartialFunctionExtensions.PartialFunction3Impl"] = function(def) {
+	this._def = def;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction3Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.__interfaces__ = [haxe.functional.PartialFunction3];
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction3Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.prototype = {
+	_def: null
+	,isDefinedAt: function(a,b,c) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b,c)) return true;
+		}
+		return false;
+	}
+	,orElse: function(that) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([Tuple2.create(that.isDefinedAt.$bind(that),that.call.$bind(that))]));
+	}
+	,orAlways: function(f) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c) {
+			return true;
+		},f)]));
+	}
+	,orAlwaysC: function(z) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c) {
+			return true;
+		},function(a,b,c) {
+			return z();
+		})]));
+	}
+	,call: function(a,b,c) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var d = _g1[_g];
+			++_g;
+			if(d._1(a,b,c)) return d._2(a,b,c);
+		}
+		return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ")");
+	}
+	,toFunction: function() {
+		var self = this;
+		return function(a,b,c) {
+			return self.isDefinedAt(a,b,c)?Option.Some(self.call(a,b,c)):Option.None;
+		};
+	}
+	,__class__: haxe.functional._PartialFunctionExtensions.PartialFunction3Impl
+}
+haxe.functional.PartialFunction3ImplExtensions = $hxClasses["haxe.functional.PartialFunction3ImplExtensions"] = function() { }
+haxe.functional.PartialFunction3ImplExtensions.__name__ = ["haxe","functional","PartialFunction3ImplExtensions"];
+haxe.functional.PartialFunction3ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction3Impl.create(def);
+}
+haxe.functional.PartialFunction3ImplExtensions.prototype = {
+	__class__: haxe.functional.PartialFunction3ImplExtensions
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl = $hxClasses["haxe.functional._PartialFunctionExtensions.PartialFunction4Impl"] = function(def) {
+	this._def = def;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction4Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.__interfaces__ = [haxe.functional.PartialFunction4];
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction4Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.prototype = {
+	_def: null
+	,isDefinedAt: function(a,b,c,d) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d)) return true;
+		}
+		return false;
+	}
+	,orElse: function(that) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([Tuple2.create(that.isDefinedAt.$bind(that),that.call.$bind(that))]));
+	}
+	,orAlways: function(f) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c,d) {
+			return true;
+		},f)]));
+	}
+	,orAlwaysC: function(z) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c,d) {
+			return true;
+		},function(a,b,c,d) {
+			return z();
+		})]));
+	}
+	,call: function(a,b,c,d) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d)) return def._2(a,b,c,d);
+		}
+		return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
+	}
+	,toFunction: function() {
+		var self = this;
+		return function(a,b,c,d) {
+			return self.isDefinedAt(a,b,c,d)?Option.Some(self.call(a,b,c,d)):Option.None;
+		};
+	}
+	,__class__: haxe.functional._PartialFunctionExtensions.PartialFunction4Impl
+}
+haxe.functional.PartialFunction4ImplExtensions = $hxClasses["haxe.functional.PartialFunction4ImplExtensions"] = function() { }
+haxe.functional.PartialFunction4ImplExtensions.__name__ = ["haxe","functional","PartialFunction4ImplExtensions"];
+haxe.functional.PartialFunction4ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction4Impl.create(def);
+}
+haxe.functional.PartialFunction4ImplExtensions.prototype = {
+	__class__: haxe.functional.PartialFunction4ImplExtensions
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl = $hxClasses["haxe.functional._PartialFunctionExtensions.PartialFunction5Impl"] = function(def) {
+	this._def = def;
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.__name__ = ["haxe","functional","_PartialFunctionExtensions","PartialFunction5Impl"];
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.__interfaces__ = [haxe.functional.PartialFunction5];
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create = function(def) {
+	return new haxe.functional._PartialFunctionExtensions.PartialFunction5Impl(def);
+}
+haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.prototype = {
+	_def: null
+	,isDefinedAt: function(a,b,c,d,e) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d,e)) return true;
+		}
+		return false;
+	}
+	,orElse: function(that) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([Tuple2.create(that.isDefinedAt.$bind(that),that.call.$bind(that))]));
+	}
+	,orAlways: function(f) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c,d,e) {
+			return true;
+		},f)]));
+	}
+	,orAlwaysC: function(z) {
+		return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(this._def.concat([DynamicExtensions.entuple(function(a,b,c,d,e) {
+			return true;
+		},function(a,b,c,d,e) {
+			return z();
+		})]));
+	}
+	,call: function(a,b,c,d,e) {
+		var _g = 0, _g1 = this._def;
+		while(_g < _g1.length) {
+			var def = _g1[_g];
+			++_g;
+			if(def._1(a,b,c,d,e)) return def._2(a,b,c,d,e);
+		}
+		return Stax.error("Function undefined at (" + a + ", " + b + ", " + c + ", " + d + ")");
+	}
+	,toFunction: function() {
+		var self = this;
+		return function(a,b,c,d,e) {
+			return self.isDefinedAt(a,b,c,d,e)?Option.Some(self.call(a,b,c,d,e)):Option.None;
+		};
+	}
+	,__class__: haxe.functional._PartialFunctionExtensions.PartialFunction5Impl
+}
+haxe.functional.PartialFunction5ImplExtensions = $hxClasses["haxe.functional.PartialFunction5ImplExtensions"] = function() { }
+haxe.functional.PartialFunction5ImplExtensions.__name__ = ["haxe","functional","PartialFunction5ImplExtensions"];
+haxe.functional.PartialFunction5ImplExtensions.toPartialFunction = function(def) {
+	return haxe.functional._PartialFunctionExtensions.PartialFunction5Impl.create(def);
+}
+haxe.functional.PartialFunction5ImplExtensions.prototype = {
+	__class__: haxe.functional.PartialFunction5ImplExtensions
+}
+haxe.util.ObjectExtensionsTestCase = $hxClasses["haxe.util.ObjectExtensionsTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.util.ObjectExtensionsTestCase.__name__ = ["haxe","util","ObjectExtensionsTestCase"];
+haxe.util.ObjectExtensionsTestCase.__super__ = haxe.test.TestCase;
+haxe.util.ObjectExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testGet: function() {
+		var o = { foo : "bar"};
+		this.assertEquals("bar",OptionExtensions.get(haxe.util.ObjectExtensions.getAny(o,"foo")),null,null,{ fileName : "ObjectExtensionsTestCase.hx", lineNumber : 34, className : "haxe.util.ObjectExtensionsTestCase", methodName : "testGet"});
+	}
+	,testSet: function() {
+		var o = { foo : "bar"};
+		this.assertEquals("baz",OptionExtensions.get(haxe.util.ObjectExtensions.getAny(haxe.util.ObjectExtensions.setAny(o,"foo","baz"),"foo")),null,null,{ fileName : "ObjectExtensionsTestCase.hx", lineNumber : 40, className : "haxe.util.ObjectExtensionsTestCase", methodName : "testSet"});
+	}
+	,testReplaceAll: function() {
+		var o = { foo : "bar", bar : "foo"};
+		var replaced = haxe.util.ObjectExtensions.replaceAllAny(o,{ foo : "foo"},"");
+		this.assertEquals("bar",OptionExtensions.get(haxe.util.ObjectExtensions.getAny(replaced,"foo")),null,null,{ fileName : "ObjectExtensionsTestCase.hx", lineNumber : 48, className : "haxe.util.ObjectExtensionsTestCase", methodName : "testReplaceAll"});
+		this.assertTrue(OptionExtensions.isEmpty(haxe.util.ObjectExtensions.getAny(replaced,"bar")),null,{ fileName : "ObjectExtensionsTestCase.hx", lineNumber : 50, className : "haxe.util.ObjectExtensionsTestCase", methodName : "testReplaceAll"});
+	}
+	,__class__: haxe.util.ObjectExtensionsTestCase
+});
+if(!js.io) js.io = {}
+js.io.IFrameIO = $hxClasses["js.io.IFrameIO"] = function() { }
+js.io.IFrameIO.__name__ = ["js","io","IFrameIO"];
+js.io.IFrameIO.prototype = {
+	receive: null
+	,receiveWhile: null
+	,receiveRequests: null
+	,send: null
+	,request: null
+	,__class__: js.io.IFrameIO
+}
+if(!js.io._IFrameIO) js.io._IFrameIO = {}
+js.io._IFrameIO.AbstractIFrameIO = $hxClasses["js.io._IFrameIO.AbstractIFrameIO"] = function() {
+	this.requestCounter = 0;
+}
+js.io._IFrameIO.AbstractIFrameIO.__name__ = ["js","io","_IFrameIO","AbstractIFrameIO"];
+js.io._IFrameIO.AbstractIFrameIO.__interfaces__ = [js.io.IFrameIO];
+js.io._IFrameIO.AbstractIFrameIO.prototype = {
+	requestCounter: null
+	,receive: function(f,originUrl,originWindow) {
+		return Stax.error("Not implemented");
+	}
+	,receiveWhile: function(f,originUrl,originWindow) {
+		return Stax.error("Not implemented");
+	}
+	,receiveRequests: function(f,url,window) {
+		var self = this;
+		return this.receive(function(message) {
+			if(message.__requestId != null && message.__data != null) f(message.__data).deliverTo(function(responseData) {
+				self.send({ __responseId : message.__requestId, __data : responseData},url,window);
+			});
+		},url,window);
+	}
+	,send: function(data,targetUrl,targetWindow) {
+		return Stax.error("Not implemented");
+	}
+	,request: function(requestData,targetUrl,targetWindow) {
+		var requestId = ++this.requestCounter;
+		var future = new Future();
+		this.receiveWhile(function(message) {
+			return message.__responseId != null && message.__responseId == requestId?(function($this) {
+				var $r;
+				future.deliver(message.__data);
+				$r = false;
+				return $r;
+			}(this)):true;
+		},targetUrl,targetWindow);
+		this.send({ __requestId : requestId, __data : requestData},targetUrl,targetWindow);
+		return future;
+	}
+	,__class__: js.io._IFrameIO.AbstractIFrameIO
+}
+js.io.IFrameIOAutoDetect = $hxClasses["js.io.IFrameIOAutoDetect"] = function(w) {
+	this.bindTarget = OptionExtensions.getOrElseC(OptionExtensions.toOption(w),js.Env.window);
+	this.underlying = ($_=this.bindTarget,$_.postMessage.$bind($_)) != null?(function($this) {
+		var $r;
+		var $t = new js.io.IFrameIOPostMessage($this.bindTarget);
+		if(Std["is"]($t,js.io.IFrameIO)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this)):(function($this) {
+		var $r;
+		var $t = new js.io.IFrameIOPollingHashtag($this.bindTarget);
+		if(Std["is"]($t,js.io.IFrameIO)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this));
+}
+js.io.IFrameIOAutoDetect.__name__ = ["js","io","IFrameIOAutoDetect"];
+js.io.IFrameIOAutoDetect.__interfaces__ = [js.io.IFrameIO];
+js.io.IFrameIOAutoDetect.prototype = {
+	bindTarget: null
+	,underlying: null
+	,receive: function(f,originUrl,originWindow) {
+		this.underlying.receive(f,originUrl,originWindow);
+		return this;
+	}
+	,receiveWhile: function(f,originUrl,originWindow) {
+		this.underlying.receiveWhile(f,originUrl,originWindow);
+		return this;
+	}
+	,receiveRequests: function(f,url,window) {
+		this.underlying.receiveRequests(f,url,window);
+		return this;
+	}
+	,send: function(data,targetUrl,targetWindow) {
+		this.underlying.send(data,targetUrl,targetWindow);
+		return this;
+	}
+	,request: function(data,targetUrl,targetWindow) {
+		return this.underlying.request(data,targetUrl,targetWindow);
+	}
+	,__class__: js.io.IFrameIOAutoDetect
+}
+var DynamicExtensions = $hxClasses["DynamicExtensions"] = function() { }
+DynamicExtensions.__name__ = ["DynamicExtensions"];
+DynamicExtensions.withEffect = function(t,f) {
+	f(t);
+	return t;
+}
+DynamicExtensions.withEffectP = function(a,f) {
+	f(a);
+	return a;
+}
+DynamicExtensions.into = function(a,f) {
+	return f(a);
+}
+DynamicExtensions.isInstanceOf = function(o,c) {
+	return Std["is"](o,c);
+}
+DynamicExtensions.entuple = function(a,b) {
+	return Tuple2.create(a,b);
+}
+DynamicExtensions.memoize = function(t) {
+	var evaled = false;
+	var result = null;
+	return function() {
+		if(!evaled) {
+			evaled = true;
+			result = t();
+		}
+		return result;
+	};
+}
+DynamicExtensions.toThunk = function(t) {
+	return function() {
+		return t;
+	};
+}
+DynamicExtensions.toConstantFunction = function(t) {
+	return function(s) {
+		return t;
+	};
+}
+DynamicExtensions.toMap = function(d) {
+	var map = haxe.data.collections.Map.create();
+	var _g = 0, _g1 = Reflect.fields(d);
+	while(_g < _g1.length) {
+		var field = _g1[_g];
+		++_g;
+		var value = Reflect.field(d,field);
+		map = map.set(field,value);
+	}
+	return map;
+}
+DynamicExtensions.prototype = {
+	__class__: DynamicExtensions
+}
+js.io.IFrameIOPostMessage = $hxClasses["js.io.IFrameIOPostMessage"] = function(w) {
+	js.io._IFrameIO.AbstractIFrameIO.call(this);
+	this.bindTarget = w;
+}
+js.io.IFrameIOPostMessage.__name__ = ["js","io","IFrameIOPostMessage"];
+js.io.IFrameIOPostMessage.__interfaces__ = [js.io.IFrameIO];
+js.io.IFrameIOPostMessage.normalizeOpt = function(url) {
+	return OptionExtensions.map(haxe.net.UrlExtensions.toParsedUrl(url),function(p) {
+		return haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSearch(haxe.net.UrlExtensions.withoutPathname(haxe.net.UrlExtensions.withoutHash(p))));
+	});
+}
+js.io.IFrameIOPostMessage.normalize = function(url) {
+	return OptionExtensions.getOrElseC(js.io.IFrameIOPostMessage.normalizeOpt(url),url);
+}
+js.io.IFrameIOPostMessage.getUrlFor = function(w,url_) {
+	return StringExtensions.startsWith(url_,"about:")?(function($this) {
+		var $r;
+		var allWindows = [w].concat(IterableExtensions.toArray(Stax.unfold(w,function(w1) {
+			var parentWindow = w1.parent;
+			return w1 == parentWindow?Option.None:Option.Some(DynamicExtensions.entuple(parentWindow,parentWindow));
+		})));
+		$r = ArrayExtensions.first(ArrayExtensions.flatMap(allWindows,function(w1) {
+			try {
+				return OptionExtensions.toArray(js.io.IFrameIOPostMessage.normalizeOpt(w1.location.href));
+			} catch( e ) {
+				return [];
+			}
+		}));
+		return $r;
+	}(this)):js.io.IFrameIOPostMessage.normalize(url_);
+}
+js.io.IFrameIOPostMessage.__super__ = js.io._IFrameIO.AbstractIFrameIO;
+js.io.IFrameIOPostMessage.prototype = $extend(js.io._IFrameIO.AbstractIFrameIO.prototype,{
+	bindTarget: null
+	,receive: function(f,originUrl,originWindow) {
+		return this.receiveWhile(function(d) {
+			return DynamicExtensions.withEffect(true,function(_) {
+				f(d);
+			});
+		},originUrl,originWindow);
+	}
+	,receiveWhile: function(f,originUrl_,originWindow) {
+		var originUrl = js.io.IFrameIOPostMessage.getUrlFor(originWindow,originUrl_);
+		var listener = null;
+		var self = this;
+		listener = function(event) {
+			if(event.origin == originUrl || event.origin == "null") {
+				var data = haxe.text.json.Json.decodeObject(event.data);
+				if(!f(data)) js.dom.Quirks.removeEventListener(self.bindTarget,"message",listener,false);
+			} else js.io.IFrameIOPostMessage.log.warning("Received data but from wrong domain: expected: " + originUrl + ", but found: " + event.origin,{ fileName : "IFrameIO.hx", lineNumber : 233, className : "js.io.IFrameIOPostMessage", methodName : "receiveWhile"});
+		};
+		js.dom.Quirks.addEventListener(this.bindTarget,"message",listener,false);
+		return this;
+	}
+	,send: function(data,targetUrl_,targetWindow) {
+		var targetUrl = js.io.IFrameIOPostMessage.getUrlFor(targetWindow,targetUrl_);
+		if(StringExtensions.startsWith(targetUrl,"file:")) targetUrl = "*";
+		try {
+			targetWindow.postMessage(haxe.text.json.Json.encodeObject(data),targetUrl);
+		} catch( e ) {
+			js.io.IFrameIOPostMessage.log.fatal("Error while posting message to " + targetUrl + " (originally " + targetUrl_ + "): " + e.message,{ fileName : "IFrameIO.hx", lineNumber : 251, className : "js.io.IFrameIOPostMessage", methodName : "send"});
+		}
+		return this;
+	}
+	,__class__: js.io.IFrameIOPostMessage
+});
+js.io.IFrameIOPollingHashtag = $hxClasses["js.io.IFrameIOPollingHashtag"] = function(w) {
+	js.io._IFrameIO.AbstractIFrameIO.call(this);
+	this.bindTarget = w;
+	this.executor = haxe.framework.Injector.inject(haxe.time.ScheduledExecutor,{ fileName : "IFrameIO.hx", lineNumber : 307, className : "js.io.IFrameIOPollingHashtag", methodName : "new"});
+	this.fragmentsToSend = js.io.IFrameIOPollingHashtag.newFragmentsList();
+	this.fragmentsReceived = haxe.data.collections.Map.create();
+	this.receivers = new Hash();
+	this.originUrlToWindow = new Hash();
+	this.senderFuture = Option.None;
+	this.receiverFuture = Option.None;
+}
+js.io.IFrameIOPollingHashtag.__name__ = ["js","io","IFrameIOPollingHashtag"];
+js.io.IFrameIOPollingHashtag.__interfaces__ = [js.io.IFrameIO];
+js.io.IFrameIOPollingHashtag.normalizeOpt = function(url) {
+	return OptionExtensions.map(haxe.net.UrlExtensions.toParsedUrl(url),function(p) {
+		return haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutHash(p));
+	});
+}
+js.io.IFrameIOPollingHashtag.normalize = function(url) {
+	return OptionExtensions.getOrElseC(js.io.IFrameIOPollingHashtag.normalizeOpt(url),url);
+}
+js.io.IFrameIOPollingHashtag.messageKeyFrom = function(o) {
+	return new js.io._IFrameIO.MessageKey(StringExtensions.toInt(o.messageId),o.from,o.to,StringExtensions.toInt(o.fragmentCount));
+}
+js.io.IFrameIOPollingHashtag.__super__ = js.io._IFrameIO.AbstractIFrameIO;
+js.io.IFrameIOPollingHashtag.prototype = $extend(js.io._IFrameIO.AbstractIFrameIO.prototype,{
+	executor: null
+	,fragmentsToSend: null
+	,fragmentsReceived: null
+	,receivers: null
+	,originUrlToWindow: null
+	,bindTarget: null
+	,senderFuture: null
+	,receiverFuture: null
+	,receive: function(f,originUrl,originWindow) {
+		return this.receiveWhile(function(d) {
+			return DynamicExtensions.withEffect(true,function(_) {
+				f(d);
+			});
+		},originUrl,originWindow);
+	}
+	,receiveWhile: function(f,originUrl,originWindow) {
+		var self = this;
+		var domain = this.extractDomain(originUrl);
+		var r = this.receivers.exists(domain)?this.receivers.get(domain):DynamicExtensions.withEffect([],function(r) {
+			self.receivers.set(domain,r);
+		});
+		var wrapper = null;
+		wrapper = function(d) {
+			if(!f(d)) r.remove(wrapper);
+		};
+		r.push(wrapper);
+		this.originUrlToWindow.set(originUrl,originWindow);
+		this.startReceiver();
+		return this;
+	}
+	,send: function(data,to_,iframe) {
+		var from = js.io.IFrameIOPollingHashtag.normalize(this.bindTarget.location.href);
+		var to = js.io.IFrameIOPollingHashtag.normalize(to_);
+		var maxFragSize = 1500 - to.length;
+		var fragmentId = 1;
+		var fragments = haxe.util.StringExtensions.chunk(haxe.text.json.Json.encodeObject(data),maxFragSize);
+		var encoded = haxe.functional.FoldableExtensions.mapTo(fragments,js.io.IFrameIOPollingHashtag.newFragmentsList(),function(chunk) {
+			return DynamicExtensions.entuple(iframe,{ type : "delivery", from : from, to : to, messageId : IntExtensions.toString(js.io.IFrameIOPollingHashtag.lastMessageId), fragmentId : IntExtensions.toString(fragmentId++), fragmentCount : IntExtensions.toString(fragments.size()), data : chunk});
+		});
+		this.fragmentsToSend = this.fragmentsToSend.concat(encoded);
+		++js.io.IFrameIOPollingHashtag.lastMessageId;
+		this.startSender();
+		return this;
+	}
+	,stop: function() {
+		this.stopSender();
+		this.stopReceiver();
+		return this;
+	}
+	,sender: function() {
+		var $e = (this.fragmentsToSend.getHeadOption());
+		switch( $e[1] ) {
+		case 0:
+			this.stopSender();
+			break;
+		case 1:
+			var tuple = $e[2];
+			this.fragmentsToSend = this.fragmentsToSend.drop(1);
+			var win = tuple._1;
+			var frag = tuple._2;
+			win.location.href = frag.to + "#&" + haxe.net.UrlExtensions.toQueryString(DynamicExtensions.toMap(frag)).substr(1);
+			break;
+		}
+	}
+	,receiver: function() {
+		var hash = this.bindTarget.location.hash;
+		if(hash.length > 2) {
+			var query = "?" + hash.substr(2);
+			var unknown = haxe.data.collections.MapExtensions.toObject(haxe.net.UrlExtensions.toQueryParameters(query));
+			if(unknown.type == "delivery") {
+				var packet = unknown;
+				var messageKey = js.io.IFrameIOPollingHashtag.messageKeyFrom(packet);
+				var fragments = this.fragmentsReceivedFor(messageKey);
+				var alreadyReceived = ArrayExtensions.foldl(fragments,false,function(b,f) {
+					return b || f.fragmentId == packet.fragmentId;
+				});
+				if(!alreadyReceived) {
+					fragments.push(packet);
+					this.analyzeReceivedFragments(messageKey,fragments);
+				}
+			} else if(unknown.type == "request") {
+				var packet = unknown;
+				var messageKey = js.io.IFrameIOPollingHashtag.messageKeyFrom(packet);
+			} else if(unknown.type == "receipt") {
+				var packet = unknown;
+				var messageKey = js.io.IFrameIOPollingHashtag.messageKeyFrom(packet);
+			}
+			this.bindTarget.location.hash = "#&";
+		} else {
+			var self = this;
+			var fragmentRequests = this.findMissingFragments();
+			if(fragmentRequests.size() > 0) {
+				var encoded = haxe.functional.FoldableExtensions.flatMapTo(fragmentRequests,haxe.data.collections.List.nil(),function(request) {
+					var win = self.originUrlToWindow.get(request.to);
+					return win != null?haxe.data.collections.List.nil().cons(DynamicExtensions.entuple(win,request)):haxe.data.collections.List.nil();
+				});
+				this.fragmentsToSend = this.fragmentsToSend.concat(encoded);
+			}
+		}
+	}
+	,extractDomain: function(url) {
+		return (function($this) {
+			var $r;
+			var $e = (haxe.net.UrlExtensions.toParsedUrl(url));
+			switch( $e[1] ) {
+			case 1:
+				var parsed = $e[2];
+				$r = parsed.hostname + parsed.pathname;
+				break;
+			case 0:
+				$r = url;
+				break;
+			}
+			return $r;
+		}(this));
+	}
+	,analyzeReceivedFragments: function(messageKey,fragments) {
+		if(fragments.length >= messageKey.fragmentCount) {
+			fragments.sort(function(a,b) {
+				return StringExtensions.toInt(a.fragmentId) - StringExtensions.toInt(b.fragmentId);
+			});
+			var fullData = ArrayExtensions.foldl(fragments,"",function(a,b) {
+				return a + b.data;
+			});
+			var message = haxe.text.json.Json.decodeObject(fullData);
+			var domain = this.extractDomain(fragments[0].from);
+			if(this.receivers.exists(domain)) ArrayExtensions.forEach(this.receivers.get(domain),function(r) {
+				r(message);
+			});
+			this.fragmentsReceived.removeByKey(messageKey);
+		}
+	}
+	,findMissingFragments: function() {
+		return haxe.data.collections.IterableExtensions.foldl(this.fragmentsReceived.values(),haxe.data.collections.List.nil(),function(allMissing,fragments) {
+			var firstFrag = fragments[0];
+			fragments.sort(function(a,b) {
+				return StringExtensions.toInt(a.fragmentId) - StringExtensions.toInt(b.fragmentId);
+			});
+			return IterableExtensions.toList(fragments).gaps(function(a,b) {
+				var lastId = StringExtensions.toInt(a.fragmentId);
+				var curId = StringExtensions.toInt(b.fragmentId);
+				return IterableExtensions.toList(haxe.data.collections.IterableExtensions.map(IntExtensions.until(lastId + 1,curId),function(missingId) {
+					var request = { type : "request", from : firstFrag.to, to : firstFrag.from, messageId : firstFrag.messageId, fragmentCount : firstFrag.fragmentCount, fragmentId : IntExtensions.toString(missingId)};
+					return request;
+				}));
+			});
+		});
+	}
+	,fragmentsReceivedFor: function(messageKey) {
+		if(!this.fragmentsReceived.containsKey(messageKey)) this.fragmentsReceived = this.fragmentsReceived.set(messageKey,[]);
+		return OptionExtensions.get(this.fragmentsReceived.get(messageKey));
+	}
+	,startSender: function() {
+		if(OptionExtensions.isEmpty(this.senderFuture)) this.senderFuture = Option.Some(this.executor.forever(this.sender.$bind(this),20));
+	}
+	,stopSender: function() {
+		OptionExtensions.map(this.senderFuture,function(s) {
+			s.cancel();
+			return Unit.Unit;
+		});
+		this.senderFuture = Option.None;
+	}
+	,startReceiver: function() {
+		if(OptionExtensions.isEmpty(this.receiverFuture)) this.receiverFuture = Option.Some(this.executor.forever(this.receiver.$bind(this),10));
+	}
+	,stopReceiver: function() {
+		OptionExtensions.map(this.receiverFuture,function(r) {
+			r.cancel();
+			return Unit.Unit;
+		});
+		this.receiverFuture = Option.None;
+	}
+	,__class__: js.io.IFrameIOPollingHashtag
+});
+js.io._IFrameIO.MessageKey = $hxClasses["js.io._IFrameIO.MessageKey"] = function(messageId,from,to,fragmentCount) {
+	this.messageId = messageId;
+	this.from = from;
+	this.to = to;
+	this.fragmentCount = fragmentCount;
+}
+js.io._IFrameIO.MessageKey.__name__ = ["js","io","_IFrameIO","MessageKey"];
+js.io._IFrameIO.MessageKey.prototype = {
+	messageId: null
+	,from: null
+	,to: null
+	,fragmentCount: null
+	,hashCode: function() {
+		return IntExtensions.hashCode(this.messageId) * StringExtensions.hashCode(this.from) * StringExtensions.hashCode(this.to) * IntExtensions.hashCode(this.fragmentCount);
+	}
+	,equals: function(other) {
+		return this.messageId == other.messageId && this.from == other.from && this.to == other.to && this.fragmentCount == other.fragmentCount;
+	}
+	,__class__: js.io._IFrameIO.MessageKey
+}
+haxe.reactive.External = $hxClasses["haxe.reactive.External"] = function() { }
+haxe.reactive.External.__name__ = ["haxe","reactive","External"];
+haxe.reactive.External.setTimeout = function(f,time) {
+	return haxe.Timer.delay(f,time);
+}
+haxe.reactive.External.cancelTimeout = function(timer) {
+	((function($this) {
+		var $r;
+		var $t = timer;
+		if(Std["is"]($t,haxe.Timer)) $t; else throw "Class cast error";
+		$r = $t;
+		return $r;
+	}(this))).stop();
+}
+haxe.reactive.External.now = function() {
+	return Date.now().getTime();
+}
+haxe.reactive.External.prototype = {
+	__class__: haxe.reactive.External
+}
+haxe.reactive.Propagation = $hxClasses["haxe.reactive.Propagation"] = { __ename__ : ["haxe","reactive","Propagation"], __constructs__ : ["propagate","doNotPropagate"] }
+haxe.reactive.Propagation.propagate = function(value) { var $x = ["propagate",0,value]; $x.__enum__ = haxe.reactive.Propagation; $x.toString = $estr; return $x; }
+haxe.reactive.Propagation.doNotPropagate = ["doNotPropagate",1];
+haxe.reactive.Propagation.doNotPropagate.toString = $estr;
+haxe.reactive.Propagation.doNotPropagate.__enum__ = haxe.reactive.Propagation;
+haxe.reactive.Pulse = $hxClasses["haxe.reactive.Pulse"] = function(stamp,value) {
+	this.stamp = stamp;
+	this.value = value;
+	var elements = [];
+	elements.push(stamp);
+	elements.push(value);
+}
+haxe.reactive.Pulse.__name__ = ["haxe","reactive","Pulse"];
+haxe.reactive.Pulse.prototype = {
+	stamp: null
+	,value: null
+	,map: function(f) {
+		return this.withValue(f(this.value));
+	}
+	,withValue: function(newValue) {
+		return new haxe.reactive.Pulse(this.stamp,newValue);
+	}
+	,__class__: haxe.reactive.Pulse
+}
+haxe.reactive.Stamp = $hxClasses["haxe.reactive.Stamp"] = function() { }
+haxe.reactive.Stamp.__name__ = ["haxe","reactive","Stamp"];
+haxe.reactive.Stamp.lastStamp = function() {
+	return haxe.reactive.Stamp._stamp;
+}
+haxe.reactive.Stamp.nextStamp = function() {
+	return ++haxe.reactive.Stamp._stamp;
+}
+haxe.reactive.Stamp.prototype = {
+	__class__: haxe.reactive.Stamp
+}
+haxe.reactive.Rank = $hxClasses["haxe.reactive.Rank"] = function() { }
+haxe.reactive.Rank.__name__ = ["haxe","reactive","Rank"];
+haxe.reactive.Rank.lastRank = function() {
+	return haxe.reactive.Rank._rank;
+}
+haxe.reactive.Rank.nextRank = function() {
+	return ++haxe.reactive.Rank._rank;
+}
+haxe.reactive.Rank.prototype = {
+	__class__: haxe.reactive.Rank
+}
+if(!haxe.reactive._Reactive) haxe.reactive._Reactive = {}
+haxe.reactive._Reactive.PriorityQueue = $hxClasses["haxe.reactive._Reactive.PriorityQueue"] = function() {
+	this.val = [];
+}
+haxe.reactive._Reactive.PriorityQueue.__name__ = ["haxe","reactive","_Reactive","PriorityQueue"];
+haxe.reactive._Reactive.PriorityQueue.prototype = {
+	val: null
+	,length: function() {
+		return this.val.length;
+	}
+	,insert: function(kv) {
+		this.val.push(kv);
+		var kvpos = this.val.length - 1;
+		while(kvpos > 0 && kv.k < this.val[Math.floor((kvpos - 1) / 2)].k) {
+			var oldpos = kvpos;
+			kvpos = Math.floor((kvpos - 1) / 2);
+			this.val[oldpos] = this.val[kvpos];
+			this.val[kvpos] = kv;
+		}
+	}
+	,isEmpty: function() {
+		return this.val.length == 0;
+	}
+	,pop: function() {
+		if(this.val.length == 1) return this.val.pop();
+		var ret = this.val.shift();
+		this.val.unshift(this.val.pop());
+		var kvpos = 0;
+		var kv = this.val[0];
+		while(true) {
+			var leftChild = kvpos * 2 + 1 < this.val.length?this.val[kvpos * 2 + 1].k:kv.k + 1;
+			var rightChild = kvpos * 2 + 2 < this.val.length?this.val[kvpos * 2 + 2].k:kv.k + 1;
+			if(leftChild > kv.k && rightChild > kv.k) break; else if(leftChild < rightChild) {
+				this.val[kvpos] = this.val[kvpos * 2 + 1];
+				this.val[kvpos * 2 + 1] = kv;
+				kvpos = kvpos * 2 + 1;
+			} else {
+				this.val[kvpos] = this.val[kvpos * 2 + 2];
+				this.val[kvpos * 2 + 2] = kv;
+				kvpos = kvpos * 2 + 2;
+			}
+		}
+		return ret;
+	}
+	,__class__: haxe.reactive._Reactive.PriorityQueue
+}
+haxe.reactive.Stream = $hxClasses["haxe.reactive.Stream"] = function(updater,sources) {
+	this._updater = updater;
+	this._sendsTo = [];
+	this._weak = false;
+	this._rank = haxe.reactive.Rank.nextRank();
+	this._cleanups = [];
+	if(sources != null) {
+		var _g = 0;
+		while(_g < sources.length) {
+			var source = sources[_g];
+			++_g;
+			source.attachListener(this);
+		}
+	}
+}
+haxe.reactive.Stream.__name__ = ["haxe","reactive","Stream"];
+haxe.reactive.Stream.prototype = {
+	_rank: null
+	,_sendsTo: null
+	,_updater: null
+	,_weak: null
+	,weaklyHeld: null
+	,_cleanups: null
+	,attachListener: function(dependent) {
+		this._sendsTo.push(dependent);
+		if(this._rank > dependent._rank) {
+			var lowest = haxe.reactive.Rank.lastRank() + 1;
+			var q = [dependent];
+			while(q.length > 0) {
+				var cur = q.splice(0,1)[0];
+				cur._rank = haxe.reactive.Rank.nextRank();
+				q = q.concat(cur._sendsTo);
+			}
+		}
+	}
+	,removeListener: function(dependent,isWeakReference) {
+		if(isWeakReference == null) isWeakReference = false;
+		var foundSending = false;
+		var _g1 = 0, _g = this._sendsTo.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(this._sendsTo[i] == dependent) {
+				this._sendsTo.splice(i,1);
+				foundSending = true;
+				break;
+			}
+		}
+		if(isWeakReference && this._sendsTo.length == 0) this.setWeaklyHeld(true);
+		return foundSending;
+	}
+	,whenFinishedDo: function(f) {
+		if(this.getWeaklyHeld()) f(); else this._cleanups.push(f);
+	}
+	,forEach: function(f) {
+		haxe.reactive.Streams.create(function(pulse) {
+			f(pulse.value);
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		return this;
+	}
+	,each: function(f) {
+		return this.forEach(f);
+	}
+	,toArray: function() {
+		var array = [];
+		this.each(function(e) {
+			array.push(e);
+		});
+		return array;
+	}
+	,constant: function(value) {
+		return this.map(function(v) {
+			return value;
+		});
+	}
+	,bind: function(k) {
+		var m = this;
+		var prevE = null;
+		var outE = haxe.reactive.Streams.identity();
+		var inE = haxe.reactive.Streams.create(function(pulse) {
+			if(prevE != null) prevE.removeListener(outE,true);
+			prevE = k(pulse.value);
+			prevE.attachListener(outE);
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[m]);
+		return outE;
+	}
+	,sendEvent: function(value) {
+		this.propagatePulse(new haxe.reactive.Pulse(haxe.reactive.Stamp.nextStamp(),value));
+		return this;
+	}
+	,sendEventTyped: function(value) {
+		this.propagatePulse(new haxe.reactive.Pulse(haxe.reactive.Stamp.nextStamp(),value));
+		return this;
+	}
+	,sendLaterIn: function(value,millis) {
+		var self = this;
+		haxe.reactive.External.setTimeout(function() {
+			self.sendEvent(value);
+		},millis);
+		return this;
+	}
+	,sendLater: function(value) {
+		return this.sendLaterIn(value,0);
+	}
+	,startsWith: function(init) {
+		return new haxe.reactive.Signal(this,init,function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse);
+		});
+	}
+	,delay: function(time) {
+		var resE = haxe.reactive.Streams.identity();
+		haxe.reactive.Streams.create(function(pulse) {
+			resE.sendLaterIn(pulse.value,time);
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		return resE;
+	}
+	,delayS: function(time) {
+		var self = this;
+		var receiverEE = haxe.reactive.Streams.identity();
+		var link = { from : self, towards : self.delay(time.valueNow())};
+		var switcherE = haxe.reactive.Streams.create(function(pulse) {
+			link.from.removeListener(link.towards);
+			link = { from : self, towards : self.delay(pulse.value)};
+			receiverEE.sendEvent(link.towards);
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[time.changes()]);
+		var resE = haxe.reactive.StreamStream.flatten(receiverEE);
+		switcherE.sendEvent(time.valueNow());
+		return resE;
+	}
+	,calm: function(time) {
+		return this.calmS(haxe.reactive.Signals.constant(time));
+	}
+	,calmS: function(time) {
+		var out = haxe.reactive.Streams.identity();
+		var towards = null;
+		haxe.reactive.Streams.create(function(pulse) {
+			if(towards != null) haxe.reactive.External.cancelTimeout(towards);
+			towards = haxe.reactive.External.setTimeout(function() {
+				towards = null;
+				out.sendEvent(pulse.value);
+			},time.valueNow());
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		return out;
+	}
+	,blind: function(time) {
+		return this.blindS(haxe.reactive.Signals.constant(time));
+	}
+	,blindS: function(time) {
+		var lastSent = haxe.reactive.External.now() - time.valueNow() - 1;
+		return haxe.reactive.Streams.create(function(p) {
+			var curTime = haxe.reactive.External.now();
+			if(curTime - lastSent > time.valueNow()) {
+				lastSent = curTime;
+				return haxe.reactive.Propagation.propagate(p);
+			} else return haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,snapshot: function(value) {
+		return this.map(function(t) {
+			return value.valueNow();
+		});
+	}
+	,filterRepeats: function(optStart) {
+		return this.filterRepeatsBy(optStart,function(v1,v2) {
+			return (Stax.getEqualFor(v1))(v1,v2);
+		});
+	}
+	,filterRepeatsBy: function(optStart,eq) {
+		var hadFirst = optStart == null?false:true;
+		var prev = optStart;
+		return this.filter(function(v) {
+			return !hadFirst || !eq(prev,v)?(function($this) {
+				var $r;
+				hadFirst = true;
+				prev = v;
+				$r = true;
+				return $r;
+			}(this)):false;
+		});
+	}
+	,map: function(mapper) {
+		return haxe.reactive.Streams.create(function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse.map(mapper));
+		},[this]);
+	}
+	,flatMap: function(mapper) {
+		return this.bind(mapper);
+	}
+	,scanl: function(initial,folder) {
+		var acc = initial;
+		return this.map(function(n) {
+			var next = folder(acc,n);
+			acc = next;
+			return next;
+		});
+	}
+	,scanlP: function(folder) {
+		var acc = null;
+		return this.map(function(n) {
+			var next;
+			if(acc != null) next = folder(acc,n); else next = n;
+			acc = next;
+			return next;
+		});
+	}
+	,take: function(n) {
+		var count = n;
+		var self = this;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return count > 0?(function($this) {
+				var $r;
+				--count;
+				$r = haxe.reactive.Propagation.propagate(pulse);
+				return $r;
+			}(this)):(function($this) {
+				var $r;
+				self.setWeaklyHeld(true);
+				$r = haxe.reactive.Propagation.doNotPropagate;
+				return $r;
+			}(this));
+		},[this]);
+	}
+	,takeWhile: function(filter) {
+		var stillChecking = true;
+		var self = this;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return stillChecking?filter(pulse.value)?haxe.reactive.Propagation.propagate(pulse):(function($this) {
+				var $r;
+				stillChecking = false;
+				self.setWeaklyHeld(true);
+				$r = haxe.reactive.Propagation.doNotPropagate;
+				return $r;
+			}(this)):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,shift: function(n) {
+		var queue = [];
+		return haxe.reactive.Streams.create(function(pulse) {
+			queue.push(pulse.value);
+			return queue.length <= n?haxe.reactive.Propagation.doNotPropagate:haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift()));
+		},[this]);
+	}
+	,shiftWhile: function(pred) {
+		var queue = [];
+		var checking = true;
+		return haxe.reactive.Streams.create(function(pulse) {
+			queue.push(pulse.value);
+			return checking?pred(pulse.value)?haxe.reactive.Propagation.doNotPropagate:(function($this) {
+				var $r;
+				checking = false;
+				$r = haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift()));
+				return $r;
+			}(this)):haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift()));
+		},[this]);
+	}
+	,shiftWith: function(elements) {
+		var queue = IterableExtensions.toArray(elements);
+		var n = queue.length;
+		return haxe.reactive.Streams.create(function(pulse) {
+			queue.push(pulse.value);
+			return queue.length <= n?haxe.reactive.Propagation.doNotPropagate:haxe.reactive.Propagation.propagate(pulse.withValue(queue.shift()));
+		},[this]);
+	}
+	,drop: function(n) {
+		var count = n;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return count > 0?(function($this) {
+				var $r;
+				--count;
+				$r = haxe.reactive.Propagation.doNotPropagate;
+				return $r;
+			}(this)):haxe.reactive.Propagation.propagate(pulse);
+		},[this]);
+	}
+	,dropWhile: function(pred) {
+		var checking = true;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return checking?pred(pulse.value)?haxe.reactive.Propagation.doNotPropagate:(function($this) {
+				var $r;
+				checking = false;
+				$r = haxe.reactive.Propagation.propagate(pulse);
+				return $r;
+			}(this)):haxe.reactive.Propagation.propagate(pulse);
+		},[this]);
+	}
+	,partition: function(pred) {
+		var trueStream = haxe.reactive.Streams.create(function(pulse) {
+			return pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		var falseStream = haxe.reactive.Streams.create(function(pulse) {
+			return !pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		return Tuple2.create(trueStream,falseStream);
+	}
+	,partitionWhile: function(pred) {
+		var trueStream = this.takeWhile(pred);
+		var falseStream = this.dropWhile(pred);
+		return Tuple2.create(trueStream,falseStream);
+	}
+	,filter: function(pred) {
+		return haxe.reactive.Streams.create(function(pulse) {
+			return pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,filterWhile: function(pred) {
+		var checking = true;
+		var self = this;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return checking?pred(pulse.value)?haxe.reactive.Propagation.propagate(pulse):(function($this) {
+				var $r;
+				checking = false;
+				self.setWeaklyHeld(true);
+				$r = haxe.reactive.Propagation.doNotPropagate;
+				return $r;
+			}(this)):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,zipWith: function($as,f) {
+		var testStamp = -1;
+		var value1 = null;
+		haxe.reactive.Streams.create(function(pulse) {
+			testStamp = pulse.stamp;
+			value1 = pulse.value;
+			return haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+		return haxe.reactive.Streams.create(function(pulse) {
+			return testStamp == pulse.stamp?haxe.reactive.Propagation.propagate(pulse.withValue(f(value1,pulse.value))):haxe.reactive.Propagation.doNotPropagate;
+		},[$as]);
+	}
+	,zip: function($as) {
+		return this.zipWith($as,Tuple2.create);
+	}
+	,zip3: function($as,bs) {
+		var streams = [];
+		streams.push(this);
+		streams.push($as);
+		streams.push(bs);
+		return haxe.reactive.Streams.zipN(streams).map(function(i) {
+			return Tuple3.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2));
+		});
+	}
+	,zip4: function($as,bs,cs) {
+		var streams = [];
+		streams.push(this);
+		streams.push($as);
+		streams.push(bs);
+		streams.push(cs);
+		return haxe.reactive.Streams.zipN(streams).map(function(i) {
+			return Tuple4.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2),haxe.data.collections.IterableExtensions.at(i,3));
+		});
+	}
+	,zip5: function($as,bs,cs,ds) {
+		var streams = [];
+		streams.push(this);
+		streams.push($as);
+		streams.push(bs);
+		streams.push(cs);
+		streams.push(ds);
+		return haxe.reactive.Streams.zipN(streams).map(function(i) {
+			return Tuple5.create(haxe.data.collections.IterableExtensions.at(i,0),haxe.data.collections.IterableExtensions.at(i,1),haxe.data.collections.IterableExtensions.at(i,2),haxe.data.collections.IterableExtensions.at(i,3),haxe.data.collections.IterableExtensions.at(i,4));
+		});
+	}
+	,group: function() {
+		return this.groupBy(function(e1,e2) {
+			return e1 == e2;
+		});
+	}
+	,groupBy: function(eq) {
+		var prev = null;
+		var cur = [];
+		return haxe.reactive.Streams.create(function(pulse) {
+			var ret = haxe.reactive.Propagation.doNotPropagate;
+			if(prev != null) {
+				if(!eq(prev,pulse.value)) {
+					var iter = cur;
+					ret = haxe.reactive.Propagation.propagate(pulse.withValue(iter));
+					cur = [];
+					cur.push(pulse.value);
+					prev = null;
+				} else cur.push(pulse.value);
+			} else cur.push(pulse.value);
+			prev = pulse.value;
+			return ret;
+		},[this]);
+	}
+	,merge: function(that) {
+		return haxe.reactive.Streams.create(function(p) {
+			return haxe.reactive.Propagation.propagate(p);
+		},[this,that]);
+	}
+	,uniqueSteps: function() {
+		var lastStamp = -1;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return pulse.stamp != lastStamp?(function($this) {
+				var $r;
+				lastStamp = pulse.stamp;
+				$r = haxe.reactive.Propagation.propagate(pulse);
+				return $r;
+			}(this)):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,uniqueEvents: function(eq) {
+		if(eq == null) eq = function(e1,e2) {
+			return e1 == e2;
+		};
+		var lastEvent = null;
+		return haxe.reactive.Streams.create(function(pulse) {
+			return lastEvent == null || !eq(pulse.value,lastEvent)?(function($this) {
+				var $r;
+				lastEvent = pulse.value;
+				$r = haxe.reactive.Propagation.propagate(pulse);
+				return $r;
+			}(this)):haxe.reactive.Propagation.doNotPropagate;
+		},[this]);
+	}
+	,unique: function(eq) {
+		return this.uniqueSteps().uniqueEvents(eq);
+	}
+	,propagatePulse: function(pulse) {
+		var queue = new haxe.reactive._Reactive.PriorityQueue();
+		var self = (function($this) {
+			var $r;
+			var $t = $this;
+			if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+			$r = $t;
+			return $r;
+		}(this));
+		queue.insert({ k : this._rank, v : { stream : self, pulse : pulse}});
+		while(queue.length() > 0) {
+			var qv = queue.pop();
+			var stream = qv.v.stream;
+			var pulse1 = qv.v.pulse;
+			var propagation = stream._updater(pulse1);
+			var $e = (propagation);
+			switch( $e[1] ) {
+			case 0:
+				var nextPulse = $e[2];
+				var weaklyHeld = true;
+				var _g = 0, _g1 = stream._sendsTo;
+				while(_g < _g1.length) {
+					var recipient = _g1[_g];
+					++_g;
+					weaklyHeld = weaklyHeld && recipient.getWeaklyHeld();
+					queue.insert({ k : recipient._rank, v : { stream : (function($this) {
+						var $r;
+						var $t = recipient;
+						if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+						$r = $t;
+						return $r;
+					}(this)), pulse : nextPulse}});
+				}
+				if(stream._sendsTo.length > 0 && weaklyHeld) stream.setWeaklyHeld(true);
+				break;
+			case 1:
+				break;
+			}
+		}
+	}
+	,setWeaklyHeld: function(held) {
+		if(this._weak != held) {
+			this._weak = held;
+			if(!held) {
+				var _g = 0, _g1 = this._cleanups;
+				while(_g < _g1.length) {
+					var cleanup = _g1[_g];
+					++_g;
+					cleanup();
+				}
+				this._cleanups = [];
+			}
+		}
+		return this._weak;
+	}
+	,getWeaklyHeld: function() {
+		return this._weak;
+	}
+	,__class__: haxe.reactive.Stream
+	,__properties__: {set_weaklyHeld:"setWeaklyHeld",get_weaklyHeld:"getWeaklyHeld"}
+}
+haxe.reactive.Signal = $hxClasses["haxe.reactive.Signal"] = function(stream,init,updater) {
+	this._last = init;
+	this._underlyingRaw = stream;
+	this._updater = updater;
+	var self = this;
+	this._underlying = haxe.reactive.Streams.create(function(pulse) {
+		return (function($this) {
+			var $r;
+			var $e = (updater(pulse));
+			switch( $e[1] ) {
+			case 0:
+				var newPulse = $e[2];
+				$r = (function($this) {
+					var $r;
+					self._last = newPulse.value;
+					$r = haxe.reactive.Propagation.propagate(newPulse);
+					return $r;
+				}($this));
+				break;
+			case 1:
+				$r = haxe.reactive.Propagation.doNotPropagate;
+				break;
+			}
+			return $r;
+		}(this));
+	},[stream.uniqueSteps()]);
+}
+haxe.reactive.Signal.__name__ = ["haxe","reactive","Signal"];
+haxe.reactive.Signal.prototype = {
+	_underlyingRaw: null
+	,_underlying: null
+	,_updater: null
+	,_last: null
+	,map: function(f) {
+		return this.lift(f);
+	}
+	,mapS: function(f) {
+		return this.liftS(f);
+	}
+	,lift: function(f) {
+		return this.changes().map(f).startsWith(f(this.valueNow()));
+	}
+	,liftS: function(f) {
+		return this.changes().map(function(a) {
+			return (f.valueNow())(a);
+		}).startsWith((f.valueNow())(this.valueNow()));
+	}
+	,zipWith: function(b2,f) {
+		var self = this;
+		var applyF = function() {
+			return f(self.valueNow(),b2.valueNow());
+		};
+		return haxe.reactive.Streams.create(function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse.withValue(applyF()));
+		},ArrayExtensions.map([this,b2],function(b) {
+			return (function($this) {
+				var $r;
+				var $t = b.changes();
+				if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+				$r = $t;
+				return $r;
+			}(this));
+		})).startsWith(applyF());
+	}
+	,zip: function(b2) {
+		return this.zipWith(b2,Tuple2.create);
+	}
+	,zip3: function(b2,b3) {
+		var self = this;
+		var createTuple = function() {
+			return Tuple3.create(self.valueNow(),b2.valueNow(),b3.valueNow());
+		};
+		return haxe.reactive.Streams.create(function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse.withValue(createTuple()));
+		},ArrayExtensions.map([this,b2,b3],function(b) {
+			return (function($this) {
+				var $r;
+				var $t = b.changes();
+				if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+				$r = $t;
+				return $r;
+			}(this));
+		})).startsWith(createTuple());
+	}
+	,zip4: function(b2,b3,b4) {
+		var self = this;
+		var createTuple = function() {
+			return Tuple4.create(self.valueNow(),b2.valueNow(),b3.valueNow(),b4.valueNow());
+		};
+		return haxe.reactive.Streams.create(function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse.withValue(createTuple()));
+		},ArrayExtensions.map([this,b2,b3,b4],function(b) {
+			return (function($this) {
+				var $r;
+				var $t = b.changes();
+				if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+				$r = $t;
+				return $r;
+			}(this));
+		})).startsWith(createTuple());
+	}
+	,zip5: function(b2,b3,b4,b5) {
+		var self = this;
+		var createTuple = function() {
+			return Tuple5.create(self.valueNow(),b2.valueNow(),b3.valueNow(),b4.valueNow(),b5.valueNow());
+		};
+		return haxe.reactive.Streams.create(function(pulse) {
+			return haxe.reactive.Propagation.propagate(pulse.withValue(createTuple()));
+		},ArrayExtensions.map([this,b2,b3,b4,b5],function(b) {
+			return (function($this) {
+				var $r;
+				var $t = b.changes();
+				if(Std["is"]($t,haxe.reactive.Stream)) $t; else throw "Class cast error";
+				$r = $t;
+				return $r;
+			}(this));
+		})).startsWith(createTuple());
+	}
+	,zipN: function(signals) {
+		var signals1 = haxe.data.collections.IterableExtensions.cons(signals,this);
+		return haxe.reactive.Signals.zipN(signals1);
+	}
+	,calm: function(time) {
+		return this.mapC(function(s) {
+			return s.calm(time);
+		});
+	}
+	,calmS: function(time) {
+		return this.mapC(function(s) {
+			return s.calmS(time);
+		});
+	}
+	,blind: function(time) {
+		return this.mapC(function(s) {
+			return s.blind(time);
+		});
+	}
+	,blindS: function(time) {
+		return this.mapC(function(s) {
+			return s.blindS(time);
+		});
+	}
+	,delay: function(time) {
+		return this.mapC(function(s) {
+			return s.delay(time);
+		});
+	}
+	,delayS: function(time) {
+		return this.mapC(function(s) {
+			return s.delayS(time);
+		});
+	}
+	,valueNow: function() {
+		return this._last;
+	}
+	,mapC: function(f) {
+		return f(this.changes()).startsWith(this.valueNow());
+	}
+	,changes: function() {
+		return this._underlying;
+	}
+	,sendSignal: function(value) {
+		this.changes().sendEvent(value);
+	}
+	,sendSignalTyped: function(value) {
+		this.changes().sendEventTyped(value);
+	}
+	,__class__: haxe.reactive.Signal
+}
+haxe.net.HttpHeaderExtensions = $hxClasses["haxe.net.HttpHeaderExtensions"] = function() { }
+haxe.net.HttpHeaderExtensions.__name__ = ["haxe","net","HttpHeaderExtensions"];
+haxe.net.HttpHeaderExtensions.toHttpHeader = function(str) {
+	return haxe.net.HttpHeaderExtensions.HeaderPattern.match(str)?Option.Some(DynamicExtensions.entuple(StringExtensions.trim(haxe.net.HttpHeaderExtensions.HeaderPattern.matched(1)),StringExtensions.trim(haxe.net.HttpHeaderExtensions.HeaderPattern.matched(2)))):Option.None;
+}
+haxe.net.HttpHeaderExtensions.toHttpHeaders = function(str) {
+	return haxe.data.collections.Map.create().addAll(ArrayExtensions.flatMap(haxe.net.HttpHeaderExtensions.HeaderLinesPattern.split(str),function(line) {
+		return OptionExtensions.toArray(haxe.net.HttpHeaderExtensions.toHttpHeader(StringExtensions.trim(line)));
+	}));
+}
+haxe.net.HttpHeaderExtensions.prototype = {
+	__class__: haxe.net.HttpHeaderExtensions
+}
+haxe.math.geom.Point2dIntExtensions = $hxClasses["haxe.math.geom.Point2dIntExtensions"] = function() { }
+haxe.math.geom.Point2dIntExtensions.__name__ = ["haxe","math","geom","Point2dIntExtensions"];
+haxe.math.geom.Point2dIntExtensions.minus = function(p1,p2) {
+	return { dx : p1.x - p2.x, dy : p1.y - p2.y};
+}
+haxe.math.geom.Point2dIntExtensions.plus = function(p,v) {
+	return { x : p.x + v.dx, y : p.y + v.dy};
+}
+haxe.math.geom.Point2dIntExtensions.map = function(p,f,g) {
+	return { x : f(p.x), y : g(p.y)};
+}
+haxe.math.geom.Point2dIntExtensions.toVector = function(p) {
+	return { dx : p.x, dy : p.y};
+}
+haxe.math.geom.Point2dIntExtensions.toFloat = function(p) {
+	return { x : IntExtensions.toFloat(p.x), y : IntExtensions.toFloat(p.y)};
+}
+haxe.math.geom.Point2dIntExtensions.toTuple = function(p) {
+	return DynamicExtensions.entuple(p.x,p.y);
+}
+haxe.math.geom.Point2dIntExtensions.prototype = {
+	__class__: haxe.math.geom.Point2dIntExtensions
+}
+haxe.math.geom.Point2dFloatExtensions = $hxClasses["haxe.math.geom.Point2dFloatExtensions"] = function() { }
+haxe.math.geom.Point2dFloatExtensions.__name__ = ["haxe","math","geom","Point2dFloatExtensions"];
+haxe.math.geom.Point2dFloatExtensions.minus = function(p1,p2) {
+	return { dx : p1.x - p2.x, dy : p1.y - p2.y};
+}
+haxe.math.geom.Point2dFloatExtensions.plus = function(p,v) {
+	return { x : p.x + v.dx, y : p.y + v.dy};
+}
+haxe.math.geom.Point2dFloatExtensions.map = function(p,f,g) {
+	return { x : f(p.x), y : g(p.y)};
+}
+haxe.math.geom.Point2dFloatExtensions.toVector = function(p) {
+	return { dx : p.x, dy : p.y};
+}
+haxe.math.geom.Point2dFloatExtensions.toInt = function(p) {
+	return { x : FloatExtensions.round(p.x), y : FloatExtensions.round(p.y)};
+}
+haxe.math.geom.Point2dFloatExtensions.toTuple = function(p) {
+	return DynamicExtensions.entuple(p.x,p.y);
+}
+haxe.math.geom.Point2dFloatExtensions.prototype = {
+	__class__: haxe.math.geom.Point2dFloatExtensions
+}
+haxe.text.json.JValueExtensions = $hxClasses["haxe.text.json.JValueExtensions"] = function() { }
+haxe.text.json.JValueExtensions.__name__ = ["haxe","text","json","JValueExtensions"];
+haxe.text.json.JValueExtensions.fold = function(v,initial,f) {
+	var cur = initial;
+	haxe.text.json.JValueExtensions.map(v,function(j) {
+		cur = f(cur,j);
+		return j;
+	});
+	return cur;
+}
+haxe.text.json.JValueExtensions.path = function(v,s) {
+	var ss = s.split("/"), c = v;
+	var $it0 = ss.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(x.length > 0) c = haxe.text.json.JValueExtensions.get(c,x);
+	}
+	return c;
+}
+haxe.text.json.JValueExtensions.map = function(v,f) {
+	var $e = (v);
+	switch( $e[1] ) {
+	case 4:
+		var xs = $e[2];
+		return f(haxe.text.json.JValue.JArray(ArrayExtensions.map(xs,function(x) {
+			return haxe.text.json.JValueExtensions.map(x,f);
+		})));
+	case 6:
+		var v1 = $e[3], k = $e[2];
+		return f(haxe.text.json.JValue.JField(k,haxe.text.json.JValueExtensions.map(v1,f)));
+	case 5:
+		var fs = $e[2];
+		return f(haxe.text.json.JValue.JObject(ArrayExtensions.map(fs,function(field) {
+			return haxe.text.json.JValueExtensions.map(field,f);
+		})));
+	default:
+		return f(v);
+	}
+}
+haxe.text.json.JValueExtensions.getOption = function(v,k) {
+	var $e = (v);
+	switch( $e[1] ) {
+	case 5:
+		var xs = $e[2];
+		var hash = haxe.text.json.JValueExtensions.extractHash(v);
+		return hash.exists(k)?Option.Some(hash.get(k)):Option.None;
+	default:
+		return Option.None;
+	}
+}
+haxe.text.json.JValueExtensions.get = function(v,k) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.text.json.JValueExtensions.getOption(v,k));
+		switch( $e[1] ) {
+		case 1:
+			var v1 = $e[2];
+			$r = v1;
+			break;
+		case 0:
+			$r = Stax.error("Expected to find field " + k + " in " + v);
+			break;
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.getOrElse = function(v,k,def) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.text.json.JValueExtensions.getOption(v,k));
+		switch( $e[1] ) {
+		case 1:
+			var v1 = $e[2];
+			$r = v1;
+			break;
+		case 0:
+			$r = def();
+			break;
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractString = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 3:
+			var s = $e[2];
+			$r = s;
+			break;
+		default:
+			$r = Stax.error("Expected JString but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractNumber = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 2:
+			var n = $e[2];
+			$r = n;
+			break;
+		default:
+			$r = Stax.error("Expected JNumber but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractBool = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 1:
+			var b = $e[2];
+			$r = b;
+			break;
+		default:
+			$r = Stax.error("Expected JBool but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractKey = function(v) {
+	return haxe.text.json.JValueExtensions.extractField(v)._1;
+}
+haxe.text.json.JValueExtensions.extractValue = function(v) {
+	return haxe.text.json.JValueExtensions.extractField(v)._2;
+}
+haxe.text.json.JValueExtensions.extractField = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 6:
+			var v1 = $e[3], k = $e[2];
+			$r = Tuple2.create(k,v1);
+			break;
+		default:
+			$r = Stax.error("Expected JField but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractHash = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 5:
+			var xs = $e[2];
+			$r = (function($this) {
+				var $r;
+				var hash = new Hash();
+				{
+					var _g = 0;
+					while(_g < xs.length) {
+						var x = xs[_g];
+						++_g;
+						var field = haxe.text.json.JValueExtensions.extractField(x);
+						hash.set(field._1,field._2);
+					}
+				}
+				$r = hash;
+				return $r;
+			}($this));
+			break;
+		default:
+			$r = Stax.error("Expected JObject but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.extractFields = function(v) {
+	return ArrayExtensions.flatMap(haxe.text.json.JValueExtensions.extractArray(v),function(j) {
+		return (function($this) {
+			var $r;
+			var $e = (j);
+			switch( $e[1] ) {
+			case 6:
+				var v1 = $e[3], k = $e[2];
+				$r = [Tuple2.create(k,v1)];
+				break;
+			default:
+				$r = [];
+			}
+			return $r;
+		}(this));
+	});
+}
+haxe.text.json.JValueExtensions.extractArray = function(v) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 4:
+			var xs = $e[2];
+			$r = xs;
+			break;
+		case 5:
+			var xs = $e[2];
+			$r = xs;
+			break;
+		default:
+			$r = Stax.error("Expected JArray or JObject but found: " + v);
+		}
+		return $r;
+	}(this));
+}
+haxe.text.json.JValueExtensions.prototype = {
+	__class__: haxe.text.json.JValueExtensions
+}
+haxe.io.http.HttpJValue = $hxClasses["haxe.io.http.HttpJValue"] = function() { }
+haxe.io.http.HttpJValue.__name__ = ["haxe","io","http","HttpJValue"];
+haxe.io.http.HttpJValue.__interfaces__ = [haxe.io.http.Http];
+haxe.io.http.HttpJValue.prototype = {
+	__class__: haxe.io.http.HttpJValue
+}
+haxe.io.http.HttpTransformer = $hxClasses["haxe.io.http.HttpTransformer"] = function(http,encoder,decoder,mimeType) {
+	this.http = http;
+	this.encoder = encoder;
+	this.decoder = decoder;
+	this.mimeType = mimeType;
+}
+haxe.io.http.HttpTransformer.__name__ = ["haxe","io","http","HttpTransformer"];
+haxe.io.http.HttpTransformer.__interfaces__ = [haxe.io.http.Http];
+haxe.io.http.HttpTransformer.prototype = {
+	http: null
+	,encoder: null
+	,decoder: null
+	,mimeType: null
+	,get: function(url,params,headers) {
+		return this.http.get(url,params,this.addMimeType(headers)).map(this.transformResponse.$bind(this));
+	}
+	,post: function(url,data,params,headers) {
+		return this.http.post(url,this.encoder(data),params,this.addMimeType(headers)).map(this.transformResponse.$bind(this));
+	}
+	,put: function(url,data,params,headers) {
+		return this.http.put(url,this.encoder(data),params,this.addMimeType(headers)).map(this.transformResponse.$bind(this));
+	}
+	,'delete': function(url,params,headers) {
+		return this.http["delete"](url,params,this.addMimeType(headers)).map(this.transformResponse.$bind(this));
+	}
+	,custom: function(method,url,data,params,headers) {
+		return this.http.custom(method,url,this.encoder(data),params,this.addMimeType(headers)).map(this.transformResponse.$bind(this));
+	}
+	,transformResponse: function(r) {
+		return { body : OptionExtensions.map(r.body,this.decoder), headers : r.headers, code : r.code};
+	}
+	,addMimeType: function(map_) {
+		return OptionExtensions.getOrElseC(OptionExtensions.toOption(map_),haxe.data.collections.Map.create().set("Content-Type",this.mimeType));
+	}
+	,__class__: haxe.io.http.HttpTransformer
+}
+haxe.io.http.HttpJValueAsync = $hxClasses["haxe.io.http.HttpJValueAsync"] = function() {
+	haxe.io.http.HttpTransformer.call(this,new haxe.io.http.HttpStringAsync(),haxe.text.json.Json.encode,haxe.text.json.Json.decode,"application/json");
+}
+haxe.io.http.HttpJValueAsync.__name__ = ["haxe","io","http","HttpJValueAsync"];
+haxe.io.http.HttpJValueAsync.__interfaces__ = [haxe.io.http.HttpJValue];
+haxe.io.http.HttpJValueAsync.__super__ = haxe.io.http.HttpTransformer;
+haxe.io.http.HttpJValueAsync.prototype = $extend(haxe.io.http.HttpTransformer.prototype,{
+	__class__: haxe.io.http.HttpJValueAsync
+});
+haxe.io.http.HttpJValueJsonp = $hxClasses["haxe.io.http.HttpJValueJsonp"] = function(callbackParameterName) {
+	if(callbackParameterName == null) callbackParameterName = "callback";
+	this.callbackParameterName = callbackParameterName;
+}
+haxe.io.http.HttpJValueJsonp.__name__ = ["haxe","io","http","HttpJValueJsonp"];
+haxe.io.http.HttpJValueJsonp.__interfaces__ = [haxe.io.http.HttpJValue];
+haxe.io.http.HttpJValueJsonp.prototype = {
+	callbackParameterName: null
+	,get: function(url_,params_,headers) {
+		var future = new Future();
+		var requestId = Math.round(haxe.io.http.HttpJValueJsonp.RequestMod * ++haxe.io.http.HttpJValueJsonp.RequestCount);
+		var callbackName = "stax_jsonp_callback_" + requestId;
+		var callbackFullName = "haxe.io.http.HttpJValueJsonp.Responders." + callbackName;
+		var params = OptionExtensions.getOrElseC(OptionExtensions.toOption(params_),haxe.data.collections.Map.create()).set(this.callbackParameterName,callbackFullName);
+		var url = haxe.net.UrlExtensions.addQueryParameters(url_,params);
+		var doCleanup = function() {
+			var script = js.Env.document.getElementById(callbackName);
+			if(script != null) js.Env.document.getElementsByTagName("HEAD")[0].removeChild(script);
+			Reflect.deleteField(haxe.io.http.HttpJValueJsonp.Responders,callbackName);
+		};
+		future.ifCanceled(doCleanup);
+		haxe.io.http.HttpJValueJsonp.Responders[callbackName] = function(data) {
+			doCleanup();
+			var code;
+			var response;
+			try {
+				response = Option.Some(haxe.text.json.Json.fromObject(data));
+				code = haxe.net.HttpResponseCode.Normal(haxe.net.HttpNormal.Success(haxe.net.HttpSuccess.OK));
+			} catch( e ) {
+				response = Option.None;
+				code = haxe.net.HttpResponseCode.Normal(haxe.net.HttpNormal.Success(haxe.net.HttpSuccess.NoContent));
+			}
+			future.deliver({ body : response, headers : haxe.data.collections.Map.create(), code : code});
+		};
+		var script = js.Env.document.createElement("SCRIPT");
+		script.setAttribute("type","text/javascript");
+		script.setAttribute("src",url);
+		script.setAttribute("id",callbackName);
+		js.Env.document.getElementsByTagName("HEAD")[0].appendChild(script);
+		return future;
+	}
+	,post: function(url,data,params,headers) {
+		return Stax.error("JSONP does not support POST");
+	}
+	,put: function(url,data,params,headers) {
+		return Stax.error("JSONP does not support PUT");
+	}
+	,'delete': function(url,params,headers) {
+		return Stax.error("JSONP does not support DELETE");
+	}
+	,custom: function(request,url,data,params,headers) {
+		return Stax.error("JSONP does not support custom request: " + request);
+	}
+	,__class__: haxe.io.http.HttpJValueJsonp
+}
+haxe.test.ui.common.ResultStats = $hxClasses["haxe.test.ui.common.ResultStats"] = function() {
+	this.assertations = 0;
+	this.successes = 0;
+	this.failures = 0;
+	this.errors = 0;
+	this.warnings = 0;
+	this.isOk = true;
+	this.hasFailures = false;
+	this.hasErrors = false;
+	this.hasWarnings = false;
+	this.onAddSuccesses = new haxe.test.Dispatcher();
+	this.onAddFailures = new haxe.test.Dispatcher();
+	this.onAddErrors = new haxe.test.Dispatcher();
+	this.onAddWarnings = new haxe.test.Dispatcher();
+}
+haxe.test.ui.common.ResultStats.__name__ = ["haxe","test","ui","common","ResultStats"];
+haxe.test.ui.common.ResultStats.prototype = {
+	assertations: null
+	,successes: null
+	,failures: null
+	,errors: null
+	,warnings: null
+	,onAddSuccesses: null
+	,onAddFailures: null
+	,onAddErrors: null
+	,onAddWarnings: null
+	,isOk: null
+	,hasFailures: null
+	,hasErrors: null
+	,hasWarnings: null
+	,addSuccesses: function(v) {
+		if(v == 0) return;
+		this.assertations += v;
+		this.successes += v;
+		this.onAddSuccesses.dispatch(v);
+	}
+	,addFailures: function(v) {
+		if(v == 0) return;
+		this.assertations += v;
+		this.failures += v;
+		this.hasFailures = this.failures > 0;
+		this.isOk = !(this.hasFailures || this.hasErrors || this.hasWarnings);
+		this.onAddFailures.dispatch(v);
+	}
+	,addErrors: function(v) {
+		if(v == 0) return;
+		this.assertations += v;
+		this.errors += v;
+		this.hasErrors = this.errors > 0;
+		this.isOk = !(this.hasFailures || this.hasErrors || this.hasWarnings);
+		this.onAddErrors.dispatch(v);
+	}
+	,addWarnings: function(v) {
+		if(v == 0) return;
+		this.assertations += v;
+		this.warnings += v;
+		this.hasWarnings = this.warnings > 0;
+		this.isOk = !(this.hasFailures || this.hasErrors || this.hasWarnings);
+		this.onAddWarnings.dispatch(v);
+	}
+	,sum: function(other) {
+		this.addSuccesses(other.successes);
+		this.addFailures(other.failures);
+		this.addErrors(other.errors);
+		this.addWarnings(other.warnings);
+	}
+	,subtract: function(other) {
+		this.addSuccesses(-other.successes);
+		this.addFailures(-other.failures);
+		this.addErrors(-other.errors);
+		this.addWarnings(-other.warnings);
+	}
+	,wire: function(dependant) {
+		dependant.onAddSuccesses.add(this.addSuccesses.$bind(this));
+		dependant.onAddFailures.add(this.addFailures.$bind(this));
+		dependant.onAddErrors.add(this.addErrors.$bind(this));
+		dependant.onAddWarnings.add(this.addWarnings.$bind(this));
+		this.sum(dependant);
+	}
+	,unwire: function(dependant) {
+		dependant.onAddSuccesses.remove(this.addSuccesses.$bind(this));
+		dependant.onAddFailures.remove(this.addFailures.$bind(this));
+		dependant.onAddErrors.remove(this.addErrors.$bind(this));
+		dependant.onAddWarnings.remove(this.addWarnings.$bind(this));
+		this.subtract(dependant);
+	}
+	,__class__: haxe.test.ui.common.ResultStats
+}
+var Lambda = $hxClasses["Lambda"] = function() { }
+Lambda.__name__ = ["Lambda"];
+Lambda.array = function(it) {
+	var a = new Array();
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var i = $it0.next();
+		a.push(i);
+	}
+	return a;
+}
+Lambda.list = function(it) {
+	var l = new List();
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var i = $it0.next();
+		l.add(i);
+	}
+	return l;
+}
+Lambda.map = function(it,f) {
+	var l = new List();
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		l.add(f(x));
+	}
+	return l;
+}
+Lambda.mapi = function(it,f) {
+	var l = new List();
+	var i = 0;
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		l.add(f(i++,x));
+	}
+	return l;
+}
+Lambda.has = function(it,elt,cmp) {
+	if(cmp == null) {
+		var $it0 = it.iterator();
+		while( $it0.hasNext() ) {
+			var x = $it0.next();
+			if(x == elt) return true;
+		}
+	} else {
+		var $it1 = it.iterator();
+		while( $it1.hasNext() ) {
+			var x = $it1.next();
+			if(cmp(x,elt)) return true;
+		}
+	}
+	return false;
+}
+Lambda.exists = function(it,f) {
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(f(x)) return true;
+	}
+	return false;
+}
+Lambda.foreach = function(it,f) {
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(!f(x)) return false;
+	}
+	return true;
+}
+Lambda.iter = function(it,f) {
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		f(x);
+	}
+}
+Lambda.filter = function(it,f) {
+	var l = new List();
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		if(f(x)) l.add(x);
+	}
+	return l;
+}
+Lambda.fold = function(it,f,first) {
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		first = f(x,first);
+	}
+	return first;
+}
+Lambda.count = function(it,pred) {
+	var n = 0;
+	if(pred == null) {
+		var $it0 = it.iterator();
+		while( $it0.hasNext() ) {
+			var _ = $it0.next();
+			n++;
+		}
+	} else {
+		var $it1 = it.iterator();
+		while( $it1.hasNext() ) {
+			var x = $it1.next();
+			if(pred(x)) n++;
+		}
+	}
+	return n;
+}
+Lambda.empty = function(it) {
+	return !it.iterator().hasNext();
+}
+Lambda.indexOf = function(it,v) {
+	var i = 0;
+	var $it0 = it.iterator();
+	while( $it0.hasNext() ) {
+		var v2 = $it0.next();
+		if(v == v2) return i;
+		i++;
+	}
+	return -1;
+}
+Lambda.concat = function(a,b) {
+	var l = new List();
+	var $it0 = a.iterator();
+	while( $it0.hasNext() ) {
+		var x = $it0.next();
+		l.add(x);
+	}
+	var $it1 = b.iterator();
+	while( $it1.hasNext() ) {
+		var x = $it1.next();
+		l.add(x);
+	}
+	return l;
+}
+Lambda.prototype = {
+	__class__: Lambda
+}
+js.dom.Quirks = $hxClasses["js.dom.Quirks"] = function() { }
+js.dom.Quirks.__name__ = ["js","dom","Quirks"];
+js.dom.Quirks.createXMLHttpRequest = function() {
+	return window.XMLHttpRequest?new XMLHttpRequest():window.ActiveXObject?(function($this) {
+		var $r;
+		try {
+			$r = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch( e ) {
+			$r = (function($this) {
+				var $r;
+				try {
+					$r = new ActiveXObject("Microsoft.XMLHTTP");
+				} catch( e1 ) {
+					$r = (function($this) {
+						var $r;
+						throw "Unable to create XMLHttpRequest object.";
+						$r = null;
+						return $r;
+					}($this));
+				}
+				return $r;
+			}($this));
+		}
+		return $r;
+	}(this)):(function($this) {
+		var $r;
+		throw "Unable to create XMLHttpRequest object.";
+		$r = null;
+		return $r;
+	}(this));
+}
+js.dom.Quirks.getIframeDocument = function(iframe) {
+	if(iframe.contentDocument != null) return iframe.contentDocument; else if(iframe.contentWindow != null) return iframe.contentWindow.document; else if(iframe.document != null) return iframe.document; else {
+		throw "Cannot find iframe content document for " + iframe;
+		return null;
+	}
+}
+js.dom.Quirks.getIframeWindow = function(iframe) {
+	if(iframe.contentWindow != null) return iframe.contentWindow; else if(iframe.contentDocument != null && iframe.contentDocument.defaultView != null) return iframe.contentDocument.defaultView; else if(iframe.document != null && iframe.document.window != null) return iframe.document.window; else {
+		throw "Cannot find iframe content document for " + iframe;
+		return null;
+	}
+}
+js.dom.Quirks.addEventListener = function(target,type,listener,useCapture) {
+	if(target.addEventListener.$bind(target) != null) target.addEventListener(type,listener,useCapture); else if(target.attachEvent != null) target.attachEvent("on" + type,listener);
+}
+js.dom.Quirks.removeEventListener = function(target,type,listener,useCapture) {
+	if(target.removeEventListener.$bind(target) != null) target.removeEventListener(type,listener,useCapture); else if(target.detachEvent != null) target.detachEvent("on" + type,listener);
+}
+js.dom.Quirks.getOverrideStyle = function(doc,el,pseudo) {
+	if(doc.getOverrideStyle.$bind(doc) != null && doc.getOverrideStyle(el,pseudo) != null) return doc.getOverrideStyle(el,pseudo); else if(el.runtimeStyle != null) return el.runtimeStyle; else return { };
+}
+js.dom.Quirks.deleteCssRule = function(doc,rule) {
+	var deleteFromSheet = function(sheet) {
+		var index = ArrayExtensions.indexOf(js.dom.DomCollectionExtensions.toArray(js.dom.Quirks.getCssRules(sheet)),rule);
+		if(index > 0) {
+			if(sheet.deleteRule.$bind(sheet) != null) {
+				sheet.deleteRule(index);
+				return true;
+			} else if(sheet.removeRule != null) {
+				sheet.removeRule(index);
+				return true;
+			}
+		}
+		return false;
+	};
+	if(rule.parentStyleSheet != null) deleteFromSheet(rule.parentStyleSheet); else {
+		var stylesheets = doc.styleSheets;
+		var _g1 = 0, _g = stylesheets.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(deleteFromSheet(stylesheets[i])) break;
+		}
+	}
+	return rule;
+}
+js.dom.Quirks.addOverridingCssRule = function(el,style) {
+	if(style == null) style = "";
+	var doc = el.ownerDocument;
+	var id = OptionExtensions.getOrElse(OptionExtensions.filter(OptionExtensions.toOption(el.getAttribute("id")),function(id) {
+		return id != "";
+	}),function() {
+		return DynamicExtensions.withEffect("id-" + haxe.util.Guid.generate(),function(guid) {
+			el.setAttribute("id",guid);
+		});
+	});
+	js.dom.Quirks.addCssStylesheet(doc,"");
+	var lastStyleSheet = doc.styleSheets[doc.styleSheets.length - 1];
+	return js.dom.Quirks.insertCssRule(lastStyleSheet,"#" + id + " {" + style + "}");
+}
+js.dom.Quirks.addCssStylesheet = function(doc,content) {
+	var head = OptionExtensions.getOrElse(OptionExtensions.toOption(doc.getElementsByTagName("HEAD")[0]),function() {
+		return DynamicExtensions.withEffect(doc.createElement("HEAD"),function(newHead) {
+			doc.documentElement.appendChild(newHead);
+		});
+	});
+	var style = doc.createElement("STYLE");
+	style.setAttribute("type","text/css");
+	try {
+		if(style.innerText != null) style.innerText = content; else if(style.innerHTML != null) style.innerHTML = content;
+		head.appendChild(style);
+	} catch( e ) {
+		head.appendChild(style);
+		doc.styleSheets[doc.styleSheets.length - 1].cssText = content;
+	}
+	return doc.styleSheets[doc.styleSheets.length - 1];
+}
+js.dom.Quirks.getCssRules = function(sheet) {
+	return sheet.cssRules != null?sheet.cssRules:sheet.rules;
+}
+js.dom.Quirks.insertCssRule = function(sheet,rule,index_) {
+	if(sheet.insertRule.$bind(sheet) != null) {
+		var rules = js.dom.Quirks.getCssRules(sheet);
+		var index = index_ == null?rules.length:index_;
+		sheet.insertRule(rule,index);
+		return rules[index];
+	} else if(sheet.addRule != null) {
+		var addRule = sheet.addRule;
+		var Pattern = new EReg("^([^{]+)\\{([^}]*)\\}$","");
+		if(Pattern.match(rule)) {
+			var index = index_ == null?-1:index_;
+			addRule(StringExtensions.trim(Pattern.matched(1)),StringExtensions.trim(Pattern.matched(2)),index);
+			var rules = js.dom.Quirks.getCssRules(sheet);
+			var newIndex = index == -1?rules.length - 1:index;
+			return rules[newIndex];
+		}
+	}
+	return Stax.error("Invalid rule: " + rule);
+}
+js.dom.Quirks.getActualCssPropertyName = function(name) {
+	if(js.dom.Quirks.FloatPattern.match(name)) return js.detect.BrowserSupport.cssFloat()?"cssFloat":"styleFloat";
+	return name;
+}
+js.dom.Quirks.getComputedCssProperty = function(elem,name) {
+	return DynamicExtensions.into(js.detect.BrowserSupport.getComputedStyle()?OptionExtensions.getOrElseC(OptionExtensions.orElse(OptionExtensions.flatMap(OptionExtensions.flatMap(OptionExtensions.toOption(elem.ownerDocument.defaultView),function(defaultView) {
+		return OptionExtensions.toOption(defaultView.getComputedStyle(elem,null));
+	}),function(computedStyle) {
+		return OptionExtensions.filter(OptionExtensions.toOption(computedStyle.getPropertyValue(name)),function(style) {
+			return style != "";
+		});
+	}),function() {
+		return name == "opacity"?Option.Some("1"):Option.None;
+	}),""):elem.currentStyle != null?name == "opacity" && !js.detect.BrowserSupport.opacity()?js.dom.Quirks.OpacityPattern.match(elem.currentStyle.filter)?FloatExtensions.toString(StringExtensions.toFloat(js.dom.Quirks.OpacityPattern.matched(1)) / 100.0):"1":(function($this) {
+		var $r;
+		var style = elem.currentStyle[name];
+		$r = js.dom.Quirks.NumberPattern.match(style) && !js.dom.Quirks.NumberPixelPattern.match(style)?(function($this) {
+			var $r;
+			var oldLeft = elem.style.left;
+			var oldRtLeft = elem.runtimeStyle.left;
+			elem.runtimeStyle.left = elem.currentStyle.left;
+			elem.style.left = name == "font-size"?"1em":style;
+			$r = DynamicExtensions.withEffect(elem.style.pixelLeft + "px",function(t) {
+				elem.style.left = oldLeft;
+				elem.runtimeStyle.left = oldRtLeft;
+			});
+			return $r;
+		}($this)):style;
+		return $r;
+	}(this)):"",function(computedStyle) {
+		return computedStyle == ""?Option.None:OptionExtensions.toOption(computedStyle);
+	});
+}
+js.dom.Quirks.getCssProperty = function(elem,name) {
+	return OptionExtensions.orElse(OptionExtensions.flatMap(OptionExtensions.toOption(elem.style),function(style) {
+		return haxe.util.ObjectExtensions.getAny(style,js.dom.Quirks.getActualCssPropertyName(name));
+	}),function() {
+		return js.dom.Quirks.getComputedCssProperty(elem,name);
+	});
+}
+js.dom.Quirks.getCssPropertyIfSet = function(elem,name) {
+	return OptionExtensions.filter(js.dom.Quirks.getCssProperty(elem,name),function(style) {
+		return style != "";
+	});
+}
+js.dom.Quirks.getViewportSize = function(win_) {
+	var win = OptionExtensions.getOrElseC(OptionExtensions.toOption(win_),js.Env.window);
+	var doc = win.document;
+	return js.Env.window.innerWidth != null?{ dx : win.innerWidth, dy : win.innerHeight}:doc.documentElement != null && (doc.documentElement.clientWidth != null && doc.documentElement.clientWidth != 0)?{ dx : doc.documentElement.clientWidth, dy : doc.documentElement.clientHeight}:{ dx : doc.body.clientWidth, dy : doc.body.clientHeight};
+}
+js.dom.Quirks.getPageScroll = function(win_) {
+	var win = OptionExtensions.getOrElseC(OptionExtensions.toOption(win_),js.Env.window);
+	var doc = win.document;
+	var xScroll = 0;
+	var yScroll = 0;
+	if(js.Env.window.pageYOffset != null) {
+		yScroll = win.pageYOffset;
+		xScroll = win.pageXOffset;
+	} else if(doc.documentElement != null && doc.documentElement.scrollTop != null) {
+		yScroll = doc.documentElement.scrollTop;
+		xScroll = doc.documentElement.scrollLeft;
+	} else if(js.Env.document.body != null) {
+		yScroll = doc.body.scrollTop;
+		xScroll = doc.body.scrollLeft;
+	}
+	return { x : xScroll, y : yScroll};
+}
+js.dom.Quirks.hasAttribute = function(e,attr) {
+	if(e.hasAttribute.$bind(e) != null) return e.hasAttribute(attr); else {
+		var value = e.getAttribute(attr);
+		return js.Env.eq(value,null) || js.Env.eq(value,"")?false:true;
+	}
+}
+js.dom.Quirks.getBodyOffset = function(doc) {
+	return OptionExtensions.map(OptionExtensions.flatMap(OptionExtensions.toOption(js.Env.document),function(document) {
+		return OptionExtensions.toOption(document.body);
+	}),function(body) {
+		var top = body.offsetTop;
+		var left = body.offsetLeft;
+		if(js.detect.BrowserSupport.offsetDoesNotIncludeMarginInBodyOffset()) {
+			top += OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getComputedCssProperty(body,"margin-top"),function(s) {
+				return StringExtensions.toInt(s,0);
+			}),0);
+			left += OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getComputedCssProperty(body,"margin-left"),function(s) {
+				return StringExtensions.toInt(s,0);
+			}),0);
+		}
+		return { x : left, y : top};
+	});
+}
+js.dom.Quirks.setOffset = function(elem,offset) {
+	if(elem == null || elem.ownerDocument == null) return elem; else {
+		var position = js.dom.Quirks.getComputedCssProperty(elem,"position");
+		OptionExtensions.foreach(position,function(v) {
+			if(v == "static") elem.style.position = "relative";
+		});
+		var curOffset = OptionExtensions.getOrElseC(js.dom.Quirks.getOffset(elem),{ x : 0, y : 0});
+		var curTop = OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getComputedCssProperty(elem,"top"),function(s) {
+			return StringExtensions.toInt(s,0);
+		}),0);
+		var curLeft = OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getComputedCssProperty(elem,"left"),function(s) {
+			return StringExtensions.toInt(s,0);
+		}),0);
+		elem.style.top = IntExtensions.toString(offset.y - curOffset.y + curTop) + "px";
+		elem.style.left = IntExtensions.toString(offset.x - curOffset.x + curLeft) + "px";
+		return elem;
+	}
+}
+js.dom.Quirks.addClass = function(element,value) {
+	if(!js.dom.Quirks.hasClass(element,value)) element.className += (element.className != null && element.className != ""?" ":"") + value;
+}
+js.dom.Quirks.removeClass = function(element,value) {
+	var result = new EReg("(^|\\s)" + value + "(\\s|$)","g").replace(element.className,"$2");
+	element.className = new EReg("/^\\s|\\s$/","").replace(result,"");
+}
+js.dom.Quirks.hasClass = function(element,value) {
+	var r = new EReg("(^|\\s)" + value + "(\\s|$)","");
+	return element.className != null?r.match(element.className):false;
+}
+js.dom.Quirks.setWidth = function(elem,width) {
+	return js.dom.Quirks.setCssProperty(elem,"width",IntExtensions.toString(width) + "px");
+}
+js.dom.Quirks.setHeight = function(elem,hight) {
+	return js.dom.Quirks.setCssProperty(elem,"height",IntExtensions.toString(hight) + "px");
+}
+js.dom.Quirks.setCssProperty = function(elem,name,value) {
+	if(elem == null || elem.nodeType == 3 || elem.nodeType == 8) return elem; else if((name == "width" || name == "height") && StringExtensions.toFloat(value) < 0) return elem; else {
+		var style = elem.style;
+		if(name == "opacity" && !js.detect.BrowserSupport.opacity()) {
+			style.zoom = 1;
+			var opacity = "alpha(opacity=" + StringExtensions.toFloat(value) * 100 + ")";
+			var filter = style.filter != null?OptionExtensions.getOrElseC(js.dom.Quirks.getComputedCssProperty(elem,"filter"),""):"";
+			var newFilter = js.dom.Quirks.AlphaPattern.match(filter)?js.dom.Quirks.AlphaPattern.replace(filter,opacity):opacity;
+			style.filter = newFilter;
+		} else {
+			var propertyName = haxe.util.StringExtensions.toCamelCase(js.dom.Quirks.getActualCssPropertyName(name));
+			elem.style[propertyName] = value;
+		}
+		return elem;
+	}
+}
+js.dom.Quirks.getInnerHeight = function(elem) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetHeight",js.dom.Quirks.cssHeight,"padding");
+}
+js.dom.Quirks.getOuterHeight = function(elem,includeMargin) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetHeight",js.dom.Quirks.cssHeight,includeMargin?"margin":"border");
+}
+js.dom.Quirks.getInnerWidth = function(elem) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetWidth",js.dom.Quirks.cssWidth,"padding");
+}
+js.dom.Quirks.getOuterWidth = function(elem,includeMargin) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetWidth",js.dom.Quirks.cssWidth,includeMargin?"margin":"border");
+}
+js.dom.Quirks.getHeight = function(elem) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetHeight",js.dom.Quirks.cssHeight,"");
+}
+js.dom.Quirks.getWidth = function(elem) {
+	return js.dom.Quirks.getWidthOrHeight(elem,"offsetWidth",js.dom.Quirks.cssWidth,"");
+}
+js.dom.Quirks.getWidthOrHeight = function(elem,offsetValueExtract,which,extra) {
+	if(elem == null || elem.ownerDocument == null) return Option.None; else {
+		var val = 0;
+		if(elem.offsetWidth != 0) val = js.dom.Quirks.getWH(elem,offsetValueExtract,which,extra); else val = js.dom.Quirks.swap(elem,js.dom.Quirks.cssShow,function(value) {
+			return js.dom.Quirks.getWH(elem,offsetValueExtract,which,extra);
+		});
+		return Option.Some(FloatExtensions.toInt(Math.max(0,Math.round(val))));
+	}
+}
+js.dom.Quirks.swap = function(elem,values,functionCallback) {
+	var elemStyle = js.dom.Quirks.setAndStore(elem,values);
+	var result = functionCallback.call(elem);
+	js.dom.Quirks.setAndStore(elem,elemStyle);
+	return result;
+}
+js.dom.Quirks.setAndStore = function(elem,styles) {
+	var values = haxe.data.collections.Map.create();
+	var $it0 = styles.iterator();
+	while( $it0.hasNext() ) {
+		var k = $it0.next();
+		values = values.set(k._1,elem.style[k._1]);
+		elem.style[k._1] = k._2;
+	}
+	return values;
+}
+js.dom.Quirks.getWH = function(elem,offsetValueExtract,which,extra) {
+	var val = elem[offsetValueExtract];
+	if(extra != "border") ArrayExtensions.forEach(which,function(v) {
+		if(extra != "") val -= OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getCssPropertyIfSet(elem,"padding-" + v),function(s) {
+			return StringExtensions.toInt(s,0);
+		}),0);
+		if(extra == "margin") val += OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getCssPropertyIfSet(elem,"margin-" + v),function(s) {
+			return StringExtensions.toInt(s,0);
+		}),0); else val -= OptionExtensions.getOrElseC(OptionExtensions.map(js.dom.Quirks.getCssPropertyIfSet(elem,"border-" + v + "-width"),function(s) {
+			return StringExtensions.toInt(s,0);
+		}),0);
+	});
+	return val;
+}
+js.dom.Quirks.getOffset = function(elem) {
+	if(elem == null || elem.ownerDocument == null) return Option.None; else if(elem == elem.ownerDocument.body) return js.dom.Quirks.getBodyOffset(elem.ownerDocument); else if(js.Env.document.documentElement != null && ($_=js.Env.document.documentElement,$_.getBoundingClientRect.$bind($_)) != null) {
+		var box = elem.getBoundingClientRect();
+		var doc = elem.ownerDocument;
+		var body = doc.body;
+		var docElem = doc.documentElement;
+		var clientTop = ArrayExtensions.first(ArrayExtensions.filter([docElem.clientTop,body.clientTop,0],haxe.functional.P.isNotNull()));
+		var clientLeft = ArrayExtensions.first(ArrayExtensions.filter([docElem.clientLeft,body.clientLeft,0],haxe.functional.P.isNotNull()));
+		var top = box.top + ArrayExtensions.first(ArrayExtensions.filter([js.Env.window.pageYOffset,js.detect.BrowserSupport.boxModel()?docElem.scrollTop:null,body.scrollTop],haxe.functional.P.isNotNull())) - clientTop;
+		var left = box.left + ArrayExtensions.first(ArrayExtensions.filter([js.Env.window.pageXOffset,js.detect.BrowserSupport.boxModel()?docElem.scrollLeft:null,body.scrollLeft],haxe.functional.P.isNotNull())) - clientLeft;
+		return Option.Some({ x : left, y : top});
+	} else {
+		var getStyle = function(elem1) {
+			var defaultView = elem1.ownerDocument.defaultView;
+			return defaultView != null?defaultView.getComputedStyle(elem1,null):elem1.currentStyle;
+		};
+		var offsetParent = elem.offsetParent;
+		var prevOffsetParent = elem;
+		var doc = elem.ownerDocument;
+		var docElem = doc.documentElement;
+		var body = doc.body;
+		var defaultView = doc.defaultView;
+		var prevComputedStyle = getStyle(elem);
+		var top = elem.offsetTop;
+		var left = elem.offsetLeft;
+		while((elem = elem.parentNode) != null && elem != body && elem != docElem) {
+			if(js.detect.BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") break;
+			var computedStyle = getStyle(elem);
+			top -= elem.scrollTop;
+			left -= elem.scrollLeft;
+			if(elem == offsetParent) {
+				top += elem.offsetTop;
+				left += elem.offsetLeft;
+				if(js.detect.BrowserSupport.offsetDoesNotAddBorder() && !(js.detect.BrowserSupport.offsetAddsBorderForTableAndCells() && new EReg("^t(able|d|h)$","i").match(elem.nodeName))) {
+					top += computedStyle.borderTopWidth.toInt(0);
+					left += computedStyle.borderLeftWidth.toInt(0);
+				}
+				prevOffsetParent = offsetParent;
+				offsetParent = elem.offsetParent;
+			}
+			if(js.detect.BrowserSupport.offsetSubtractsBorderForOverflowNotVisible() && computedStyle.overflow != "visible") {
+				top += computedStyle.borderTopWidth.toInt(0);
+				left += computedStyle.borderLeftWidth.toInt(0);
+			}
+			prevComputedStyle = computedStyle;
+		}
+		if(prevComputedStyle.position == "relative" || prevComputedStyle.position == "static") {
+			top += body.offsetTop;
+			left += body.offsetLeft;
+		}
+		if(js.detect.BrowserSupport.positionFixed() && prevComputedStyle.position == "fixed") {
+			top += FloatExtensions.toInt(Math.max(docElem.scrollTop,body.scrollTop));
+			left += FloatExtensions.toInt(Math.max(docElem.scrollLeft,body.scrollLeft));
+		}
+		return Option.Some({ x : left, y : top});
+	}
+}
+js.dom.Quirks.getPosition = function(elem) {
+	if(elem == null || elem.ownerDocument == null) return Option.None;
+	var offsetParent = js.dom.Quirks.offsetParent(elem);
+	var offset = OptionExtensions.getOrElseC(js.dom.Quirks.getOffset(elem),{ x : 0, y : 0});
+	var parentOffset = js.dom.Quirks.RootPattern.match(offsetParent.nodeName)?{ x : 0, y : 0}:OptionExtensions.getOrElseC(js.dom.Quirks.getOffset(offsetParent),{ x : 0, y : 0});
+	offset.x -= StringExtensions.toInt(OptionExtensions.getOrElseC(js.dom.Quirks.getCssPropertyIfSet(elem,"marginTop"),"0"));
+	offset.y -= StringExtensions.toInt(OptionExtensions.getOrElseC(js.dom.Quirks.getCssPropertyIfSet(elem,"marginLeft"),"0"));
+	parentOffset.x += StringExtensions.toInt(OptionExtensions.getOrElseC(js.dom.Quirks.getCssPropertyIfSet(offsetParent,"borderTopWidth"),"0"));
+	parentOffset.y += StringExtensions.toInt(OptionExtensions.getOrElseC(js.dom.Quirks.getCssPropertyIfSet(offsetParent,"borderLeftWidth"),"0"));
+	return Option.Some({ x : offset.x - parentOffset.x, y : offset.y - parentOffset.y});
+}
+js.dom.Quirks.offsetParent = function(elem) {
+	var offsetParent = elem.offsetParent != null?elem.offsetParent:js.Env.document.body;
+	while(offsetParent != null && (!js.dom.Quirks.RootPattern.match(offsetParent.nodeName) && OptionExtensions.getOrElseC(js.dom.Quirks.getCssProperty(offsetParent,"position"),"") == "static")) offsetParent = offsetParent.offsetParent;
+	return offsetParent;
+}
+js.dom.Quirks.prototype = {
+	__class__: js.dom.Quirks
+}
+js.io.IFrameIOTestCase = $hxClasses["js.io.IFrameIOTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+js.io.IFrameIOTestCase.__name__ = ["js","io","IFrameIOTestCase"];
+js.io.IFrameIOTestCase.__super__ = haxe.test.TestCase;
+js.io.IFrameIOTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	window1: null
+	,window2: null
+	,iframeIO1: null
+	,iframeIO2: null
+	,beforeAll: function() {
+		var d = js.Env.document;
+		var body = d.getElementsByTagName("body")[0];
+		var iframe1 = js.dom.HTMLDocumentExtensions.newIframeInvisible(js.Env.document);
+		var iframe2 = js.dom.HTMLDocumentExtensions.newIframeInvisible(js.Env.document);
+		body.appendChild(iframe1);
+		body.appendChild(iframe2);
+		var doc1 = js.dom.Quirks.getIframeDocument(iframe1);
+		var doc2 = js.dom.Quirks.getIframeDocument(iframe2);
+		this.window1 = js.dom.Quirks.getIframeWindow(iframe1);
+		this.window2 = js.dom.Quirks.getIframeWindow(iframe2);
+		this.iframeIO1 = new js.io.IFrameIOAutoDetect(this.window1);
+		this.iframeIO2 = new js.io.IFrameIOAutoDetect(this.window2);
+	}
+	,afterAll: function() {
+	}
+	,testSendOfTinyStringPacketIsReceived: function() {
+		var self = this;
+		var count = 0;
+		this.iframeIO1.receiveWhile(function(data) {
+			self.assertEquals("foo",data,null,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 67, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+			haxe.Log.trace("Successfully tested send of tiny packet",{ fileName : "IFrameIOTestCase.hx", lineNumber : 69, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+			self.XtestSendOfLargeStringPacketIsReceived();
+			return false;
+		},this.window2.location.href,this.window2);
+		this.iframeIO2.send("foo",this.window1.location.href,this.window1);
+		this.assertTrue(true,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 81, className : "js.io.IFrameIOTestCase", methodName : "testSendOfTinyStringPacketIsReceived"});
+	}
+	,XtestSendOfLargeStringPacketIsReceived: function() {
+		var string = "";
+		var _g = 0;
+		while(_g < 1000) {
+			var i = _g++;
+			string += "91234";
+		}
+		var self = this;
+		this.iframeIO1.receiveWhile(function(data) {
+			self.assertEquals(string,data,null,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 93, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+			haxe.Log.trace("Successfully tested send of large packet",{ fileName : "IFrameIOTestCase.hx", lineNumber : 95, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+			return false;
+		},this.window2.location.href,this.window2);
+		this.iframeIO2.send(string,this.window1.location.href,this.window1);
+		this.assertTrue(true,null,{ fileName : "IFrameIOTestCase.hx", lineNumber : 105, className : "js.io.IFrameIOTestCase", methodName : "XtestSendOfLargeStringPacketIsReceived"});
+	}
+	,__class__: js.io.IFrameIOTestCase
+});
+haxe.test.Runner = $hxClasses["haxe.test.Runner"] = function() {
+	this.fixtures = new Array();
+	this.onProgress = new haxe.test.Dispatcher();
+	this.onStart = new haxe.test.Dispatcher();
+	this.onComplete = new haxe.test.Dispatcher();
+	this.length = 0;
+}
+haxe.test.Runner.__name__ = ["haxe","test","Runner"];
+haxe.test.Runner.findMethodByName = function(test,name) {
+	return function() {
+		var method = Reflect.field(test,name);
+		if(method != null) method.apply(test,[]);
+	};
+}
+haxe.test.Runner.prototype = {
+	fixtures: null
+	,onProgress: null
+	,onStart: null
+	,onComplete: null
+	,length: null
+	,addAll: function(tests,prefix,pattern) {
+		if(prefix == null) prefix = "test";
+		var $it0 = tests.iterator();
+		while( $it0.hasNext() ) {
+			var test = $it0.next();
+			this.add(test,prefix,pattern);
+		}
+		return this;
+	}
+	,add: function(test,prefix,pattern) {
+		if(prefix == null) prefix = "test";
+		if(!Reflect.isObject(test)) throw "can't add a null object as a test case";
+		var patternMatches = function(field) {
+			return OptionExtensions.map(OptionExtensions.toOption(pattern),function(p) {
+				return p.match(field);
+			});
+		};
+		var prefixMatches = function(field) {
+			return Option.Some(StringExtensions.startsWith(field,prefix));
+		};
+		var fieldIsTest = function(field) {
+			return OptionExtensions.getOrElseC(OptionExtensions.orElseC(patternMatches(field),prefixMatches(field)),false);
+		};
+		var fieldIsMethod = (Function2Extensions.curry(this.isMethod.$bind(this)))(test);
+		var testMethods = ArrayExtensions.filter(Type.getInstanceFields(Type.getClass(test)),haxe.functional.Predicate1Extensions.and(fieldIsTest,fieldIsMethod));
+		var getMethodByName = this.addBeforeAll(test,this.addAfterAll(test,[testMethods.length],(Function2Extensions.curry(haxe.test.Runner.findMethodByName))(test)));
+		var methodFixtures = ArrayExtensions.map(testMethods,function(field) {
+			return new haxe.test.TestFixture(test,field,getMethodByName(field),"before","after");
+		});
+		this.addFixtures(methodFixtures);
+		return this;
+	}
+	,addFixture: function(fixture) {
+		this.fixtures.push(fixture);
+		this.length++;
+		return this;
+	}
+	,addFixtures: function(fixtures) {
+		var $it0 = fixtures.iterator();
+		while( $it0.hasNext() ) {
+			var fixture = $it0.next();
+			this.addFixture(fixture);
+		}
+		return this;
+	}
+	,getFixture: function(index) {
+		return this.fixtures[index];
+	}
+	,isMethod: function(test,name) {
+		try {
+			return Reflect.isFunction(Reflect.field(test,name));
+		} catch( e ) {
+			return false;
+		}
+	}
+	,pos: null
+	,run: function() {
+		this.pos = 0;
+		this.onStart.dispatch(this);
+		this.runNext();
+		return this;
+	}
+	,runNext: function() {
+		if(this.fixtures.length > this.pos) this.runFixture(this.fixtures[this.pos++]); else this.onComplete.dispatch(this);
+	}
+	,runFixture: function(fixture) {
+		var handler = new haxe.test.TestHandler(fixture);
+		handler.onComplete.add(this.testComplete.$bind(this));
+		handler.execute();
+	}
+	,testComplete: function(h) {
+		this.onProgress.dispatch({ result : haxe.test.TestResult.ofHandler(h), done : this.pos, totals : this.length});
+		this.runNext();
+	}
+	,addBeforeAll: function(test,f) {
+		if(Reflect.field(test,"beforeAll") != null) {
+			var beforeAll = haxe.test.Runner.findMethodByName(test,"beforeAll");
+			var totalTests = 0;
+			var runBeforeAll = function() {
+				++totalTests;
+				if(totalTests == 1) beforeAll();
+			};
+			return function(name) {
+				var method = f(name);
+				return function() {
+					runBeforeAll();
+					method();
+				};
+			};
+		}
+		return f;
+	}
+	,addAfterAll: function(test,totalTestsHolder,f) {
+		if(Reflect.field(test,"afterAll") != null) {
+			var afterAll = haxe.test.Runner.findMethodByName(test,"afterAll");
+			var runAfterAll = function() {
+				totalTestsHolder[0] = totalTestsHolder[0] - 1;
+				if(totalTestsHolder[0] == 0) afterAll();
+			};
+			return function(name) {
+				var method = f(name);
+				return function() {
+					try {
+						method();
+					} catch( e ) {
+						runAfterAll();
+						throw e;
+					}
+					runAfterAll();
+				};
+			};
+		}
+		return f;
+	}
+	,__class__: haxe.test.Runner
+}
+haxe.text.json.JValue = $hxClasses["haxe.text.json.JValue"] = { __ename__ : ["haxe","text","json","JValue"], __constructs__ : ["JNull","JBool","JNumber","JString","JArray","JObject","JField"] }
+haxe.text.json.JValue.JNull = ["JNull",0];
+haxe.text.json.JValue.JNull.toString = $estr;
+haxe.text.json.JValue.JNull.__enum__ = haxe.text.json.JValue;
+haxe.text.json.JValue.JBool = function(v) { var $x = ["JBool",1,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.text.json.JValue.JNumber = function(v) { var $x = ["JNumber",2,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.text.json.JValue.JString = function(v) { var $x = ["JString",3,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.text.json.JValue.JArray = function(v) { var $x = ["JArray",4,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.text.json.JValue.JObject = function(v) { var $x = ["JObject",5,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.text.json.JValue.JField = function(k,v) { var $x = ["JField",6,k,v]; $x.__enum__ = haxe.text.json.JValue; $x.toString = $estr; return $x; }
+haxe.reactive.Streams = $hxClasses["haxe.reactive.Streams"] = function() {
+}
+haxe.reactive.Streams.__name__ = ["haxe","reactive","Streams"];
+haxe.reactive.Streams.create = function(updater,sources) {
+	var sourceEvents = sources == null?null:haxe.data.collections.IterableExtensions.toArray(sources);
+	return new haxe.reactive.Stream(updater,sourceEvents);
+}
+haxe.reactive.Streams.identity = function(sources) {
+	var sourceArray = sources == null?null:haxe.data.collections.IterableExtensions.toArray(sources);
+	return new haxe.reactive.Stream(function(pulse) {
+		return haxe.reactive.Propagation.propagate(pulse);
+	},sourceArray);
+}
+haxe.reactive.Streams.zero = function() {
+	return haxe.reactive.Streams.create(function(pulse) {
+		throw "zeroE : received a value; zeroE should not receive a value; the value was " + pulse.value;
+		return haxe.reactive.Propagation.doNotPropagate;
+	});
+}
+haxe.reactive.Streams.one = function(val) {
+	var sent = false;
+	var stream = haxe.reactive.Streams.create(function(pulse) {
+		if(sent) throw "Streams.one: received an extra value";
+		sent = false;
+		return haxe.reactive.Propagation.propagate(pulse);
+	});
+	stream.sendLater(val);
+	return stream;
+}
+haxe.reactive.Streams.merge = function(streams) {
+	return haxe.data.collections.IterableExtensions.size(streams) == 0?haxe.reactive.Streams.zero():haxe.reactive.Streams.identity(streams);
+}
+haxe.reactive.Streams.constant = function(value,sources) {
+	return haxe.reactive.Streams.create(function(pulse) {
+		return haxe.reactive.Propagation.propagate(pulse.withValue(value));
+	},sources);
+}
+haxe.reactive.Streams.receiver = function() {
+	return haxe.reactive.Streams.identity();
+}
+haxe.reactive.Streams.cond = function(conditions) {
+	return (function($this) {
+		var $r;
+		var $e = (haxe.data.collections.IterableExtensions.headOption(conditions));
+		switch( $e[1] ) {
+		case 0:
+			$r = haxe.reactive.Streams.zero();
+			break;
+		case 1:
+			var h = $e[2];
+			$r = haxe.reactive.StreamBool.ifTrue(h._1,h._2,haxe.reactive.Streams.cond(haxe.data.collections.IterableExtensions.tail(conditions)));
+			break;
+		}
+		return $r;
+	}(this));
+}
+haxe.reactive.Streams.timer = function(time) {
+	return haxe.reactive.Streams.timerS(haxe.reactive.Signals.constant(time));
+}
+haxe.reactive.Streams.timerS = function(time) {
+	var stream = haxe.reactive.Streams.identity();
+	var pulser = null;
+	var timer = null;
+	var createTimer = function() {
+		return haxe.reactive.External.setTimeout(pulser,time.valueNow());
+	};
+	pulser = function() {
+		stream.sendEvent(haxe.reactive.External.now());
+		if(timer != null) haxe.reactive.External.cancelTimeout(timer);
+		if(!stream.getWeaklyHeld()) timer = createTimer();
+	};
+	timer = createTimer();
+	return stream;
+}
+haxe.reactive.Streams.zipN = function(streams) {
+	var stamps = haxe.data.collections.IterableExtensions.toArray(haxe.data.collections.IterableExtensions.map(streams,function(s) {
+		return -1;
+	}));
+	var values = haxe.data.collections.IterableExtensions.toArray(haxe.data.collections.IterableExtensions.map(streams,function(s) {
+		return null;
+	}));
+	var output = haxe.reactive.Streams.identity();
+	var _g1 = 0, _g = haxe.data.collections.IterableExtensions.size(streams);
+	while(_g1 < _g) {
+		var index = [_g1++];
+		var stream = haxe.data.collections.IterableExtensions.at(streams,index[0]);
+		output = output.merge(haxe.reactive.Streams.create((function(index) {
+			return function(pulse) {
+				stamps[index[0]] = pulse.stamp;
+				values[index[0]] = pulse.value;
+				return haxe.reactive.Propagation.propagate(pulse);
+			};
+		})(index),[stream]));
+	}
+	return haxe.reactive.Streams.create(function(pulse) {
+		var stampsEqual = haxe.data.collections.IterableExtensions.size(haxe.data.collections.IterableExtensions.nub(stamps)) == 1;
+		return stampsEqual?(function($this) {
+			var $r;
+			var iter = ArrayExtensions.snapshot(values);
+			$r = haxe.reactive.Propagation.propagate(pulse.withValue(iter));
+			return $r;
+		}(this)):haxe.reactive.Propagation.doNotPropagate;
+	},[output]).uniqueSteps();
+}
+haxe.reactive.Streams.randomS = function(time) {
+	return haxe.reactive.Streams.timerS(time).map(function(e) {
+		return Math.random();
+	});
+}
+haxe.reactive.Streams.random = function(time) {
+	return haxe.reactive.Streams.randomS(haxe.reactive.Signals.constant(time));
+}
+haxe.reactive.Streams.prototype = {
+	__class__: haxe.reactive.Streams
+}
+haxe.test.ui.common.ClassResult = $hxClasses["haxe.test.ui.common.ClassResult"] = function(className,setupName,teardownName) {
+	this.fixtures = new Hash();
+	this.className = className;
+	this.setupName = setupName;
+	this.hasSetup = setupName != null;
+	this.teardownName = teardownName;
+	this.hasTeardown = teardownName != null;
+	this.methods = 0;
+	this.stats = new haxe.test.ui.common.ResultStats();
+}
+haxe.test.ui.common.ClassResult.__name__ = ["haxe","test","ui","common","ClassResult"];
+haxe.test.ui.common.ClassResult.prototype = {
+	fixtures: null
+	,className: null
+	,setupName: null
+	,teardownName: null
+	,hasSetup: null
+	,hasTeardown: null
+	,methods: null
+	,stats: null
+	,add: function(result) {
+		if(this.fixtures.exists(result.methodName)) throw "invalid duplicated fixture result";
+		this.stats.wire(result.stats);
+		this.methods++;
+		this.fixtures.set(result.methodName,result);
+	}
+	,get: function(method) {
+		return this.fixtures.get(method);
+	}
+	,exists: function(method) {
+		return this.fixtures.exists(method);
+	}
+	,methodNames: function(errorsHavePriority) {
+		if(errorsHavePriority == null) errorsHavePriority = true;
+		var names = [];
+		var $it0 = this.fixtures.keys();
+		while( $it0.hasNext() ) {
+			var name = $it0.next();
+			names.push(name);
+		}
+		if(errorsHavePriority) {
+			var me = this;
+			names.sort(function(a,b) {
+				var $as = me.get(a).stats;
+				var bs = me.get(b).stats;
+				if($as.hasErrors) return !bs.hasErrors?-1:$as.errors == bs.errors?Reflect.compare(a,b):Reflect.compare($as.errors,bs.errors); else if(bs.hasErrors) return 1; else if($as.hasFailures) return !bs.hasFailures?-1:$as.failures == bs.failures?Reflect.compare(a,b):Reflect.compare($as.failures,bs.failures); else if(bs.hasFailures) return 1; else if($as.hasWarnings) return !bs.hasWarnings?-1:$as.warnings == bs.warnings?Reflect.compare(a,b):Reflect.compare($as.warnings,bs.warnings); else if(bs.hasWarnings) return 1; else return Reflect.compare(a,b);
+			});
+		} else names.sort(function(a,b) {
+			return Reflect.compare(a,b);
+		});
+		return names;
+	}
+	,__class__: haxe.test.ui.common.ClassResult
+}
+haxe.test.TestHandler = $hxClasses["haxe.test.TestHandler"] = function(fixture) {
+	if(fixture == null) throw "fixture argument is null";
+	this.fixture = fixture;
+	this.results = new List();
+	this.asyncStack = new List();
+	this.onTested = fixture.onTested;
+	this.onTimeout = fixture.onTimeout;
+	this.onComplete = fixture.onComplete;
+}
+haxe.test.TestHandler.__name__ = ["haxe","test","TestHandler"];
+haxe.test.TestHandler.exceptionStack = function(pops) {
+	if(pops == null) pops = 2;
+	var stack = haxe.Stack.exceptionStack();
+	while(pops-- > 0) stack.pop();
+	return stack;
+}
+haxe.test.TestHandler.prototype = {
+	results: null
+	,fixture: null
+	,asyncStack: null
+	,onTested: null
+	,onTimeout: null
+	,onComplete: null
+	,execute: function() {
+		try {
+			this.executeMethodByName(this.fixture.setup);
+			try {
+				this.executeMethod(this.fixture.method);
+			} catch( e ) {
+				this.results.add(haxe.test.Assertation.Error(e,haxe.test.TestHandler.exceptionStack()));
+			}
+		} catch( e ) {
+			this.results.add(haxe.test.Assertation.SetupError(e,haxe.test.TestHandler.exceptionStack()));
+		}
+		this.checkTested();
+	}
+	,checkTested: function() {
+		if(this.expireson == null || this.asyncStack.length == 0) this.tested(); else if(haxe.Timer.stamp() > this.expireson) this.timeout(); else haxe.Timer.delay(this.checkTested.$bind(this),10);
+	}
+	,expireson: null
+	,setTimeout: function(timeout) {
+		var newexpire = haxe.Timer.stamp() + timeout / 1000;
+		this.expireson = this.expireson == null?newexpire:newexpire > this.expireson?newexpire:this.expireson;
+	}
+	,bindHandler: function() {
+		haxe.test.Assert.results = this.results;
+		haxe.test.Assert.createAsync = this.addAsync.$bind(this);
+		haxe.test.Assert.createEvent = this.addEvent.$bind(this);
+	}
+	,unbindHandler: function() {
+		haxe.test.Assert.results = null;
+		haxe.test.Assert.createAsync = function(f,t) {
+			return function() {
+			};
+		};
+		haxe.test.Assert.createEvent = function(f,t) {
+			return function(e) {
+			};
+		};
+	}
+	,addAsync: function(f,timeout) {
+		if(timeout == null) timeout = 250;
+		this.asyncStack.add(f);
+		var handler = this;
+		this.setTimeout(timeout);
+		return function() {
+			if(!handler.asyncStack.remove(f)) {
+				handler.results.add(haxe.test.Assertation.AsyncError("method already executed",[]));
+				return;
+			}
+			try {
+				handler.bindHandler();
+				f();
+			} catch( e ) {
+				handler.results.add(haxe.test.Assertation.AsyncError(e,haxe.test.TestHandler.exceptionStack(0)));
+			}
+		};
+	}
+	,addEvent: function(f,timeout) {
+		if(timeout == null) timeout = 250;
+		this.asyncStack.add(f);
+		var handler = this;
+		this.setTimeout(timeout);
+		return function(e) {
+			if(!handler.asyncStack.remove(f)) {
+				handler.results.add(haxe.test.Assertation.AsyncError("event already executed",[]));
+				return;
+			}
+			try {
+				handler.bindHandler();
+				f(e);
+			} catch( e1 ) {
+				handler.results.add(haxe.test.Assertation.AsyncError(e1,haxe.test.TestHandler.exceptionStack(0)));
+			}
+		};
+	}
+	,executeMethodByName: function(name) {
+		if(name == null) return;
+		var method = Reflect.field(this.fixture.target,name);
+		if(method != null) {
+			this.bindHandler();
+			method.apply(this.fixture.target,[]);
+		}
+	}
+	,executeMethod: function(f) {
+		if(f != null) {
+			this.bindHandler();
+			f();
+		}
+	}
+	,tested: function() {
+		if(this.results.length == 0) this.results.add(haxe.test.Assertation.Warning("no assertions"));
+		this.onTested.dispatch(this);
+		this.completed();
+	}
+	,timeout: function() {
+		this.results.add(haxe.test.Assertation.TimeoutError(this.asyncStack.length,[]));
+		this.onTimeout.dispatch(this);
+		this.completed();
+	}
+	,completed: function() {
+		try {
+			this.executeMethodByName(this.fixture.teardown);
+		} catch( e ) {
+			this.results.add(haxe.test.Assertation.TeardownError(e,haxe.test.TestHandler.exceptionStack(2)));
+		}
+		this.unbindHandler();
+		this.onComplete.dispatch(this);
+	}
+	,__class__: haxe.test.TestHandler
+}
+haxe.test.Assert = $hxClasses["haxe.test.Assert"] = function() { }
+haxe.test.Assert.__name__ = ["haxe","test","Assert"];
+haxe.test.Assert.results = null;
+haxe.test.Assert.that = function(obj,cond,msg,pos) {
+	var $e = (cond(obj));
+	switch( $e[1] ) {
+	case 0:
+		var result = $e[2];
+		haxe.test.Assert.isTrue(false,"Expected: " + result.assertion + ", Found: x = " + haxe.test.Assert.q(obj),pos);
+		break;
+	case 1:
+		haxe.test.Assert.isTrue(true,null,pos);
+		break;
+	}
+}
+haxe.test.Assert.isTrue = function(cond,msg,pos) {
+	if(haxe.test.Assert.results == null) throw "Assert.results is not currently bound to any assert context";
+	if(null == msg) msg = "expected true";
+	if(cond) haxe.test.Assert.results.add(haxe.test.Assertation.Success(pos)); else haxe.test.Assert.results.add(haxe.test.Assertation.Failure(msg,pos));
+}
+haxe.test.Assert.isFalse = function(value,msg,pos) {
+	if(null == msg) msg = "expected false";
+	haxe.test.Assert.isTrue(value == false,msg,pos);
+}
+haxe.test.Assert.isNull = function(value,msg,pos) {
+	if(msg == null) msg = "expected null but was " + haxe.test.Assert.q(value);
+	haxe.test.Assert.isTrue(value == null,msg,pos);
+}
+haxe.test.Assert.notNull = function(value,msg,pos) {
+	if(null == msg) msg = "expected false";
+	haxe.test.Assert.isTrue(value != null,msg,pos);
+}
+haxe.test.Assert["is"] = function(value,type,msg,pos) {
+	if(msg == null) msg = "expected type " + haxe.test.Assert.typeToString(type) + " but was " + haxe.test.Assert.typeToString(value);
+	haxe.test.Assert.isTrue(Std["is"](value,type),msg,pos);
+}
+haxe.test.Assert.notEquals = function(expected,value,msg,pos) {
+	if(msg == null) msg = "expected " + haxe.test.Assert.q(expected) + " and testa value " + haxe.test.Assert.q(value) + " should be different";
+	haxe.test.Assert.isFalse(expected == value,msg,pos);
+}
+haxe.test.Assert.equals = function(expected,value,equal,msg,pos) {
+	if(equal == null) equal = Stax.getEqualFor(expected);
+	if(msg == null) msg = "expected " + haxe.test.Assert.q(expected) + " but was " + haxe.test.Assert.q(value);
+	haxe.test.Assert.isTrue(equal(expected,value),msg,pos);
+}
+haxe.test.Assert.matches = function(pattern,value,msg,pos) {
+	if(msg == null) msg = "the value " + haxe.test.Assert.q(value) + "does not match the provided pattern";
+	haxe.test.Assert.isTrue(pattern.match(value),msg,pos);
+}
+haxe.test.Assert.floatEquals = function(expected,value,approx,msg,pos) {
+	if(msg == null) msg = "expected " + expected + " but was " + value;
+	if(Math.isNaN(expected)) {
+		if(Math.isNaN(value)) return haxe.test.Assert.isTrue(true,msg,pos); else return haxe.test.Assert.isTrue(false,msg,pos);
+	} else if(Math.isNaN(value)) return haxe.test.Assert.isTrue(false,msg,pos);
+	if(null == approx) approx = 1e-5;
+	return haxe.test.Assert.isTrue(Math.abs(value - expected) < approx,msg,pos);
+}
+haxe.test.Assert.getTypeName = function(v) {
+	var $e = (Type["typeof"](v));
+	switch( $e[1] ) {
+	case 0:
+		return null;
+	case 1:
+		return "Int";
+	case 2:
+		return "Float";
+	case 3:
+		return "Bool";
+	case 5:
+		return "function";
+	case 6:
+		var c = $e[2];
+		return Type.getClassName(c);
+	case 7:
+		var e = $e[2];
+		return Type.getEnumName(e);
+	case 4:
+		return "Object";
+	case 8:
+		return "Unknown";
+	}
+}
+haxe.test.Assert.isIterable = function(v,isAnonym) {
+	var fields = isAnonym?Reflect.fields(v):Type.getInstanceFields(Type.getClass(v));
+	if(!Lambda.has(fields,"iterator")) return false;
+	return Reflect.isFunction(Reflect.field(v,"iterator"));
+}
+haxe.test.Assert.isIterator = function(v,isAnonym) {
+	var fields = isAnonym?Reflect.fields(v):Type.getInstanceFields(Type.getClass(v));
+	if(!Lambda.has(fields,"next") || !Lambda.has(fields,"hasNext")) return false;
+	return Reflect.isFunction(Reflect.field(v,"next")) && Reflect.isFunction(Reflect.field(v,"hasNext"));
+}
+haxe.test.Assert.sameAs = function(expected,value,status) {
+	var texpected = haxe.test.Assert.getTypeName(expected);
+	var tvalue = haxe.test.Assert.getTypeName(value);
+	var isanonym = texpected == "Object";
+	if(texpected != tvalue) {
+		status.error = "expected type " + texpected + " but it is " + tvalue + (status.path == ""?"":" for field " + status.path);
+		return false;
+	}
+	var $e = (Type["typeof"](expected));
+	switch( $e[1] ) {
+	case 0:
+	case 1:
+	case 2:
+	case 3:
+		if(expected != value) {
+			status.error = "expected " + expected + " but it is " + value + (status.path == ""?"":" for field " + status.path);
+			return false;
+		}
+		return true;
+	case 5:
+		if(!Reflect.compareMethods(expected,value)) {
+			status.error = "expected same function reference" + (status.path == ""?"":" for field " + status.path);
+			return false;
+		}
+		return true;
+	case 6:
+		var c = $e[2];
+		var cexpected = Type.getClassName(c);
+		var cvalue = Type.getClassName(Type.getClass(value));
+		if(cexpected != cvalue) {
+			status.error = "expected instance of " + cexpected + " but it is " + cvalue + (status.path == ""?"":" for field " + status.path);
+			return false;
+		}
+		if(Std["is"](expected,Array)) {
+			if(status.recursive || status.path == "") {
+				if(expected.length != value.length) {
+					status.error = "expected " + expected.length + " elements but they were " + value.length + (status.path == ""?"":" for field " + status.path);
+					return false;
+				}
+				var path = status.path;
+				var _g1 = 0, _g = expected.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					status.path = path == ""?"array[" + i + "]":path + "[" + i + "]";
+					if(!haxe.test.Assert.sameAs(expected[i],value[i],status)) {
+						status.error = "expected " + haxe.test.Assert.q(expected) + " but it is " + haxe.test.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		if(Std["is"](expected,Date)) {
+			if(expected.getTime() != value.getTime()) {
+				status.error = "expected " + haxe.test.Assert.q(expected) + " but it is " + haxe.test.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+				return false;
+			}
+			return true;
+		}
+		if(Std["is"](expected,haxe.io.Bytes)) {
+			if(status.recursive || status.path == "") {
+				var ebytes = expected;
+				var vbytes = value;
+				if(ebytes.length != vbytes.length) return false;
+				var _g1 = 0, _g = ebytes.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					if(ebytes.b[i] != vbytes.b[i]) {
+						status.error = "expected byte " + ebytes.b[i] + " but wss " + ebytes.b[i] + (status.path == ""?"":" for field " + status.path);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		if(Std["is"](expected,Hash) || Std["is"](expected,IntHash)) {
+			if(status.recursive || status.path == "") {
+				var keys = Lambda.array({ iterator : function() {
+					return expected.keys();
+				}});
+				var vkeys = Lambda.array({ iterator : function() {
+					return value.keys();
+				}});
+				if(keys.length != vkeys.length) {
+					status.error = "expected " + keys.length + " keys but they were " + vkeys.length + (status.path == ""?"":" for field " + status.path);
+					return false;
+				}
+				var path = status.path;
+				var _g = 0;
+				while(_g < keys.length) {
+					var key = keys[_g];
+					++_g;
+					status.path = path == ""?"hash[" + key + "]":path + "[" + key + "]";
+					if(!haxe.test.Assert.sameAs(expected.get(key),value.get(key),status)) {
+						status.error = "expected " + haxe.test.Assert.q(expected) + " but it is " + haxe.test.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		if(haxe.test.Assert.isIterator(expected,false)) {
+			if(status.recursive || status.path == "") {
+				var evalues = Lambda.array({ iterator : function() {
+					return expected;
+				}});
+				var vvalues = Lambda.array({ iterator : function() {
+					return value;
+				}});
+				if(evalues.length != vvalues.length) {
+					status.error = "expected " + evalues.length + " values in Iterator but they were " + vvalues.length + (status.path == ""?"":" for field " + status.path);
+					return false;
+				}
+				var path = status.path;
+				var _g1 = 0, _g = evalues.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					status.path = path == ""?"iterator[" + i + "]":path + "[" + i + "]";
+					if(!haxe.test.Assert.sameAs(evalues[i],vvalues[i],status)) {
+						status.error = "expected " + haxe.test.Assert.q(expected) + " but it is " + haxe.test.Assert.q(value) + (status.path == ""?"":" for field " + status.path);
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		if(haxe.test.Assert.isIterable(expected,false)) {
+			if(status.recursive || status.path == "") {
+				var evalues = Lambda.array(expected);
+				var vvalues = Lambda.array(value);
+				if(evalues.length != vvalues.length) {
+					status.error = "expected " + evalues.length + " values in Iterable but they were " + vvalues.length + (status.path == ""?"":" for field " + status.path);
+					return false;
+				}
+				var path = status.path;
+				var _g1 = 0, _g = evalues.length;
+				while(_g1 < _g) {
+					var i = _g1++;
+					status.path = path == ""?"iterable[" + i + "]":path + "[" + i + "]";
+					if(!haxe.test.Assert.sameAs(evalues[i],vvalues[i],status)) return false;
+				}
+			}
+			return true;
+		}
+>>>>>>> Rearranging for minimal code import
 		if(status.recursive || status.path == "") {
 			var fields = Type.getInstanceFields(Type.getClass(expected));
 			var path = status.path;
@@ -12249,6 +17655,1334 @@ haxe.test.Assert.sameAs = function(expected,value,status) {
 		throw "Unable to compare values: " + haxe.test.Assert.q(expected) + " and " + haxe.test.Assert.q(value);
 		return $r;
 	}(this));
+<<<<<<< HEAD
+=======
+}
+haxe.test.Assert.q = function(v) {
+	if(null == v) return "null"; else if(Std["is"](v,String)) return "\"" + StringTools.replace(v,"\"","\\\"") + "\""; else return "" + v;
+}
+haxe.test.Assert.looksLike = function(expected,value,recursive,msg,pos) {
+	if(null == recursive) recursive = true;
+	var status = { recursive : recursive, path : "", error : null};
+	if(haxe.test.Assert.sameAs(expected,value,status)) haxe.test.Assert.isTrue(true,msg,pos); else haxe.test.Assert.fail(msg == null?status.error:msg,pos);
+}
+haxe.test.Assert.throwsException = function(method,type,msg,pos) {
+	if(type == null) type = String;
+	try {
+		method();
+		var name = Type.getClassName(type);
+		if(name == null) name = "" + type;
+		haxe.test.Assert.fail("exception of type " + name + " not raised",pos);
+	} catch( ex ) {
+		var name = Type.getClassName(type);
+		if(name == null) name = "" + type;
+		haxe.test.Assert.isTrue(Std["is"](ex,type),"expected throw of type " + name + " but was " + ex,pos);
+	}
+}
+haxe.test.Assert.equalsOneOf = function(value,possibilities,msg,pos) {
+	if(Lambda.has(possibilities,value)) haxe.test.Assert.isTrue(true,msg,pos); else haxe.test.Assert.fail(msg == null?"value " + haxe.test.Assert.q(value) + " not found in the expected possibilities " + possibilities:msg,pos);
+}
+haxe.test.Assert.contains = function(values,match,msg,pos) {
+	if(Lambda.has(values,match)) haxe.test.Assert.isTrue(true,msg,pos); else haxe.test.Assert.fail(msg == null?"values " + values + " do not contain " + match:msg,pos);
+}
+haxe.test.Assert.notContains = function(values,match,msg,pos) {
+	if(!Lambda.has(values,match)) haxe.test.Assert.isTrue(true,msg,pos); else haxe.test.Assert.fail(msg == null?"values " + values + " do contain " + match:msg,pos);
+}
+haxe.test.Assert.stringContains = function(match,value,msg,pos) {
+	if(value != null && value.indexOf(match) >= 0) haxe.test.Assert.isTrue(true,msg,pos); else haxe.test.Assert.fail(msg == null?"value " + haxe.test.Assert.q(value) + " does not contain " + haxe.test.Assert.q(match):msg,pos);
+}
+haxe.test.Assert.stringSequence = function(sequence,value,msg,pos) {
+	if(null == value) {
+		haxe.test.Assert.fail(msg == null?"null argument value":msg,pos);
+		return;
+	}
+	var p = 0;
+	var _g = 0;
+	while(_g < sequence.length) {
+		var s = sequence[_g];
+		++_g;
+		var p2 = value.indexOf(s,p);
+		if(p2 < 0) {
+			if(msg == null) {
+				msg = "expected '" + s + "' after ";
+				if(p > 0) {
+					var cut = value.substr(0,p);
+					if(cut.length > 30) cut = "..." + cut.substr(-27);
+					msg += " '" + cut + "'";
+				} else msg += " begin";
+			}
+			haxe.test.Assert.fail(msg,pos);
+			return;
+		}
+		p = p2 + s.length;
+	}
+	haxe.test.Assert.isTrue(true,msg,pos);
+}
+haxe.test.Assert.fail = function(msg,pos) {
+	if(msg == null) msg = "failure expected";
+	haxe.test.Assert.isTrue(false,msg,pos);
+}
+haxe.test.Assert.warn = function(msg) {
+	haxe.test.Assert.results.add(haxe.test.Assertation.Warning(msg));
+}
+haxe.test.Assert.createAsync = function(f,timeout) {
+	return function() {
+	};
+}
+haxe.test.Assert.delivered = function(future,assertions,timeout) {
+	var f = haxe.test.Assert.createAsync(function() {
+		if(future.isCanceled()) haxe.test.Assert.fail("expected delivery of future " + haxe.test.Assert.q(future) + ", but it was canceled",{ fileName : "Assert.hx", lineNumber : 681, className : "haxe.test.Assert", methodName : "delivered"}); else assertions(OptionExtensions.get(future.value()));
+	},timeout);
+	future.deliverTo(function(value) {
+		f();
+	});
+	future.ifCanceled(f);
+}
+haxe.test.Assert.canceled = function(future,assertions,timeout) {
+	future.ifCanceled(haxe.test.Assert.createAsync(assertions,timeout));
+}
+haxe.test.Assert.notDelivered = function(future,timeout,pos) {
+	var f = haxe.test.Assert.createAsync(function() {
+		if(future.isDelivered()) haxe.test.Assert.fail("Did not expect delivery of: " + OptionExtensions.get(future.value()),pos); else haxe.test.Assert.isTrue(true,null,{ fileName : "Assert.hx", lineNumber : 708, className : "haxe.test.Assert", methodName : "notDelivered"});
+	},timeout + 10);
+	haxe.Timer.delay(f,timeout);
+	future.deliverTo(function(value) {
+		f();
+	});
+}
+haxe.test.Assert.createEvent = function(f,timeout) {
+	return function(e) {
+	};
+}
+haxe.test.Assert.typeToString = function(t) {
+	try {
+		var _t = Type.getClass(t);
+		if(_t != null) t = _t;
+	} catch( e ) {
+	}
+	try {
+		return Type.getClassName(t);
+	} catch( e ) {
+	}
+	try {
+		var _t = Type.getEnum(t);
+		if(_t != null) t = _t;
+	} catch( e ) {
+	}
+	try {
+		return Type.getEnumName(t);
+	} catch( e ) {
+	}
+	try {
+		return Std.string(Type["typeof"](t));
+	} catch( e ) {
+	}
+	try {
+		return Std.string(t);
+	} catch( e ) {
+	}
+	return "<unable to retrieve type name>";
+}
+haxe.test.Assert.prototype = {
+	__class__: haxe.test.Assert
+}
+var StringBuf = $hxClasses["StringBuf"] = function() {
+	this.b = new Array();
+}
+StringBuf.__name__ = ["StringBuf"];
+StringBuf.prototype = {
+	add: function(x) {
+		this.b[this.b.length] = x == null?"null":x;
+	}
+	,addSub: function(s,pos,len) {
+		this.b[this.b.length] = s.substr(pos,len);
+	}
+	,addChar: function(c) {
+		this.b[this.b.length] = String.fromCharCode(c);
+	}
+	,toString: function() {
+		return this.b.join("");
+	}
+	,b: null
+	,__class__: StringBuf
+}
+haxe.Log = $hxClasses["haxe.Log"] = function() { }
+haxe.Log.__name__ = ["haxe","Log"];
+haxe.Log.trace = function(v,infos) {
+	js.Boot.__trace(v,infos);
+}
+haxe.Log.clear = function() {
+	js.Boot.__clear_trace();
+}
+haxe.Log.prototype = {
+	__class__: haxe.Log
+}
+js.dom.HTMLDocumentExtensions = $hxClasses["js.dom.HTMLDocumentExtensions"] = function() { }
+js.dom.HTMLDocumentExtensions.__name__ = ["js","dom","HTMLDocumentExtensions"];
+js.dom.HTMLDocumentExtensions.newElement = function(document,eType,atts,style) {
+	if(style == null) style = "";
+	var element = document.createElement(eType);
+	if(atts != null) {
+		var _g1 = 0, _g = atts.length;
+		while(_g1 < _g) {
+			var i = _g1++;
+			element.setAttribute(atts[i]._1,atts[i]._2);
+		}
+	}
+	if(style != null) element.style.cssText = style;
+	return element;
+}
+js.dom.HTMLDocumentExtensions.newImage = function(doc) {
+	return doc.createElement("IMG");
+}
+js.dom.HTMLDocumentExtensions.newDiv = function(doc) {
+	return doc.createElement("DIV");
+}
+js.dom.HTMLDocumentExtensions.newIframe = function(doc,width,height) {
+	var iframe = doc.createElement("IFRAME");
+	OptionExtensions.map(OptionExtensions.zip(OptionExtensions.toOption(width),OptionExtensions.toOption(height)),function(t) {
+		iframe.setAttribute("width",IntExtensions.toString(width));
+		iframe.setAttribute("height",IntExtensions.toString(height));
+	});
+	return iframe;
+}
+js.dom.HTMLDocumentExtensions.newIframeWindow = function(doc,width,height) {
+	var iframe = js.dom.HTMLDocumentExtensions.newIframe(doc,width,height);
+	iframe.setAttribute("frameBorder","0");
+	iframe.setAttribute("marginWidth","0");
+	iframe.setAttribute("marginHeight","0");
+	iframe.setAttribute("vspace","0");
+	iframe.setAttribute("hspace","0");
+	iframe.setAttribute("scrolling","no");
+	iframe.setAttribute("noResize","noResize");
+	iframe.setAttribute("allowTransparency","true");
+	iframe.style.margin = "0";
+	iframe.style.padding = "0";
+	iframe.style.border = "none";
+	iframe.style.borderLeftStyle = "none";
+	iframe.style.borderRightStyle = "none";
+	iframe.style.borderTopStyle = "none";
+	iframe.style.borderBottomStyle = "none";
+	iframe.style.backgroundColor = "transparent";
+	return iframe;
+}
+js.dom.HTMLDocumentExtensions.newIframeInvisible = function(doc) {
+	return js.dom.HTMLDocumentExtensions.newIframeWindow(doc,0,0);
+}
+js.dom.HTMLDocumentExtensions.getId = function(doc,s) {
+	return doc.getElementById(s);
+}
+js.dom.HTMLDocumentExtensions.getIds = function(doc,a) {
+	var result = [];
+	var _g1 = 0, _g = a.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		result.push(js.dom.HTMLDocumentExtensions.getId(doc,a[i]));
+	}
+	return result;
+}
+js.dom.HTMLDocumentExtensions.getTags = function(doc,s) {
+	return OptionExtensions.getOrElseC(OptionExtensions.toOption(doc.getElementsByTagName(s)),[]);
+}
+js.dom.HTMLDocumentExtensions.getClasses = function(doc,s) {
+	return OptionExtensions.getOrElseC(OptionExtensions.toOption(js.Env.getElementsByClass(s)),[]);
+}
+js.dom.HTMLDocumentExtensions.prototype = {
+	__class__: js.dom.HTMLDocumentExtensions
+}
+var DOMTokenList = $hxClasses["DOMTokenList"] = function() { }
+DOMTokenList.__name__ = ["DOMTokenList"];
+DOMTokenList.prototype = {
+	length: null
+	,item: null
+	,contains: null
+	,add: null
+	,remove: null
+	,toggle: null
+	,stringifier: null
+	,__class__: DOMTokenList
+}
+var DOMSettableTokenList = $hxClasses["DOMSettableTokenList"] = function() { }
+DOMSettableTokenList.__name__ = ["DOMSettableTokenList"];
+DOMSettableTokenList.prototype = {
+	value: null
+	,length: null
+	,item: null
+	,contains: null
+	,add: null
+	,remove: null
+	,toggle: null
+	,stringifier: null
+	,__class__: DOMSettableTokenList
+}
+var DOMStringList = $hxClasses["DOMStringList"] = function() { }
+DOMStringList.__name__ = ["DOMStringList"];
+DOMStringList.prototype = {
+	item: null
+	,contains: null
+	,length: null
+	,__class__: DOMStringList
+}
+var NameList = $hxClasses["NameList"] = function() { }
+NameList.__name__ = ["NameList"];
+NameList.prototype = {
+	getName: null
+	,getNamespaceURI: null
+	,contains: null
+	,containsNS: null
+	,length: null
+	,__class__: NameList
+}
+var NamedNodeMap = $hxClasses["NamedNodeMap"] = function() { }
+NamedNodeMap.__name__ = ["NamedNodeMap"];
+NamedNodeMap.prototype = {
+	getNamedItem: null
+	,setNamedItem: null
+	,removeNamedItem: null
+	,item: null
+	,getNamedItemNS: null
+	,setNamedItemNS: null
+	,removeNamedItemNS: null
+	,length: null
+	,__class__: NamedNodeMap
+}
+var TimedTrackCueList = $hxClasses["TimedTrackCueList"] = function() { }
+TimedTrackCueList.__name__ = ["TimedTrackCueList"];
+TimedTrackCueList.prototype = {
+	length: null
+	,getter: null
+	,getCueById: null
+	,__class__: TimedTrackCueList
+}
+var Selection = $hxClasses["Selection"] = function() { }
+Selection.__name__ = ["Selection"];
+Selection.prototype = {
+	anchorNode: null
+	,anchorOffset: null
+	,focusNode: null
+	,focusOffset: null
+	,isCollapsed: null
+	,rangeCount: null
+	,collapse: null
+	,collapseToStart: null
+	,collapseToEnd: null
+	,selectAllChildren: null
+	,deleteFromDocument: null
+	,getRangeAt: null
+	,addRange: null
+	,removeRange: null
+	,removeAllRanges: null
+	,stringifier: null
+	,__class__: Selection
+}
+var MessagePortArray = $hxClasses["MessagePortArray"] = function() { }
+MessagePortArray.__name__ = ["MessagePortArray"];
+MessagePortArray.prototype = {
+	__class__: MessagePortArray
+}
+var MessagePort = $hxClasses["MessagePort"] = function() { }
+MessagePort.__name__ = ["MessagePort"];
+MessagePort.prototype = {
+	postMessage: null
+	,start: null
+	,close: null
+	,onMessage: null
+	,__class__: MessagePort
+}
+var MediaList = $hxClasses["MediaList"] = function() { }
+MediaList.__name__ = ["MediaList"];
+MediaList.prototype = {
+	mediaText: null
+	,length: null
+	,item: null
+	,deleteMedium: null
+	,appendMedium: null
+	,__class__: MediaList
+}
+haxe.test.ui.text.PrintReport = $hxClasses["haxe.test.ui.text.PrintReport"] = function(runner) {
+	haxe.test.ui.text.PlainTextReport.call(this,runner,this._handler.$bind(this));
+	this.newline = "\n";
+	this.indent = "  ";
+}
+haxe.test.ui.text.PrintReport.__name__ = ["haxe","test","ui","text","PrintReport"];
+haxe.test.ui.text.PrintReport.__super__ = haxe.test.ui.text.PlainTextReport;
+haxe.test.ui.text.PrintReport.prototype = $extend(haxe.test.ui.text.PlainTextReport.prototype,{
+	useTrace: null
+	,_handler: function(report) {
+		this._trace(report.getResults());
+	}
+	,_trace: function(s) {
+		s = StringTools.replace(s,"  ",this.indent);
+		s = StringTools.replace(s,"\n",this.newline);
+		haxe.Log.trace(s,{ fileName : "PrintReport.hx", lineNumber : 81, className : "haxe.test.ui.text.PrintReport", methodName : "_trace"});
+	}
+	,__class__: haxe.test.ui.text.PrintReport
+});
+haxe.math.tween.Tween = $hxClasses["haxe.math.tween.Tween"] = function() { }
+haxe.math.tween.Tween.__name__ = ["haxe","math","tween","Tween"];
+haxe.math.tween.Tween.linear = function(state1,state2,def) {
+	if(def == null) def = 0.0;
+	var combinedFields = IterableExtensions.toSet(Reflect.fields(state1)).addAll(Reflect.fields(state2));
+	var data = haxe.functional.FoldableExtensions.toMap(haxe.functional.FoldableExtensions.map(combinedFields,function(name) {
+		var start = OptionExtensions.getOrElseC(OptionExtensions.toOption(Reflect.field(state1,name)),def);
+		var end = OptionExtensions.getOrElseC(OptionExtensions.toOption(Reflect.field(state2,name)),def);
+		return DynamicExtensions.entuple(name,{ start : start, delta : end - start});
+	}));
+	return function(t) {
+		return data.foldl({ },function(r,tuple) {
+			var name = tuple._1;
+			var start = tuple._2.start;
+			var delta = tuple._2.delta;
+			r[name] = start + t * delta;
+			return r;
+		});
+	};
+}
+haxe.math.tween.Tween.prototype = {
+	__class__: haxe.math.tween.Tween
+}
+haxe.net.UrlExtensionsTestCase = $hxClasses["haxe.net.UrlExtensionsTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.net.UrlExtensionsTestCase.__name__ = ["haxe","net","UrlExtensionsTestCase"];
+haxe.net.UrlExtensionsTestCase.__super__ = haxe.test.TestCase;
+haxe.net.UrlExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testParseUrl1: function() {
+		var p = OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl("ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top"));
+		this.assertEquals("#top",p.hash,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 32, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("eau.ww.eesd.gov.calgary",p.host,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 33, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("eau.ww.eesd.gov.calgary",p.hostname,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 34, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top",p.href,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 35, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("/home/smith/budget.wk1",p.pathname,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 36, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("",p.port,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 37, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("ftp:",p.protocol,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 38, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+		this.assertEquals("?foo=bar",p.search,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 39, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl1"});
+	}
+	,testParseUrl2: function() {
+		var p = OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top"));
+		this.assertEquals("#top",p.hash,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 45, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("eau.ww.eesd.gov.calgary:923",p.host,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 46, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("eau.ww.eesd.gov.calgary",p.hostname,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 47, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top",p.href,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 48, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("/home/smith/budget.wk1",p.pathname,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 49, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("923",p.port,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 50, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("ftp:",p.protocol,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 51, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+		this.assertEquals("?foo=bar",p.search,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 52, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl2"});
+	}
+	,testParseUrl3: function() {
+		var url = "http://co121w.col121.mail.live.com/?rru=home&livecom=1";
+		this.assertEquals(url,haxe.net.UrlExtensions.toUrl(OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl(url))),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 58, className : "haxe.net.UrlExtensionsTestCase", methodName : "testParseUrl3"});
+	}
+	,testExtractSearchForLocalFile: function() {
+		this.assertEquals("?foo",haxe.net.UrlExtensions.extractSearch("ad-display.js?foo"),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 62, className : "haxe.net.UrlExtensionsTestCase", methodName : "testExtractSearchForLocalFile"});
+	}
+	,testNoProtocolIsPreserved: function() {
+		this.assertEquals("client.html",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSearch(OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl("client.html?foo")))),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 66, className : "haxe.net.UrlExtensionsTestCase", methodName : "testNoProtocolIsPreserved"});
+	}
+	,testWithout: function() {
+		var p = OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top"));
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary/home/smith/budget.wk1?foo=bar#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutPort(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 72, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSearch(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 73, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutHash(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 74, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://:923/home/smith/budget.wk1?foo=bar#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutHostname(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 75, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("eau.ww.eesd.gov.calgary:923/home/smith/budget.wk1?foo=bar#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutProtocol(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 76, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923/home/smith/?foo=bar#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutFile(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 77, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://gov.calgary:923/home/smith/budget.wk1?foo=bar#top",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSubdomains(p)),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 78, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		this.assertEquals("ftp://eau.ww.eesd.gov.calgary:923",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutPathname(haxe.net.UrlExtensions.withoutHash(haxe.net.UrlExtensions.withoutSearch(p)))),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 80, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		var p2 = "http://co121w.col121.mail.live.com/mail/home.mvc?n=1025401125&livecom=1";
+		this.assertEquals("http://co121w.col121.mail.live.com",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSearch(haxe.net.UrlExtensions.withoutPathname(haxe.net.UrlExtensions.withoutHash(OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl(p2)))))),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 84, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+		var p3 = "http://co121w.col121.mail.live.com/?rru=home&livecom=1";
+		this.assertEquals("http://co121w.col121.mail.live.com",haxe.net.UrlExtensions.toUrl(haxe.net.UrlExtensions.withoutSearch(haxe.net.UrlExtensions.withoutPathname(haxe.net.UrlExtensions.withoutHash(OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl(p3)))))),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 88, className : "haxe.net.UrlExtensionsTestCase", methodName : "testWithout"});
+	}
+	,testCanParseFileProtocol: function() {
+		var p = OptionExtensions.get(haxe.net.UrlExtensions.toParsedUrl("file:///Users/John/Documents/github/stax/test.html"));
+		this.assertEquals("file:",p.protocol,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 94, className : "haxe.net.UrlExtensionsTestCase", methodName : "testCanParseFileProtocol"});
+		this.assertEquals("/Users/John/Documents/github/stax/test.html",p.pathname,null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 95, className : "haxe.net.UrlExtensionsTestCase", methodName : "testCanParseFileProtocol"});
+	}
+	,testQueryStringBijection: function() {
+		var self = this;
+		var identity = Function1Extensions.compose(haxe.net.UrlExtensions.toQueryString,haxe.net.UrlExtensions.toQueryParameters);
+		var test = function(s) {
+			self.assertEquals(s,identity(s),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 102, className : "haxe.net.UrlExtensionsTestCase", methodName : "testQueryStringBijection"});
+		};
+		test("?foo=bar");
+		test("?foo=");
+	}
+	,testAddQueryParametersWhenNoneExist: function() {
+		this.assertEquals("http://foo.com?foo=bar",haxe.net.UrlExtensions.addQueryParameters("http://foo.com",DynamicExtensions.toMap({ foo : "bar"})),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 109, className : "haxe.net.UrlExtensionsTestCase", methodName : "testAddQueryParametersWhenNoneExist"});
+	}
+	,testAddQueryParametersWhenJustQuestionMarkExists: function() {
+		this.assertEquals("http://foo.com?foo=bar",haxe.net.UrlExtensions.addQueryParameters("http://foo.com?",DynamicExtensions.toMap({ foo : "bar"})),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 113, className : "haxe.net.UrlExtensionsTestCase", methodName : "testAddQueryParametersWhenJustQuestionMarkExists"});
+	}
+	,testAddQueryParametersWhenQueryParametersAlreadyExists: function() {
+		this.assertEquals("http://foo.com?doo=dar&foo=bar",haxe.net.UrlExtensions.addQueryParameters("http://foo.com?doo=dar",DynamicExtensions.toMap({ foo : "bar"})),null,null,{ fileName : "UrlExtensionsTestCase.hx", lineNumber : 117, className : "haxe.net.UrlExtensionsTestCase", methodName : "testAddQueryParametersWhenQueryParametersAlreadyExists"});
+	}
+	,__class__: haxe.net.UrlExtensionsTestCase
+});
+haxe.reactive.SignalFloat = $hxClasses["haxe.reactive.SignalFloat"] = function() {
+}
+haxe.reactive.SignalFloat.__name__ = ["haxe","reactive","SignalFloat"];
+haxe.reactive.SignalFloat.plus = function(b,value) {
+	return haxe.reactive.SignalFloat.plusS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.plusS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return t._1 + t._2;
+	});
+}
+haxe.reactive.SignalFloat.minusS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return t._1 - t._2;
+	});
+}
+haxe.reactive.SignalFloat.minus = function(b,value) {
+	return haxe.reactive.SignalFloat.minusS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.timesS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return t._1 * t._2;
+	});
+}
+haxe.reactive.SignalFloat.times = function(b,value) {
+	return haxe.reactive.SignalFloat.timesS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.dividedByS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return t._1 / t._2;
+	});
+}
+haxe.reactive.SignalFloat.dividedBy = function(b,value) {
+	return haxe.reactive.SignalFloat.dividedByS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.abs = function(b) {
+	return b.map(function(e) {
+		return Math.abs(e);
+	});
+}
+haxe.reactive.SignalFloat.negate = function(b) {
+	return b.map(function(e) {
+		return -e;
+	});
+}
+haxe.reactive.SignalFloat.floor = function(b) {
+	return b.map(function(e) {
+		return Math.floor(e);
+	});
+}
+haxe.reactive.SignalFloat.ceil = function(b) {
+	return b.map(function(e) {
+		return Math.ceil(e);
+	});
+}
+haxe.reactive.SignalFloat.round = function(b) {
+	return b.map(function(e) {
+		return Math.round(e);
+	});
+}
+haxe.reactive.SignalFloat.acos = function(b) {
+	return b.map(function(e) {
+		return Math.acos(e);
+	});
+}
+haxe.reactive.SignalFloat.asin = function(b) {
+	return b.map(function(e) {
+		return Math.asin(e);
+	});
+}
+haxe.reactive.SignalFloat.atan = function(b) {
+	return b.map(function(e) {
+		return Math.atan(e);
+	});
+}
+haxe.reactive.SignalFloat.atan2B = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return Math.atan2(t._1,t._2);
+	});
+}
+haxe.reactive.SignalFloat.atan2 = function(b,value) {
+	return haxe.reactive.SignalFloat.atan2B(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.cos = function(b) {
+	return b.map(function(e) {
+		return Math.cos(e);
+	});
+}
+haxe.reactive.SignalFloat.exp = function(b) {
+	return b.map(function(e) {
+		return Math.exp(e);
+	});
+}
+haxe.reactive.SignalFloat.log = function(b) {
+	return b.map(function(e) {
+		return Math.log(e);
+	});
+}
+haxe.reactive.SignalFloat.maxS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return Math.max(t._1,t._2);
+	});
+}
+haxe.reactive.SignalFloat.max = function(b,value) {
+	return haxe.reactive.SignalFloat.maxS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.minS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return Math.min(t._1,t._2);
+	});
+}
+haxe.reactive.SignalFloat.min = function(b,value) {
+	return haxe.reactive.SignalFloat.minS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.powS = function(b1,b2) {
+	return b1.zip(b2).map(function(t) {
+		return Math.pow(t._1,t._2);
+	});
+}
+haxe.reactive.SignalFloat.pow = function(b,value) {
+	return haxe.reactive.SignalFloat.powS(b,haxe.reactive.Signals.constant(value));
+}
+haxe.reactive.SignalFloat.sin = function(b) {
+	return b.map(function(e) {
+		return Math.sin(e);
+	});
+}
+haxe.reactive.SignalFloat.sqrt = function(b) {
+	return b.map(function(e) {
+		return Math.sqrt(e);
+	});
+}
+haxe.reactive.SignalFloat.tan = function(b) {
+	return b.map(function(e) {
+		return Math.tan(e);
+	});
+}
+haxe.reactive.SignalFloat.prototype = {
+	__class__: haxe.reactive.SignalFloat
+}
+haxe.test.TestResult = $hxClasses["haxe.test.TestResult"] = function() {
+}
+haxe.test.TestResult.__name__ = ["haxe","test","TestResult"];
+haxe.test.TestResult.ofHandler = function(handler) {
+	var r = new haxe.test.TestResult();
+	var path = Type.getClassName(Type.getClass(handler.fixture.target)).split(".");
+	r.cls = path.pop();
+	r.pack = path.join(".");
+	r.method = handler.fixture.methodName;
+	r.setup = handler.fixture.setup;
+	r.teardown = handler.fixture.teardown;
+	r.assertations = handler.results;
+	return r;
+}
+haxe.test.TestResult.prototype = {
+	pack: null
+	,cls: null
+	,method: null
+	,setup: null
+	,teardown: null
+	,assertations: null
+	,__class__: haxe.test.TestResult
+}
+haxe.io.http.HttpJValueJsonpTestCase = $hxClasses["haxe.io.http.HttpJValueJsonpTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.io.http.HttpJValueJsonpTestCase.__name__ = ["haxe","io","http","HttpJValueJsonpTestCase"];
+haxe.io.http.HttpJValueJsonpTestCase.__super__ = haxe.test.TestCase;
+haxe.io.http.HttpJValueJsonpTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	h: null
+	,before: function() {
+		this.h = new haxe.io.http.HttpJValueJsonp();
+	}
+	,testGet: function() {
+		haxe.test.Assert.delivered(this.h.get("http://search.twitter.com/search.json",DynamicExtensions.toMap({ q : "santa"})),function(data) {
+			var results = haxe.text.json.JValueExtensions.get(OptionExtensions.get(data.body),"results");
+			haxe.test.Assert.notNull(results,null,{ fileName : "HttpJValueJsonpTestCase.hx", lineNumber : 45, className : "haxe.io.http.HttpJValueJsonpTestCase", methodName : "testGet"});
+		},4000);
+	}
+	,__class__: haxe.io.http.HttpJValueJsonpTestCase
+});
+if(!js.detect) js.detect = {}
+js.detect.BrowserSupport = $hxClasses["js.detect.BrowserSupport"] = function() { }
+js.detect.BrowserSupport.__name__ = ["js","detect","BrowserSupport"];
+js.detect.BrowserSupport.cssTransformationSupported = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("cssTransformationSupported",function(v) {
+		var isSupported = Option.None;
+		var docEl = js.Env.document.documentElement;
+		if(docEl != null) {
+			var s = docEl.style;
+			isSupported = Option.Some(js.Env.isDefined(s.WebkitTransform) || js.Env.isDefined(s.MozTransform));
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.elementTagnameUppercased = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("elementTagnameUppercased",function(v) {
+		var isUppercased = Option.None;
+		var docEl = js.Env.document.documentElement;
+		if(docEl != null) isUppercased = Option.Some("HTML" == docEl.nodeName);
+		return isUppercased;
+	});
+}
+js.detect.BrowserSupport.querySelectorIgnoresCapitalizedValuesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("querySelectorIgnoresCapitalizedValuesBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && js.Env.document.compatMode == "BackCompat") {
+			var el = js.Env.document.createElement("div");
+			var el2 = js.Env.document.createElement("span");
+			if(el != null && el2 != null && el.querySelector != null) {
+				el2.className = "Test";
+				el.appendChild(el2);
+				result = Option.Some(el.querySelector(".Test") != null);
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isEventSrcelementPresent = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isEventSrcelementPresent",function(v) {
+		var isSupported = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var i = js.Env.document.createElement("input");
+			var root = js.Env.document.documentElement;
+			if(i != null && i.style != null && i.click.$bind(i) != null && root != null && root.appendChild.$bind(root) != null && root.removeChild.$bind(root) != null) {
+				i.type = "checkbox";
+				i.style.display = "none";
+				i.onclick = function(e) {
+					if(js.Env.typeOf(e) == "object") isSupported = Option.Some(js.Env.isDefined(e.srcElement)); else isSupported = Option.Some(false);
+				};
+				root.appendChild(i);
+				i.click();
+				root.removeChild(i);
+				i.onclick = null;
+				i = null;
+			}
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.isNativeHasAttributePresent = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isNativeHasAttributePresent",function(v) {
+		var isSupported = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var i = js.Env.document.createElement("iframe");
+			var root = js.Env.document.documentElement;
+			var frames = js.Env.window.frames;
+			if(root != null && root.appendChild.$bind(root) != null && root.removeChild.$bind(root) != null) {
+				i.style.display = "none";
+				root.appendChild(i);
+				try {
+					var frame = frames[frames.length - 1];
+					if(frame != null) {
+						var doc = frame.document;
+						if(doc != null && doc.write.$bind(doc) != null) {
+							doc.write("<html><head><title></title></head><body></body></html>");
+							if(doc.documentElement != null) isSupported = Option.Some(js.Env.isDefined(($_=doc.documentElement,$_.hasAttribute.$bind($_)))); else isSupported = Option.Some(false);
+							root.removeChild(i);
+							i = null;
+						}
+					}
+				} catch( e ) {
+					isSupported = Option.Some(false);
+				}
+			}
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.isContextMenuEventSupported = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isContextMenuEventSupported",function(v) {
+		var isPresent = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("p");
+			if(el != null && el.setAttribute.$bind(el) != null) {
+				el.setAttribute("oncontextmenu","");
+				isPresent = Option.Some(js.Env.isDefined(el.oncontextmenu));
+			}
+		}
+		return isPresent;
+	});
+}
+js.detect.BrowserSupport.computedStyleReturnsValuesForStaticlyPositionedElements = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("computedStyleReturnsValuesForStaticlyPositionedElements",function(v) {
+		var result = Option.None;
+		var view = js.Env.document.defaultView;
+		if(view != null && view.getComputedStyle.$bind(view) != null) {
+			var docEl = js.Env.document.documentElement;
+			var position = null;
+			var positionPriority = null;
+			var style = view.getComputedStyle(docEl,null);
+			if(style.position != "static") {
+				position = style.position;
+				var docElStyle = docEl.style;
+				docElStyle.position = "";
+			}
+			var computedStyle = view.getComputedStyle(docEl,null);
+			result = Option.Some(computedStyle.left != "auto");
+			if(position != null) {
+				var docElStyle = docEl.style;
+				docElStyle.position = position;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isRgbaSupported = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isRgbaSupported",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var value = "rgba(1,1,1,0.5)";
+			var el = js.Env.document.createElement("p");
+			var re = /^rgba/;
+			if(el != null && el.style != null && js.Env.typeOf(re.test) == "function") try {
+				el.style.color = value;
+				result = Option.Some(re.test(el.style.color));
+			} catch( e ) {
+				result = Option.Some(false);
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isCssBorderRadiusSupported = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isCssBorderRadiusSupported",function(v) {
+		var result = Option.None;
+		var docEl = js.Env.document.documentElement;
+		if(docEl != null) {
+			var s = docEl.style;
+			result = Option.Some(js.Env.typeOf(s.borderRadius) == "string" || js.Env.typeOf(s.MozBorderRadius) == "string" || js.Env.typeOf(s.WebkitBorderRadius) == "string" || js.Env.typeOf(s.KhtmlBorderRadius) == "string");
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.elemenChildrenReturnsElementNodes = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("elemenChildrenReturnsElementNodes",function(v) {
+		var isSupported = Option.None;
+		var docEl = js.Env.document.documentElement;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && js.Env.isDefined(docEl.children)) {
+			var el = js.Env.document.createElement("div");
+			el.innerHTML = "<div><p>a</p></div>b<!-- x -->";
+			isSupported = Option.Some(el.children && el.children.length == 1 && el.children[0] && el.children[0].tagName && el.children[0].tagName.toUpperCase() == "DIV");
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.isCanvasSupported = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isCanvasSupported",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var elCanvas = js.Env.document.createElement("canvas");
+			result = Option.Some(!!(elCanvas != null && (elCanvas.getContext != null && elCanvas.getContext("2d") != null)));
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.positionFixed = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("positionFixed",function(v) {
+		var isSupported = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.style != null) {
+				el.style.position = "fixed";
+				el.style.top = "-10px";
+				var root = js.Env.document.body;
+				if(root != null) {
+					root.appendChild(el);
+					isSupported = Option.Some(el.offsetTop == -10);
+					root.removeChild(el);
+				}
+			}
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.isCssEnabled = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isCssEnabled",function(v) {
+		var isSupported = Option.None;
+		var body = js.Env.document.body;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && body != null && body.appendChild.$bind(body) != null && body.removeChild.$bind(body) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.style != null) {
+				el.style.display = "none";
+				body.appendChild(el);
+				isSupported = Option.Some(el.offsetWidth == 0);
+				body.removeChild(el);
+			}
+		}
+		return isSupported;
+	});
+}
+js.detect.BrowserSupport.isQuirksMode = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isQuirksMode",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.style != null) {
+				var style = el.style;
+				style.width = "1";
+			}
+			var style = el.style;
+			result = Option.Some(style.width == "1px");
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isContainsBuggy = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isContainsBuggy",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el1 = js.Env.document.createElement("div"), el2 = js.Env.document.createElement("div");
+			if(el1 != null && el2 != null && js.Env.isDefined(el1.contains)) result = Option.Some(el1.contains(el2));
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isActivexEnabled = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("isActivexEnabled",function(v) {
+		var result = Option.Some(false);
+		if(window.ActiveXObject) {
+			var xmlVersions = ["Microsoft.XMLHTTP","Msxml2.XMLHTTP.3.0","Msxml2.XMLHTTP.4.0","Msxml2.XMLHTTP.5.0","Msxml2.XMLHTTP.6.0"];
+			var _g = 0;
+			while(_g < xmlVersions.length) {
+				var value = xmlVersions[_g];
+				++_g;
+				try {
+					if(new ActiveXObject(value) != null) result = Option.Some(true);
+				} catch( ex ) {
+				}
+			}
+			result = Option.Some(OptionExtensions.getOrElseC(result,false));
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.typeofNodelistIsFunctionBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("typeofNodelistIsFunctionBug",function(v) {
+		var result = Option.None;
+		if(js.Env.document.forms != null) result = Option.Some(js.Env.typeOf(js.Env.document.forms) == "function");
+		return result;
+	});
+}
+js.detect.BrowserSupport.getElementsByTagNameReturnsCommentNodesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("getElementsByTagNameReturnsCommentNodesBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.getElementsByTagName.$bind(el) != null) {
+				el.innerHTML = "<span>a</span><!--b-->";
+				var all = el.getElementsByTagName("*");
+				if(all.length != null) {
+					var lastNode = el.getElementsByTagName("*")[1];
+					result = Option.Some(!!(lastNode != null && lastNode.nodeType == 8));
+				}
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.setAttributeIgnoresNameAttributeBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("setAttributeIgnoresNameAttributeBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var elForm = js.Env.document.createElement("form");
+			var elInput = js.Env.document.createElement("input");
+			var root = js.Env.document.documentElement;
+			if(elForm != null && elInput != null && elInput.setAttribute.$bind(elInput) != null && elForm.appendChild.$bind(elForm) != null && root != null && root.appendChild.$bind(root) != null && root.removeChild.$bind(root) != null) {
+				elInput.setAttribute("name","test");
+				elForm.appendChild(elInput);
+				root.appendChild(elForm);
+				if(elForm.elements != null) result = Option.Some(js.Env.typeOf(elForm.elements["test"]) == "undefined"); else result = Option.Some(true);
+				root.removeChild(elForm);
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.elementPropertiesAreAttributesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("elementPropertiesAreAttributesBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.getAttribute.$bind(el) != null) {
+				el.__foo = 'bar';
+				result = Option.Some(el.getAttribute("__foo") == "bar");
+				el = null;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isRegexpWhitespaceCharacterClassBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isRegexpWhitespaceCharacterClassBug",function(v) {
+		var result = Option.None;
+		var str = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029';
+		result = Option.Some(!/^\s+$/.test(str));
+		return result;
+	});
+}
+js.detect.BrowserSupport.isStringPrototypeSplitRegexpBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isStringPrototypeSplitRegexpBug",function(v) {
+		var s = "a_b";
+		return Option.Some(s.split(/(_)/).length != 3);
+	});
+}
+js.detect.BrowserSupport.preElementsIgnoreNewLinesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("preElementsIgnoreNewLinesBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && ($_=js.Env.document,$_.createTextNode.$bind($_)) != null) {
+			var el = js.Env.document.createElement("pre");
+			var txt = js.Env.document.createTextNode("xx");
+			var root = js.Env.document.documentElement;
+			if(el != null && el.appendChild.$bind(el) != null && txt != null && root != null && root.appendChild.$bind(root) != null && root.removeChild.$bind(root) != null) {
+				el.appendChild(txt);
+				root.appendChild(el);
+				var initialHeight = el.offsetHeight;
+				el.firstChild.nodeValue = "x\nx";
+				var isIgnored = el.offsetHeight == initialHeight;
+				root.removeChild(el);
+				el = txt = null;
+				result = Option.Some(isIgnored);
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.selectElementInnerHtmlBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("selectElementInnerHtmlBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("select");
+			if(el != null) {
+				el.innerHTML = "<option value=\"test\">test</option>";
+				if(el.options != null && el.options[0] != null) result = Option.Some(el.options[0].nodeName.toUpperCase() != "OPTION");
+				el = null;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.tableElementInnerHtmlBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("tableElementInnerHtmlBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) try {
+			var el = js.Env.document.createElement("table");
+			if(el != null && el.tBodies != null) {
+				el.innerHTML = "<tbody><tr><td>test</td></tr></tbody>";
+				result = Option.Some(js.Env.typeOf(el.tBodies[0]) == "undefined");
+				el = null;
+			}
+		} catch( e ) {
+			result = Option.Some(true);
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.scriptElementRejectsTextNodeAppendingBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("scriptElementRejectsTextNodeAppendingBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && ($_=js.Env.document,$_.createTextNode.$bind($_)) != null) {
+			var s = js.Env.document.createElement("script");
+			if(s != null && s.appendChild.$bind(s) != null) {
+				try {
+					s.appendChild(js.Env.document.createTextNode(""));
+					result = Option.Some(s.firstChild == null || s.firstChild != null && s.firstChild.nodeType != 3);
+				} catch( e ) {
+					result = Option.Some(true);
+				}
+				s = null;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.documentGetElementByIdConfusesIdsWithNamesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("documentGetElementByIdConfusesIdsWithNamesBug",function(v) {
+		var result = Option.Some(false);
+		if(($_=js.Env.document,$_.getElementsByTagName.$bind($_)) != null && ($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var num = Date.now().getTime();
+			var name = "__test_" + num;
+			var head = js.Env.document.getElementsByTagName("head")[0];
+			var el;
+			try {
+				el = js.Env.document.createElement("<input name=\"" + name + "\">");
+			} catch( e ) {
+				el = js.Env.document.createElement("input");
+				el.name = name;
+			}
+			if(head.appendChild.$bind(head) != null && head.removeChild.$bind(head) != null) {
+				head.appendChild(el);
+				var testElement = js.Env.document.getElementById(name);
+				result = Option.Some(!!(testElement != null && testElement.nodeName.toUpperCase() == "INPUT"));
+				head.removeChild(el);
+				el = null;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.documentGetElementByIdIgnoresCaseBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("documentGetElementByIdIgnoresCaseBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null && ($_=js.Env.document,$_.getElementsByTagName.$bind($_)) != null && ($_=js.Env.document,$_.getElementById.$bind($_)) != null) {
+			var el = js.Env.document.createElement("script");
+			var head = js.Env.document.getElementsByTagName("head")[0];
+			if(el != null && head != null && head.appendChild.$bind(head) != null && head.removeChild.$bind(head) != null) {
+				el.type = "text/javascript";
+				el.id = "A";
+				head.appendChild(el);
+				result = Option.Some(!!(js.Env.document.getElementById("a") != null));
+				head.removeChild(el);
+				el = null;
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.offsetValuesForStaticElementsInsidePositionedOnesBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("offsetValuesForStaticElementsInsidePositionedOnesBug",function(v) {
+		var result = Option.None;
+		var body = js.Env.document.body;
+		if(body != null && body.insertBefore.$bind(body) != null && ($_=js.Env.document,$_.createElement.$bind($_)) != null && ($_=js.Env.document,$_.getElementById.$bind($_)) != null) {
+			var id = "x" + (Math.random() + "").substr(2);
+			var clearance = "margin:0;padding:0;border:0;visibility:hidden;";
+			var payload = "<div style=\"position:absolute;top:10px;" + clearance + "\">" + "<div style=\"position:relative;top:10px;" + clearance + "\">" + "<div style=\"height:10px;font-size:1px;" + clearance + "\"></div>" + "<div id=\"" + id + "\">x</div>" + "</div>" + "</div>";
+			var wrapper = js.Env.document.createElement("div");
+			if(wrapper != null) {
+				wrapper.innerHTML = payload;
+				body.insertBefore(wrapper,body.firstChild);
+				var el = js.Env.document.getElementById(id);
+				if(el != null && el.style != null) {
+					if(el.offsetTop != 10) {
+						el.style.position = "relative";
+						if(el.offsetTop == 10) result = Option.Some(true);
+					} else result = Option.Some(false);
+				}
+				body.removeChild(wrapper);
+			}
+			wrapper = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isDocumentGetElementsByNameBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isDocumentGetElementsByNameBug",function(v) {
+		var result = Option.None;
+		var docEl = js.Env.document.documentElement;
+		if(docEl != null && docEl.appendChild.$bind(docEl) != null && docEl.removeChild.$bind(docEl) != null && ($_=js.Env.document,$_.getElementsByName.$bind($_)) != null && ($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null) {
+				var uid = "x" + (Math.random() + "").substr(2);
+				el.id = uid;
+				docEl.appendChild(el);
+				result = Option.Some(js.Env.document.getElementsByName(uid)[0] == el);
+				docEl.removeChild(el);
+			}
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isOverflowStyleBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isOverflowStyleBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			el.innerHTML = "<p style=\"overflow: visible;\">x</p>";
+			var firstChild = el.firstChild;
+			if(firstChild != null && firstChild.style != null) {
+				var style = firstChild.style;
+				style.overflow = "hidden";
+				result = Option.Some(style.overflow != "hidden");
+			}
+			el = null;
+			firstChild = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.isQuerySelectorAllBug = function() {
+	return js.detect.BrowserSupport.testBugAndMemorize("isQuerySelectorAllBug",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("div");
+			if(el != null && el.querySelectorAll != null) {
+				el.innerHTML = "<object><param name=\"\"></object>";
+				result = Option.Some(el.querySelectorAll("param").length != 1);
+			}
+			el = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.html5Audio = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Audio",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var el = js.Env.document.createElement("audio");
+			result = Option.Some(!!el.canPlayType);
+			el = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.html5AudioInMP3Format = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5AudioInMP3Format",function(v) {
+		return js.detect.BrowserSupport.canPlayType("audio","audio/mpeg;");
+	});
+}
+js.detect.BrowserSupport.html5AudioInVorbisFormat = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5AudioInVorbisFormat",function(v) {
+		return js.detect.BrowserSupport.canPlayType("audio","audio/ogg; codecs=\"vorbis\"");
+	});
+}
+js.detect.BrowserSupport.html5AudioInWavFormat = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5AudioInWavFormat",function(v) {
+		return js.detect.BrowserSupport.canPlayType("audio","audio/wav; codecs=\"1\"");
+	});
+}
+js.detect.BrowserSupport.html5AudioInAACFormat = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5AudioInAACFormat",function(v) {
+		return js.detect.BrowserSupport.canPlayType("audio","audio/mp4; codecs=\"mp4a.40.2\"");
+	});
+}
+js.detect.BrowserSupport.canPlayType = function(element,format) {
+	var result = Option.None;
+	if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+		var a = js.Env.document.createElement(element);
+		result = Option.Some(!!(a.canPlayType && a.canPlayType(format).replace("no","") != ""));
+		a = null;
+	}
+	return result;
+}
+js.detect.BrowserSupport.html5Canvas = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Canvas",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var a = js.Env.document.createElement("canvas");
+			result = Option.Some(!!a.getContext);
+			a = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.html5CanvasTextAPI = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5CanvasTextAPI",function(v) {
+		var result = Option.None;
+		if(($_=js.Env.document,$_.createElement.$bind($_)) != null) {
+			var c = js.Env.document.createElement("canvas");
+			result = Option.Some(c.getContext && js.Env.typeOf(c.getContext("2d").fillText) == "function");
+			c = null;
+		}
+		return result;
+	});
+}
+js.detect.BrowserSupport.html5Command = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Command",function(v) {
+		return js.detect.BrowserSupport.checIfExist("command","type");
+	});
+}
+js.detect.BrowserSupport.html5Datalist = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Datalist",function(v) {
+		return js.detect.BrowserSupport.checIfExist("datalist","options");
+	});
+}
+js.detect.BrowserSupport.html5Details = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Details",function(v) {
+		return js.detect.BrowserSupport.checIfExist("details","open");
+	});
+}
+js.detect.BrowserSupport.html5Device = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5Device",function(v) {
+		return js.detect.BrowserSupport.checIfExist("device","type");
+	});
+}
+js.detect.BrowserSupport.html5FormConstraintValidation = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5FormConstraintValidation",function(v) {
+		return js.detect.BrowserSupport.checIfExist("form","noValidate");
+	});
+}
+js.detect.BrowserSupport.html5IframeSandbox = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5IframeSandbox",function(v) {
+		return js.detect.BrowserSupport.checIfExist("iframe","sandbox");
+	});
+}
+js.detect.BrowserSupport.html5IframeSrcdoc = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5IframeSrcdoc",function(v) {
+		return js.detect.BrowserSupport.checIfExist("iframe","srcdoc");
+	});
+}
+js.detect.BrowserSupport.html5InputAutofocus = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputAutofocus",function(v) {
+		return js.detect.BrowserSupport.checIfExist("input","autofocus");
+	});
+}
+js.detect.BrowserSupport.html5InputPlaceholder = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputPlaceholder",function(v) {
+		return js.detect.BrowserSupport.checIfExist("input","placeholder");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeColor = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeColor",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("color");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeEmail = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeEmail",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("email");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeNumber = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeNumber",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("range");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeRange = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeRange",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("color");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeSearch = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeSearch",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("search");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeTel = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeTel",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("tel");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeUrl = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeUrl",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("url");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeDate = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeDate",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("date");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeTime = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeTime",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("time");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeDatetime = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeDatetime",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("datetime");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeDatetimeLocal = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeDatetimeLocal",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("datetime-local");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeWeek = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeWeek",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("week");
+	});
+}
+js.detect.BrowserSupport.html5InputTypeMonth = function() {
+	return js.detect.BrowserSupport.testFeatureAndMemorize("html5InputTypeMonth",function(v) {
+		return js.detect.BrowserSupport.checIputTypeProperty("month");
+	});
+>>>>>>> Rearranging for minimal code import
 }
 haxe.test.Assert.q = function(v) {
 	if(null == v) return "null"; else if(Std["is"](v,String)) return "\"" + StringTools.replace(v,"\"","\\\"") + "\""; else return "" + v;
@@ -14699,6 +21433,7 @@ js.dom.HTMLElementExtensions.asVideoOption = function(e) {
 }
 js.dom.HTMLElementExtensions.asAudioOption = function(e) {
 	return e.nodeName == "AUDIO"?Option.Some(e):Option.None;
+<<<<<<< HEAD
 }
 js.dom.HTMLElementExtensions.asHeadOption = function(e) {
 	return e.nodeName == "HEAD"?Option.Some(e):Option.None;
@@ -14916,6 +21651,518 @@ haxe.util.OrderExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototy
 		this.assertFalse((haxe.util.OrderExtension.notEqual(stax.IntOps.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 44, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
 		this.assertTrue((haxe.util.OrderExtension.equal(stax.IntOps.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 46, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
 		this.assertFalse((haxe.util.OrderExtension.equal(stax.IntOps.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 47, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+	}
+	,__class__: haxe.util.OrderExtensionsTestCase
+});
+js.Env = $hxClasses["js.Env"] = function() { }
+js.Env.__name__ = ["js","Env"];
+js.Env.eq = function(a,b) {
+	return (function(a, b) { return a === b; })(a,b);
+=======
+>>>>>>> Rearranging for minimal code import
+}
+js.dom.HTMLElementExtensions.asHeadOption = function(e) {
+	return e.nodeName == "HEAD"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asLinkOption = function(e) {
+	return e.nodeName == "LINK"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTitleOption = function(e) {
+	return e.nodeName == "TITLE"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asMetaOption = function(e) {
+	return e.nodeName == "META"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asBaseOption = function(e) {
+	return e.nodeName == "BASE"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asIsIndexOption = function(e) {
+	return e.nodeName == "ISINDEX"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asSelectOption = function(e) {
+	return e.nodeName == "SELECT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asCanvasOption = function(e) {
+	return e.nodeName == "CANVAS"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asOptGroupOption = function(e) {
+	return e.nodeName == "OPTGROUP"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asOptionOption = function(e) {
+	return e.nodeName == "OPTION"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asInputOption = function(e) {
+	return e.nodeName == "INPUT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTextAreaOption = function(e) {
+	return e.nodeName == "TEXTAREA"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asButtonOption = function(e) {
+	return e.nodeName == "BUTTON"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asLabelOption = function(e) {
+	return e.nodeName == "LABEL"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asFieldSetOption = function(e) {
+	return e.nodeName == "FIELDSET"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asLegendOption = function(e) {
+	return e.nodeName == "LEGEND"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asUListOption = function(e) {
+	return e.nodeName == "UL"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asOListOption = function(e) {
+	return e.nodeName == "OL"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asDListOption = function(e) {
+	return e.nodeName == "DL"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asDirOption = function(e) {
+	return e.nodeName == "DIR"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asMenuOption = function(e) {
+	return e.nodeName == "MENU"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asLIOption = function(e) {
+	return e.nodeName == "LI"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asPOption = function(e) {
+	return e.nodeName == "P"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asHOption = function(e) {
+	return e.nodeName == "H"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asQuoteOption = function(e) {
+	return e.nodeName == "QUOTE"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asPreOption = function(e) {
+	return e.nodeName == "PRE"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asBROption = function(e) {
+	return e.nodeName == "BR"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asBaseFontOption = function(e) {
+	return e.nodeName == "BASEFONT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asFontOption = function(e) {
+	return e.nodeName == "FONT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asHROption = function(e) {
+	return e.nodeName == "HR"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asModOption = function(e) {
+	return e.nodeName == "MOD"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asAOption = function(e) {
+	return e.nodeName == "A"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asImageOption = function(e) {
+	return e.nodeName == "IMG"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asObjectOption = function(e) {
+	return e.nodeName == "OBJECT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asParamOption = function(e) {
+	return e.nodeName == "PARAM"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asAppletOption = function(e) {
+	return e.nodeName == "APPLET"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asMapOption = function(e) {
+	return e.nodeName == "MAP"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asAreaOption = function(e) {
+	return e.nodeName == "AREA"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTableOption = function(e) {
+	return e.nodeName == "TABLE"?Option.Some(e):Option.None;
+}
+<<<<<<< HEAD
+js.CSSValueType = $hxClasses["js.CSSValueType"] = function() { }
+js.CSSValueType.__name__ = ["js","CSSValueType"];
+js.CSSValueType.prototype = {
+	__class__: js.CSSValueType
+}
+js.PrimitiveType = $hxClasses["js.PrimitiveType"] = function() { }
+js.PrimitiveType.__name__ = ["js","PrimitiveType"];
+js.PrimitiveType.prototype = {
+	__class__: js.PrimitiveType
+}
+js.UpdateStatus = $hxClasses["js.UpdateStatus"] = function() { }
+js.UpdateStatus.__name__ = ["js","UpdateStatus"];
+js.UpdateStatus.prototype = {
+	__class__: js.UpdateStatus
+}
+js.ErrorSeverity = $hxClasses["js.ErrorSeverity"] = function() { }
+js.ErrorSeverity.__name__ = ["js","ErrorSeverity"];
+js.ErrorSeverity.prototype = {
+	__class__: js.ErrorSeverity
+}
+stax.EitherOps = $hxClasses["stax.EitherOps"] = function() { }
+stax.EitherOps.__name__ = ["stax","EitherOps"];
+stax.EitherOps.toLeft = function(v) {
+	return Either.Left(v);
+}
+stax.EitherOps.toRight = function(v) {
+	return Either.Right(v);
+}
+stax.EitherOps.flip = function(e) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = Either.Right(v);
+			break;
+		case 1:
+			var v = $e[2];
+			$r = Either.Left(v);
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.left = function(e) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = Option.Some(v);
+			break;
+		default:
+			$r = Option.None;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.isLeft = function(e) {
+	return (function($this) {
+		var $r;
+		switch( (e)[1] ) {
+		case 0:
+			$r = true;
+			break;
+		case 1:
+			$r = false;
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.isRight = function(e) {
+	return (function($this) {
+		var $r;
+		switch( (e)[1] ) {
+		case 0:
+			$r = false;
+			break;
+		case 1:
+			$r = true;
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.right = function(e) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 1:
+			var v = $e[2];
+			$r = Option.Some(v);
+			break;
+		default:
+			$r = Option.None;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.get = function(e) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = v;
+			break;
+		case 1:
+			var v = $e[2];
+			$r = v;
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.mapLeft = function(e,f) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = Either.Left(f(v));
+			break;
+		case 1:
+			var v = $e[2];
+			$r = Either.Right(v);
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.map = function(e,f1,f2) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = Either.Left(f1(v));
+			break;
+		case 1:
+			var v = $e[2];
+			$r = Either.Right(f2(v));
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.mapRight = function(e,f) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = Either.Left(v);
+			break;
+		case 1:
+			var v = $e[2];
+			$r = Either.Right(f(v));
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.flatMap = function(e,f1,f2) {
+	return (function($this) {
+		var $r;
+		var $e = (e);
+		switch( $e[1] ) {
+		case 0:
+			var v = $e[2];
+			$r = f1(v);
+			break;
+		case 1:
+			var v = $e[2];
+			$r = f2(v);
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.composeLeft = function(e1,e2,ac,bc) {
+	return (function($this) {
+		var $r;
+		var $e = (e1);
+		switch( $e[1] ) {
+		case 0:
+			var v1 = $e[2];
+			$r = (function($this) {
+				var $r;
+				var $e = (e2);
+				switch( $e[1] ) {
+				case 0:
+					var v2 = $e[2];
+					$r = Either.Left(ac(v1,v2));
+					break;
+				case 1:
+					var v2 = $e[2];
+					$r = Either.Left(v1);
+					break;
+				}
+				return $r;
+			}($this));
+			break;
+		case 1:
+			var v1 = $e[2];
+			$r = (function($this) {
+				var $r;
+				var $e = (e2);
+				switch( $e[1] ) {
+				case 0:
+					var v2 = $e[2];
+					$r = Either.Left(v2);
+					break;
+				case 1:
+					var v2 = $e[2];
+					$r = Either.Right(bc(v1,v2));
+					break;
+				}
+				return $r;
+			}($this));
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.composeRight = function(e1,e2,ac,bc) {
+	return (function($this) {
+		var $r;
+		var $e = (e1);
+		switch( $e[1] ) {
+		case 0:
+			var v1 = $e[2];
+			$r = (function($this) {
+				var $r;
+				var $e = (e2);
+				switch( $e[1] ) {
+				case 0:
+					var v2 = $e[2];
+					$r = Either.Left(ac(v1,v2));
+					break;
+				case 1:
+					var v2 = $e[2];
+					$r = Either.Right(v2);
+					break;
+				}
+				return $r;
+			}($this));
+			break;
+		case 1:
+			var v1 = $e[2];
+			$r = (function($this) {
+				var $r;
+				var $e = (e2);
+				switch( $e[1] ) {
+				case 0:
+					var v2 = $e[2];
+					$r = Either.Right(v1);
+					break;
+				case 1:
+					var v2 = $e[2];
+					$r = Either.Right(bc(v1,v2));
+					break;
+				}
+				return $r;
+			}($this));
+			break;
+		}
+		return $r;
+	}(this));
+}
+stax.EitherOps.prototype = {
+	__class__: stax.EitherOps
+}
+haxe.data.collections.ArrayExtensionsTestCase = $hxClasses["haxe.data.collections.ArrayExtensionsTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+=======
+js.dom.HTMLElementExtensions.asCaptionOption = function(e) {
+	return e.nodeName == "CAPTION"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTDOption = function(e) {
+	return e.nodeName == "TD"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTHeadOption = function(e) {
+	return e.nodeName == "THEAD"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTBodyOption = function(e) {
+	return e.nodeName == "TBODY"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTFootOption = function(e) {
+	return e.nodeName == "TFOOT"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asTROption = function(e) {
+	return e.nodeName == "TR"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asFrameSetOption = function(e) {
+	return e.nodeName == "FRAMESET"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asFrameOption = function(e) {
+	return e.nodeName == "FRAME"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.asIFrameOption = function(e) {
+	return e.nodeName == "IFRAME"?Option.Some(e):Option.None;
+}
+js.dom.HTMLElementExtensions.prototype = {
+	__class__: js.dom.HTMLElementExtensions
+}
+haxe.reactive.StreamBool = $hxClasses["haxe.reactive.StreamBool"] = function() {
+}
+haxe.reactive.StreamBool.__name__ = ["haxe","reactive","StreamBool"];
+haxe.reactive.StreamBool.not = function(stream) {
+	return stream.map(function(v) {
+		return !v;
+	});
+}
+haxe.reactive.StreamBool.ifTrue = function(stream,thenE,elseE) {
+	var testStamp = -1;
+	var testValue = false;
+	haxe.reactive.Streams.create(function(pulse) {
+		testStamp = pulse.stamp;
+		testValue = pulse.value;
+		return haxe.reactive.Propagation.doNotPropagate;
+	},[stream]);
+	return haxe.reactive.Streams.merge([haxe.reactive.Streams.create(function(pulse) {
+		return testValue && testStamp == pulse.stamp?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate;
+	},[thenE]),haxe.reactive.Streams.create(function(pulse) {
+		return !testValue && testStamp == pulse.stamp?haxe.reactive.Propagation.propagate(pulse):haxe.reactive.Propagation.doNotPropagate;
+	},[elseE])]);
+}
+haxe.reactive.StreamBool.and = function(streams) {
+	var rev = haxe.data.collections.IterableExtensions.reversed(streams);
+	var count = haxe.data.collections.IterableExtensions.size(streams);
+	var iterator = rev.iterator();
+	var acc = iterator.hasNext()?iterator.next():haxe.reactive.Streams.one(true);
+	while(iterator.hasNext()) {
+		var next = iterator.next();
+		acc = haxe.reactive.StreamBool.ifTrue(next,acc,next.constant(false));
+	}
+	return acc;
+}
+haxe.reactive.StreamBool.or = function(streams) {
+	var rev = haxe.data.collections.IterableExtensions.reversed(streams);
+	var count = haxe.data.collections.IterableExtensions.size(streams);
+	var iterator = rev.iterator();
+	var acc = iterator.hasNext()?iterator.next():haxe.reactive.Streams.one(false);
+	while(iterator.hasNext()) {
+		var next = iterator.next();
+		acc = haxe.reactive.StreamBool.ifTrue(next,next,acc);
+	}
+	return acc;
+}
+haxe.reactive.StreamBool.prototype = {
+	__class__: haxe.reactive.StreamBool
+}
+haxe.util.OrderExtensionsTestCase = $hxClasses["haxe.util.OrderExtensionsTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.util.OrderExtensionsTestCase.__name__ = ["haxe","util","OrderExtensionsTestCase"];
+haxe.util.OrderExtensionsTestCase.__super__ = haxe.test.TestCase;
+haxe.util.OrderExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testGreaterThan: function() {
+		this.assertTrue((haxe.util.OrderExtension.greaterThan(IntExtensions.compare))(2,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 27, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.greaterThan(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 28, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.greaterThanOrEqual(IntExtensions.compare))(2,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 30, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.greaterThanOrEqual(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 31, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.greaterThanOrEqual(IntExtensions.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 32, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.lessThan(IntExtensions.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 34, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.lessThan(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 35, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.lessThanOrEqual(IntExtensions.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 37, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.lessThanOrEqual(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 38, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.lessThanOrEqual(IntExtensions.compare))(2,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 39, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.notEqual(IntExtensions.compare))(2,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 41, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.notEqual(IntExtensions.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 42, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.notEqual(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 43, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertTrue((haxe.util.OrderExtension.equal(IntExtensions.compare))(1,1),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 45, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
+		this.assertFalse((haxe.util.OrderExtension.equal(IntExtensions.compare))(1,2),null,{ fileName : "OrderExtensionsTestCase.hx", lineNumber : 46, className : "haxe.util.OrderExtensionsTestCase", methodName : "testGreaterThan"});
 	}
 	,__class__: haxe.util.OrderExtensionsTestCase
 });
@@ -15217,276 +22464,17 @@ js.ErrorSeverity.__name__ = ["js","ErrorSeverity"];
 js.ErrorSeverity.prototype = {
 	__class__: js.ErrorSeverity
 }
-stax.EitherOps = $hxClasses["stax.EitherOps"] = function() { }
-stax.EitherOps.__name__ = ["stax","EitherOps"];
-stax.EitherOps.toLeft = function(v) {
-	return Either.Left(v);
-}
-stax.EitherOps.toRight = function(v) {
-	return Either.Right(v);
-}
-stax.EitherOps.flip = function(e) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = Either.Right(v);
-			break;
-		case 1:
-			var v = $e[2];
-			$r = Either.Left(v);
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.left = function(e) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = Option.Some(v);
-			break;
-		default:
-			$r = Option.None;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.isLeft = function(e) {
-	return (function($this) {
-		var $r;
-		switch( (e)[1] ) {
-		case 0:
-			$r = true;
-			break;
-		case 1:
-			$r = false;
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.isRight = function(e) {
-	return (function($this) {
-		var $r;
-		switch( (e)[1] ) {
-		case 0:
-			$r = false;
-			break;
-		case 1:
-			$r = true;
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.right = function(e) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 1:
-			var v = $e[2];
-			$r = Option.Some(v);
-			break;
-		default:
-			$r = Option.None;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.get = function(e) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = v;
-			break;
-		case 1:
-			var v = $e[2];
-			$r = v;
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.mapLeft = function(e,f) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = Either.Left(f(v));
-			break;
-		case 1:
-			var v = $e[2];
-			$r = Either.Right(v);
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.map = function(e,f1,f2) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = Either.Left(f1(v));
-			break;
-		case 1:
-			var v = $e[2];
-			$r = Either.Right(f2(v));
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.mapRight = function(e,f) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = Either.Left(v);
-			break;
-		case 1:
-			var v = $e[2];
-			$r = Either.Right(f(v));
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.flatMap = function(e,f1,f2) {
-	return (function($this) {
-		var $r;
-		var $e = (e);
-		switch( $e[1] ) {
-		case 0:
-			var v = $e[2];
-			$r = f1(v);
-			break;
-		case 1:
-			var v = $e[2];
-			$r = f2(v);
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.composeLeft = function(e1,e2,ac,bc) {
-	return (function($this) {
-		var $r;
-		var $e = (e1);
-		switch( $e[1] ) {
-		case 0:
-			var v1 = $e[2];
-			$r = (function($this) {
-				var $r;
-				var $e = (e2);
-				switch( $e[1] ) {
-				case 0:
-					var v2 = $e[2];
-					$r = Either.Left(ac(v1,v2));
-					break;
-				case 1:
-					var v2 = $e[2];
-					$r = Either.Left(v1);
-					break;
-				}
-				return $r;
-			}($this));
-			break;
-		case 1:
-			var v1 = $e[2];
-			$r = (function($this) {
-				var $r;
-				var $e = (e2);
-				switch( $e[1] ) {
-				case 0:
-					var v2 = $e[2];
-					$r = Either.Left(v2);
-					break;
-				case 1:
-					var v2 = $e[2];
-					$r = Either.Right(bc(v1,v2));
-					break;
-				}
-				return $r;
-			}($this));
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.composeRight = function(e1,e2,ac,bc) {
-	return (function($this) {
-		var $r;
-		var $e = (e1);
-		switch( $e[1] ) {
-		case 0:
-			var v1 = $e[2];
-			$r = (function($this) {
-				var $r;
-				var $e = (e2);
-				switch( $e[1] ) {
-				case 0:
-					var v2 = $e[2];
-					$r = Either.Left(ac(v1,v2));
-					break;
-				case 1:
-					var v2 = $e[2];
-					$r = Either.Right(v2);
-					break;
-				}
-				return $r;
-			}($this));
-			break;
-		case 1:
-			var v1 = $e[2];
-			$r = (function($this) {
-				var $r;
-				var $e = (e2);
-				switch( $e[1] ) {
-				case 0:
-					var v2 = $e[2];
-					$r = Either.Right(v1);
-					break;
-				case 1:
-					var v2 = $e[2];
-					$r = Either.Right(bc(v1,v2));
-					break;
-				}
-				return $r;
-			}($this));
-			break;
-		}
-		return $r;
-	}(this));
-}
-stax.EitherOps.prototype = {
-	__class__: stax.EitherOps
-}
 haxe.data.collections.ArrayExtensionsTestCase = $hxClasses["haxe.data.collections.ArrayExtensionsTestCase"] = function() {
 	haxe.test.TestCase.call(this);
 }
+>>>>>>> Rearranging for minimal code import
 haxe.data.collections.ArrayExtensionsTestCase.__name__ = ["haxe","data","collections","ArrayExtensionsTestCase"];
 haxe.data.collections.ArrayExtensionsTestCase.__super__ = haxe.test.TestCase;
 haxe.data.collections.ArrayExtensionsTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
 	testPartition: function() {
 		var t = haxe.data.collections.ArrayExtensions.partition([1,2,3,4,5,6],function(v) {
 			return v % 2 != 0;
+<<<<<<< HEAD
 		});
 		this.assertEquals(stax.Tuple2.create([1,3,5],[2,4,6]),t,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 34, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testPartition"});
 	}
@@ -15640,12 +22628,168 @@ haxe.data.collections.ArrayExtensionsTestCase.prototype = $extend(haxe.test.Test
 		});
 		this.assertEquals(haxe.data.collections.Map.create().set(1,[1]).set(2,[2,4,8]).set(3,[3,6,9]).set(5,[5,10]).set(7,[7]),r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 164, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testGroupBy"});
 	}
+=======
+		});
+		this.assertEquals(Tuple2.create([1,3,5],[2,4,6]),t,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 30, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testPartition"});
+	}
+	,testPartitionWhile: function() {
+		var t = haxe.data.collections.ArrayExtensions.partitionWhile([1,2,3,4,5,6],function(v) {
+			return v < 4;
+		});
+		this.assertEquals(Tuple2.create([1,2,3],[4,5,6]),t,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 35, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testPartitionWhile"});
+	}
+	,testMapTo: function() {
+		var r = haxe.data.collections.ArrayExtensions.mapTo([2,3],["1"],function(v) {
+			return "" + v;
+		});
+		this.assertEquals(["1","2","3"],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 40, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMapTo"});
+	}
+	,testFlatMapTo: function() {
+		var r = haxe.data.collections.ArrayExtensions.flatMapTo(["2","3,4,5","6,7"],[1],function(v) {
+			return ArrayExtensions.map(v.split(","),function(i) {
+				return Std.parseInt(i);
+			});
+		});
+		this.assertEquals([1,2,3,4,5,6,7],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 47, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFlatMapTo"});
+	}
+	,testCount: function() {
+		this.assertEquals(3,haxe.data.collections.ArrayExtensions.count([1,2,3,4,5],function(v) {
+			return v % 2 != 0;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 51, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testCount"});
+	}
+	,testCountWhile: function() {
+		this.assertEquals(2,haxe.data.collections.ArrayExtensions.count([1,2,3,4,5],function(v) {
+			return v < 3;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 55, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testCountWhile"});
+	}
+	,testScanl: function() {
+		var r = haxe.data.collections.ArrayExtensions.scanl([1,2,3,4,5],1,function(a,b) {
+			return a + b;
+		});
+		this.assertEquals([1,2,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 60, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl"});
+	}
+	,testScanr: function() {
+		var r = haxe.data.collections.ArrayExtensions.scanr([1,2,3,4,5],1,function(a,b) {
+			return a + b;
+		});
+		this.assertEquals([1,6,5,4,3,2],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 65, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr"});
+	}
+	,testScanl1: function() {
+		var r = haxe.data.collections.ArrayExtensions.scanl1([1,2,3,4,5],function(a,b) {
+			return a + b;
+		});
+		this.assertEquals([1,3,4,5,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 70, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanl1"});
+	}
+	,testScanr1: function() {
+		var r = haxe.data.collections.ArrayExtensions.scanr1([1,2,3,4,5],function(a,b) {
+			return a + b;
+		});
+		this.assertEquals([5,9,8,7,6],r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 75, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testScanr1"});
+	}
+	,testAppendAll: function() {
+		this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.appendAll([1],[2,3]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 79, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testAppendAll"});
+	}
+	,testIsEmpty: function() {
+		this.assertTrue(haxe.data.collections.ArrayExtensions.isEmpty([]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 83, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+		this.assertFalse(haxe.data.collections.ArrayExtensions.isEmpty([1]),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 84, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIsEmpty"});
+	}
+	,testFind: function() {
+		this.assertEquals(Option.None,haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
+			return v == 4;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 88, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+		this.assertEquals(Option.Some(2),haxe.data.collections.ArrayExtensions.find([1,2,3],function(v) {
+			return v == 2;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 89, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testFind"});
+	}
+	,testForAll: function() {
+		this.assertTrue(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
+			return v < 4;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 93, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+		this.assertFalse(haxe.data.collections.ArrayExtensions.forAll([1,2,3],function(v) {
+			return v < 2;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 94, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAll"});
+	}
+	,testForAny: function() {
+		this.assertFalse(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
+			return v > 3;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 98, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+		this.assertTrue(haxe.data.collections.ArrayExtensions.forAny([1,2,3],function(v) {
+			return v < 2;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 99, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testForAny"});
+	}
+	,testExists: function() {
+		this.assertFalse(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
+			return v == 4;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 103, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+		this.assertTrue(haxe.data.collections.ArrayExtensions.exists([1,2,3],function(v) {
+			return v == 2;
+		}),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 104, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExists"});
+	}
+	,testExistsP: function() {
+		var f = function(v,ref) {
+			return v == ref;
+		};
+		this.assertFalse(haxe.data.collections.ArrayExtensions.existsP([1,2,3],4,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 109, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+		this.assertTrue(haxe.data.collections.ArrayExtensions.existsP([1,2,3],2,f),null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 110, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testExistsP"});
+	}
+	,testNubBy: function() {
+		this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nub([1,2,2,3,1]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 114, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNubBy"});
+	}
+	,testNub: function() {
+		this.assertEquals([1,2,3],haxe.data.collections.ArrayExtensions.nubBy([1,2,2,3,1],function(a,b) {
+			return a == b;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 118, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testNub"});
+	}
+	,testIntersectBy: function() {
+		this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersectBy([1,2,3],[2,3,4,5],function(a,b) {
+			return a == b;
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 122, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersectBy"});
+	}
+	,testIntersect: function() {
+		this.assertEquals([2,3],haxe.data.collections.ArrayExtensions.intersect([1,2,3],[2,3,4,5]),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 126, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testIntersect"});
+	}
+	,testMkString: function() {
+		this.assertEquals("A-B-C",haxe.data.collections.ArrayExtensions.mkString(["a","b","c"],"-",function(s) {
+			return s.toUpperCase();
+		}),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 130, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testMkString"});
+	}
+	,testToMap: function() {
+		var map = haxe.data.collections.ArrayExtensions.toMap([Tuple2.create("a",1),Tuple2.create("b",2)]);
+		this.assertIs(map,haxe.data.collections.Map,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 135, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+		this.assertEquals(2,map.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 136, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToMap"});
+	}
+	,testToList: function() {
+		var list = haxe.data.collections.ArrayExtensions.toList([1,2,3]);
+		this.assertIs(list,haxe.data.collections.List,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 141, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+		this.assertEquals(3,list.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 142, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToList"});
+	}
+	,testToSet: function() {
+		var set = haxe.data.collections.ArrayExtensions.toSet([1,2,2,3,1]);
+		this.assertIs(set,haxe.data.collections.Set,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 147, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+		this.assertEquals(3,set.size(),null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 148, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testToSet"});
+	}
+	,testGroupBy: function() {
+		var arr = [1,2,3,4,5,6,7,8,9,10];
+		var primes = [7,5,3,2];
+		var r = haxe.data.collections.ArrayExtensions.groupBy(arr,function(v) {
+			var _g = 0;
+			while(_g < primes.length) {
+				var p = primes[_g];
+				++_g;
+				if(v % p == 0) return p;
+			}
+			return 1;
+		});
+		this.assertEquals(haxe.data.collections.Map.create().set(1,[1]).set(2,[2,4,8]).set(3,[3,6,9]).set(5,[5,10]).set(7,[7]),r,null,null,{ fileName : "ArrayExtensionsTestCase.hx", lineNumber : 160, className : "haxe.data.collections.ArrayExtensionsTestCase", methodName : "testGroupBy"});
+	}
+>>>>>>> Rearranging for minimal code import
 	,__class__: haxe.data.collections.ArrayExtensionsTestCase
 });
 var Std = $hxClasses["Std"] = function() { }
 Std.__name__ = ["Std"];
 Std["is"] = function(v,t) {
 	return js.Boot.__instanceof(v,t);
+<<<<<<< HEAD
 }
 Std.string = function(s) {
 	return js.Boot.__string_rec(s,"");
@@ -15757,10 +22901,395 @@ haxe.text.json.ListJValue.extract = function(v,e,tool) {
 			break;
 		default:
 			$r = Stax.error("Expected Array but was: " + v);
-		}
-		return $r;
-	}(this));
+=======
 }
+Std.string = function(s) {
+	return js.Boot.__string_rec(s,"");
+}
+Std["int"] = function(x) {
+	if(x < 0) return Math.ceil(x);
+	return Math.floor(x);
+}
+Std.parseInt = function(x) {
+	var v = parseInt(x,10);
+	if(v == 0 && x.charCodeAt(1) == 120) v = parseInt(x);
+	if(isNaN(v)) return null;
+	return v;
+}
+Std.parseFloat = function(x) {
+	return parseFloat(x);
+}
+Std.random = function(x) {
+	return Math.floor(Math.random() * x);
+}
+Std.prototype = {
+	__class__: Std
+}
+haxe.Timer = $hxClasses["haxe.Timer"] = function(time_ms) {
+	var arr = haxe_timers;
+	this.id = arr.length;
+	arr[this.id] = this;
+	this.timerId = window.setInterval("haxe_timers[" + this.id + "].run();",time_ms);
+}
+haxe.Timer.__name__ = ["haxe","Timer"];
+haxe.Timer.delay = function(f,time_ms) {
+	var t = new haxe.Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	};
+	return t;
+}
+haxe.Timer.measure = function(f,pos) {
+	var t0 = haxe.Timer.stamp();
+	var r = f();
+	haxe.Log.trace(haxe.Timer.stamp() - t0 + "s",pos);
+	return r;
+}
+haxe.Timer.stamp = function() {
+	return Date.now().getTime() / 1000;
+}
+haxe.Timer.prototype = {
+	id: null
+	,timerId: null
+	,stop: function() {
+		if(this.id == null) return;
+		window.clearInterval(this.timerId);
+		var arr = haxe_timers;
+		arr[this.id] = null;
+		if(this.id > 100 && this.id == arr.length - 1) {
+			var p = this.id - 1;
+			while(p >= 0 && arr[p] == null) p--;
+			arr = arr.slice(0,p + 1);
+		}
+		this.id = null;
+	}
+	,run: function() {
+	}
+	,__class__: haxe.Timer
+}
+js.dom.DomCollectionExtensions = $hxClasses["js.dom.DomCollectionExtensions"] = function() { }
+js.dom.DomCollectionExtensions.__name__ = ["js","dom","DomCollectionExtensions"];
+js.dom.DomCollectionExtensions.toArray = function(c) {
+	var a = [];
+	var _g1 = 0, _g = c.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		a.push(c[i]);
+	}
+	return a;
+}
+js.dom.DomCollectionExtensions.prototype = {
+	__class__: js.dom.DomCollectionExtensions
+}
+if(!haxe.rtti) haxe.rtti = {}
+haxe.rtti.Meta = $hxClasses["haxe.rtti.Meta"] = function() { }
+haxe.rtti.Meta.__name__ = ["haxe","rtti","Meta"];
+haxe.rtti.Meta.getType = function(t) {
+	var meta = t.__meta__;
+	return meta == null || meta.obj == null?{ }:meta.obj;
+}
+haxe.rtti.Meta.getStatics = function(t) {
+	var meta = t.__meta__;
+	return meta == null || meta.statics == null?{ }:meta.statics;
+}
+haxe.rtti.Meta.getFields = function(t) {
+	var meta = t.__meta__;
+	return meta == null || meta.fields == null?{ }:meta.fields;
+}
+haxe.rtti.Meta.prototype = {
+	__class__: haxe.rtti.Meta
+}
+haxe.data.transcode.JValueTestCase = $hxClasses["haxe.data.transcode.JValueTestCase"] = function() {
+	haxe.test.TestCase.call(this);
+}
+haxe.data.transcode.JValueTestCase.__name__ = ["haxe","data","transcode","JValueTestCase"];
+haxe.data.transcode.JValueTestCase.__super__ = haxe.test.TestCase;
+haxe.data.transcode.JValueTestCase.prototype = $extend(haxe.test.TestCase.prototype,{
+	testBool: function() {
+		this.doTest(BoolExtensions.decompose,function(v) {
+			return BoolExtensions.extract(Bool,v);
+		},[true,false]);
+	}
+	,testInt: function() {
+		this.doTest(IntExtensions.decompose,function(v) {
+			return IntExtensions.extract(Int,v);
+		},[-1234,9231]);
+	}
+	,testFloat: function() {
+		this.doTest(FloatExtensions.decompose,function(v) {
+			return FloatExtensions.extract(Float,v);
+		},[0.25,0.5]);
+	}
+	,testString: function() {
+		this.doTest(StringExtensions.decompose,function(v) {
+			return StringExtensions.extract(String,v);
+		},["boo","baz"]);
+	}
+	,testDate: function() {
+		this.doTest(DateExtensions.decompose,function(v) {
+			return DateExtensions.extract(Date,v);
+		},[Date.now(),Date.fromTime(0.0)]);
+	}
+	,testOption: function() {
+		var a = [Option.Some(123),Option.None];
+		this.doTest(OptionExtensions.decompose,function(v) {
+			return OptionExtensions.extract(Option,v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			});
+		},a);
+	}
+	,testTuple2: function() {
+		var a = [Tuple2.create(123,"foo"),Tuple2.create(0,"bar")];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return Tuple2.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			});
+		},a);
+	}
+	,testTuple3: function() {
+		var a = [Tuple3.create(123,"foo",true),Tuple3.create(0,"bar",false)];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return Tuple3.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			},function(v1) {
+				return BoolExtensions.extract(Bool,v1);
+			});
+		},a);
+	}
+	,testTuple4: function() {
+		var a = [Tuple4.create(123,"foo",true,0.25),Tuple4.create(0,"bar",false,0.5)];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return Tuple4.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			},function(v1) {
+				return BoolExtensions.extract(Bool,v1);
+			},function(v1) {
+				return FloatExtensions.extract(Float,v1);
+			});
+		},a);
+	}
+	,testTuple5: function() {
+		var a = [Tuple5.create(123,"foo",true,0.25,"biz"),Tuple5.create(0,"bar",false,0.5,"bop")];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return Tuple5.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			},function(v1) {
+				return BoolExtensions.extract(Bool,v1);
+			},function(v1) {
+				return FloatExtensions.extract(Float,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			});
+		},a);
+	}
+	,testArray: function() {
+		var a = [[123,9,-23],[]];
+		this.doTest(ArrayExtensions.decompose,function(v) {
+			return ArrayExtensions.extract(Array,v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			});
+		},a);
+	}
+	,testSet: function() {
+		var a = [haxe.data.collections.Set.create().addAll([123,9,-23]),haxe.data.collections.Set.create()];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return haxe.data.collections.Set.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			});
+		},a);
+	}
+	,testList: function() {
+		var a = [haxe.data.collections.List.create().addAll([123,9,-23]),haxe.data.collections.List.create()];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return haxe.data.collections.List.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			});
+		},a);
+	}
+	,testMap: function() {
+		var a = [haxe.data.collections.Map.create().addAll([Tuple2.create(123,"foo"),Tuple2.create(-23,"bar"),Tuple2.create(0,"baz")]),haxe.data.collections.Map.create()];
+		this.doTest(this.instanceDecompose.$bind(this),function(v) {
+			return haxe.data.collections.Map.extract(v,function(v1) {
+				return IntExtensions.extract(Int,v1);
+			},function(v1) {
+				return StringExtensions.extract(String,v1);
+			});
+		},a);
+	}
+	,testJValue: function() {
+		this.doTest(JValueExtensions.decompose,function(v) {
+			return JValueExtensions.extract(haxe.text.json.JValue,v);
+		},[haxe.text.json.JValue.JNull,haxe.text.json.JValue.JString("foo"),haxe.text.json.JValue.JNumber(123.0),haxe.text.json.JValue.JBool(false),haxe.text.json.JValue.JObject([haxe.text.json.JValue.JField("foo",haxe.text.json.JValue.JString("bar"))]),haxe.text.json.JValue.JArray([haxe.text.json.JValue.JNull,haxe.text.json.JValue.JString("baz")])]);
+	}
+	,instanceDecompose: function(v) {
+		return Reflect.field(v,"decompose").apply(v,[]);
+	}
+	,doTest: function(decomposer,extractor,values) {
+		var eq = Stax.getEqualFor(values[0]);
+		var _g = 0;
+		while(_g < values.length) {
+			var value = values[_g];
+			++_g;
+			var actual = extractor(decomposer(value));
+			var equal = eq(value,actual);
+			if(!equal) throw "Expected " + value + " but was " + actual;
+			this.assertTrue(equal,null,{ fileName : "JValueTestCase.hx", lineNumber : 140, className : "haxe.data.transcode.JValueTestCase", methodName : "doTest"});
+>>>>>>> Rearranging for minimal code import
+		}
+	}
+	,__class__: haxe.data.transcode.JValueTestCase
+});
+haxe.reactive.StreamStream = $hxClasses["haxe.reactive.StreamStream"] = function() {
+}
+haxe.reactive.StreamStream.__name__ = ["haxe","reactive","StreamStream"];
+haxe.reactive.StreamStream.switchE = function(streams) {
+	return haxe.reactive.StreamStream.flatten(streams);
+}
+haxe.reactive.StreamStream.join = function(stream) {
+	return haxe.reactive.StreamStream.flatten(stream);
+}
+haxe.reactive.StreamStream.flatten = function(stream) {
+	return stream.bind(function(stream1) {
+		return stream1;
+	});
+}
+haxe.reactive.StreamStream.prototype = {
+	__class__: haxe.reactive.StreamStream
+}
+haxe.math.tween.Easings = $hxClasses["haxe.math.tween.Easings"] = function() { }
+haxe.math.tween.Easings.__name__ = ["haxe","math","tween","Easings"];
+haxe.math.tween.Easings.Linear = function(t) {
+	return t;
+}
+haxe.math.tween.Easings.Quadratic = function(t) {
+	return t * t;
+}
+haxe.math.tween.Easings.Cubic = function(t) {
+	return t * t * t;
+}
+haxe.math.tween.Easings.Quartic = function(t) {
+	var squared = t * t;
+	return squared * squared;
+}
+haxe.math.tween.Easings.Quintic = function(t) {
+	var squared = t * t;
+	return squared * squared * t;
+}
+haxe.math.tween.Easings.prototype = {
+	__class__: haxe.math.tween.Easings
+}
+var Unit = $hxClasses["Unit"] = { __ename__ : ["Unit"], __constructs__ : ["Unit"] }
+Unit.Unit = ["Unit",0];
+Unit.Unit.toString = $estr;
+Unit.Unit.__enum__ = Unit;
+var Option = $hxClasses["Option"] = { __ename__ : ["Option"], __constructs__ : ["None","Some"] }
+Option.None = ["None",0];
+Option.None.toString = $estr;
+Option.None.__enum__ = Option;
+Option.Some = function(v) { var $x = ["Some",1,v]; $x.__enum__ = Option; $x.toString = $estr; return $x; }
+var Either = $hxClasses["Either"] = { __ename__ : ["Either"], __constructs__ : ["Left","Right"] }
+Either.Left = function(v) { var $x = ["Left",0,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
+Either.Right = function(v) { var $x = ["Right",1,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
+var Product = $hxClasses["Product"] = function() { }
+Product.__name__ = ["Product"];
+Product.prototype = {
+	productPrefix: null
+	,productArity: null
+	,productElement: null
+	,__class__: Product
+	,__properties__: {get_productArity:"getProductArity",get_productPrefix:"getProductPrefix"}
+}
+var AbstractProduct = $hxClasses["AbstractProduct"] = function(elements) {
+	this._productElements = elements;
+	this._orders = [];
+	this._equals = [];
+	this._hashes = [];
+	this._shows = [];
+}
+AbstractProduct.__name__ = ["AbstractProduct"];
+AbstractProduct.__interfaces__ = [Product];
+AbstractProduct.prototype = {
+	productPrefix: null
+	,productArity: null
+	,_productElements: null
+	,productElement: function(n) {
+		return this._productElements[n];
+	}
+	,toString: function() {
+		var s = this.getProductPrefix() + "(" + (this.getShow(0))(this.productElement(0));
+		var _g1 = 1, _g = this.getProductArity();
+		while(_g1 < _g) {
+			var i = _g1++;
+			s += ", " + (this.getShow(i))(this.productElement(i));
+		}
+		return s + ")";
+	}
+	,hashCode: function() {
+		var h = 0;
+		var _g1 = 0, _g = this.getProductArity();
+		while(_g1 < _g) {
+			var i = _g1++;
+			h += AbstractProduct._baseHashes[this.getProductArity() - 2][i] * (this.getHash(i))(this.productElement(i));
+		}
+		return h;
+	}
+	,productCompare: function(other) {
+		var _g1 = 0, _g = this.getProductArity();
+		while(_g1 < _g) {
+			var i = _g1++;
+			var c = (this.getOrder(i))(this.productElement(i),other.productElement(i));
+			if(c != 0) return c;
+		}
+		return 0;
+	}
+	,productDecompose: function() {
+		return haxe.text.json.JValue.JArray(ArrayExtensions.map(this._productElements,function(t) {
+			return (haxe.data.transcode.TranscodeJValue.getDecomposerFor(Type["typeof"](t)))(t);
+		}));
+	}
+	,productEquals: function(other) {
+		var _g1 = 0, _g = this.getProductArity();
+		while(_g1 < _g) {
+			var i = _g1++;
+			if(!(this.getEqual(i))(this.productElement(i),other.productElement(i))) return false;
+		}
+		return true;
+	}
+	,getProductPrefix: function() {
+		return Stax.error("Not implemented");
+	}
+	,getProductArity: function() {
+		return Stax.error("Not implemented");
+	}
+	,_orders: null
+	,_equals: null
+	,_hashes: null
+	,_shows: null
+	,getOrder: function(i) {
+		return null == this._orders[i]?this._orders[i] = Stax.getOrderFor(this.productElement(i)):this._orders[i];
+	}
+	,getEqual: function(i) {
+		return null == this._equals[i]?this._equals[i] = Stax.getEqualFor(this.productElement(i)):this._equals[i];
+	}
+	,getHash: function(i) {
+		return null == this._hashes[i]?this._hashes[i] = Stax.getHashFor(this.productElement(i)):this._hashes[i];
+	}
+	,getShow: function(i) {
+		return null == this._shows[i]?this._shows[i] = Stax.getShowFor(this.productElement(i)):this._shows[i];
+	}
+	,__class__: AbstractProduct
+	,__properties__: {get_productArity:"getProductArity",get_productPrefix:"getProductPrefix"}
+}
+<<<<<<< HEAD
 haxe.text.json.ListJValue.prototype = {
 	__class__: haxe.text.json.ListJValue
 }
@@ -15773,12 +23302,31 @@ haxe.text.json.MapJValue.extract = function(v,ke,ve,korder,kequal,khash,kshow,vo
 	var te = function(abc) {
 		return haxe.text.json.Tuple2JValue.extract(abc,ke,ve);
 	};
+=======
+var Tuple2 = $hxClasses["Tuple2"] = function(first,second) {
+	AbstractProduct.call(this,[first,second]);
+	this._1 = first;
+	this._2 = second;
+}
+Tuple2.__name__ = ["Tuple2"];
+Tuple2.first = function(t) {
+	return t._1;
+}
+Tuple2.second = function(t) {
+	return t._2;
+}
+Tuple2.create = function(a,b) {
+	return new Tuple2(a,b);
+}
+Tuple2.extract = function(v,e1,e2) {
+>>>>>>> Rearranging for minimal code import
 	return (function($this) {
 		var $r;
 		var $e = (v);
 		switch( $e[1] ) {
 		case 4:
 			var v1 = $e[2];
+<<<<<<< HEAD
 			$r = haxe.data.collections.Map.create(korder,kequal,khash,kshow,vorder,vequal,vhash,vshow).addAll(stax.ArrayLambdas.map(v1,te));
 			break;
 		default:
@@ -15963,12 +23511,19 @@ haxe.data.transcode.JValueTestCase.prototype = $extend(haxe.test.TestCase.protot
 			var equal = eq(value,actual);
 			if(!equal) throw "Expected " + value + " but was " + actual;
 			this.assertTrue(equal,null,{ fileName : "JValueTestCase.hx", lineNumber : 137, className : "haxe.data.transcode.JValueTestCase", methodName : "doTest"});
+=======
+			$r = Tuple2.create(e1(v1[0]),e2(v1[1]));
+			break;
+		default:
+			$r = Stax.error("Expected Array but was: " + v);
+>>>>>>> Rearranging for minimal code import
 		}
 	}
 	,__class__: haxe.data.transcode.JValueTestCase
 });
 haxe.reactive.StreamStream = $hxClasses["haxe.reactive.StreamStream"] = function() {
 }
+<<<<<<< HEAD
 haxe.reactive.StreamStream.__name__ = ["haxe","reactive","StreamStream"];
 haxe.reactive.StreamStream.switchE = function(streams) {
 	return haxe.reactive.StreamStream.flatten(streams);
@@ -16018,6 +23573,94 @@ Option.Some = function(v) { var $x = ["Some",1,v]; $x.__enum__ = Option; $x.toSt
 var Either = $hxClasses["Either"] = { __ename__ : ["Either"], __constructs__ : ["Left","Right"] }
 Either.Left = function(v) { var $x = ["Left",0,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
 Either.Right = function(v) { var $x = ["Right",1,v]; $x.__enum__ = Either; $x.toString = $estr; return $x; }
+=======
+Tuple2.__super__ = AbstractProduct;
+Tuple2.prototype = $extend(AbstractProduct.prototype,{
+	_1: null
+	,_2: null
+	,apply: function(f) {
+		return f(this._1,this._2);
+	}
+	,getProductPrefix: function() {
+		return "Tuple2";
+	}
+	,getProductArity: function() {
+		return 2;
+	}
+	,compare: function(other) {
+		return this.productCompare(other);
+	}
+	,entuple: function(c) {
+		return Tuple3.create(this._1,this._2,c);
+	}
+	,equals: function(other) {
+		return this.productEquals(other);
+	}
+	,decompose: function() {
+		return this.productDecompose();
+	}
+	,__class__: Tuple2
+});
+var Tuple3 = $hxClasses["Tuple3"] = function(first,second,third) {
+	AbstractProduct.call(this,[first,second,third]);
+	this._1 = first;
+	this._2 = second;
+	this._3 = third;
+}
+Tuple3.__name__ = ["Tuple3"];
+Tuple3.first = function(t) {
+	return t._1;
+}
+Tuple3.second = function(t) {
+	return t._2;
+}
+Tuple3.third = function(t) {
+	return t._3;
+}
+Tuple3.create = function(a,b,c) {
+	return new Tuple3(a,b,c);
+}
+Tuple3.extract = function(v,e1,e2,e3) {
+	return (function($this) {
+		var $r;
+		var $e = (v);
+		switch( $e[1] ) {
+		case 4:
+			var v1 = $e[2];
+			$r = Tuple3.create(e1(v1[0]),e2(v1[1]),e3(v1[2]));
+			break;
+		default:
+			$r = Stax.error("Expected Array but was: " + v);
+		}
+		return $r;
+	}(this));
+}
+Tuple3.__super__ = AbstractProduct;
+Tuple3.prototype = $extend(AbstractProduct.prototype,{
+	_1: null
+	,_2: null
+	,_3: null
+	,apply: function(f) {
+		return f(this._1,this._2,this._3);
+	}
+	,getProductPrefix: function() {
+		return "Tuple3";
+	}
+	,getProductArity: function() {
+		return 3;
+	}
+	,compare: function(other) {
+		return this.productCompare(other);
+	}
+	,equals: function(other) {
+		return this.productEquals(other);
+	}
+	,decompose: function() {
+		return this.productDecompose();
+	}
+	,__class__: Tuple3
+});
+>>>>>>> Rearranging for minimal code import
 var FieldOrder = $hxClasses["FieldOrder"] = function() { }
 FieldOrder.__name__ = ["FieldOrder"];
 FieldOrder.prototype = {

@@ -16,6 +16,7 @@
 */
 import Prelude;
 
+import Stax;
 import haxe.text.json.JValue;
 import haxe.data.transcode.TranscodeJValue;
 import haxe.data.transcode.TranscodeJValueExtensions;
