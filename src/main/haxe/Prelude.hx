@@ -455,6 +455,8 @@ class Tuple2< A, B> extends AbstractProduct {
     return Tuple3.create(_1, _2, c);
   }
 
+  public static function bothEqual<T>(a : Tuple2<T, T>) : Bool return a._1 == a._2
+  
   public function compare(other : Tuple2<A, B>): Int {
     return productCompare(other);
   }

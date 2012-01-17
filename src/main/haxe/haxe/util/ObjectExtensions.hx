@@ -23,13 +23,21 @@ using PreludeExtensions;
 typedef Object = {};
 
 class ObjectExtensions {
+  
+  inline public static function copyDeep(d: Object): Object return 
+    copy(d, false)
+    
   public static function copy(d: Object, shallow: Bool = true): Object {
-    return copyTo(d, {}, shallow);
+    var res = { };
+    copyTo(d, res, shallow);
+    return res;
   }
 
-  public static function copyTyped<T>(d: T, shallow: Bool = true): T {
-    return cast copyTo(d, {}, shallow);
-  }
+  inline public static function copyTypedDeep<T>(d: T): T return 
+    untyped copy(d, false)
+    
+  inline public static function copyTyped<T>(d: T, shallow: Bool = true): T return
+    untyped copy(d, shallow)
   
   public static function copyTo(src: Object, dest: Object, shallow: Bool = true): Object {
     function safecopy(d: Dynamic): Dynamic
@@ -49,9 +57,24 @@ class ObjectExtensions {
   }
   
   public static function extendWith(dest: Object, src: Object, shallow: Bool = true): Object {
-    copyTo(src, dest);
-    
+    copyTo(src, dest, shallow);    
     return dest;
+  }
+  public static function copyExtendedWith(a: Object, b: Object, shallow: Bool = true): Object {
+    var res = copy(a, shallow);
+    copyTo(b, res, shallow);    
+    return res;
+  }
+
+  public static function extendWithDeep(dest: Object, src: Object): Object {
+    copyTo(src, dest, false);    
+    return dest;
+  }
+
+  public static function copyExtendedWithDeep(a: Object, b: Object): Object {
+    var res = copy(a, false);
+    copyTo(b, res, false);    
+    return res;
   }
   
   public static function fields(d: Object): Array<String> {
