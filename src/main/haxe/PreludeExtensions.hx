@@ -370,12 +370,17 @@ class ArrayExtensions {
     return h;
   }
   
+  public static function filterNot<T>(a: Array<T>, f: T -> Bool): Array<T> {
+    var n: Array<T> = [];    
+    for (e in a)
+      if (!f(e)) n.push(e);    
+    return n;
+  }
+  
   public static function filter<T>(a: Array<T>, f: T -> Bool): Array<T> {
     var n: Array<T> = [];
-    
     for (e in a)
-      if (f(e)) n.push(e);
-    
+      if (f(e)) n.push(e);    
     return n;
   }
   
@@ -916,6 +921,14 @@ class Function5Extensions {
 }
 
 class OptionExtensions {
+  
+  public static function exists<T>(o : Option<T>, v : T) {
+    switch (o) {
+      case Some(x) : return x == v;
+      default : return false;
+    }
+  }
+  
   public static function toOption<T>(t: T): Option<T> {
     return if (t == null) None; else Some(t);
   }
