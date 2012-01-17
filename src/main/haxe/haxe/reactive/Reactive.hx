@@ -1485,8 +1485,23 @@ class Signal<T> {
      *
      * @result      The underlying Stream.
      */
-    public function changes(): Stream<T> {
+    inline public function changes(): Stream<T> {
         return _underlying;
+    }
+    
+    /**
+     * Calls the specified function for each event.
+     */
+    public function whenChanges(f: T -> Void): Void {
+      changes().forEach(f);
+    }
+
+    /**
+     * Calls the specified function for each event.
+     */
+    public function nowAndWhenChanges(f: T -> Void): Void {
+      changes().forEach(f);
+      f(valueNow());
     }
     
     /**
