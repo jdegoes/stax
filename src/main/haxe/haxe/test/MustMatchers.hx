@@ -16,11 +16,10 @@
 package haxe.test;
 
 import Prelude;
-import PreludeExtensions;
 
 import haxe.data.collections.Collection;
+using stax.StringOps;
 
-using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 typedef MatchResult = { assertion: String, negation: String }

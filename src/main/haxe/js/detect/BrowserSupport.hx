@@ -20,9 +20,12 @@ import Prelude;
 import js.Env;
 import js.dom.Quirks;
 import haxe.data.collections.Map;
-import PreludeExtensions;
 
-using PreludeExtensions;
+using stax.OptionOps;
+using stax.ArrayOps;
+using stax.DynamicOps;
+using stax.StringOps;
+
 using js.dom.DomExtensions;
 using haxe.util.ObjectExtensions;
 

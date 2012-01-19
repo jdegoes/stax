@@ -17,9 +17,7 @@
 package haxe.functional;
 
 import Prelude;
-import PreludeExtensions;
-
-using PreludeExtensions;
+using stax.StringOps;
 
 typedef Predicate<A> = Predicate1<A>
 

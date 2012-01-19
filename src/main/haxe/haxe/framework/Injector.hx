@@ -20,8 +20,13 @@ import Prelude;
 
 import haxe.PosInfos;
 
-import PreludeExtensions;
-using PreludeExtensions;
+import stax.Tuples;
+using stax.ArrayOps;
+import stax.OptionOps; 
+using stax.OptionOps; 
+using stax.FunctionOps;
+using stax.DynamicOps;
+
 
 enum BindingType {
   OneToOne;   // Every call to the injector will create a new instance
@@ -274,9 +279,9 @@ private class InjectorImpl {
   private static function getDefaultImplementationBinding(c: Class<Dynamic>): Option<Void -> Dynamic> {
     if(existsDefaultBinding(c))
       return getDefaultBinding(c);
-    var f = OptionExtensions.toOption(haxe.rtti.Meta.getType(c))
+    var f = OptionOps.toOption(haxe.rtti.Meta.getType(c))
       .flatMap(function(m : Dynamic) { 
-        return OptionExtensions.toOption((Reflect.hasField(m, "DefaultImplementation") ? Reflect.field(m, "DefaultImplementation") : null)); })
+        return OptionOps.toOption((Reflect.hasField(m, "DefaultImplementation") ? Reflect.field(m, "DefaultImplementation") : null)); })
       .flatMap(function(p : Array<String>) {
         var cls = null;
         return if(null == p || null == p[0] || null == (cls = Type.resolveClass(p[0]))) None else Some(Tuple2.create(cls, null != p[1] ? Type.createEnum(BindingType, p[1], []) : null)); })

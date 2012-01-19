@@ -16,40 +16,46 @@
 package haxe.util;
 
 import Prelude;
-import haxe.data.collections.List;
 
-using PreludeExtensions;
+//BREAKING CHANGE: chars returns an Array.
+
+using stax.IntOps;
+
 using haxe.functional.FoldableExtensions;
 
 class StringExtensions {
   static var SepAlphaPattern        = ~/(-|_)([a-z])/g;
   static var AlphaUpperAlphaPattern = ~/-([a-z])([A-Z])/g;
 
-  public static function chunk(str: String, len: Int): List<String> {
+  public static function chunk(str: String, len: Int): Array<String> {
     var start = 0;
     var end   = (start + len).min(str.length);
     
-    return if (end == 0) List.nil();
+    return if (end == 0) [];
      else {
        var prefix = str.substr(start, end);
        var rest   = str.substr(end);
 
-       chunk(rest, len).prepend(prefix);
+			 [prefix].concat(chunk(rest, len));
      }
   }
 
-  public static function chars(str: String): List<String> {
+  public static function chars(str: String): Array<String> {
     var a = [];
     
     for (i in 0...str.length) {
       a.push(str.charAt(i));
     }
     
-    return a.toList();
+    return a;
   }
   
-  public static function string(l: List<String>): String {
-    return l.foldr('', function(b, a) return b + a);
+  public static function string(l: Iterable<String>): String {
+		var o = '';
+		for ( val in l) {
+			o += val;
+		}
+		return o;
   }
   
   public static function toCamelCase(str: String): String {

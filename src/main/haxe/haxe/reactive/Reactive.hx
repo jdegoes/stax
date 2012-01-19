@@ -15,13 +15,14 @@
 */
 package haxe.reactive;
 
-import Tuples;
+import stax.Tuples;
 import Prelude;
-import PreludeExtensions;
+
 import haxe.reactive.Streams;
 
-using PreludeExtensions;
+
 using haxe.data.collections.IterableExtensions;
+using stax.IterableOps;
 
 typedef Timeout = {}
 

@@ -18,9 +18,12 @@ package js.dom;
 import Dom;
 import js.Env;
 import Prelude;
-import PreludeExtensions;
+import stax.Tuples;
 
-using PreludeExtensions;
+using stax.IntOps;
+import stax.OptionOps;
+using stax.OptionOps;
+
 
 /** 
  * Comm]on elements.
@@ -105,10 +108,10 @@ class HTMLDocumentExtensions {
   }
   
   public static function getTags(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionExtensions.getOrElseC(OptionExtensions.toOption( cast doc.getElementsByTagName(s)), []);
+    return OptionOps.getOrElseC(OptionOps.toOption( cast doc.getElementsByTagName(s)), []);
   }
   
   public static function getClasses(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionExtensions.getOrElseC(OptionExtensions.toOption(Env.getElementsByClass(s)), []);
+    return OptionOps.getOrElseC(OptionOps.toOption(Env.getElementsByClass(s)), []);
   }
 }

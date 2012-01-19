@@ -16,7 +16,6 @@
 package haxe.io.http;
 
 import Prelude;
-import PreludeExtensions;
 import haxe.io.http.Http;
 import haxe.io.http.HttpString;
 import haxe.io.http.HttpTransformer;
@@ -26,13 +25,18 @@ import haxe.text.json.JValue;
 import haxe.text.json.Json;
 import haxe.data.collections.Map;
 
+import stax.Future;
+
+import stax.OptionOps;
+using stax.OptionOps;
+
 #if js
 import Dom;
 import js.Env;
 import js.dom.Quirks;
 #end
 
-using PreludeExtensions;
+
 using haxe.functional.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
@@ -75,7 +79,7 @@ class HttpJValueJsonp implements HttpJValue {
     var callbackName     = 'stax_jsonp_callback_' + requestId;
     var callbackFullName = 'haxe.io.http.HttpJValueJsonp.Responders.' + callbackName;
     
-    var params = OptionExtensions.toOption(params_).getOrElseC(Map.create()).set(callbackParameterName, callbackFullName);
+    var params = OptionOps.toOption(params_).getOrElseC(Map.create()).set(callbackParameterName, callbackFullName);
     
     var url = url_.addQueryParameters(params);
     

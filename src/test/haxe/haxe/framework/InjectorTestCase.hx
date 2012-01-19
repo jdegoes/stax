@@ -23,7 +23,7 @@ import haxe.framework.Injector;
 
 import haxe.time.Clock;
 
-using PreludeExtensions;
+
 using haxe.framework.Injector;
 
 class InjectorTestCase extends TestCase {

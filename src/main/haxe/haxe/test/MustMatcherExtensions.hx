@@ -19,7 +19,7 @@ import Prelude;
 
 import haxe.test.MustMatchers;
 
-using PreludeExtensions;
+using stax.EitherOps;
 
 class MustMatcherExtensions {
   public static function negate<T>(c: MustMatcher<T>): MustMatcher<T> {

@@ -20,7 +20,8 @@ import Prelude;
 import haxe.text.json.JValue;
 
 using haxe.text.json.JValueExtensions;
-using PreludeExtensions;
+using stax.ArrayOps;
+using stax.FunctionOps;
 
 class Json {
   public static var encodeObject = encode.compose(fromObject);

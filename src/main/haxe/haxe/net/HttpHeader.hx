@@ -16,7 +16,7 @@
 package haxe.net;
 
 import Prelude;
-
+import stax.Tuples;
 import haxe.data.collections.Map;
 
 typedef HttpHeader = Tuple2<String, String>

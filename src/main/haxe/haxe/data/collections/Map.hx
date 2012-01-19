@@ -17,17 +17,21 @@
 package haxe.data.collections;
 
 import Prelude;
-import PreludeExtensions;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
+
+import stax.Tuples;
+
 import haxe.functional.Foldable;
 import haxe.functional.PartialFunction;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using PreludeExtensions;
+using stax.OptionOps;
+using stax.ArrayOps;
+using stax.IterableOps;
+
+using haxe.data.collections.IterableExtensions;
+
 using haxe.functional.FoldableExtensions;
 using haxe.functional.PartialFunctionExtensions;
 
@@ -332,20 +336,6 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var vha = valueHash; 
     return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
   }
-
-  public function decompose(): JValue {
-    return ArrayExtensions.decompose(toArray());
-  }
-
-  public static function extract<K, V>(v: JValue, ke: JExtractorFunction<K>, ve: JExtractorFunction<V>, ?korder : OrderFunction<K>, ?kequal: EqualFunction<K>, ?khash: HashFunction<K>, ?kshow : ShowFunction<K>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhash: HashFunction<V>, ?vshow : ShowFunction<V>): Map<K, V> {
-    var te = function(v){return Tuple2.extract(v, ke, ve);};
-
-    return switch(v) {
-      case JArray(v): Map.create(korder, kequal, khash, kshow, vorder, vequal, vhash, vshow).addAll(v.map(te));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
   
   public function load(): Int {
     return if (_buckets.length == 0) MaxLoad;
@@ -595,4 +585,42 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
         _valueShow = Stax.getShowFor(it.next()._2);  
     } else _valueShow;
   }
+}
+class MapExtensions {
+  public static function toObject<V>(map: Map<String, V>): Dynamic<V> {
+    return map.foldl({}, function(object, tuple) {
+      Reflect.setField(object, tuple._1, tuple._2);
+      
+      return object;
+    });
+  }
+	public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
+    var map: Map<String, T> = Map.create();
+    
+    for (field in Reflect.fields(d)) {
+      var value = Reflect.field(d, field);
+      
+      map = map.set(field, value);
+    }
+    
+    return map;
+  }
+}
+class IterableToMap {
+  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>):Map<K,V> {
+    return haxe.data.collections.Map.create().addAll(i);
+  }	
+}
+class FoldableToMap {
+	public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  
+    var dest = Map.create();
+    return foldable.foldl(dest, function(a, b) {
+      return a.append(b);
+    });
+  }	
+}
+class ArrayToMap {
+  public static function toMap<K, V>(arr : Array<Tuple2<K, V>>) {
+    return haxe.data.collections.Map.create().addAll(arr);
+  }	
 }

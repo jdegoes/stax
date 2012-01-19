@@ -16,9 +16,13 @@
 package haxe.util;
 
 import Prelude;
+
+import stax.Tuples;
+using stax.Tuples;
+
 import Type;
 
-using PreludeExtensions;
+using stax.ArrayOps;
 
 typedef Object = {};
 

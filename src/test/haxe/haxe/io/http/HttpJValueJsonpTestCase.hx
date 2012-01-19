@@ -23,8 +23,10 @@ import haxe.io.http.Http;
 import haxe.io.http.HttpJValue;
 import haxe.text.json.Json;
 
-using PreludeExtensions;
+
 using haxe.text.json.JValueExtensions;
+using stax.OptionOps;
+using haxe.data.collections.Map;
 
 class HttpJValueJsonpTestCase extends TestCase {
   var h: HttpJValue;

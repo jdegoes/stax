@@ -15,11 +15,14 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 import Prelude;
-import Tuples;
+import stax.Future;
+using stax.Future;
+import stax.Tuples;
 import haxe.test.TestCase;
 
-using PreludeExtensions;
+using stax.OptionOps;
 
+using stax.FunctionOps;
 class PreludeTestCase extends TestCase {
   public function new() {
     super();

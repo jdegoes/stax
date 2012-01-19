@@ -20,7 +20,7 @@ import js.Env;
 import Prelude;
 import PreludeExtensions;
 
-using PreludeExtensions;
+
 
 class HTMLEventExtensions {
   public static function cancelBubbling(e: EventListener<Dynamic>): Void {

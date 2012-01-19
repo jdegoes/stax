@@ -19,30 +19,31 @@ import Prelude;
 
 import haxe.test.TestCase;
 
-import PreludeExtensions;
+import stax.IntOps;
+
 using haxe.util.OrderExtension;
 
 class OrderExtensionsTestCase extends TestCase {
   public function testGreaterThan() {
-    assertTrue (IntExtensions.compare.greaterThan()(2, 1));
-    assertFalse(IntExtensions.compare.greaterThan()(1, 1));
+    assertTrue (IntOps.compare.greaterThan()(2, 1));
+    assertFalse(IntOps.compare.greaterThan()(1, 1));
 
-    assertTrue (IntExtensions.compare.greaterThanOrEqual()(2, 1));
-    assertTrue (IntExtensions.compare.greaterThanOrEqual()(1, 1));
-    assertFalse(IntExtensions.compare.greaterThanOrEqual()(1, 2));
+    assertTrue (IntOps.compare.greaterThanOrEqual()(2, 1));
+    assertTrue (IntOps.compare.greaterThanOrEqual()(1, 1));
+    assertFalse(IntOps.compare.greaterThanOrEqual()(1, 2));
 
-    assertTrue (IntExtensions.compare.lessThan()(1, 2));
-    assertFalse(IntExtensions.compare.lessThan()(1, 1));
+    assertTrue (IntOps.compare.lessThan()(1, 2));
+    assertFalse(IntOps.compare.lessThan()(1, 1));
 
-    assertTrue (IntExtensions.compare.lessThanOrEqual()(1, 2));
-    assertTrue (IntExtensions.compare.lessThanOrEqual()(1, 1));
-    assertFalse(IntExtensions.compare.lessThanOrEqual()(2, 1));
+    assertTrue (IntOps.compare.lessThanOrEqual()(1, 2));
+    assertTrue (IntOps.compare.lessThanOrEqual()(1, 1));
+    assertFalse(IntOps.compare.lessThanOrEqual()(2, 1));
 
-    assertTrue (IntExtensions.compare.notEqual()(2, 1));
-    assertTrue (IntExtensions.compare.notEqual()(1, 2));
-    assertFalse(IntExtensions.compare.notEqual()(1, 1));
+    assertTrue (IntOps.compare.notEqual()(2, 1));
+    assertTrue (IntOps.compare.notEqual()(1, 2));
+    assertFalse(IntOps.compare.notEqual()(1, 1));
 
-    assertTrue (IntExtensions.compare.equal()(1, 1));
-    assertFalse(IntExtensions.compare.equal()(1, 2));
+    assertTrue (IntOps.compare.equal()(1, 1));
+    assertFalse(IntOps.compare.equal()(1, 2));
   }
 }

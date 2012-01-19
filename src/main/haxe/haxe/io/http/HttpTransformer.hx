@@ -20,8 +20,8 @@ import haxe.data.collections.Map;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.io.http.Http;
-
-using PreludeExtensions;
+import stax.Future;
+using stax.OptionOps;
 
 // Transforms an Http<S> into an Http<T> given encoder/decoder functions.
 class HttpTransformer<S, T> implements Http<T> {

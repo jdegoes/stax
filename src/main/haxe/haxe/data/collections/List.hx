@@ -16,19 +16,33 @@
 */
 package haxe.data.collections;
 
+import stax.Tuples;
 import Prelude;
-import PreludeExtensions;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using PreludeExtensions;
+import stax.IntOps;
+using  stax.IntOps;
+using  stax.ArrayOps;
+using  stax.IterableOps;
+
 using haxe.functional.FoldableExtensions;
 
+class ArrayToList {
+  public static function toList<T>(arr : Array<T>) {
+    return haxe.data.collections.List.create().addAll(arr);
+  }	
+}
+class FoldableToList {
+  public static function toList<A, B>(foldable : Foldable<A, B>) : List<B> {  
+    var dest = List.create();
+    return foldable.foldl(dest, function(a, b) {
+      return a.append(b);
+    });
+  }	
+}
 /** A classic immutable list built from cons and nil elements. */
 class List<T> implements Collection<List<T>, T> {
   public var head (getHead, null): T;
@@ -46,26 +60,31 @@ class List<T> implements Collection<List<T>, T> {
   public var hash(getHash, null) : HashFunction<T>;
   public var show  (getShow, null) : ShowFunction<T>;
 
-  public static function nil<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hash : HashFunction<T>, ?show : ShowFunction<T>): List<T> {
-    return new Nil(order, equal, hash, show);
+	public static function toList<T>(i: Iterable<T>) {
+    return haxe.data.collections.List.create().addAll(i);
+  }
+  public static function nil<T>(?order : OrderFunction<T>, ?tools : CollectionTools<T>): List<T> {
+    return new Nil(tools);
   }
   
-  public static function create<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hash : HashFunction<T>, ?show : ShowFunction<T>): List<T> {
-    return nil(order, equal, hash, show);
+  public static function create<T>(?tools:CollectionTools<T>): List<T> {
+    return nil(tools);
   }
 
   /** Creates a factory for lists of the specified type. */
-  public static function factory<T>(?order : OrderFunction<T>, ?equal: EqualFunction<T>, ?hash : HashFunction<T>, ?show : ShowFunction<T>): Factory<List<T>> {
+  public static function factory<T>(?tools:CollectionTools<T> ): Factory<List<T>> {
     return function() {
-      return List.create(order, equal, hash, show);
+      return List.create(tools);
     }
   }
 
-  private function new(order : OrderFunction<T>, equal: EqualFunction<T>, hash : HashFunction<T>, show : ShowFunction<T>) {
-    _order  = order;
-    _equal  = equal;  
-    _hash = hash; 
-    _show   = show; 
+  private function new(?tools:CollectionTools<T>) {
+		if(tools!=null){
+				_order  = tools.order;
+				_equal  = tools.equal;  
+				_hash = tools.hash; 
+				_show   = tools.show; 
+		}
   }
 
   public function empty<C, D>(): Foldable<C, D> {
@@ -77,7 +96,7 @@ class List<T> implements Collection<List<T>, T> {
    * construct lists by prepending, and then reverse at the end if necessary.
    */
   public function cons(head: T): List<T> {
-    return new Cons(_order, _equal, _hash, _show, head, this);
+    return new Cons(Stax.tool(_order,_equal,_hash,_show), head, this);
   }
 
   /** Synonym for cons. */
@@ -154,7 +173,7 @@ class List<T> implements Collection<List<T>, T> {
    * the cons() method should be used to grow the list.
    */
   public function add(t: T): List<T> {
-    return foldr(create(_order, _equal, _hash, _show).cons(t), function(b, a) {
+    return foldr(create(Stax.tool(_order, _equal, _hash, _show)).cons(t), function(b, a) {
       return a.cons(b);
     });
   }
@@ -166,7 +185,7 @@ class List<T> implements Collection<List<T>, T> {
 
     a.reverse();
 
-    var r = create(_order, _equal, _hash, _show);
+    var r = create( Stax.tool(_order, _equal, _hash, _show) );
 
     for (e in a) r = r.cons(e);
 
@@ -177,7 +196,7 @@ class List<T> implements Collection<List<T>, T> {
 
   public function remove(t: T): List<T> {
     var pre: Array<T> = [];
-    var post: List<T> = nil(_order, _equal, _hash, _show);
+    var post: List<T> = nil(Stax.tool(_order, _equal, _hash, _show));
     var cur = this;      
     var eq = equal;
     for (i in 0...size()) {
@@ -258,13 +277,13 @@ class List<T> implements Collection<List<T>, T> {
 
   /** Override Foldable to provide higher performance: */
   public function filter(f: T -> Bool): List<T> {
-    return foldr(create(_order, _equal, _hash, _show), function(e, list) return if (f(e)) list.cons(e) else list);
+    return foldr(create(Stax.tool(_order, _equal, _hash, _show)), function(e, list) return if (f(e)) list.cons(e) else list);
   }
 
   /** Returns a list that contains all the elements of this list in reverse
    * order */
   public function reverse(): List<T> {
-    return foldl(create(_order, _equal, _hash, _show), function(a, b) return a.cons(b));
+    return foldl(create(Stax.tool(_order, _equal, _hash, _show)), function(a, b) return a.cons(b));
   }
 
   /** Zips this list and the specified list into a list of tuples. */
@@ -288,7 +307,7 @@ class List<T> implements Collection<List<T>, T> {
    * @param f Called with every two consecutive elements to retrieve a list of gaps.
    */
   public function gaps<G>(f: T -> T -> List<G>, ?equal: EqualFunction<G>): List<G> {
-    return zip(drop(1)).flatMapTo(List.nil(equal), function(tuple) return f(tuple._1, tuple._2));
+    return zip(drop(1)).flatMapTo(List.nil(Stax.tool(null,equal)), function(tuple) return f(tuple._1, tuple._2));
   }
 
   /** Returns a list that contains all the elements of this list, sorted by
@@ -297,7 +316,7 @@ class List<T> implements Collection<List<T>, T> {
   public function sort(): List<T> {
     var a = this.toArray();
     a.sort(order);
-    var result = create(_order, _equal, _hash, _show);
+    var result = create(Stax.tool(_order, _equal, _hash, _show));
 
     for (i in 0...a.length) {
       result = result.cons(a[a.length - 1 - i]);
@@ -311,19 +330,19 @@ class List<T> implements Collection<List<T>, T> {
   }
   
   public function withOrderFunction(order : OrderFunction<T>) {
-    return create(order, _equal, _hash, _show).addAll(this);
+    return create(Stax.tool(order,_equal,_hash,_show)).addAll(this);
   }
   
   public function withEqualFunction(equal : EqualFunction<T>) {
-    return create(_order, equal, _hash, _show).addAll(this);
+    return create(Stax.tool(_order, equal, _hash, _show)).addAll(this);
   }
   
   public function withHashFunction(hash : HashFunction<T>) {
-    return create(_order, _equal, hash, _show).addAll(this);
+    return create(Stax.tool(_order, _equal, hash, _show)).addAll(this);
   }
   
   public function withShowFunction(show : ShowFunction<T>) {
-    return create(_order, _equal, _hash, show).addAll(this);
+    return create(Stax.tool(_order, _equal, _hash, show)).addAll(this);
   }
 
   var _equal : EqualFunction<T>;
@@ -387,18 +406,6 @@ class List<T> implements Collection<List<T>, T> {
     return 0;
   }
 
-  public function decompose(): JValue {
-    return ArrayExtensions.decompose(toArray());
-  }
-
-  public static function extract<A>(v: JValue, e: JExtractorFunction<A>, ?order : OrderFunction<A>, ?equal: EqualFunction<A>, ?hash : HashFunction<A>, ?show : ShowFunction<A>): List<A> {
-    return switch(v) {
-      case JArray(v): List.create(order, equal, hash, show).addAll(v.map(e));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
-
   private function getHead(): T {
     return Stax.error("List has no head element");
   }
@@ -425,8 +432,8 @@ private class Cons<T> extends List<T> {
   var _tail: List<T>;
   var _size: Int;
 
-  public function new(order : OrderFunction<T>, equal: EqualFunction<T>, hash : HashFunction<T>, show : ShowFunction<T>, head: T, tail: List<T>) {
-    super(order, equal, hash, show);
+  public function new(tools:CollectionTools<T>, head: T, tail: List<T>) {
+    super(tools);
     _head = head;
     _tail = tail;
     _size = tail.size() + 1;
@@ -464,7 +471,7 @@ private class Cons<T> extends List<T> {
 }
 
 private class Nil<T> extends List<T> {
-  public function new(order : OrderFunction<T>, equal: EqualFunction<T>, hash : HashFunction<T>, show : ShowFunction<T>) {
-    super(order, equal, hash, show);
+  public function new(tools:CollectionTools<T>) {
+    super(tools);
   }
 }

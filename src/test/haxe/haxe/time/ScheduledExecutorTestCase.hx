@@ -21,8 +21,9 @@ import haxe.test.Assert;
 import haxe.test.TestCase;
 import haxe.time.ScheduledExecutor;
 
-using PreludeExtensions;
 using haxe.framework.Injector;
+
+import stax.Future;
 
 class ScheduledExecutorTestCase extends TestCase {
   var _executor: ScheduledExecutor;

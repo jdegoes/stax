@@ -20,7 +20,7 @@ import Prelude;
 import haxe.math.geom.Vector;
 import haxe.math.geom.Point;
 
-using PreludeExtensions;
+
 
 class Vector2dIntExtensions {
   public static inline function minus(v1: Vector2d<Int>, v2: Vector2d<Int>): Vector2d<Int> {

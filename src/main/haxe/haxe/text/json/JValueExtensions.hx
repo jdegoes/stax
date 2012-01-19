@@ -17,12 +17,25 @@
 
 package haxe.text.json;
 
+import stax.Tuples;
 import Prelude;
 import haxe.text.json.JValue;
+import haxe.data.transcode.TranscodeJValueExtensions;
+import haxe.data.transcode.TranscodeJValue;
 
-using PreludeExtensions;
+using stax.OptionOps;
+using stax.ArrayOps;
+using stax.DynamicOps;
+
+using haxe.text.json.JValueExtensions;
 
 class JValueExtensions {  
+  public static function decompose(v: JValue): JValue {
+    return v;
+  }
+  public static function extract(c : Enum<JValue>, v: JValue): JValue {
+    return v;
+  }
   public static function fold<T>(v: JValue, initial: T, f: T -> JValue -> T): T {
     var cur = initial;
     
@@ -100,8 +113,7 @@ class JValueExtensions {
   public static function extractField(v: JValue): Tuple2<String, JValue> {
     return switch (v) {
       case JField (k, v): Tuple2.create(k, v);
-      
-      default: Stax.error("Expected JField but found: " + v);
+      default						: Stax.error("Expected JField but found: " + v);
     }
   }  
   public static function extractHash(v: JValue): Hash<JValue> {
@@ -136,6 +148,71 @@ class JValueExtensions {
       case JObject (xs): xs;
       
       default: Stax.error("Expected JArray or JObject but found: " + v);
+    }
+  }
+}
+class OptionJValue {
+  public static function decompose<T>(v: Option<T>): JValue {
+    return v.map(function(v) {return TranscodeJValue.getDecomposerFor(Type.typeof(v))(v);}).getOrElse(JNull.toThunk());
+  }
+  public static function extract<T>(c : Enum<Option<Dynamic>>, v: JValue, e: JExtractorFunction<T>): Option<T> {
+    return switch(v) {
+      case JNull: None;
+
+      default: Some(e(v));
+    }
+  }	
+}
+class AbstractProductJValue {
+	public static function productDecompose(t:AbstractProduct): JValue {	
+    return JArray(t._productElements.map(function(t){return TranscodeJValue.getDecomposerFor(Type.typeof(t))(t);}));
+  }
+}
+class Tuple2JValue {
+	public static function extract<A, B>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>): Tuple2<A, B> {
+    return switch(v) {
+      case JArray(v): Tuple2.create(e1(v[0]), e2(v[1]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
+  }
+	public static function decompose(t:Tuple2<Dynamic,Dynamic>): JValue {
+    return t.productDecompose();
+  }
+}
+class Tuple3JValue{
+	public static function decompose(t:Tuple3<Dynamic,Dynamic,Dynamic>): JValue {
+    return t.productDecompose();
+  }
+  public static function extract<A, B, C>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>): Tuple3<A, B, C> {
+    return switch(v) {
+      case JArray(v): Tuple3.create(e1(v[0]), e2(v[1]), e3(v[2]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
+  }
+}
+class Tuple4JValue{
+	public static function decompose(t:Tuple4 < Dynamic, Dynamic, Dynamic, Dynamic > ): JValue {
+    return t.productDecompose();
+  }
+  public static function extract<A, B, C, D>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>): Tuple4<A, B, C, D> {
+    return switch(v) {
+      case JArray(v): Tuple4.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]));
+
+      default: Stax.error("Expected Array but was: " + v);
+    }
+  }
+}
+class Tuple5JValue{
+	public static function decompose(t:Tuple5<Dynamic,Dynamic,Dynamic,Dynamic,Dynamic>): JValue {
+    return t.productDecompose();
+  }
+  public static function extract<A, B, C, D, E>(v: JValue, e1: JExtractorFunction<A>, e2: JExtractorFunction<B>, e3: JExtractorFunction<C>, e4: JExtractorFunction<D>, e5: JExtractorFunction<E>): Tuple5<A, B, C, D, E> {
+    return switch(v) {
+      case JArray(v): Tuple5.create(e1(v[0]), e2(v[1]), e3(v[2]), e4(v[3]), e5(v[4]));
+
+      default: Stax.error("Expected Array but was: " + v);
     }
   }
 }

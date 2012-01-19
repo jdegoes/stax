@@ -17,7 +17,13 @@
 package haxe.data.collections;
 
 import Prelude; 
-using PreludeExtensions;
+import stax.Tuples;
+using stax.Tuples;
+
+using stax.ArrayOps;
+using stax.FloatOps;
+using stax.OptionOps;
+using stax.IntOps;
 
 class ArrayExtensions { 
   public static function partition<T>(arr: Array<T>, f: T -> Bool): Tuple2<Array<T>, Array<T>> {
@@ -251,25 +257,6 @@ class ArrayExtensions {
       return a + prefix + show(b);
     });
   }
-  
-  public static function groupBy<T, K>(arr: Array<T>, grouper: T -> K) : Map<K, Array<T>> { 
-    return arr.foldl(Map.create(), function(map, e) {
-      var key = grouper(e);
-      var result = map.getOrElse(key, function() return []);
-      result.push(e);
-      return map.set(key, result);
-    });
-  }
-  
-  public static function toList<T>(arr : Array<T>) {
-    return haxe.data.collections.List.create().addAll(arr);
-  }
-  
-  public static function toSet<T>(arr : Array<T>) {
-    return haxe.data.collections.Set.create().addAll(arr);
-  }
-  
-  public static function toMap<K, V>(arr : Array<Tuple2<K, V>>) {
-    return haxe.data.collections.Map.create().addAll(arr);
-  } 
+	public static function splitAt<T>(srcArr : Array<T>, index : Int) : Tuple2 < Array<T>, Array<T> > return
+		srcArr.slice(0, index).entuple(srcArr.slice(index))   
 }

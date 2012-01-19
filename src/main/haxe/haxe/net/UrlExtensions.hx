@@ -19,7 +19,12 @@ import Prelude;
 import haxe.net.Url;
 import haxe.data.collections.Map;
 
-using PreludeExtensions;
+using stax.StringOps;
+using stax.ArrayOps;
+import stax.Tuples;
+using stax.Tuples;
+using stax.OptionOps;
+
 using haxe.functional.Foldable;
 
 class UrlExtensions {

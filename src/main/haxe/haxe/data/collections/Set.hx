@@ -17,18 +17,28 @@
 package haxe.data.collections;
 
 import Prelude;
-import PreludeExtensions;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using PreludeExtensions;
+using stax.ArrayOps;
+
 using haxe.functional.FoldableExtensions;
 
+class FoldableToSet {
+	public static function toSet<A, B>(foldable : Foldable<A, B>) : Set<B> {  
+    var dest = Set.create();
+    return foldable.foldl(dest, function(a, b) {
+      return a.append(b);
+    });
+  }	
+}
+class ArrayToSet {
+	public static function toSet<T>(arr : Array<T>) {
+    return haxe.data.collections.Set.create().addAll(arr);
+  }	
+}
 /** A cross-platform, immutable Set built on Map. */
 class Set<T> implements Collection<Set<T>, T> {
   public var equal (getEqual, null): EqualFunction<T>;
@@ -38,6 +48,9 @@ class Set<T> implements Collection<Set<T>, T> {
   
   var _map: Map<T, T>;
   
+	public static function toSet<T>(i: Iterable<T>) {
+    return haxe.data.collections.Set.create().addAll(i);
+  }
   public static function create<T>(?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Set<T> {  
     return new Set<T>(Map.create(order, equal, hash, show));
   }
@@ -116,19 +129,6 @@ class Set<T> implements Collection<Set<T>, T> {
     var ha = hash;
     return foldl(393241, function(a, b) return a * (ha(b) + 6151));
   }
-
-  public function decompose(): JValue {
-    return ArrayExtensions.decompose(toArray());
-  }
-
-  public static function extract<T>(v: JValue, e: JExtractorFunction<T>, ?order: OrderFunction<T>, ?equal: EqualFunction<T>, ?hash: HashFunction<T>, ?show: ShowFunction<T>): Set<T> {
-    return switch(v) {
-      case JArray(v): Set.create(order, equal, hash, show).addAll(v.map(e));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
-
   public function toString(): String {    
     return "Set " + toArray().toStringWith(show);
   } 

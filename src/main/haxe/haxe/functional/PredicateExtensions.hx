@@ -20,7 +20,6 @@ import Prelude;
 
 import haxe.functional.Predicate;
 
-using PreludeExtensions;
 
 class Predicate1Extensions {
   public static function and<T>(p1: Predicate<T>, p2: Predicate<T>): Predicate<T> {

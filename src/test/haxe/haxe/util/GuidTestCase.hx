@@ -20,7 +20,7 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.util.Guid;
 
-using PreludeExtensions;
+
 
 class GuidTestCase extends TestCase {
   public function new() {

@@ -16,11 +16,12 @@
 package haxe.reactive;
 
 import Prelude;
+import stax.Tuples;
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 import haxe.data.collections.List;
 
-using PreludeExtensions;
+
 using haxe.functional.FoldableExtensions;
 
 class SignalCollectionExtensions {

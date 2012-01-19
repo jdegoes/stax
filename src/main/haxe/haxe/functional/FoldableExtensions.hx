@@ -15,15 +15,14 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package haxe.functional;
-import haxe.data.collections.Set;
-import haxe.data.collections.List;
 
+import stax.Tuples;
 import Prelude;
-import PreludeExtensions;
-import haxe.functional.Foldable; 
-import haxe.data.collections.Map;
+using stax.OptionOps;
 
-using PreludeExtensions;
+import haxe.functional.Foldable; 
+
+
 
 class FoldableExtensions {
   public static function foldr<A, B, Z>(foldable: Foldable<A, B>, z: Z, f: B -> Z -> Z): Z {
@@ -329,41 +328,11 @@ class FoldableExtensions {
     });
   }
   
-  public static function groupBy<C, T, K>(foldable: Foldable<C, T>, grouper: T -> K) : Map<K, C> { 
-    var def = foldable.empty();
-    return cast foldable.foldl(Map.create(), function(map, e) {
-      var key = grouper(e);
-      var result = map.getOrElseC(key, def);
-      return map.set(key, cast result.append(e));
-    });
-  }
-  
   public static function toArray<A, B>(foldable: Foldable<A, B>): Array<B> {
     var es: Array<B> = [];
     
     foldable.foldl(foldable.empty(), function(a, b) { es.push(b); return a; });
 
     return es;
-  }
-  
-  public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  
-    var dest = Map.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
-  }
-  
-  public static function toList<A, B>(foldable : Foldable<A, B>) : List<B> {  
-    var dest = List.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
-  }
-  
-  public static function toSet<A, B>(foldable : Foldable<A, B>) : Set<B> {  
-    var dest = Set.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
   }
 }

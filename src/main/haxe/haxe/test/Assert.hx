@@ -16,13 +16,13 @@
 package haxe.test;
 
 import Prelude;
-import PreludeExtensions;
+import stax.Future;
 import haxe.io.Bytes;
 import haxe.test.Assertation;
 import haxe.test.MustMatchers;
 import haxe.PosInfos;
+using stax.OptionOps;
 
-using PreludeExtensions;
 
 
 /**

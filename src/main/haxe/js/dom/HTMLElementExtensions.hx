@@ -19,9 +19,11 @@ import Prelude;
 import Dom;
 
 using haxe.data.collections.ArrayExtensions;
-using PreludeExtensions;
+
 using js.dom.HTMLDocumentExtensions;
 using js.dom.DomExtensions.DomCollectionExtensions;
+
+using stax.OptionOps;
 
 class HTMLElementExtensions {
   

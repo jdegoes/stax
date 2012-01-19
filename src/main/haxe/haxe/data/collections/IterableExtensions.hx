@@ -18,11 +18,17 @@ package haxe.data.collections;
 
 import Prelude;
 
-using PreludeExtensions;
-import PreludeExtensions;
+import stax.Tuples;
+using stax.Tuples;
+
+import stax.ArrayOps;
+using stax.ArrayOps;
+using stax.IterableOps;
+
 using haxe.data.collections.IterableExtensions;
 
 class IterableExtensions {
+	
   public static function size<T>(iterable: Iterable<T>): Int {
     var size = 0;
     
@@ -32,7 +38,7 @@ class IterableExtensions {
   }
   
   public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
-    return ArrayExtensions.filter(iter.toArray(), f);
+    return ArrayLambdas.filter(iter.toArray(), f);
   }
   
   public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
@@ -42,12 +48,20 @@ class IterableExtensions {
     
     return folded;
   }
-  
+	 public static function foldl1<T, T>(iter: Iterable<T>, mapper: T -> T -> T): T {
+    var folded = iter.head();
+    iter = iter.tail();
+		
+    for (e in iter) { folded = mapper(folded, e); }
+    
+    return folded;
+  }
+
   public static function concat<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T>
     return iter1.toArray().concat(iter2.toArray())
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
-    return ArrayExtensions.foldr(iterable.toArray(), z, f);
+    return ArrayLambdas.foldr(iterable.toArray(), z, f);
   }
   
   public static function headOption<T>(iter: Iterable<T>): Option<T> {
@@ -153,7 +167,6 @@ class IterableExtensions {
 		var empty : Iterable<T> = [];
 		return foldl(iter, empty, concat);
   }
-
   public static function interleave<T>(iter: Iterable<Iterable<T>>): Iterable<T> {
 		var alls = iter.map(function (it) return it.iterator()).toArray();
 		var res = [];		
@@ -194,15 +207,6 @@ class IterableExtensions {
       return b;
     });
   }
-  
-  public static function toArray<T>(i: Iterable<T>) {
-    var a = [];
-    
-    for (e in i) a.push(e);
-    
-    return a;
-  }
-  
   public static function reversed<T>(iter: Iterable<T>): Iterable<T> {
     return foldl(iter, [], function(a, b) {
       a.unshift(b);
@@ -313,7 +317,7 @@ class IterableExtensions {
     
     return result;
   }
-  
+  	
   public static function union<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
     return unionBy(iter1, iter2, function(a, b) { return a == b; });
   }
@@ -328,7 +332,7 @@ class IterableExtensions {
 
   public static function count<T>(iter: Iterable<T>, f: T -> Bool): Int {
     return iter.toArray().count(f);
-  }
+  } 
   
   public static function countWhile<T>(iter: Iterable<T>, f: T -> Bool): Int {
     return iter.toArray().countWhile(f);
@@ -358,9 +362,5 @@ class IterableExtensions {
   
   public static function forAny<T>(iter: Iterable<T>, f: T -> Bool): Bool {
     return iter.toArray().forAny(f);
-  }
-  
-  public static function groupBy<T, K>(iter: Iterable<T>, grouper: T -> K) : Map<K, Iterable<T>> { 
-    return iter.toArray().groupBy(grouper);
   }
 }

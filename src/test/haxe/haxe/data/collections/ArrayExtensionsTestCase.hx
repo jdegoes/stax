@@ -20,9 +20,13 @@ import Prelude;
 
 import haxe.test.TestCase;
 using haxe.data.collections.ArrayExtensions;
-
-import PreludeExtensions;  
-using PreludeExtensions;
+using haxe.data.collections.Set;
+using haxe.data.collections.List;
+using haxe.data.collections.Map;
+using haxe.data.collections.Group;
+ 
+import stax.Tuples;
+using stax.ArrayOps;
 
 class ArrayExtensionsTestCase extends TestCase {
   public function testPartition() {

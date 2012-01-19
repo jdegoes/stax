@@ -1,4 +1,4 @@
-package ;
+package stax;
 
 /**
  * ...
@@ -7,10 +7,19 @@ package ;
 import Prelude;
 using Prelude;
 
+import stax.Tuples;
+using stax.OptionOps;
+using stax.DynamicOps;
 
-import PreludeExtensions;
-using PreludeExtensions;
-
+/**
+ * An asynchronous operation that may complete in the future unless
+ * successfully canceled.
+ * <p>
+ * Futures can be combined and chained together to form complicated
+ * asynchronous control flows. Often used operations are map() and
+ * flatMap().
+ * <p>
+ */
 class Future<T> {
   var _listeners: Array<T -> Void>;
   var _result: T;
@@ -253,5 +262,8 @@ class Future<T> {
 
   public static function create<T>(): Future<T> {
     return new Future<T>();
+  }
+	public static function toFuture<T>(t: T): Future<T> {
+    return Future.create().deliver(t);
   }
 }

@@ -1,6 +1,6 @@
 package haxe.reactive;
 
-import Tuples;
+import stax.Tuples;
 import Prelude;
 import haxe.test.TestCase;
 import haxe.reactive.Reactive;
@@ -17,7 +17,9 @@ import haxe.reactive.StreamBool;
 import haxe.reactive.Streams;
 import haxe.reactive.Collections;
 
-using PreludeExtensions;
+using stax.IterableOps;
+using haxe.data.collections.List;
+
 using haxe.functional.FoldableExtensions;
 
 class TimeoutBundle {
@@ -290,7 +292,7 @@ class ReactiveTestCase extends TestCase {
     
     advanceTime(30);
     
-    assertEquals([1, 2, 1, 3, 2, 4, 3, 4], merged.toArray());
+    assertEquals([1, 2, 1, 3, 2, 4, 3, 4], merged);
   }
  
   public function testCalm():Void {

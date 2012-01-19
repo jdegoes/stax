@@ -16,12 +16,6 @@
 */
 import Type;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
-import PreludeExtensions;
-using PreludeExtensions;
-
 enum Unit {
   Unit;
 }
@@ -66,6 +60,7 @@ enum Either<A, B> {
 }
 
 typedef FailureOrSuccess<A, B> = Either<A, B>
+<<<<<<< HEAD
 
 /**
  * An asynchronous operation that may complete in the future unless
@@ -288,11 +283,19 @@ class Tuple3< A, B, C> extends AbstractProduct {
     }
   }
 }
+=======
+>>>>>>> refactor
 typedef OrderFunction<T>  = Function2<T, T, Int>;
 typedef EqualFunction<T>  = Function2<T, T, Bool>;
 typedef ShowFunction<T>   = Function<T, String>;
 typedef HashFunction<T> = Function<T, Int>;   
 
+typedef CollectionTools<T> = {
+		order : Null<OrderFunction<T>>,
+		equal	: Null<EqualFunction<T>>,
+		show	: Null<ShowFunction<T>>,
+		hash	: Null<HashFunction<T>>,
+}
 class FieldOrder {
   public static inline var Ascending = 1;
   public static inline var Descending = -1;

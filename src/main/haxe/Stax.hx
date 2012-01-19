@@ -5,17 +5,30 @@ package ;
  * @author 0b1kn00b
  */
 
-import PreludeExtensions;
-using PreludeExtensions;
 import Prelude;
 using Prelude;
+import stax.Tuples;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
+using stax.IterableOps;
+
+import stax.ArrayOps;
+using stax.ArrayOps;
+
+import stax.BoolOps;
+import stax.FloatOps;
+import stax.StringOps;
+using stax.StringOps;
+import stax.IntOps;
+import stax.DateOps;
+
+using stax.OptionOps;
+
 import Type;
 
 class Stax {
+	public static inline function tool<A>(?order:OrderFunction<A>,?equal:EqualFunction<A>,?hash:HashFunction<A>,?show:ShowFunction<A>):CollectionTools<A>{
+		return { order : order , equal : equal , show : show , hash : hash };
+	}
   static function _createOrderImpl<T>(impl : OrderFunction<Dynamic>) : OrderFunction<T> {
     return function(a, b) {
     return if(a == b || (a == null && b == null)) 0;
@@ -33,11 +46,11 @@ class Stax {
   public static function getOrderForType<T>(v: ValueType) : OrderFunction<T> {
     return switch(v) {
     case TBool:
-      _createOrderImpl(BoolExtensions.compare);
+      _createOrderImpl(BoolOps.compare);
     case TInt:
-      _createOrderImpl(IntExtensions.compare);
+      _createOrderImpl(IntOps.compare);
     case TFloat:
-      _createOrderImpl(FloatExtensions.compare);
+      _createOrderImpl(FloatOps.compare);
     case TUnknown:
       function(a : T, b : T) return (a == b) ? 0 : ((cast a) > (cast b) ? 1 : -1);
     case TObject:
@@ -53,11 +66,11 @@ class Stax {
     case TClass(c):
       switch(Type.getClassName(c)) {
       case "String":
-        _createOrderImpl(StringExtensions.compare);
+        _createOrderImpl(StringOps.compare);
       case "Date":
-        _createOrderImpl(DateExtensions.compare);
+        _createOrderImpl(DateOps.compare);
       case "Array":
-        _createOrderImpl(ArrayExtensions.compare);
+        _createOrderImpl(ArrayOps.compare);
       default:
         if(_hasMetaDataClass(c)) {
           var i = 0;
@@ -72,7 +85,7 @@ class Stax {
             var c = a._3 - b._3;
             if(c != 0)
               return c;
-            return StringExtensions.compare(a._1, b._1);
+            return StringOps.compare(a._1, b._1);
           });
 		      _createOrderImpl(function(a, b) {       
             var values = fields.filter(function(v) return !Reflect.isFunction(Reflect.field(a, v._1))).map(function(v){return Tuple3.create(Reflect.field(a, v._1), Reflect.field(b, v._1), v._2);});
@@ -134,7 +147,7 @@ class Stax {
       var c = a._3 - b._3;
       if(c != 0)
         return c;
-      return StringExtensions.compare(a._1, b._1);
+      return StringOps.compare(a._1, b._1);
     }).map(function(v) {
       return v._1;
     });
@@ -155,11 +168,11 @@ class Stax {
   public static function getEqualForType<T>(v: ValueType) : EqualFunction<T> {
     return switch(v) {
       case TBool:
-        _createEqualImpl(BoolExtensions.equals);
+        _createEqualImpl(BoolOps.equals);
       case TInt:
-        _createEqualImpl(IntExtensions.equals);
+        _createEqualImpl(IntOps.equals);
       case TFloat:
-        _createEqualImpl(FloatExtensions.equals);
+        _createEqualImpl(FloatOps.equals);
       case TUnknown:
       function(a : T, b : T) return a == b;
       case TObject:
@@ -174,11 +187,11 @@ class Stax {
     case TClass(c):
       switch(Type.getClassName(c)) {
         case "String":
-          _createEqualImpl(StringExtensions.equals);
+          _createEqualImpl(StringOps.equals);
         case "Date":
-          _createEqualImpl(DateExtensions.equals);
+          _createEqualImpl(DateOps.equals);
         case "Array":
-          _createEqualImpl(ArrayExtensions.equals);
+          _createEqualImpl(ArrayOps.equals);
         default:    
           if(_hasMetaDataClass(c)) {  
             var fields = _fieldsWithMeta(c, "equalHash");
@@ -235,11 +248,11 @@ class Stax {
   public static function getShowForType<T>(v : ValueType) : ShowFunction<T> {
     return switch(v) {
       case TBool:
-        _createShowImpl(BoolExtensions.toString);
+        _createShowImpl(BoolOps.toString);
       case TInt:
-        _createShowImpl(IntExtensions.toString);
+        _createShowImpl(IntOps.toString);
       case TFloat:
-        _createShowImpl(FloatExtensions.toString);
+        _createShowImpl(FloatOps.toString);
       case TUnknown:
       _createShowImpl(function(v) return '<unknown>');
       case TObject:
@@ -255,9 +268,9 @@ class Stax {
       case TClass(c):
         switch(Type.getClassName(c)) {
         case "String":
-          _createShowImpl(StringExtensions.toString);
+          _createShowImpl(StringOps.toString);
         case "Array":
-          _createShowImpl(ArrayExtensions.toString);
+          _createShowImpl(ArrayOps.toString);
         default:
             if(_hasMetaDataClass(c)) {
               var fields = _fieldsWithMeta(c, "show");
@@ -301,11 +314,11 @@ class Stax {
   public static function getHashForType<T>(v: ValueType) : HashFunction<T> {
     return switch(v) {
       case TBool:
-        _createHashImpl(BoolExtensions.hashCode);
+        _createHashImpl(BoolOps.hashCode);
       case TInt:
-        _createHashImpl(IntExtensions.hashCode);
+        _createHashImpl(IntOps.hashCode);
       case TFloat:
-        _createHashImpl(FloatExtensions.hashCode);
+        _createHashImpl(FloatOps.hashCode);
       case TUnknown:
       _createHashImpl(function(v : T) return error("can't retrieve hascode for TUnknown: " + v));
       case TObject:
@@ -316,11 +329,11 @@ class Stax {
       case TClass(c):
         switch(Type.getClassName(c)) {
         case "String":
-          _createHashImpl(StringExtensions.hashCode);
+          _createHashImpl(StringOps.hashCode);
         case "Date":
-          _createHashImpl(DateExtensions.hashCode);
+          _createHashImpl(DateOps.hashCode);
         case "Array":
-          _createHashImpl(ArrayExtensions.hashCode);
+          _createHashImpl(ArrayOps.hashCode);
         default:
           var fields = Type.getInstanceFields(c);
           if(_hasMetaDataClass(c)) {       
@@ -328,7 +341,7 @@ class Stax {
             _createHashImpl(function(v : T) {
               var className = Type.getClassName(c);
               var values    = fields.map(function(f){return Reflect.field(v, f);}).filter(function(v) return !Reflect.isFunction(v));
-              return values.foldl(9901 * StringExtensions.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
+              return values.foldl(9901 * StringOps.hashCode(className), function(v, e){return v + (333667 * (Stax.getHashFor(e)(e) + 197192));});
             });
           } else if(Type.getInstanceFields(c).remove("hashCode")) {
             _createHashImpl(function(v) return Reflect.callMethod(v, Reflect.field(v, "hashCode"), []));

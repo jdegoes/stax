@@ -19,8 +19,11 @@ import Prelude;
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
+import stax.Tuples;
 using haxe.data.collections.IterableExtensions;
-using PreludeExtensions;
+using stax.IterableOps;
+using stax.ArrayOps;
+
 using haxe.functional.FoldableExtensions;
 
 class Streams {

@@ -7,7 +7,8 @@ import js.dom.Quirks;
 
 import haxe.test.TestCase;
 using js.dom.Quirks;
-using PreludeExtensions;
+
+using stax.OptionOps;
 
 class QuirksTestCase extends TestCase {
   var element: HTMLElement;

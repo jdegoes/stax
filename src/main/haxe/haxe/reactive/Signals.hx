@@ -16,6 +16,7 @@
 package haxe.reactive;
 
 import Prelude;
+import stax.Tuples;
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 

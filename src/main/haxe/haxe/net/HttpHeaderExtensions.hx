@@ -20,7 +20,12 @@ import Prelude;
 import haxe.data.collections.Map;
 import haxe.net.HttpHeader;
 
-using PreludeExtensions;
+import stax.Tuples;
+using stax.Tuples;
+
+using stax.StringOps;
+using stax.ArrayOps;
+using stax.OptionOps;
 
 class HttpHeaderExtensions {
   static var HeaderPattern = ~/^([^:]+): *(.+)$/;

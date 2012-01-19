@@ -20,7 +20,9 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.functional.PartialFunction;
 
-using PreludeExtensions;
+import stax.Tuples;
+using stax.DynamicOps;
+
 using haxe.functional.PartialFunctionExtensions;
 
 class PartialFunctionTestCase extends TestCase {

@@ -28,13 +28,25 @@ import haxe.text.json.Json;
 import haxe.net.Url;
 import haxe.io.log.Logger;
 
-using PreludeExtensions;
+using haxe.data.collections.List;
+import stax.Future;
+import stax.Tuples;
+using stax.Tuples;
+using stax.StringOps;
+using stax.ArrayOps;
+using stax.IntOps;
+using stax.OptionOps;
+using stax.IterableOps;
+using stax.DynamicOps;
+using haxe.data.collections.ArrayExtensions;
+using haxe.data.collections.Map;
+
 using haxe.functional.FoldableExtensions;
 using haxe.util.StringExtensions;
 using haxe.data.collections.IterableExtensions;
-using haxe.data.collections.MapExtensions;
 using haxe.net.UrlExtensions;
 using haxe.framework.Injector;
+
 
 /** A bidirectional communication layer capable of crossing frames hosted on 
  * different domains.
@@ -346,7 +358,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
     
     var maxFragSize = 1500 - to.length;
     var fragmentId  = 1;
-    var fragments   = Json.encodeObject(data).chunk(maxFragSize);
+    var fragments   = Json.encodeObject(data).chunk(maxFragSize).toList();
     
     var encoded = fragments.mapTo(newFragmentsList(), function(chunk): Tuple2<Window, AddressableFragment> return iframe.entuple(cast {
       type:           'delivery',
