@@ -30,7 +30,7 @@ using  js.dom.HTMLDocumentExtensions;
 import haxe.test.TestCase;
 
 class HTMLDocumentExtensionsTestCase extends TestCase {
-    var _doc:           Env.HTMLDocument;
+    var _doc:           Dom.HTMLDocument;
     var _testElements:  HTMLElement;
 
     public function new():Void {

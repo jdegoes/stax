@@ -136,11 +136,11 @@ interface IAutoinjected {
 }
 
 class Autoinjected implements IAutoinjected {
-  public function new();
+  public function new(){}
 }
 
 class NotAutoinjected implements IAutoinjected {
-  public function new();
+  public function new(){}
 } 
 
 @DefaultImplementation("haxe.framework.AutoinjectedMany", "OneToMany")
@@ -149,5 +149,5 @@ interface IAutoinjectedMany {
 }
 
 class AutoinjectedMany implements IAutoinjectedMany {
-  public function new();
+  public function new(){}
 }
