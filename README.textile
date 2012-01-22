@@ -1,4 +1,5 @@
 h1. Stax Proposals:
+		
 		1	) Remove JSON from collection classes and seperate : +reduce code weight
 		2 ) Split Stax into relevant parts( now found in package stax) : +reduce code weight -more import statements
 		3 ) Remove Collection dependencies from FoldableExtensions, now found in collection modules. +needed all collections for anything foldable
