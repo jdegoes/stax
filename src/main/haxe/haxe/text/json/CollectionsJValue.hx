@@ -5,13 +5,14 @@ package haxe.text.json;
  * @author 0b1kn00b
  */
 import Prelude;
+using Stax;
+
 import haxe.data.collections.Set;
 import haxe.data.collections.List;
 import haxe.data.collections.Map;
 import haxe.data.transcode.TranscodeJValue;
 
-using stax.IterableOps;
-using stax.ArrayOps;
+
 import haxe.text.json.PrimitivesJValue;
 using haxe.text.json.PrimitivesJValue;
 using haxe.text.json.CollectionsJValue;

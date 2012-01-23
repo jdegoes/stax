@@ -8,8 +8,8 @@ import Prelude;
 using Prelude;
 
 import stax.Tuples;
-using stax.OptionOps;
-using stax.DynamicOps;
+using stax.Options;
+using stax.Dynamics;
 
 /**
  * An asynchronous operation that may complete in the future unless

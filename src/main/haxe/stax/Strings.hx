@@ -4,12 +4,12 @@ package stax;
  * ...
  * @author 0b1kn00b
  */
-using stax.IntOps;
-using stax.OptionOps;
+using stax.Maths;
+using stax.Options;
 
 import Prelude;
 
-class StringOps {
+class Strings {
   public static function toBool(v: String, ?d: Bool): Bool {
     if (v == null) return d;
     
@@ -62,17 +62,5 @@ class StringOps {
   }
   public static function toString(v: String): String {
     return v;
-  }
-  public static function hashCode(v: String) {
-    var hash = 49157;
-    
-    for (i in 0...v.length) {       
-#if neko
-      hash += (24593 + v.charCodeAt(i)) * 49157;
-#else
-      hash += (24593 + untyped v.cca(i)) * 49157;
-#end
-    }   
-    return hash;
   }
 }

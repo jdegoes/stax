@@ -17,13 +17,13 @@ package haxe.test;
 
 import haxe.test.Dispatcher;
 
-using stax.StringOps;
-using stax.OptionOps;
-using stax.ArrayOps;
-using stax.FunctionOps;
+using stax.Strings;
+using stax.Options;
+
+using stax.Functions;
 
 import Prelude;
-
+using Stax;
 
 using haxe.functional.PredicateExtensions;
 

@@ -19,8 +19,7 @@ import Prelude;
 import stax.Tuples;
 using stax.Tuples;
 
-using stax.IntOps;
-using stax.FloatOps;
+using stax.Maths;
 import haxe.math.geom.Point;
 import haxe.math.geom.Vector;
 

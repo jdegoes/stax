@@ -23,9 +23,9 @@ import haxe.net.Url;
 
 using haxe.net.UrlExtensions;
 using haxe.data.collections.Map;
-using stax.OptionOps;
-using stax.StringOps;
-using stax.FunctionOps;
+using stax.Options;
+using stax.Strings;
+using stax.Functions;
 
 
 class UrlExtensionsTestCase extends TestCase {

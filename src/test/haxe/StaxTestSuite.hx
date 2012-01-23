@@ -64,7 +64,7 @@ class StaxTestSuite {
         var runner = (new Runner()).addAll([   
           new PreludeTestCase(),    
           new JValueTestCase(),   
-          new ArrayExtensionsTestCase(),
+          new ArraysTestCase(),
           new MapTestCase(),
           new SetTestCase(),
           new ListTestCase(),

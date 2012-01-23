@@ -17,15 +17,18 @@
 
 package haxe.text.json;
 
-import stax.Tuples;
 import Prelude;
+using Stax;
+
+import stax.Tuples;
+
 import haxe.text.json.JValue;
 import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.data.transcode.TranscodeJValue;
 
-using stax.OptionOps;
-using stax.ArrayOps;
-using stax.DynamicOps;
+using stax.Options;
+
+using stax.Dynamics;
 
 using haxe.text.json.JValueExtensions;
 

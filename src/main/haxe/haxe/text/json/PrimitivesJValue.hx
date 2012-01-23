@@ -4,21 +4,22 @@ package haxe.text.json;
  * ...
  * @author 0b1kn00b
  */
+using Stax;
+
 import haxe.data.transcode.TranscodeJValue;
 import haxe.data.transcode.TranscodeJValueExtensions;
 import haxe.text.json.JValue;
 
-import stax.BoolOps;
-using stax.BoolOps;
+using stax.plus.Show;
 
-import stax.FloatOps;
-using stax.FloatOps;
+import stax.Maths;
+using stax.Maths;
 
-import stax.StringOps;
-using stax.StringOps;
+import stax.Strings;
+using stax.Strings;
 
-import stax.ArrayOps;
-using stax.ArrayOps;
+ 
+ 
 class PrimitivesJValue {
 	
 }

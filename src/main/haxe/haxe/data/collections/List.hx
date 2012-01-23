@@ -16,6 +16,8 @@
 */
 package haxe.data.collections;
 
+using Stax;
+
 import stax.Tuples;
 import Prelude;
 
@@ -23,10 +25,13 @@ import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-import stax.IntOps;
-using  stax.IntOps;
-using  stax.ArrayOps;
-using  stax.IterableOps;
+import stax.Maths;
+using  stax.Maths;
+
+import stax.plus.Order; using stax.plus.Order;
+import stax.plus.Hasher; using stax.plus.Hasher;
+import stax.plus.Show; using stax.plus.Show;
+import stax.plus.Equal; using stax.plus.Equal;
 
 using haxe.functional.FoldableExtensions;
 
@@ -352,36 +357,36 @@ class List<T> implements Collection<List<T>, T> {
   function getOrder() {
     return if(null == _order) {
       if(size() == 0)
-        Stax.getOrderFor(null);
+        Order.getOrderFor(null);
       else
-        _order = Stax.getOrderFor(first);
+        _order = Order.getOrderFor(first);
       } else _order;
   }
   
   function getEqual() { 
     return if(null == _equal) {
       if(size() == 0)
-        Stax.getEqualFor(null);
+        Equal.getEqualFor(null);
       else
-        _equal = Stax.getEqualFor(first);
+        _equal = Equal.getEqualFor(first);
       } else _equal;
   }
 
   function getHash() {
     return if(null == _hash) {
       if(size() == 0)
-      Stax.getHashFor(null);
+      Hasher.getHashFor(null);
       else
-        _hash = Stax.getHashFor(first);   
+        _hash = Hasher.getHashFor(first);   
     } else _hash;
   }
   
   function getShow() {
     return if(null == _show) {
       if(size() == 0)
-      Stax.getShowFor(null);
+      Show.getShowFor(null);
       else
-        _show = Stax.getShowFor(first);   
+        _show = Show.getShowFor(first);   
     } else _show;
   }
   

@@ -21,7 +21,7 @@ import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.io.http.Http;
 import stax.Future;
-using stax.OptionOps;
+using stax.Options;
 
 // Transforms an Http<S> into an Http<T> given encoder/decoder functions.
 class HttpTransformer<S, T> implements Http<T> {

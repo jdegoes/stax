@@ -16,7 +16,7 @@
 package haxe.reactive;
 
 import haxe.reactive.Reactive;
-using haxe.data.collections.IterableExtensions;
+using stax.Iterables;
 
 class SignalBool {
     private function new() { }

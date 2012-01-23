@@ -18,6 +18,8 @@ package haxe.data.collections;
 
 import Prelude;
 
+import stax.plus.Equal;
+
 import haxe.functional.Foldable;
 import haxe.test.TestCase;
 import haxe.data.collections.List;
@@ -26,7 +28,7 @@ using haxe.functional.FoldableExtensions;
 
 import stax.Tuples;
 using stax.Tuples;
-using stax.IntOps;
+using stax.Maths;
 
 
 class ListTestCase extends TestCase {
@@ -235,7 +237,7 @@ class ListTestCase extends TestCase {
   
   function assertListEquals(l1: List<Int>, l2: List<Int>, ?pos : haxe.PosInfos) {
     assertTrue(l1.equals(l2), pos); 
-    assertTrue(Stax.getEqualFor(l1)(l1, l2), pos); 
+    assertTrue(Equal.getEqualFor(l1)(l1, l2), pos); 
   }
   
   function defaultList(): List<Int> {

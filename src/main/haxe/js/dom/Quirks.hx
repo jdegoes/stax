@@ -16,6 +16,7 @@
 package js.dom;
 
 import Prelude;
+using Stax;
 
 
 import Dom;
@@ -23,15 +24,17 @@ import js.Env;
 import js.detect.BrowserSupport;
 import haxe.functional.Predicate;
 import haxe.data.collections.Map;
+using stax.Arrays;
+
 import haxe.util.Guid;
 
-using stax.StringOps;
-using stax.DynamicOps;
-using stax.OptionOps;
-using stax.FloatOps;
-using stax.ArrayOps;
+using stax.Strings;
+using stax.Dynamics;
+using stax.Options;
+using stax.Maths;
+ 
 
-import stax.DynamicOps;
+import stax.Dynamics;
 
 using js.dom.DomExtensions;
 using haxe.util.StringExtensions;
@@ -307,7 +310,7 @@ class Quirks {
 
          elem.style.left = (name == "font-size") ? "1em" : style;
 
-         DynamicOps.withEffect(untyped elem.style.pixelLeft + "px", function(t) untyped {
+         Dynamics.withEffect(untyped elem.style.pixelLeft + "px", function(t) untyped {
            // Revert the changed values
            elem.style.left        = oldLeft;
            elem.runtimeStyle.left = oldRtLeft;

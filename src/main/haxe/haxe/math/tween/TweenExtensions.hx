@@ -21,7 +21,7 @@ import haxe.math.tween.Easing;
 import haxe.time.ScheduledExecutor;
 
 import stax.Future;
-using stax.FloatOps;
+using stax.Maths;
 
 using haxe.framework.Injector;
 

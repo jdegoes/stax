@@ -16,6 +16,7 @@
 package haxe.net;
 
 import Prelude;
+using Stax;
 
 import haxe.data.collections.Map;
 import haxe.net.HttpHeader;
@@ -23,9 +24,9 @@ import haxe.net.HttpHeader;
 import stax.Tuples;
 using stax.Tuples;
 
-using stax.StringOps;
-using stax.ArrayOps;
-using stax.OptionOps;
+using stax.Strings;
+ 
+using stax.Options;
 
 class HttpHeaderExtensions {
   static var HeaderPattern = ~/^([^:]+): *(.+)$/;

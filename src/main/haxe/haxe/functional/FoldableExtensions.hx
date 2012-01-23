@@ -18,7 +18,11 @@ package haxe.functional;
 
 import stax.Tuples;
 import Prelude;
-using stax.OptionOps;
+
+import stax.plus.Show;
+import stax.plus.Equal;
+
+using stax.Options;
 
 import haxe.functional.Foldable; 
 
@@ -302,7 +306,7 @@ class FoldableExtensions {
   public static function nub<A, B>(foldable:Foldable<A, B>): A {
     var it = iterator(foldable);
     var first = if(it.hasNext()) it.next() else null;
-    return nubBy(foldable, Stax.getEqualFor(first));
+    return nubBy(foldable, Equal.getEqualFor(first));
   }
   
   public static function intersectBy<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>, f: B -> B -> Bool): A {
@@ -314,7 +318,7 @@ class FoldableExtensions {
   public static function intersect<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>): A {
     var it = iterator(foldable1);
     var first = if(it.hasNext()) it.next() else null;
-    return intersectBy(foldable1, foldable2, Stax.getEqualFor(first));
+    return intersectBy(foldable1, foldable2, Equal.getEqualFor(first));
   }
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
@@ -323,7 +327,7 @@ class FoldableExtensions {
     return foldable.foldl('', function(a, b) {
       var prefix = if (isFirst) { isFirst = false; ''; } else sep;    
       if(null == show)
-      show = Stax.getShowFor(b);
+      show = Show.getShowFor(b);
       return a + prefix + show(b);
     });
   }

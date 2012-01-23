@@ -21,7 +21,7 @@ import haxe.test.TestCase;
 import haxe.test.Assert;
 import haxe.net.HttpHeader;
 
-using stax.OptionOps;
+using stax.Options;
 using stax.Tuples;
 
 using haxe.net.HttpHeaderExtensions;

@@ -5,11 +5,12 @@ package haxe.data.collections;
  * @author 0b1kn00b
  */
 import haxe.functional.Foldable;
-using stax.ArrayOps;
-using stax.IterableOps;
+
+
+using Stax;
+using stax.Iterables;
+using stax.Arrays;
 using haxe.data.collections.Group;
-using haxe.data.collections.IterableExtensions;
-using haxe.data.collections.ArrayExtensions;
 
 class Group {
 

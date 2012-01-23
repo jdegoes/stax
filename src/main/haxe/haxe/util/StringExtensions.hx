@@ -16,10 +16,11 @@
 package haxe.util;
 
 import Prelude;
+using stax.Maths;
 
 //BREAKING CHANGE: chars returns an Array.
 
-using stax.IntOps;
+
 
 using haxe.functional.FoldableExtensions;
 

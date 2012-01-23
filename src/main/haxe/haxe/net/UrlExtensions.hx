@@ -16,14 +16,16 @@
 package haxe.net;
 
 import Prelude;
+using Stax;
+
 import haxe.net.Url;
 import haxe.data.collections.Map;
 
-using stax.StringOps;
-using stax.ArrayOps;
+using stax.Strings;
+ 
 import stax.Tuples;
 using stax.Tuples;
-using stax.OptionOps;
+using stax.Options;
 
 using haxe.functional.Foldable;
 

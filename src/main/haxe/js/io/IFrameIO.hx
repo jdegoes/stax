@@ -28,22 +28,27 @@ import haxe.text.json.Json;
 import haxe.net.Url;
 import haxe.io.log.Logger;
 
-using haxe.data.collections.List;
+
 import stax.Future;
 import stax.Tuples;
+
+using Stax;
 using stax.Tuples;
-using stax.StringOps;
-using stax.ArrayOps;
-using stax.IntOps;
-using stax.OptionOps;
-using stax.IterableOps;
-using stax.DynamicOps;
-using haxe.data.collections.ArrayExtensions;
+using stax.Arrays;
+using stax.Strings;
+using stax.Maths;
+using stax.Options;
+using stax.Dynamics;
+using stax.Iterables;
+
+using stax.plus.Hasher;
+
 using haxe.data.collections.Map;
+using haxe.data.collections.List;
 
 using haxe.functional.FoldableExtensions;
 using haxe.util.StringExtensions;
-using haxe.data.collections.IterableExtensions;
+
 using haxe.net.UrlExtensions;
 using haxe.framework.Injector;
 

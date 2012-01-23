@@ -5,9 +5,8 @@ package stax;
  * @author 0b1kn00b
  */
 import Prelude;
-import stax.Tuples;
 
-class BoolOps {
+class Bools {
   public static function toInt(v: Bool): Float { return if (v) 1 else 0; }
   
   public static function ifTrue<T>(v: Bool, f: Thunk<T>): Option<T> {
@@ -28,13 +27,5 @@ class BoolOps {
 
   public static function equals(v1 : Bool, v2 : Bool) : Bool {
     return v1 == v2;   
-  }
-  
-  public static function hashCode(v : Bool) : Int {
-    return if (v) 786433 else 393241;  
-  }
-
-  public static function toString(v : Bool) : String {
-    return if (v) "true" else "false";  
   }
 }

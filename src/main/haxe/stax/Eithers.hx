@@ -6,7 +6,7 @@ package stax;
  */
 import Prelude;
 
-class EitherOps {
+class Eithers {
   public static function toLeft<A, B>(v: A): Either<A, B> {
     return Left(v);
   }
