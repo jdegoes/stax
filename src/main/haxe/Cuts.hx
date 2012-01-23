@@ -10,5 +10,5 @@ class Cuts {
 	
 }
 
-typedef Arrays 		= haxe.data.collections.ArrayExtensions;
+typedef Arrays 		= haxe.data.collections.Arrays;
 typedef Iterables = haxe.data.collections.IterableExtensions;

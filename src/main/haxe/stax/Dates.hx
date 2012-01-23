@@ -5,7 +5,7 @@ package stax;
  * @author 0b1kn00b
  */
 
-class DateOps {
+class Dates {
   public static function compare(v1: Date, v2: Date) {  
     var diff = v1.getTime() - v2.getTime();
       
@@ -16,8 +16,5 @@ class DateOps {
   }
   public static function toString(v: Date): String {
     return v.toString();
-  }
-  public static function hashCode(v: Date) {
-    return Math.round(v.getTime() * 49157);
   }
 }

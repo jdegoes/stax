@@ -5,11 +5,11 @@ package stax;
  * @author 0b1kn00b
  */
 import Prelude;
-using stax.OptionOps;
-using stax.EitherOps;
-using stax.DynamicOps;
+using stax.Options;
+using stax.Eithers;
+using stax.Dynamics;
 
-class OptionOps {
+class Options {
   public static function toOption<T>(t: T): Option<T> {
     return if (t == null) None; else Some(t);
   }
@@ -90,18 +90,18 @@ class OptionOps {
   }
   
   public static function orElseC<T>(o1: Option<T>, o2: Option<T>): Option<T> {
-    return OptionOps.orElse(o1, o2.toThunk());
+    return Options.orElse(o1, o2.toThunk());
   }
   
   public static function orEither<T, S>(o1: Option<T>, thunk: Thunk<S>): Either<S, T> {
     return switch (o1) {
-      case None: EitherOps.toLeft(thunk());
-      case Some(v): EitherOps.toRight(v);
+      case None: Eithers.toLeft(thunk());
+      case Some(v): Eithers.toRight(v);
     }
   }
   
   public static function orEitherC<T, S>(o1: Option<T>, c: S): Either<S, T> {
-    return OptionOps.orEither(o1, c.toThunk());
+    return Options.orEither(o1, c.toThunk());
   }
   
   public static function getOrElse<T>(o: Option<T>, thunk: Thunk<T>): T {
@@ -112,7 +112,7 @@ class OptionOps {
   }
   
   public static function getOrElseC<T>(o: Option<T>, c: T): T {
-    return OptionOps.getOrElse(o, c.toThunk());
+    return Options.getOrElse(o, c.toThunk());
   }
   
   public static function isEmpty<T>(o: Option<T>): Bool {

@@ -1,5 +1,7 @@
 package haxe.reactive;
 
+using Stax;
+
 import stax.Tuples;
 import Prelude;
 import haxe.test.TestCase;
@@ -17,7 +19,7 @@ import haxe.reactive.StreamBool;
 import haxe.reactive.Streams;
 import haxe.reactive.Collections;
 
-using stax.IterableOps;
+
 using haxe.data.collections.List;
 
 using haxe.functional.FoldableExtensions;

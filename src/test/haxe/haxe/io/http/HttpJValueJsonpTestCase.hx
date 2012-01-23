@@ -25,7 +25,7 @@ import haxe.text.json.Json;
 
 
 using haxe.text.json.JValueExtensions;
-using stax.OptionOps;
+using stax.Options;
 using haxe.data.collections.Map;
 
 class HttpJValueJsonpTestCase extends TestCase {

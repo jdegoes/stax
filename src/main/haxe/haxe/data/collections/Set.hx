@@ -17,12 +17,16 @@
 package haxe.data.collections;
 
 import Prelude;
+using Stax;
 
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using stax.ArrayOps;
+import stax.plus.Order; using stax.plus.Order;
+import stax.plus.Hasher; using stax.plus.Hasher;
+import stax.plus.Show; using stax.plus.Show;
+import stax.plus.Equal; using stax.plus.Equal;
 
 using haxe.functional.FoldableExtensions;
 

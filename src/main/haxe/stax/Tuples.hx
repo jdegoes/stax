@@ -6,6 +6,11 @@ package stax;
  */
 import Prelude;
 
+import stax.plus.Order;
+import stax.plus.Equal;
+import stax.plus.Show;
+import stax.plus.Hasher;
+
 typedef TTuple2<A,B> = {
 	_1 : A,
 	_2 : B
@@ -99,28 +104,28 @@ class AbstractProduct implements Product {
   private var _shows  : Array<ShowFunction <Dynamic>>;
   private function getOrder(i : Int) {
     return if(null == _orders[i]) {
-      _orders[i] = Stax.getOrderFor(productElement(i));
+      _orders[i] = Order.getOrderFor(productElement(i));
     } else
       _orders[i];
   }
 
   private function getEqual(i : Int) {
     return if(null == _equals[i]) {
-      _equals[i] = Stax.getEqualFor(productElement(i));
+      _equals[i] = Equal.getEqualFor(productElement(i));
     } else
       _equals[i];
   }
 
   private function getHash(i : Int) {
     return if(null == _hashes[i]) {
-      _hashes[i] = Stax.getHashFor(productElement(i));
+      _hashes[i] = Hasher.getHashFor(productElement(i));
     } else
       _hashes[i];
   }
 
   private function getShow(i : Int) {
     return if(null == _shows[i]) {
-      _shows[i] = Stax.getShowFor(productElement(i));
+      _shows[i] = Show.getShowFor(productElement(i));
     } else
       _shows[i];
   }

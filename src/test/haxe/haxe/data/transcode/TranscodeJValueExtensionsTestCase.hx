@@ -3,6 +3,8 @@ package haxe.data.transcode;
 import haxe.Stack;
 import Prelude;
 
+import stax.plus.Equal;
+
 import Type;
 import stax.Tuples;
 import Prelude;
@@ -116,7 +118,7 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
         valueType = Type.typeof(value);
       var decomposed = TranscodeJValue.getDecomposerFor(valueType)(value);
       var actual     = TranscodeJValue.getExtractorFor(valueType, extractors)(decomposed);
-			var equal      = Stax.getEqualFor(value)(value, actual);
+			var equal      = Equal.getEqualFor(value)(value, actual);
       if (!equal) {
         throw "Expected " + value + " but was " + actual;
       }

@@ -27,8 +27,8 @@ import haxe.data.collections.Map;
 
 import stax.Future;
 
-import stax.OptionOps;
-using stax.OptionOps;
+import stax.Options;
+using stax.Options;
 
 #if js
 import Dom;
@@ -79,7 +79,7 @@ class HttpJValueJsonp implements HttpJValue {
     var callbackName     = 'stax_jsonp_callback_' + requestId;
     var callbackFullName = 'haxe.io.http.HttpJValueJsonp.Responders.' + callbackName;
     
-    var params = OptionOps.toOption(params_).getOrElseC(Map.create()).set(callbackParameterName, callbackFullName);
+    var params = Options.toOption(params_).getOrElseC(Map.create()).set(callbackParameterName, callbackFullName);
     
     var url = url_.addQueryParameters(params);
     

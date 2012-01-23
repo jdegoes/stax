@@ -18,6 +18,9 @@ package haxe.data.transcode;
 
 import Prelude;
 import stax.Tuples;
+
+import stax.plus.Equal;
+
 import haxe.test.TestCase;
 import haxe.text.json.JValue;
 import haxe.data.collections.Set;
@@ -124,7 +127,7 @@ class JValueTestCase extends TestCase {
   }
 
   private function doTest<T>(decomposer: JDecomposerFunction<T>, extractor: JExtractorFunction<T>, values: Array<T>): Void {
-    var eq = Stax.getEqualFor(values[0]);
+    var eq = Equal.getEqualFor(values[0]);
     for (value in values) {
 			var decompose = decomposer(value);
 			var actual = extractor(decomposer(value));

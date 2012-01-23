@@ -17,11 +17,14 @@ package haxe.test;
 
 import Prelude;
 import stax.Future;
+
+import stax.plus.Equal;
+
 import haxe.io.Bytes;
 import haxe.test.Assertation;
 import haxe.test.MustMatchers;
 import haxe.PosInfos;
-using stax.OptionOps;
+using stax.Options;
 
 
 
@@ -149,7 +152,7 @@ class Assert {
   * unless you know what you are doing.
   */
   public static function equals<T>(expected: T, value: T, ?equal: EqualFunction<T>, ?msg : String , ?pos : PosInfos) {
-    if (equal == null) equal = Stax.getEqualFor(expected);
+    if (equal == null) equal = Equal.getEqualFor(expected);
     
     if(msg == null) msg = "expected " + q(expected) + " but was " + q(value);
     isTrue(equal(expected, value), msg, pos);

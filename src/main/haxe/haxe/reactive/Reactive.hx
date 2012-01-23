@@ -15,14 +15,15 @@
 */
 package haxe.reactive;
 
-import stax.Tuples;
 import Prelude;
+import stax.Tuples;
+import stax.plus.Equal;
 
 import haxe.reactive.Streams;
 
+using Stax;
+using stax.Iterables;
 
-using haxe.data.collections.IterableExtensions;
-using stax.IterableOps;
 
 typedef Timeout = {}
 
@@ -529,7 +530,7 @@ class Stream<T> {
      * @param optStart  An optional start value.
      */
     public function filterRepeats(?optStart: T): Stream<T> {                     
-        return filterRepeatsBy(optStart, function(v1, v2) return Stax.getEqualFor(v1)(v1, v2));
+        return filterRepeatsBy(optStart, function(v1, v2) return Equal.getEqualFor(v1)(v1, v2));
     }
     
     /**

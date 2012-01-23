@@ -14,18 +14,23 @@
  (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package haxe.data.collections;
+package stax;
+
+using Stax;
+import Stax;
 
 import Prelude; 
 import stax.Tuples;
 using stax.Tuples;
 
-using stax.ArrayOps;
-using stax.FloatOps;
-using stax.OptionOps;
-using stax.IntOps;
+import stax.plus.Equal;
 
-class ArrayExtensions { 
+using stax.Maths;
+using stax.Options;
+
+using stax.Arrays;
+
+class Arrays { 
   public static function partition<T>(arr: Array<T>, f: T -> Bool): Tuple2<Array<T>, Array<T>> {
     return arr.foldl(Tuple2.create([], []), function(a, b) {
       if(f(b))
@@ -234,7 +239,7 @@ class ArrayExtensions {
   }
   
   public static function nub<T>(arr:Array<T>): Array<T> {
-    return nubBy(arr, Stax.getEqualFor(arr[0]));
+    return nubBy(arr, Equal.getEqualFor(arr[0]));
   }
   
   public static function intersectBy<T>(arr1: Array<T>, arr2: Array<T>, f: T -> T -> Bool): Array<T> {
@@ -244,19 +249,151 @@ class ArrayExtensions {
   }
   
   public static function intersect<T>(arr1: Array<T>, arr2: Array<T>): Array<T> {
-    return intersectBy(arr1, arr2, Stax.getEqualFor(arr1[0]));
-  }
-  
-  public static function mkString<T>(arr: Array<T>, ?sep: String = ', ', ?show: T -> String): String {
-    var isFirst = true;
-    
-    return arr.foldl('', function(a, b) {
-      var prefix = if (isFirst) { isFirst = false; ''; } else sep;    
-      if(null == show)
-      show = Stax.getShowFor(b);
-      return a + prefix + show(b);
-    });
+    return intersectBy(arr1, arr2, Equal.getEqualFor(arr1[0]));
   }
 	public static function splitAt<T>(srcArr : Array<T>, index : Int) : Tuple2 < Array<T>, Array<T> > return
 		srcArr.slice(0, index).entuple(srcArr.slice(index))   
+  
+  public static function indexOf<T>(a: Array<T>, t: T): Int {
+    var index = 0;
+    
+    for (e in a) { 
+      if (e == t) return index;
+      
+      ++index;
+    }
+    
+    return -1;
+  } 
+  public static function mapWithIndex<T, S>(a: Array<T>, f: T -> Int -> S): Array<S> {
+    var n: Array<S> = [];
+    var i = 0;
+    for (e in a) n.push(f(e, i++));
+    
+    return n;
+  }
+  public static function then<T, S>(a1: Array<T>, a2: Array<S>): Array<S> {
+    return a2;
+  }
+  
+  public static function foldr<T, Z>(a: Array<T>, z: Z, f: T -> Z -> Z): Z {
+    var r = z;
+    
+    for (i in 0...a.length) { 
+      var e = a[a.length - 1 - i];
+      
+      r = f(e, r);
+    }
+    
+    return r;
+  }
+  
+  public static function zip<A, B>(a: Array<A>, b: Array<B>): Array<Tuple2<A, B>> {
+		return zipWith(a, b, Tuple2.create);
+  }
+
+  public static function zipWith<A, B, C>(a: Array<A>, b: Array<B>, f : A -> B -> C): Array<C> {
+    var len = Math.floor(Math.min(a.length, b.length));
+    
+    var r: Array<C> = [];
+    
+    for (i in 0...len) {
+      r.push(f(a[i], b[i]));
+    }
+    
+    return r;
+  }
+
+  public static function zipWithIndex<A>(a: Array<A>): Array<Tuple2<A, Int>> {
+		return zipWithIndexWith(a, Tuple2.create);
+  }
+
+  public static function zipWithIndexWith<A, B>(a: Array<A>, f : A -> Int -> B): Array<B> {
+    var len = a.length;
+    
+    var r: Array<B> = [];
+    
+    for (i in 0...len) {
+      r.push(f(a[i], i));
+    }
+    
+    return r;
+  }
+	
+  public static function append<T>(a: Array<T>, t: T): Array<T> {
+    var copy = ArrayLamda.snapshot(a);
+    
+    copy.push(t);
+    
+    return copy;
+  }  
+  public static function first<T>(a: Array<T>): T {
+    return a[0];
+  }
+  
+  public static function firstOption<T>(a: Array<T>): Option<T> {
+    return if (a.length == 0) None; else Some(a[0]);
+  }
+  
+  public static function last<T>(a: Array<T>): T {
+    return a[a.length - 1];
+  }
+  
+  public static function lastOption<T>(a: Array<T>): Option<T> {
+    return if (a.length == 0) None; else Some(a[a.length - 1]);
+  }
+  
+  public static function contains<T>(a: Array<T>, t: T): Bool {
+    for (e in a) if (t == e) return true;
+    
+    return false;
+  }
+  
+  public static function forEach<T>(a: Array<T>, f: T -> Void): Array<T> {
+    for (e in a) f(e);
+    
+    return a;
+  }  
+  public static function forEachWithIndex<T>(a: Array<T>, f: T -> Int -> Void): Array<T> {
+    var i = 0;
+		for (e in a) f(e, i++);
+    
+    return a;
+  }  
+  public static function take<T>(a: Array<T>, n: Int): Array<T> {
+    return a.slice(0, n.min(a.length));
+  }
+  public static function takeWhile<T>(a: Array<T>, p: T -> Bool): Array<T> {
+    var r = [];
+    
+    for (e in a) {
+      if (p(e)) r.push(e); else break;
+    }
+    
+    return r;
+  }
+  public static function drop<T>(a: Array<T>, n: Int): Array<T> {
+    return if (n >= a.length) [] else a.slice(n);
+  }
+  public static function dropWhile<T>(a: Array<T>, p: T -> Bool): Array<T> {
+    var r = [].concat(a);
+    
+    for (e in a) {
+      if (p(e)) r.shift(); else break;
+    }
+    
+    return r;
+  }
+
+	public static function sliceBy<T>(srcArr : Array<T>, sizeSrc : Array<Int>) : Array<Array<T>> return {
+		var slices = [];		
+		var restIndex = 0;
+		for (size in sizeSrc) {
+			var newRestIndex = restIndex + size;
+			var slice = srcArr.slice(restIndex, newRestIndex);
+			slices.push(slice);
+			restIndex = newRestIndex;
+		}
+		slices;
+	}
 }

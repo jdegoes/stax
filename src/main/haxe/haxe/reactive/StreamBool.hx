@@ -17,7 +17,8 @@ package haxe.reactive;
 
 import haxe.reactive.Reactive;
 
-using haxe.data.collections.IterableExtensions;
+using Stax;
+using stax.Iterables;
 
 class StreamBool {
     private function new() { }

@@ -17,7 +17,7 @@
 package haxe.data.collections;
 
 import Prelude;
-
+using Stax;
 
 import stax.Tuples;
 
@@ -26,11 +26,14 @@ import haxe.functional.PartialFunction;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using stax.OptionOps;
-using stax.ArrayOps;
-using stax.IterableOps;
+using stax.Options;
 
-using haxe.data.collections.IterableExtensions;
+import stax.plus.Order; using stax.plus.Order;
+import stax.plus.Hasher; using stax.plus.Hasher;
+import stax.plus.Show; using stax.plus.Show;
+import stax.plus.Equal; using stax.plus.Equal;
+
+using stax.Iterables;
 
 using haxe.functional.FoldableExtensions;
 using haxe.functional.PartialFunctionExtensions;
@@ -139,8 +142,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     
     var list = _buckets[bucket];  
 
-    if(null == _keyEqual)   _keyEqual = Stax.getEqualFor(t._1);
-    if(null == _valueEqual) _valueEqual = Stax.getEqualFor(t._2);
+    if(null == _keyEqual)   _keyEqual = Equal.getEqualFor(t._1);
+    if(null == _valueEqual) _valueEqual = Equal.getEqualFor(t._2);
     
     for (i in 0...list.length) {
       var entry = list[i];
@@ -510,9 +513,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyOrder) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getOrderFor(null);
+      Order.getOrderFor(null);
       else
-        _keyOrder = Stax.getOrderFor(it.next()._1); 
+        _keyOrder = Order.getOrderFor(it.next()._1); 
     } else _keyOrder;
   }
   
@@ -520,9 +523,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyEqual) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getEqualFor(null);
+      Equal.getEqualFor(null);
       else
-        _keyEqual = Stax.getEqualFor(it.next()._1); 
+        _keyEqual = Equal.getEqualFor(it.next()._1); 
     } else _keyEqual;
   }     
   
@@ -530,9 +533,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyHash) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getHashFor(null);
+        Hasher.getHashFor(null);
       else
-        _keyHash = Stax.getHashFor(it.next()._1);  
+        _keyHash = Hasher.getHashFor(it.next()._1);  
     } else _keyHash;
   }
   
@@ -540,9 +543,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyShow) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getShowFor(null);
+        Show.getShowFor(null);
       else
-        _keyShow = Stax.getShowFor(it.next()._1);  
+        _keyShow = Show.getShowFor(it.next()._1);  
     } else _keyShow;
   }
 
@@ -550,9 +553,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueOrder) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getOrderFor(null);
+      Order.getOrderFor(null);
       else
-        _valueOrder = Stax.getOrderFor(it.next()._2); 
+        _valueOrder = Order.getOrderFor(it.next()._2); 
     } else _valueOrder;
   }     
 
@@ -560,9 +563,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueEqual) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getEqualFor(null);
+      Equal.getEqualFor(null);
       else
-        _valueEqual = Stax.getEqualFor(it.next()._2); 
+        _valueEqual = Equal.getEqualFor(it.next()._2); 
     } else _valueEqual;    
   }   
 
@@ -570,9 +573,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueHash) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getHashFor(null);
+        Hasher.getHashFor(null);
       else
-        _valueHash = Stax.getHashFor(it.next()._2);  
+        _valueHash = Hasher.getHashFor(it.next()._2);  
     } else _valueHash;
   }
   
@@ -580,9 +583,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueShow) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getShowFor(null);
+        Show.getShowFor(null);
       else
-        _valueShow = Stax.getShowFor(it.next()._2);  
+        _valueShow = Show.getShowFor(it.next()._2);  
     } else _valueShow;
   }
 }

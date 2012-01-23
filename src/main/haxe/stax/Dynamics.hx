@@ -6,7 +6,7 @@ package stax;
  */
 import Prelude;
 
-class DynamicOps {
+class Dynamics {
   public static function withEffect<T>(t: T, f: Function<T, Void>): T {
     f(t);
     

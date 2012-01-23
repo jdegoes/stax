@@ -19,13 +19,15 @@ package haxe.data.transcode;
 import Type;
 import stax.Tuples;
 
-import stax.StringOps;
-using stax.ArrayOps;
-import stax.ArrayOps;
-using stax.DynamicOps;
+import stax.Strings;
+import stax.plus.Hasher;
+
+
+using stax.Dynamics;
 
 import Prelude;
-
+using Stax;
+import stax.Arrays;
 import haxe.data.collections.Map;
 import haxe.data.transcode.Transcode;
 import haxe.data.transcode.TranscodeJValue;
@@ -67,7 +69,7 @@ class MapOps {
 
   public static function stringKeyExtract<V>(v: JValue, ve: JExtractorFunction<V>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhash: HashFunction<V>, ?vshow : ShowFunction<V>): Map<String, V> {
     var extract0 = function(v: Array<JValue>){
-      return Map.create(StringOps.compare, StringOps.equals, StringOps.hashCode, StringOps.toString, vorder, vequal, vhash, vshow).addAll(v.map(function(j) {
+      return Map.create(Strings.compare, Strings.equals, StringHasher.hashCode, Strings.toString, vorder, vequal, vhash, vshow).addAll(v.map(function(j) {
         return switch(j) {
           case JField(k, v): Tuple2.create(k, ve(v));
 
@@ -210,7 +212,7 @@ class TranscodeJValue{
                       case JArray(a):
                         if (args == null)
                           args = [];
-                        ArrayLambdas.zip(a, args).map(function(t){return t._2(t._1);});
+                        Arrays.zip(a, args).map(function(t){return t._2(t._1);});
                       default: Stax.error("Expected JArray but was: " + v);
                     }
                   return Type.createEnum(Type.resolveEnum(name), constructor, parameters);

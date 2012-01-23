@@ -17,18 +17,19 @@
 package haxe.data.collections;
 
 import Prelude;
+using stax.plus.Show;
 
 import haxe.test.TestCase;
-using haxe.data.collections.ArrayExtensions;
+using stax.Arrays;
 using haxe.data.collections.Set;
 using haxe.data.collections.List;
 using haxe.data.collections.Map;
 using haxe.data.collections.Group;
  
 import stax.Tuples;
-using stax.ArrayOps;
+using Stax;
 
-class ArrayExtensionsTestCase extends TestCase {
+class ArraysTestCase extends TestCase {
   public function testPartition() {
     var t = [1,2,3,4,5,6].partition(function(v) return v % 2 != 0);  
     assertEquals(Tuple2.create([1,3,5], [2,4,6]), t);

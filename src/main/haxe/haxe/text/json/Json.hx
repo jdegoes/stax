@@ -17,11 +17,13 @@
 package haxe.text.json;
 
 import Prelude;
+using Stax;
+
 import haxe.text.json.JValue;
 
 using haxe.text.json.JValueExtensions;
-using stax.ArrayOps;
-using stax.FunctionOps;
+
+using stax.Functions;
 
 class Json {
   public static var encodeObject = encode.compose(fromObject);

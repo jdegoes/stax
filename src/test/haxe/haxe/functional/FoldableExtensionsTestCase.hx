@@ -30,8 +30,8 @@ import haxe.test.TestCase;
 import haxe.functional.FoldableExtensions;
 
 import stax.Tuples;
-using stax.ArrayOps;
-using stax.IntOps;
+
+using stax.Maths;
 
 using haxe.functional.FoldableExtensions;
 

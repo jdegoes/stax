@@ -20,9 +20,9 @@ import js.Env;
 import Prelude;
 import stax.Tuples;
 
-using stax.IntOps;
-import stax.OptionOps;
-using stax.OptionOps;
+using stax.Maths;
+import stax.Options;
+using stax.Options;
 
 
 /** 
@@ -108,10 +108,10 @@ class HTMLDocumentExtensions {
   }
   
   public static function getTags(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionOps.getOrElseC(OptionOps.toOption( cast doc.getElementsByTagName(s)), []);
+    return Options.getOrElseC(Options.toOption( cast doc.getElementsByTagName(s)), []);
   }
   
   public static function getClasses(doc: HTMLDocument, s: String): Array<HTMLElement> {
-    return OptionOps.getOrElseC(OptionOps.toOption(Env.getElementsByClass(s)), []);
+    return Options.getOrElseC(Options.toOption(Env.getElementsByClass(s)), []);
   }
 }

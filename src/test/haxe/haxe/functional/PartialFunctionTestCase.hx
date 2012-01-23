@@ -21,7 +21,7 @@ import haxe.test.TestCase;
 import haxe.functional.PartialFunction;
 
 import stax.Tuples;
-using stax.DynamicOps;
+using stax.Dynamics;
 
 using haxe.functional.PartialFunctionExtensions;
 

@@ -6,12 +6,9 @@ package stax;
  */
 import Prelude;
 
-using stax.DynamicOps;
+using stax.Dynamics;
 
-class FunctionOps {
-	
-}
-class Function0Extensions {
+class Functions0 {
   public static function swallow(f: Void -> Void): Void -> Void {
     return function() {
       try {
@@ -65,7 +62,7 @@ class Function0Extensions {
     }
   }
 }
-class Function1Extensions {
+class Functions1 {
   public static function swallow<A>(f: Function<A, Void>): Function<A, Void> {
     return toEffect(swallowWith(f, null));
   }
@@ -115,7 +112,7 @@ class Function1Extensions {
     }
   }
 }
-class Function2Extensions {  
+class Functions2{  
   public static function swallow<P1, P2>(f: Function2<P1, P2, Void>): Function2<P1, P2, Void> {
     return toEffect(swallowWith(f, null));
   }
@@ -174,7 +171,7 @@ class Function2Extensions {
     }
   }
 }
-class Function3Extensions {  
+class Functions3{  
   public static function swallow<A, B, C>(f: Function3<A, B, C, Void>): Function3<A, B, C, Void> {
     return toEffect(swallowWith(f, null));
   }
@@ -230,7 +227,7 @@ class Function3Extensions {
     }
   }
 }
-class Function4Extensions {  
+class Functions4{  
   public static function swallow<A, B, C, D>(f: Function4<A, B, C, D, Void>): Function4<A, B, C, D, Void> {
     return toEffect(swallowWith(f, null));
   }
@@ -288,7 +285,7 @@ class Function4Extensions {
     }
   }
 }
-class Function5Extensions {  
+class Functions5{  
   public static function swallow<A, B, C, D, E>(f: Function5<A, B, C, D, E, Void>): Function5<A, B, C, D, E, Void> {
     return toEffect(swallowWith(f, null));
   }

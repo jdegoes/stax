@@ -14,40 +14,18 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package haxe.data.collections;
+package stax;
 
 import Prelude;
+using Stax;
+import Stax;
 
 import stax.Tuples;
 using stax.Tuples;
 
-import stax.ArrayOps;
-using stax.ArrayOps;
-using stax.IterableOps;
+using stax.Iterables;
 
-using haxe.data.collections.IterableExtensions;
-
-class IterableExtensions {
-	
-  public static function size<T>(iterable: Iterable<T>): Int {
-    var size = 0;
-    
-    for (e in iterable) ++size;
-    
-    return size;
-  }
-  
-  public static function filter<T>(iter: Iterable<T>, f: T -> Bool): Iterable<T> {
-    return ArrayLambdas.filter(iter.toArray(), f);
-  }
-  
-  public static function foldl<T, Z>(iter: Iterable<T>, seed: Z, mapper: Z -> T -> Z): Z {
-    var folded = seed;
-    
-    for (e in iter) { folded = mapper(folded, e); }
-    
-    return folded;
-  }
+class Iterables {
 	 public static function foldl1<T, T>(iter: Iterable<T>, mapper: T -> T -> T): T {
     var folded = iter.head();
     iter = iter.tail();
@@ -61,7 +39,7 @@ class IterableExtensions {
     return iter1.toArray().concat(iter2.toArray())
   
   public static function foldr<T, Z>(iterable: Iterable<T>, z: Z, f: T -> Z -> Z): Z {
-    return ArrayLambdas.foldr(iterable.toArray(), z, f);
+    return Arrays.foldr(iterable.toArray(), z, f);
   }
   
   public static function headOption<T>(iter: Iterable<T>): Option<T> {
@@ -137,7 +115,7 @@ class IterableExtensions {
   public static function at<T>(iter: Iterable<T>, index: Int): T {
     var result: T = null;
     
-    if (index < 0) index = size(iter) - (-1 * index);
+    if (index < 0) index = IterableLambda.size(iter) - (-1 * index);
     
     var curIndex  = 0;
     for (e in iter) {
@@ -148,29 +126,14 @@ class IterableExtensions {
     }
     return Stax.error('Index not found');
   }
-  
-  public static function map<T, Z>(iter: Iterable<T>, f: T -> Z): Iterable<Z> {
-    return foldl(iter, [], function(a, b) {
-      a.push(f(b));
-      return a;
-    });
-  }
-  
-  public static function flatMap<T, Z>(iter: Iterable<T>, f: T -> Iterable<Z>): Iterable<Z> {
-    return foldl(iter, [], function(a, b) {
-      for (e in f(b)) a.push(e);
-      return a;
-    });
-  }
-
   public static function flatten<T>(iter: Iterable<Iterable<T>>): Iterable<T> {
 		var empty : Iterable<T> = [];
-		return foldl(iter, empty, concat);
+		return IterableLambda.foldl(iter, empty, concat);
   }
   public static function interleave<T>(iter: Iterable<Iterable<T>>): Iterable<T> {
 		var alls = iter.map(function (it) return it.iterator()).toArray();
 		var res = [];		
-		while (haxe.data.collections.ArrayExtensions.forAll(alls, function (iter) return iter.hasNext())) { //alls.forAll(function (iter) return iter.hasNext()))  <- stack overflow!!
+		while (stax.Arrays.forAll(alls, function (iter) return iter.hasNext())) { //alls.forAll(function (iter) return iter.hasNext()))  <- stack overflow!!
 			alls.forEach(function (iter) res.push(iter.next()));
 		}
 		return res;
@@ -201,14 +164,14 @@ class IterableExtensions {
   }
   
   public static function cons<T>(iter: Iterable<T>, e: T): Iterable<T> {
-    return foldl(iter, [e], function(b, a) {
+    return IterableLambda.foldl(iter, [e], function(b, a) {
       b.push(a);
       
       return b;
     });
   }
   public static function reversed<T>(iter: Iterable<T>): Iterable<T> {
-    return foldl(iter, [], function(a, b) {
+    return IterableLambda.foldl(iter, [], function(a, b) {
       a.unshift(b);
       
       return a;
@@ -276,7 +239,7 @@ class IterableExtensions {
   }
 
   public static function nubBy<T>(iter:Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-    return foldl(iter, [], function(a, b) {
+    return IterableLambda.foldl(iter, [], function(a, b) {
       return if(existsP(a, b, f)) {
         a;
       }
@@ -288,13 +251,13 @@ class IterableExtensions {
   }
   
   public static function intersectBy<T>(iter1: Iterable<T>, iter2: Iterable<T>, f: T -> T -> Bool): Iterable<T> {
-    return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+    return IterableLambda.foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
       return if (existsP(iter2, b, f)) append(a, b); else a;
     });
   }
   
   public static function intersect<T>(iter1: Iterable<T>, iter2: Iterable<T>): Iterable<T> {
-    return foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
+    return IterableLambda.foldl(iter1, cast [], function(a: Iterable<T>, b: T): Iterable<T> {
       return if (existsP(iter2, b, function(a, b) { return a == b; })) append(a, b); else a;
     });
   }
@@ -363,4 +326,7 @@ class IterableExtensions {
   public static function forAny<T>(iter: Iterable<T>, f: T -> Bool): Bool {
     return iter.toArray().forAny(f);
   }
+	public static inline function first<T>(iter:Iterable<T>):T{
+		return iter.head();
+	}
 }

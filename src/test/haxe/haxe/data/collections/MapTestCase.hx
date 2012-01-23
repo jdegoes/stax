@@ -24,7 +24,7 @@ import haxe.data.collections.Map;
 
 using haxe.functional.FoldableExtensions;
 
-using stax.OptionOps;
+using stax.Options;
 
 class MapTestCase extends TestCase {
   public function testSizeGrowsWhenAddingUniqueKeys(): Void {

@@ -16,13 +16,14 @@
 package haxe.reactive;
 
 import Prelude;
+using Stax;
+
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
 import stax.Tuples;
-using haxe.data.collections.IterableExtensions;
-using stax.IterableOps;
-using stax.ArrayOps;
+using stax.Iterables;
+ 
 
 using haxe.functional.FoldableExtensions;
 

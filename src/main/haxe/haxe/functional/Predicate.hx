@@ -17,7 +17,8 @@
 package haxe.functional;
 
 import Prelude;
-using stax.StringOps;
+import stax.plus.Equal;
+using stax.Strings;
 
 typedef Predicate<A> = Predicate1<A>
 
@@ -65,7 +66,7 @@ class P {
   }
   
   public static function isEqualTo<T>(ref: T, ?equal: EqualFunction<T>): Predicate<T> {
-    if (equal == null) equal = Stax.getEqualFor(ref);
+    if (equal == null) equal = Equal.getEqualFor(ref);
     
     return function(value) {
       return equal(ref, value);
