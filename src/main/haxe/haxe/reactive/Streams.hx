@@ -16,11 +16,15 @@
 package haxe.reactive;
 
 import Prelude;
+using Stax;
+
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
-using haxe.data.collections.IterableExtensions;
-using PreludeExtensions;
+import stax.Tuples;
+using stax.Iterables;
+ 
+
 using haxe.functional.FoldableExtensions;
 
 class Streams {

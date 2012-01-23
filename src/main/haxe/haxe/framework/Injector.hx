@@ -17,11 +17,17 @@
 package haxe.framework;
 
 import Prelude;
+using Stax;
 
 import haxe.PosInfos;
 
-import PreludeExtensions;
-using PreludeExtensions;
+import stax.Tuples;
+ 
+import stax.Options; 
+using stax.Options; 
+using stax.Functions;
+using stax.Dynamics;
+
 
 enum BindingType {
   OneToOne;   // Every call to the injector will create a new instance
@@ -256,10 +262,10 @@ private class InjectorImpl {
   private static function bindForSpecificF<T>(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, interf: Class<T>, specific: String, f: Void -> T, bindingType: BindingType):Void {
     switch (bindingTypeDef(bindingType)) {
       case OneToOne:
-        addSpecificBinding(extractor(state.first()), interf, specific, f);
+        addSpecificBinding(extractor(state[0]), interf, specific, f);
     
       case OneToMany:
-        addSpecificBinding(extractor(state.first()), interf, specific, f.memoize());
+        addSpecificBinding(extractor(state[0]), interf, specific, f.memoize());
     }
   }
 
@@ -274,9 +280,9 @@ private class InjectorImpl {
   private static function getDefaultImplementationBinding(c: Class<Dynamic>): Option<Void -> Dynamic> {
     if(existsDefaultBinding(c))
       return getDefaultBinding(c);
-    var f = OptionExtensions.toOption(haxe.rtti.Meta.getType(c))
+    var f = Options.toOption(haxe.rtti.Meta.getType(c))
       .flatMap(function(m : Dynamic) { 
-        return OptionExtensions.toOption((Reflect.hasField(m, "DefaultImplementation") ? Reflect.field(m, "DefaultImplementation") : null)); })
+        return Options.toOption((Reflect.hasField(m, "DefaultImplementation") ? Reflect.field(m, "DefaultImplementation") : null)); })
       .flatMap(function(p : Array<String>) {
         var cls = null;
         return if(null == p || null == p[0] || null == (cls = Type.resolveClass(p[0]))) None else Some(Tuple2.create(cls, null != p[1] ? Type.createEnum(BindingType, p[1], []) : null)); })
@@ -313,19 +319,19 @@ private class InjectorImpl {
   }
 
   private static function addGlobalBinding(c: Class<Dynamic>, f: Void -> Dynamic):Void {
-    state.first().globalBindings.set(Type.getClassName(c), f);
+    state[0].globalBindings.set(Type.getClassName(c), f);
   }
   
   private static function existsDefaultBinding(c : Class<Dynamic>):Bool {
-    return state.first().defaultBindings.exists(Type.getClassName(c));
+    return state[0].defaultBindings.exists(Type.getClassName(c));
   }
   
   private static function addDefaultBinding(c : Class<Dynamic>, f: Option<Void -> Dynamic>):Void {
-    state.first().defaultBindings.set(Type.getClassName(c), f);
+    state[0].defaultBindings.set(Type.getClassName(c), f);
   }
   
   private static function getDefaultBinding(c : Class<Dynamic>) : Option<Void->Dynamic> {
-    return state.first().defaultBindings.get(Type.getClassName(c));
+    return state[0].defaultBindings.get(Type.getClassName(c));
   }
 
   private static function getSpecificBinding(extractor: Bindings -> Hash<Hash<Void -> Dynamic>>, c: Class<Dynamic>, specific: String): Option<Void -> Dynamic> {

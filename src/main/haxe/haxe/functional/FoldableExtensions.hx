@@ -15,15 +15,18 @@
  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package haxe.functional;
-import haxe.data.collections.Set;
-import haxe.data.collections.List;
 
+import stax.Tuples;
 import Prelude;
-import PreludeExtensions;
-import haxe.functional.Foldable; 
-import haxe.data.collections.Map;
 
-using PreludeExtensions;
+import stax.plus.Show;
+import stax.plus.Equal;
+
+using stax.Options;
+
+import haxe.functional.Foldable; 
+
+
 
 class FoldableExtensions {
   public static function foldr<A, B, Z>(foldable: Foldable<A, B>, z: Z, f: B -> Z -> Z): Z {
@@ -303,7 +306,7 @@ class FoldableExtensions {
   public static function nub<A, B>(foldable:Foldable<A, B>): A {
     var it = iterator(foldable);
     var first = if(it.hasNext()) it.next() else null;
-    return nubBy(foldable, Stax.getEqualFor(first));
+    return nubBy(foldable, Equal.getEqualFor(first));
   }
   
   public static function intersectBy<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>, f: B -> B -> Bool): A {
@@ -315,7 +318,7 @@ class FoldableExtensions {
   public static function intersect<A, B>(foldable1: Foldable<A, B>, foldable2: Foldable<A, B>): A {
     var it = iterator(foldable1);
     var first = if(it.hasNext()) it.next() else null;
-    return intersectBy(foldable1, foldable2, Stax.getEqualFor(first));
+    return intersectBy(foldable1, foldable2, Equal.getEqualFor(first));
   }
   
   public static function mkString<A, B>(foldable: Foldable<A, B>, ?sep: String = ', ', ?show: B -> String): String {
@@ -324,17 +327,8 @@ class FoldableExtensions {
     return foldable.foldl('', function(a, b) {
       var prefix = if (isFirst) { isFirst = false; ''; } else sep;    
       if(null == show)
-      show = Stax.getShowFor(b);
+      show = Show.getShowFor(b);
       return a + prefix + show(b);
-    });
-  }
-  
-  public static function groupBy<C, T, K>(foldable: Foldable<C, T>, grouper: T -> K) : Map<K, C> { 
-    var def = foldable.empty();
-    return cast foldable.foldl(Map.create(), function(map, e) {
-      var key = grouper(e);
-      var result = map.getOrElseC(key, def);
-      return map.set(key, cast result.append(e));
     });
   }
   
@@ -344,26 +338,5 @@ class FoldableExtensions {
     foldable.foldl(foldable.empty(), function(a, b) { es.push(b); return a; });
 
     return es;
-  }
-  
-  public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  
-    var dest = Map.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
-  }
-  
-  public static function toList<A, B>(foldable : Foldable<A, B>) : List<B> {  
-    var dest = List.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
-  }
-  
-  public static function toSet<A, B>(foldable : Foldable<A, B>) : Set<B> {  
-    var dest = Set.create();
-    return foldable.foldl(dest, function(a, b) {
-      return a.append(b);
-    });
   }
 }

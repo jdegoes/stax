@@ -22,7 +22,7 @@ import PreludeExtensions;
 import haxe.data.collections.Map;
 import haxe.data.collections.List;
 
-using PreludeExtensions;
+
 
 class Mock<T> {
   var _expects: Map<String, Array<Dynamic>>;

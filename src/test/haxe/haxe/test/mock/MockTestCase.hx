@@ -20,7 +20,7 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.test.mock.Mock;
 
-using PreludeExtensions;
+
 
 class MockTestCase extends TestCase {
 	public function new() {

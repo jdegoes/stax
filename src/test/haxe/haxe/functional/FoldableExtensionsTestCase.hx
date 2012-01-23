@@ -16,14 +16,23 @@
 */
 package haxe.functional;
 import haxe.data.collections.List; 
+using haxe.data.collections.List; 
+
 import haxe.data.collections.Map;
+
 import haxe.data.collections.Set;
+using haxe.data.collections.Set;
+
+using haxe.data.collections.Group;
 
 import Prelude;
 import haxe.test.TestCase;
 import haxe.functional.FoldableExtensions;
 
-using PreludeExtensions;
+import stax.Tuples;
+
+using stax.Maths;
+
 using haxe.functional.FoldableExtensions;
 
 class FoldableExtensionsTestCase extends TestCase {
@@ -119,26 +128,28 @@ class FoldableExtensionsTestCase extends TestCase {
       .set(5, [5, 10].toList())
       .set(7, [7].toList())
       ,
-      r
+      cast r
     );
   } 
   
   public function testSetGroupBy() {
     var set = Set.create().appendAll([1,2,3,4,5,6,7,8,9,10]);
     var primes = [7, 5, 3, 2];
-    var r = set.groupBy(function(v) {
+    var r :Map<Int,Iterable<Null<Int>>>=  set.groupBy(function(v) {
       for(p in primes)
         if(v % p == 0)
           return p;
       return 1;
     });
+		var m : Map < Int, Iterable<Null<Int>> > = 
+		Map.create()
+      .set(1, [1].toSet().elements() )
+      .set(2, [2,4,8].toSet().elements() )
+      .set(3, [3,6,9].toSet().elements() )
+      .set(5, [5, 10].toSet().elements())
+      .set(7, [7].toSet().elements() );
     assertEquals(
-      Map.create()
-      .set(1, [1].toSet())
-      .set(2, [2,4,8].toSet())
-      .set(3, [3,6,9].toSet())
-      .set(5, [5, 10].toSet())
-      .set(7, [7].toSet())
+      m
       ,
       r
     );

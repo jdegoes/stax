@@ -16,11 +16,13 @@
 package haxe.io.http;
 
 import Prelude;
-import PreludeExtensions;
+import stax.Future;
 import haxe.io.http.Http;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 import haxe.data.collections.Map;
+import stax.Options;
+using stax.Options;
 
 #if js
 import Dom;
@@ -28,7 +30,7 @@ import js.Env;
 import js.dom.Quirks;
 #end
 
-using PreludeExtensions;
+
 using haxe.functional.FoldableExtensions;
 using haxe.net.HttpResponseCodeExtensions;
 using haxe.net.UrlExtensions;
@@ -62,7 +64,7 @@ class HttpStringAsync implements HttpString {
   }
   
   public function custom(method: String, _url: Url, data: String, ?_params: QueryParameters, ?_headers: Map<String, String>): Future<HttpResponse<String>> {
-    var url = if (_params != null) _url.addQueryParameters(OptionExtensions.toOption(_params).getOrElseC(Map.create())); else _url;
+    var url = if (_params != null) _url.addQueryParameters(Options.toOption(_params).getOrElseC(Map.create())); else _url;
     var future: Future<HttpResponse<String>> = new Future();
     
     var request = Quirks.createXMLHttpRequest();
@@ -105,7 +107,7 @@ class HttpStringAsync implements HttpString {
   }
   
   private function makeHeader(?_headers: Map<String, String>, contentType: String): Map<String, String>{
-    return OptionExtensions.toOption(_headers).getOrElseC(Map.create().set("Content-Type", contentType));
+    return Options.toOption(_headers).getOrElseC(Map.create().set("Content-Type", contentType));
   }
 }
 

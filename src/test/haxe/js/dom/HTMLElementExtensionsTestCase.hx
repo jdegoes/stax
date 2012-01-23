@@ -26,7 +26,7 @@ using  js.dom.HTMLElementExtensions;
 import haxe.test.TestCase;
 
 class HTMLElementExtensionsTestCase extends TestCase {
-    var _doc: Env.HTMLDocument;
+    var _doc: Dom.HTMLDocument;
 
     public function new():Void {
         super();

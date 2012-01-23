@@ -21,7 +21,7 @@ import haxe.test.TestCase;
 import haxe.test.Assert;
 import haxe.math.geom.Point;
 
-using PreludeExtensions;
+
 using haxe.math.geom.PointExtensions;
 
 class PointTestCase extends TestCase {

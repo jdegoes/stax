@@ -16,17 +16,26 @@
 package js.dom;
 
 import Prelude;
-import PreludeExtensions;
+using Stax;
+
 
 import Dom;
 import js.Env;
 import js.detect.BrowserSupport;
 import haxe.functional.Predicate;
 import haxe.data.collections.Map;
+using stax.Arrays;
+
 import haxe.util.Guid;
 
-import PreludeExtensions;
-using PreludeExtensions;
+using stax.Strings;
+using stax.Dynamics;
+using stax.Options;
+using stax.Maths;
+ 
+
+import stax.Dynamics;
+
 using js.dom.DomExtensions;
 using haxe.util.StringExtensions;
 using haxe.util.ObjectExtensions;
@@ -301,7 +310,7 @@ class Quirks {
 
          elem.style.left = (name == "font-size") ? "1em" : style;
 
-         DynamicExtensions.withEffect(untyped elem.style.pixelLeft + "px", function(t) untyped {
+         Dynamics.withEffect(untyped elem.style.pixelLeft + "px", function(t) untyped {
            // Revert the changed values
            elem.style.left        = oldLeft;
            elem.runtimeStyle.left = oldRtLeft;
@@ -562,7 +571,7 @@ class Quirks {
     var val: Int = untyped elem[offsetValueExtract];
 
     if (extra != "border"){
-      which.foreach(function(v) {
+      which.forEach(function(v) {
         if (extra != ""){
            val -= getCssPropertyIfSet( elem, 'padding-' + v).map(function(s) return s.toInt(0)).getOrElseC(0);
         }

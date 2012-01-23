@@ -16,10 +16,18 @@
 package haxe.math.tween;
 
 import Prelude;
-import PreludeExtensions;
 import haxe.data.collections.Set;
+using haxe.data.collections.Set;
 
-using PreludeExtensions;
+using haxe.data.collections.Group;
+using haxe.data.collections.Map;
+
+import stax.Options;
+using stax.Options;
+
+import stax.Tuples;
+using stax.Tuples;
+
 using haxe.functional.FoldableExtensions;
 
 typedef Tweener = Float -> Dynamic<Float>
@@ -29,8 +37,8 @@ class Tween {
     var combinedFields = Reflect.fields(state1).toSet().addAll(Reflect.fields(state2));
     
     var data = combinedFields.map(function(name: String): Tuple2<String, {start: Float, delta: Float}> {
-      var start: Float = OptionExtensions.toOption(Reflect.field(state1, name)).getOrElseC(def);
-      var end:   Float = OptionExtensions.toOption(Reflect.field(state2, name)).getOrElseC(def);
+      var start: Float = Options.toOption(Reflect.field(state1, name)).getOrElseC(def);
+      var end:   Float = Options.toOption(Reflect.field(state2, name)).getOrElseC(def);
       
       return name.entuple({
         start:  start,

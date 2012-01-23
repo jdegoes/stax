@@ -20,7 +20,8 @@ import Prelude;
 import haxe.test.TestCase;
 import haxe.util.ObjectExtensions;
 
-using PreludeExtensions;
+using stax.Options;
+
 using haxe.util.ObjectExtensions;
 
 class ObjectExtensionsTestCase extends TestCase {

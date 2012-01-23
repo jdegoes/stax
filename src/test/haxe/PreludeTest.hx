@@ -16,10 +16,21 @@
 */
 import Prelude;
 
+import stax.Future;
+using stax.Future;
+
+import stax.Tuples;
+
+import stax.plus.Equal;
+import stax.plus.Order;
+import stax.plus.Show;
+import stax.plus.Hasher;
+
 import haxe.test.TestCase;
 
-using PreludeExtensions;
+using stax.Options;
 
+using stax.Functions;
 class PreludeTestCase extends TestCase {
   public function new() {
     super();
@@ -49,21 +60,21 @@ class PreludeTestCase extends TestCase {
   }           
 
   public function testOrderForInt() {
-    var order = Stax.getOrderFor(1);
+    var order = Order.getOrderFor(1);
     assertTrue(order(2, 1)  > 0);
     assertTrue(order(1, 2)  < 0);
     assertTrue(order(1, 1) == 0);
   }
 
   public function testOrderForFloat() {
-    var order = Stax.getOrderFor(1.0);
+    var order = Order.getOrderFor(1.0);
     assertTrue(order(1.2, 1.1)  > 0);
     assertTrue(order(1.1, 1.2)  < 0);
     assertTrue(order(0.1, 0.1) == 0);
   }
 
   public function testOrderForBool() {
-    var order = Stax.getOrderFor(true);
+    var order = Order.getOrderFor(true);
     assertTrue(order(true,  false)  > 0);
     assertTrue(order(false, true)   < 0);
     assertTrue(order(true,  true)  == 0);
@@ -71,14 +82,14 @@ class PreludeTestCase extends TestCase {
   }
 
   public function testOrderForNull() {   
-    var order = Stax.getOrderFor(null);
+    var order = Order.getOrderFor(null);
     assertTrue(order("s", null)   > 0);
     assertTrue(order(null, "s")   < 0);
     assertTrue(order(null, null) == 0);
   }  
 
   public function testOrderForString() {
-    var order = Stax.getOrderFor("s");
+    var order = Order.getOrderFor("s");
     assertTrue(order("b", "a")  > 0);
     assertTrue(order("a", "b")  < 0);
     assertTrue(order("a", null) > 0);
@@ -90,7 +101,7 @@ class PreludeTestCase extends TestCase {
     var a = Date.fromString("1999-12-31");
     var b = Date.fromString("2000-01-01");  
     var c = Date.fromString("1999-12-31");
-    var order = Stax.getOrderFor(b);
+    var order = Order.getOrderFor(b);
     assertTrue(order(b, a)    > 0);
     assertTrue(order(a, b)    < 0); 
     assertTrue(order(a, null) > 0);
@@ -103,7 +114,7 @@ class PreludeTestCase extends TestCase {
     var a2 = [4];
     var a3 = [2,2,3];
     var a4 = [4]; 
-    var order = Stax.getOrderFor(a1);
+    var order = Order.getOrderFor(a1);
     assertTrue(order(a1, a2)  > 0);
     assertTrue(order(a3, a1)  > 0); 
     assertTrue(order(a2, a1)  < 0);
@@ -116,21 +127,21 @@ class PreludeTestCase extends TestCase {
     var c1 = new Comparable(1);
     var c2 = new Comparable(2);  
     var c3 = new Comparable(1);
-    var order = Stax.getOrderFor(c1);
+    var order = Order.getOrderFor(c1);
     assertTrue(order(c2, c1)  > 0);
     assertTrue(order(c1, c2)  < 0);
     assertTrue(order(c1, c3) == 0);
   } 
 
   public function testOrderForNotComparableClass() {                 
-    this.assertThrowsException(function() Stax.getOrderFor(new Hash()));
+    this.assertThrowsException(function() Order.getOrderFor(new Hash()));
   }
 
   public function testReflectiveOrderForDynamicComparableClass() {
     var c1 = new DynamicComparable(1);
     var c2 = new DynamicComparable(2);
     var c3 = new DynamicComparable(1);
-    var order = Stax.getOrderFor(c1);
+    var order = Order.getOrderFor(c1);
     assertTrue(order(c2, c1)  > 0);
     assertTrue(order(c1, c2)  < 0);
     assertTrue(order(c1, c3) == 0);
@@ -140,14 +151,14 @@ class PreludeTestCase extends TestCase {
     var c1 = new DynamicComparableDescending(1);
     var c2 = new DynamicComparableDescending(2);
     var c3 = new DynamicComparableDescending(1);
-    var order = Stax.getOrderFor(c1);
+    var order = Order.getOrderFor(c1);
     assertTrue(order(c2, c1)  < 0);    
     assertTrue(order(c1, c2)  > 0);
     assertTrue(order(c1, c3) == 0);
   }
 
   public function testOrderForFunction() {                 
-    this.assertThrowsException(function() Stax.getOrderFor(function() trace("hello world")));
+    this.assertThrowsException(function() Order.getOrderFor(function() trace("hello world")));
   }  
 
   public function testTupleOrder() {    
@@ -160,7 +171,7 @@ class PreludeTestCase extends TestCase {
     ];
   
     for(test in tests) {
-      assertTrue(Stax.getOrderFor(test._1)(test._1, test._2) > 0, "failed to compare " + test._1 + " to " + test._2);
+      assertTrue(Order.getOrderFor(test._1)(test._1, test._2) > 0, "failed to compare " + test._1 + " to " + test._2);
       assertTrue(test._1.compare(test._2) > 0, "failed to compare " + test._1 + " to " + test._2);  
     }
   }
@@ -175,7 +186,7 @@ class PreludeTestCase extends TestCase {
     ];
     
     for(test in tests) {
-      assertTrue(Stax.getEqualFor(test._1)(test._1, test._2));
+      assertTrue(Equal.getEqualFor(test._1)(test._1, test._2));
       assertTrue(test._1.equals(test._2)); 
     } 
   }
@@ -190,18 +201,18 @@ class PreludeTestCase extends TestCase {
     ];
     
     for(test in tests) {
-      assertEquals(test._2, Stax.getShowFor(test._1)(test._1));
+      assertEquals(test._2, Show.getShowFor(test._1)(test._1));
       assertEquals(test._2, test._1.toString());       
     }
   }    
 
   public function testTupleHashCode() {    
     var tests = [
-      Stax.getHashFor(Tuple2.create("b",0)),
-      Stax.getHashFor(Tuple2.create("a",1)), 
-      Stax.getHashFor(Tuple3.create("a",0,0.1)),
-      Stax.getHashFor(Tuple4.create("a",0,0.1,"b")),
-      Stax.getHashFor(Tuple5.create("a",0,0.1,"a",1)), 
+      Hasher.getHashFor(Tuple2.create("b",0)),
+      Hasher.getHashFor(Tuple2.create("a",1)), 
+      Hasher.getHashFor(Tuple3.create("a",0,0.1)),
+      Hasher.getHashFor(Tuple4.create("a",0,0.1,"b")),
+      Hasher.getHashFor(Tuple5.create("a",0,0.1,"a",1)), 
     ];
    
     while(tests.length > 0)
@@ -220,7 +231,7 @@ class PreludeTestCase extends TestCase {
     var o2 = Some("a");
     var o3 = Some("b"); 
     var o4 = Some("a");
-    var order = Stax.getOrderFor(o1);
+    var order = Order.getOrderFor(o1);
     assertTrue(order(o2, o1)  > 0);
     assertTrue(order(o3, o1)  > 0);
     assertTrue(order(o3, o2)  > 0);
@@ -235,7 +246,7 @@ class PreludeTestCase extends TestCase {
     var o1 = { name : "haxe"};                      
     var o2 = { name : "stax"};
     var o3 = { name : "haxe"};
-    var order = Stax.getOrderFor(o1);
+    var order = Order.getOrderFor(o1);
     assertTrue(order(o2, o1)      > 0);
     assertTrue(order(o1, o2)      < 0);
     assertTrue(order(o1, o3)     == 0); 
@@ -245,21 +256,21 @@ class PreludeTestCase extends TestCase {
   }       
 
   public function testEqualForInt() {
-    var equal = Stax.getEqualFor(1);
+    var equal = Equal.getEqualFor(1);
     assertFalse(equal(2, 1));
     assertFalse(equal(1, 2));
     assertTrue(equal(1, 1));
   }
 
   public function testEqualForFloat() {
-    var equal = Stax.getEqualFor(1.0);
+    var equal = Equal.getEqualFor(1.0);
     assertFalse(equal(1.2, 1.1));
     assertFalse(equal(1.1, 1.2));
     assertTrue(equal(0.1, 0.1));
   }
 
   public function testEqualForBool() {
-    var equal = Stax.getEqualFor(true);
+    var equal = Equal.getEqualFor(true);
     assertFalse(equal(true,  false));
     assertFalse(equal(false, true));
     assertTrue(equal(true,  true));
@@ -267,14 +278,14 @@ class PreludeTestCase extends TestCase {
   }
 
   public function testEqualForNull() {   
-    var equal = Stax.getEqualFor(null);
+    var equal = Equal.getEqualFor(null);
     assertFalse(equal("s", null));
     assertFalse(equal(null, "s"));
     assertTrue(equal(null, null));
   }  
 
   public function testEqualForString() {
-    var equal = Stax.getEqualFor("s");
+    var equal = Equal.getEqualFor("s");
     assertFalse(equal("b", "a"));
     assertFalse(equal("a", "b"));
   assertFalse(equal("a", null));
@@ -286,7 +297,7 @@ class PreludeTestCase extends TestCase {
     var a = Date.fromString("1999-12-31");
     var b = Date.fromString("2000-01-01");  
     var c = Date.fromString("1999-12-31");
-    var equal = Stax.getEqualFor(b);
+    var equal = Equal.getEqualFor(b);
     assertFalse(equal(b, a));
     assertFalse(equal(a, b)); 
     assertFalse(equal(a, null));
@@ -298,7 +309,7 @@ class PreludeTestCase extends TestCase {
     var a1 = [1,2,3];
     var a2 = [4,5];
     var a3 = [4,5];
-    var equal = Stax.getEqualFor(a1);
+    var equal = Equal.getEqualFor(a1);
     assertFalse(equal(a1, a2));
     assertTrue(equal(a2, a3)); 
     assertTrue(equal([], [])); 
@@ -308,14 +319,14 @@ class PreludeTestCase extends TestCase {
     var c1 = new HasEquals(1);
     var c2 = new HasEquals(2);  
     var c3 = new HasEquals(1);
-    var equal = Stax.getEqualFor(c1);
+    var equal = Equal.getEqualFor(c1);
     assertFalse(equal(c2, c1));
     assertFalse(equal(c1, c2));
     assertTrue(equal(c1, c3));
   }
 
   public function testEqualForNotClassWithoutEquals() {                 
-    this.assertThrowsException(function() Stax.getEqualFor(new TestCase()));
+    this.assertThrowsException(function() Equal.getEqualFor(new TestCase()));
   } 
 
   public function testEqualForEnum() { 
@@ -323,7 +334,7 @@ class PreludeTestCase extends TestCase {
     var o2 = Some("a");
     var o3 = Some("b"); 
     var o4 = Some("a");
-    var equal = Stax.getEqualFor(o1);
+    var equal = Equal.getEqualFor(o1);
     assertFalse(equal(o2, o1));
     assertFalse(equal(o3, o1));
     assertFalse(equal(o3, o2));
@@ -338,7 +349,7 @@ class PreludeTestCase extends TestCase {
     var o1 = { name : "haxe"};                      
     var o2 = { name : "stax"};
     var o3 = { name : "haxe"};
-    var equal = Stax.getEqualFor(o1);
+    var equal = Equal.getEqualFor(o1);
     assertFalse(equal(o2, o1));
     assertFalse(equal(o1, o2));
     assertTrue(equal(o1, o3)); 
@@ -348,12 +359,12 @@ class PreludeTestCase extends TestCase {
   }             
 
   public function testEqualForMethods() {
-    var equal = Stax.getEqualFor(testEqualForMethods);
+    var equal = Equal.getEqualFor(testEqualForMethods);
     assertFalse(equal(testEqualForMethods, testEqualForAnonymousTyped));
     assertTrue(equal(testEqualForMethods, testEqualForMethods));
   }  
                      
-  static function getShow<T>(v : T) return Stax.getShowFor(v)(v)                           
+  static function getShow<T>(v : T) return Show.getShowFor(v)(v)                           
   
   public function testShowFor() {         
     assertEquals("null",  getShow(null));
@@ -396,19 +407,19 @@ class PreludeTestCase extends TestCase {
   public function testReflectiveHasher(){
     var zerocodes : Array<Dynamic> = [null, 0];
     for(z in zerocodes)
-      assertEquals(0, Stax.getHashFor(z)(z));
+      assertEquals(0, Hasher.getHashFor(z)(z));
 
     var nonzerocodes : Array<Dynamic> = [true, false, "", "a", 1, 0.1, [],[1], {}, {n:"a"}, new HasNoHashAndShow(1), new HasHash(1), Date.fromString("2000-01-01"), None, Some("a")];
     for(n in nonzerocodes)
-      this.assertNotEquals(0, Stax.getHashFor(n)(n));
+      this.assertNotEquals(0, Hasher.getHashFor(n)(n));
   }
 
   public function assertHashCodeForIsZero<T>(v : T) {
-    assertEquals(0, Stax.getHashFor(v)(v));
+    assertEquals(0, Hasher.getHashFor(v)(v));
   }
 
   public function assertHashCodeForIsNotZero<T>(v : T) {
-    assertNotEquals(0, Stax.getHashFor(v)(v));
+    assertNotEquals(0, Hasher.getHashFor(v)(v));
   }
 
   public function toString() return "PreludeTest"

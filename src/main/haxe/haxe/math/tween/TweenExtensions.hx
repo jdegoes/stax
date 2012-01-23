@@ -20,7 +20,9 @@ import haxe.math.tween.Tween;
 import haxe.math.tween.Easing;
 import haxe.time.ScheduledExecutor;
 
-using PreludeExtensions;
+import stax.Future;
+using stax.Maths;
+
 using haxe.framework.Injector;
 
 class TweenerExtensions {

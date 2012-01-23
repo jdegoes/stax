@@ -16,10 +16,17 @@
 package haxe.net;
 
 import Prelude;
+using Stax;
+
 import haxe.net.Url;
 import haxe.data.collections.Map;
 
-using PreludeExtensions;
+using stax.Strings;
+ 
+import stax.Tuples;
+using stax.Tuples;
+using stax.Options;
+
 using haxe.functional.Foldable;
 
 class UrlExtensions {

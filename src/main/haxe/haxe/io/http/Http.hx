@@ -16,11 +16,12 @@
 package haxe.io.http;
 
 import Prelude;
+import stax.Future;
 import haxe.data.collections.Map;
 import haxe.net.Url;
 import haxe.net.HttpResponseCode;
 
-using PreludeExtensions;
+
 
 typedef HttpResponse<T> = {
   code:     HttpResponseCode,

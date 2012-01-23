@@ -23,7 +23,7 @@ import js.Env;
 import js.dom.Quirks;
 import js.io.IFrameIO;
 
-using PreludeExtensions;
+
 using js.dom.HTMLDocumentExtensions;
 
 class IFrameIOTestCase extends TestCase {

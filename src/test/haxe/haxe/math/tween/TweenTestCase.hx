@@ -22,7 +22,7 @@ import haxe.test.Assert;
 import haxe.math.tween.Tween;
 import haxe.math.tween.Easing;
 
-using PreludeExtensions;
+
 using haxe.math.tween.TweenExtensions;
 
 class TweenTestCase extends TestCase {

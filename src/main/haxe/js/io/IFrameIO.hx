@@ -28,13 +28,30 @@ import haxe.text.json.Json;
 import haxe.net.Url;
 import haxe.io.log.Logger;
 
-using PreludeExtensions;
+
+import stax.Future;
+import stax.Tuples;
+
+using Stax;
+using stax.Tuples;
+using stax.Arrays;
+using stax.Strings;
+using stax.Maths;
+using stax.Options;
+using stax.Dynamics;
+using stax.Iterables;
+
+using stax.plus.Hasher;
+
+using haxe.data.collections.Map;
+using haxe.data.collections.List;
+
 using haxe.functional.FoldableExtensions;
 using haxe.util.StringExtensions;
-using haxe.data.collections.IterableExtensions;
-using haxe.data.collections.MapExtensions;
+
 using haxe.net.UrlExtensions;
 using haxe.framework.Injector;
+
 
 /** A bidirectional communication layer capable of crossing frames hosted on 
  * different domains.
@@ -346,7 +363,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
     
     var maxFragSize = 1500 - to.length;
     var fragmentId  = 1;
-    var fragments   = Json.encodeObject(data).chunk(maxFragSize);
+    var fragments   = Json.encodeObject(data).chunk(maxFragSize).toList();
     
     var encoded = fragments.mapTo(newFragmentsList(), function(chunk): Tuple2<Window, AddressableFragment> return iframe.entuple(cast {
       type:           'delivery',
@@ -484,7 +501,7 @@ class IFrameIOPollingHashtag extends AbstractIFrameIO, implements IFrameIO {
       var domain = extractDomain(fragments[0].from);
     
       if (receivers.exists(domain)) {
-        receivers.get(domain).foreach(function(r) r(message));
+        receivers.get(domain).forEach(function(r) r(message));
       }
     
       fragmentsReceived.removeByKey(messageKey);

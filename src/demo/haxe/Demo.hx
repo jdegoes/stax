@@ -8,7 +8,7 @@ import js.detect.BrowserSupport;
 import haxe.framework.Injector;
 import haxe.time.ScheduledExecutor;
 
-using PreludeExtensions;
+
 using js.dom.HTMLDocumentExtensions;
 
 class Demo {
