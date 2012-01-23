@@ -16,11 +16,11 @@
 package haxe.test;
 
 import Prelude;
-import PreludeExtensions;
+import stax.plus.Equal;
 
 import haxe.data.collections.Collection;
+using stax.Strings;
 
-using PreludeExtensions;
 using haxe.functional.FoldableExtensions;
 
 typedef MatchResult = { assertion: String, negation: String }
@@ -30,7 +30,7 @@ typedef MustMatcher<T> = T -> Either<MatchResult, MatchResult>
 // Expected: (x == 123) || (x == null), but found: x == 9
 class Must {
   public static function equal<T>(expected: T, ?equal: EqualFunction<T>): MustMatcher<T> {
-    if (equal == null) equal = Stax.getEqualFor(expected);
+    if (equal == null) equal = Equal.getEqualFor(expected);
     
     return function(value: T) {
       var result = {

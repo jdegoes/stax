@@ -16,10 +16,12 @@
 package haxe.reactive;
 
 import Prelude;
+import stax.Tuples;
 import haxe.reactive.Reactive;
 import haxe.data.collections.Collection;
 
-using haxe.data.collections.IterableExtensions;
+using Stax;
+using stax.Iterables;
 
 class Signals {
     private function new() { }

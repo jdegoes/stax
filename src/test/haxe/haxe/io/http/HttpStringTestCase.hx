@@ -22,7 +22,7 @@ import haxe.test.Assert;
 import haxe.io.http.Http;
 import haxe.io.http.HttpString;
 
-using PreludeExtensions;
+
 
 class HttpStringTestCase extends TestCase {
   var h: HttpString;

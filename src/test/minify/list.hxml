@@ -1,0 +1,3 @@
+-cp ../../main/haxe
+-swf ../../../bin/test/prelude.swf
+-main Loader.hx

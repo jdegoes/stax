@@ -1,8 +1,12 @@
 package haxe.data.transcode;
 
+import haxe.Stack;
 import Prelude;
 
+import stax.plus.Equal;
+
 import Type;
+import stax.Tuples;
 import Prelude;
 import haxe.test.TestCase;
 import haxe.text.json.JValue;
@@ -12,7 +16,7 @@ import haxe.data.collections.List;
 import haxe.data.transcode.TranscodeJValue;
 import haxe.data.transcode.TranscodeJValueExtensions;
 
-using PreludeExtensions;
+
 
 typedef UnionOfSimpleFeedTypes = Dynamic
 
@@ -92,8 +96,8 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
 
   public function testMap() {
     var a: Array<Map<Int, String>> = [Map.create().addAll([Tuple2.create(123, "foo"), Tuple2.create(-23, "bar"), Tuple2.create(0, "baz")]), Map.create()];
-
-    doTest(a, [TranscodeJValue.getExtractorFor(TInt), TranscodeJValue.getExtractorFor(TClass(String))]);
+		
+		doTest(a, [TranscodeJValue.getExtractorFor(TInt), TranscodeJValue.getExtractorFor(TClass(String))]);
   }
 
   public function testJValue() {
@@ -109,13 +113,12 @@ class TranscodeJValueExtensionsTestCase extends TestCase {
 
 
   private function doTest<T>(values: Array<T>, ?valueType: ValueType, ?extractors: Array<JExtractorFunction<T>>): Void {
-    for (value in values) {
+		for (value in values) {
       if (valueType == null)
         valueType = Type.typeof(value);
       var decomposed = TranscodeJValue.getDecomposerFor(valueType)(value);
       var actual     = TranscodeJValue.getExtractorFor(valueType, extractors)(decomposed);
-      var equal      = Stax.getEqualFor(value)(value, actual);
-
+			var equal      = Equal.getEqualFor(value)(value, actual);
       if (!equal) {
         throw "Expected " + value + " but was " + actual;
       }

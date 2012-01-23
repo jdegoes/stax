@@ -21,7 +21,7 @@ import Prelude;
 import haxe.functional.Foldable;
 import haxe.data.collections.Collection;
 
-using PreludeExtensions;
+
 using haxe.functional.FoldableExtensions;
 
 /*

@@ -16,10 +16,11 @@
 */
 package haxe.functional;
 
+import stax.Tuples;
+using stax.Tuples;
+
 import Prelude;
 import haxe.functional.PartialFunction;
-
-using PreludeExtensions;
 
 private class PartialFunction1Impl<A, Z> implements PartialFunction1<A, Z> {
   var _def: Array<Tuple2<A -> Bool, A -> Z>>;

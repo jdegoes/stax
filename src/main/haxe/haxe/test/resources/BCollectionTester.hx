@@ -4,7 +4,7 @@ import haxe.test.TestCase;
 
 import haxe.reactive.SignalCollection;
 
-using haxe.data.collections.IterableExtensions;
+using stax.Iterables;
 
 class CollectionTester extends TestCase {
   

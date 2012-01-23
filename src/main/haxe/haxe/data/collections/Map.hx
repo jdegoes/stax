@@ -17,17 +17,24 @@
 package haxe.data.collections;
 
 import Prelude;
-import PreludeExtensions;
+using Stax;
 
-import haxe.text.json.JValue;
-import haxe.data.transcode.TranscodeJValue;
-import haxe.data.transcode.TranscodeJValueExtensions;
+import stax.Tuples;
+
 import haxe.functional.Foldable;
 import haxe.functional.PartialFunction;
 import haxe.data.collections.Collection;
 import haxe.functional.FoldableExtensions;
 
-using PreludeExtensions;
+using stax.Options;
+
+import stax.plus.Order; using stax.plus.Order;
+import stax.plus.Hasher; using stax.plus.Hasher;
+import stax.plus.Show; using stax.plus.Show;
+import stax.plus.Equal; using stax.plus.Equal;
+
+using stax.Iterables;
+
 using haxe.functional.FoldableExtensions;
 using haxe.functional.PartialFunctionExtensions;
 
@@ -135,8 +142,8 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     
     var list = _buckets[bucket];  
 
-    if(null == _keyEqual)   _keyEqual = Stax.getEqualFor(t._1);
-    if(null == _valueEqual) _valueEqual = Stax.getEqualFor(t._2);
+    if(null == _keyEqual)   _keyEqual = Equal.getEqualFor(t._1);
+    if(null == _valueEqual) _valueEqual = Equal.getEqualFor(t._2);
     
     for (i in 0...list.length) {
       var entry = list[i];
@@ -332,20 +339,6 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     var vha = valueHash; 
     return foldl(786433, function(a, b) return a + (kha(b._1) * 49157 + 6151) * vha(b._2));
   }
-
-  public function decompose(): JValue {
-    return ArrayExtensions.decompose(toArray());
-  }
-
-  public static function extract<K, V>(v: JValue, ke: JExtractorFunction<K>, ve: JExtractorFunction<V>, ?korder : OrderFunction<K>, ?kequal: EqualFunction<K>, ?khash: HashFunction<K>, ?kshow : ShowFunction<K>, ?vorder : OrderFunction<V>, ?vequal: EqualFunction<V>, ?vhash: HashFunction<V>, ?vshow : ShowFunction<V>): Map<K, V> {
-    var te = function(v){return Tuple2.extract(v, ke, ve);};
-
-    return switch(v) {
-      case JArray(v): Map.create(korder, kequal, khash, kshow, vorder, vequal, vhash, vshow).addAll(v.map(te));
-
-      default: Stax.error("Expected Array but was: " + v);
-    }
-  }
   
   public function load(): Int {
     return if (_buckets.length == 0) MaxLoad;
@@ -520,9 +513,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyOrder) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getOrderFor(null);
+      Order.getOrderFor(null);
       else
-        _keyOrder = Stax.getOrderFor(it.next()._1); 
+        _keyOrder = Order.getOrderFor(it.next()._1); 
     } else _keyOrder;
   }
   
@@ -530,9 +523,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyEqual) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getEqualFor(null);
+      Equal.getEqualFor(null);
       else
-        _keyEqual = Stax.getEqualFor(it.next()._1); 
+        _keyEqual = Equal.getEqualFor(it.next()._1); 
     } else _keyEqual;
   }     
   
@@ -540,9 +533,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyHash) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getHashFor(null);
+        Hasher.getHashFor(null);
       else
-        _keyHash = Stax.getHashFor(it.next()._1);  
+        _keyHash = Hasher.getHashFor(it.next()._1);  
     } else _keyHash;
   }
   
@@ -550,9 +543,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _keyShow) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getShowFor(null);
+        Show.getShowFor(null);
       else
-        _keyShow = Stax.getShowFor(it.next()._1);  
+        _keyShow = Show.getShowFor(it.next()._1);  
     } else _keyShow;
   }
 
@@ -560,9 +553,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueOrder) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getOrderFor(null);
+      Order.getOrderFor(null);
       else
-        _valueOrder = Stax.getOrderFor(it.next()._2); 
+        _valueOrder = Order.getOrderFor(it.next()._2); 
     } else _valueOrder;
   }     
 
@@ -570,9 +563,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueEqual) {
       var it = iterator();
       if(!it.hasNext())
-      Stax.getEqualFor(null);
+      Equal.getEqualFor(null);
       else
-        _valueEqual = Stax.getEqualFor(it.next()._2); 
+        _valueEqual = Equal.getEqualFor(it.next()._2); 
     } else _valueEqual;    
   }   
 
@@ -580,9 +573,9 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueHash) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getHashFor(null);
+        Hasher.getHashFor(null);
       else
-        _valueHash = Stax.getHashFor(it.next()._2);  
+        _valueHash = Hasher.getHashFor(it.next()._2);  
     } else _valueHash;
   }
   
@@ -590,9 +583,47 @@ class Map<K, V> implements Collection<Map<K, V>, Tuple2<K, V>>, implements Parti
     return if(null == _valueShow) {
       var it = iterator();
       if(!it.hasNext())
-        Stax.getShowFor(null);
+        Show.getShowFor(null);
       else
-        _valueShow = Stax.getShowFor(it.next()._2);  
+        _valueShow = Show.getShowFor(it.next()._2);  
     } else _valueShow;
   }
+}
+class MapExtensions {
+  public static function toObject<V>(map: Map<String, V>): Dynamic<V> {
+    return map.foldl({}, function(object, tuple) {
+      Reflect.setField(object, tuple._1, tuple._2);
+      
+      return object;
+    });
+  }
+	public static function toMap<T>(d: Dynamic<T>): Map<String, T> {
+    var map: Map<String, T> = Map.create();
+    
+    for (field in Reflect.fields(d)) {
+      var value = Reflect.field(d, field);
+      
+      map = map.set(field, value);
+    }
+    
+    return map;
+  }
+}
+class IterableToMap {
+  public static function toMap<K, V>(i: Iterable<Tuple2<K, V>>):Map<K,V> {
+    return haxe.data.collections.Map.create().addAll(i);
+  }	
+}
+class FoldableToMap {
+	public static function toMap<A, K, V>(foldable : Foldable<A, Tuple2<K, V>>) : Map<K, V> {  
+    var dest = Map.create();
+    return foldable.foldl(dest, function(a, b) {
+      return a.append(b);
+    });
+  }	
+}
+class ArrayToMap {
+  public static function toMap<K, V>(arr : Array<Tuple2<K, V>>) {
+    return haxe.data.collections.Map.create().addAll(arr);
+  }	
 }

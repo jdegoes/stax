@@ -17,9 +17,14 @@ package haxe.test;
 
 import haxe.test.Dispatcher;
 
-import Prelude;
+using stax.Strings;
+using stax.Options;
 
-using PreludeExtensions;
+using stax.Functions;
+
+import Prelude;
+using Stax;
+
 using haxe.functional.PredicateExtensions;
 
 /**

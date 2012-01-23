@@ -17,10 +17,6 @@
 
 package haxe.text.json;
 
-import Prelude;
-
-using PreludeExtensions;
-
 enum JValue {
   JNull;
   JBool(v: Bool);

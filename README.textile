@@ -1,3 +1,42 @@
+h1. Stax Proposals:
+		
+		1	) Remove JSON from collection classes and seperate : +reduce code weight
+		2 ) Split Stax into relevant parts( now found in package stax) : +reduce code weight -more import statements
+		3 ) Remove Collection dependencies from FoldableExtensions, now found in collection modules. +needed all collections for anything foldable
+		4 ) Remove groupBy from IterableExtensions / ArrayExtensions /FoldableExtensions, placed in haxe.data.collections.Group +
+		
+		using lambdas alone now weighs in as 40kb(swf), which includes Stax and Tuples, down from 100kb+
+		Tuples now 35k
+		
+		All previously passing unit tests still pass, with modest changes.
+		Known issues, no handling for subclasses of collections for JSON
+		
+		haxe.data.collections.IterableExtensions now stax.Iterables
+		haxe.data.collections.ArrayExtensions now stax.Arrays
+		
+		Stax (the class) has the following Lambdas for Iterables and Arrays:
+				map
+				flatMap
+				foldl
+				filter
+				size
+		
+		Int and Float methods in stax.Maths
+		Method Chaining etc in stax.Functions
+		Tuples in stax.Tuples
+		etc
+		
+		Equal,Hash,Show,Order & Meta in stax.plus.*
+		
+		I don't think the Tuples base class should rely on that but I haven't implemented it.
+		
+		Prelude is simply a collection of Typedefs
+		
+		I renamed foreach to forEach for two reasons
+		
+		1) forAll and forAny are capitalised
+		2) foreach in Lambda can cause confusion.
+		
 h1. Stax v0.1
 
 Stax is a new standard library for HaXe designed for developers who prefer declarative programming and productivity over program size and speed.

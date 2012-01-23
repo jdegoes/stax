@@ -20,8 +20,7 @@ import haxe.test.Assert;
 import haxe.test.MustMatchers;
 import haxe.test.MustMatcherExtensions;
 import haxe.PosInfos;
-
-using PreludeExtensions;
+import stax.Future;
 
 class TestCase {
   public function new() {

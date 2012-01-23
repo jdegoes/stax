@@ -22,8 +22,11 @@ import haxe.test.TestCase;
 import haxe.net.Url;
 
 using haxe.net.UrlExtensions;
+using haxe.data.collections.Map;
+using stax.Options;
+using stax.Strings;
+using stax.Functions;
 
-using PreludeExtensions;
 
 class UrlExtensionsTestCase extends TestCase {
   public function testParseUrl1() {

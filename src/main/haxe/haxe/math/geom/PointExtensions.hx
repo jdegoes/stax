@@ -16,11 +16,14 @@
 package haxe.math.geom;
 
 import Prelude;
+import stax.Tuples;
+using stax.Tuples;
 
+using stax.Maths;
 import haxe.math.geom.Point;
 import haxe.math.geom.Vector;
 
-using PreludeExtensions;
+
 
 class Point2dIntExtensions {
   public static inline function minus(p1: Point2d<Int>, p2: Point2d<Int>): Vector2d<Int> {

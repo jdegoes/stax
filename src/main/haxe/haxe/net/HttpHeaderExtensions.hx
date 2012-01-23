@@ -16,11 +16,17 @@
 package haxe.net;
 
 import Prelude;
+using Stax;
 
 import haxe.data.collections.Map;
 import haxe.net.HttpHeader;
 
-using PreludeExtensions;
+import stax.Tuples;
+using stax.Tuples;
+
+using stax.Strings;
+ 
+using stax.Options;
 
 class HttpHeaderExtensions {
   static var HeaderPattern = ~/^([^:]+): *(.+)$/;
